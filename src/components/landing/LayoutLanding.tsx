@@ -11,11 +11,11 @@ export default function LayoutLanding() {
 
   return (
     <>
-      {!isLoading && <Header />}
-      <div className="container mt-20">
+      <Header />
+      <div className="mt-16">
         <Outlet />
       </div>
-      {!isLoading && <Footer />}
+      <Footer />
       <ScrollToTop />
     </>
   );

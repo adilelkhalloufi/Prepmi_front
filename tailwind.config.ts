@@ -58,6 +58,9 @@ export default {
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
       },
+      backgroundImage: {
+        'mainbackground': "url('/healthy-meal-bowl.png')",
+      },
       keyframes: {
         "accordion-down": {
           from: { height: "0" },
