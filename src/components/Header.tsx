@@ -1,6 +1,4 @@
 import { Button } from "@/components/ui/button";
-import {   Moon, Sun } from "lucide-react";
-import { useTheme } from "./theme-provider";
 import { useTranslation } from "react-i18next";
 import { webRoutes } from "@/routes/web";
 import { IconBasket, IconLogin, IconRecycle, IconUser } from "@tabler/icons-react";
@@ -11,7 +9,7 @@ import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store";
 import { Badge } from "./ui/badge";
-
+import logo from "../assets/Prepme.svg";
 interface RouteProps {
   href: string;
   label: string;
@@ -21,31 +19,24 @@ export function Header() {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const routeList: RouteProps[] = [
+
     {
-      href: webRoutes.home,
-      // label: "Home",
-      label: t("menu_home"),
+      href: "#meals",
+      label: t("menu_meals"),
     },
-    // {
-    //   href: webRoutes.stagnant,
-    //   //  label: "Scarp",
-    //   label: t("menu_stagnant"),
-    // },
     {
-      href: webRoutes.scarp,
-      //  label: "Scarp",
-      label: t("menu_scrap"),
+      href: "#how-it-works",
+      label: t("menu_how_it_works"),
+    },
+    {
+      href: "#pricing",
+      label: t("menu_pricing"),
     },
     {
       href: "#about",
       label: t("menu_about"),
-      // label: "About",
     },
-    {
-      href: "#contact",
-      label: t("menu_contact"),
-      // label: "Contact"  ,
-    },
+
   ];
   const cart = useSelector((state: RootState) => state.cart);
   const admin = useSelector((state: RootState) => state.admin);
@@ -55,22 +46,21 @@ export function Header() {
       <div className="container flex h-16 items-center justify-between">
         <div className="flex items-center space-x-4">
           <span className="text-xl font-bold flex items-center">
-            <IconRecycle />
             <a
               rel="noreferrer noopener"
               href="/"
               className="ml-2 font-bold text-xl flex text-center"
             >
-              {t("website")}
+              <img src={logo} alt="Prepme" className="h-8 w-auto" />
             </a>
           </span>
           <nav className="hidden md:flex space-x-6">
             {routeList.map((route: RouteProps, i) => (
               <a
-                rel="noreferrer noopener"
+
                 href={route.href}
                 key={i}
-                className="text-sm font-medium hover:text-primary"
+                className="text-sm font-medium hover:text-primary m-auto"
               >
                 {route.label}
               </a>
@@ -91,31 +81,43 @@ export function Header() {
             }}
           >
             <IconBasket className="mr-2 w-5 h-5" />
-            {cart.products.length > 0 && (    <Badge  variant="default"    className="absolute top-0 right-0">
+            {cart.products.length > 0 && (<Badge variant="default" className="absolute top-0 right-0">
               {cart.products.length}
-              </Badge>  )}
-            
-          
+            </Badge>)}
+
+
           </Button>
           {admin && (
             <Button
-            variant="ghost"
+              variant="ghost"
               onClick={() => {
                 navigate(webRoutes.Dashboard);
               }}
             >
-               <IconUser/>
+              <IconUser />
             </Button>
-          )} 
-          {!admin && ( <Button
-            onClick={() => {
-                navigate(webRoutes.login);
-            }}
-          >
-            <IconLogin className="mr-2 w-5 h-5" />
-            {t("login")}
-          </Button>)}
-         
+          )}
+          {!admin && (
+            <>
+              <Button
+                variant="ghost"
+                onClick={() => {
+                  navigate(webRoutes.login);
+                }}
+              >
+                <IconLogin className="mr-2 w-5 h-5" />
+                {t("menu_login")}
+              </Button>
+              <Button
+                onClick={() => {
+                  navigate(webRoutes.register || "/register");
+                }}
+              >
+                {t("menu_get_started")}
+              </Button>
+            </>
+          )}
+
         </div>
       </div>
     </header>

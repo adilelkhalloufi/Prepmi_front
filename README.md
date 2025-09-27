@@ -1,7 +1,6 @@
-Adev @adevMa
+# 🍴 Prepmi – Meal Subscription & Delivery Platform
 
-Mohammed Hanine CTO EquipConnect
+Prepmi is a meal delivery and subscription platform inspired by services like [SimmerEats](https://www.simmereats.com/).  
+It allows users to subscribe to healthy weekly meal plans, browse rotating menus, place orders, and track deliveries with ease.
 
-KhordaMa has streamlined our scrap management process, making it faster and more cost-effective. A game-changer for our operations!
-
-1# Platform KhordaMa is the first platform in Morocco dedicated to the efficient buying and selling of industrial scrap and waste. It revolutionizes the recycling industry by connecting businesses with ease, helping to promote sustainability and reduce waste.
+The goal of Prepmi is to make **meal prep simple, flexible, and convenient** by offering healthy pre-made meals with customizable plans and dietary options.
