@@ -69,5 +69,24 @@
     "review4": "Vivant à Fès, j'apprécie les saveurs authentiques. PrepMe livre des repas frais et sains qui respectent notre héritage culinaire tout en répondant aux besoins nutritionnels modernes.",
     "review5": "D'Agadir avec amour ! PrepMe a rendu l'alimentation saine si pratique. Les repas arrivent frais et l'emballage est écologique. Je recommande vivement !",
     "review6": "Résident de Tanger ici ! Les repas créés par le chef sont de qualité restaurant. Je n'ai jamais aussi bien mangé tout en maintenant mes objectifs de fitness. Simplement exceptionnel !"
+  },
+  "about": {
+    "badge": "Notre Histoire",
+    "title": "DE NOTRE CUISINE À LA VÔTRE",
+    "story_opening": "Notre histoire a commencé avec un rêve simple au Maroc. Une petite cuisine à Casablanca et une faim de quelque chose de plus. Deux entrepreneurs passionnés avec une famille très soutenante derrière eux.",
+    "story_problem": "Nous avons remarqué à quel point il était difficile pour les professionnels occupés de maintenir un mode de vie sain. De longues heures de travail, peu de temps pour la préparation des repas, et le manque d'options nutritives et pratiques dans notre beau Maroc.",
+    "story_solution": "Alors nous avons pris les recettes traditionnelles de notre grand-mère, les avons combinées avec la science nutritionnelle moderne, et avons créé PrepMe. Nous avons commencé petit, cuisinant des repas frais dans notre cuisine familiale et les livrant à des amis et collègues.",
+    "story_growth": "La nouvelle s'est répandue rapidement. Bientôt nous servions des centaines, puis des milliers de personnes à travers le Maroc. La demande était incroyable - les gens avaient faim de repas sains et délicieux qui honoraient notre héritage culinaire.",
+    "story_mission": "Maintenant, PrepMe est devenu plus qu'un service de livraison de repas. Nous sommes un mouvement vers une vie plus saine, soutenant les agriculteurs locaux, et célébrant les saveurs marocaines dans chaque bouchée.",
+    "story_future": "Ce n'était jamais juste le plan, mais c'est devenu notre vie - vous aider à vivre votre vie la plus saine et la plus heureuse tout en restant connecté aux saveurs qui rendent le Maroc spécial.",
+    "value1_title": "Qualité d'Abord",
+    "value1_desc": "Ingrédients premium, préparation experte, recettes approuvées par des nutritionnistes",
+    "value2_title": "Santé et Bonheur",
+    "value2_desc": "Nourrir votre corps tout en délectant vos papilles gustatives chaque jour",
+    "value3_title": "Racines Marocaines",
+    "value3_desc": "Célébrer notre riche héritage culinaire avec la sagesse nutritionnelle moderne",
+    "closing_message": "Nous sommes là pour rendre l'alimentation saine sans effort, délicieuse et authentiquement marocaine.",
+    "signature": "Santé et Bonheur,",
+    "team_name": "La Famille PrepMe"
   }
 }
