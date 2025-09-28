@@ -66,10 +66,10 @@ export function HowItWorks() {
 
         {/* Header */}
         <div className="text-center mb-16 relative">
-          {/* <div className="inline-flex items-center gap-2 bg-primary/10 text-primary px-4 py-2 rounded-full text-sm font-medium mb-6 animate-fade-in">
+          <div className="inline-flex items-center gap-2 bg-primary/10 text-primary px-4 py-2 rounded-full text-sm font-medium mb-6 animate-fade-in">
             <span className="w-2 h-2 bg-primary rounded-full animate-pulse"></span>
-            Simple Process
-          </div> */}
+            {t('how_it_works.simple_process')}
+          </div>
           <h2 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent animate-fade-up">
             {t('how_it_works.title')}
           </h2>

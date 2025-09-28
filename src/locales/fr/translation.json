@@ -15,6 +15,7 @@
   "hero_subtitle": "Des repas frais et nutritifs préparés par des chefs professionnels et livrés directement à votre porte. Commencez votre mode de vie sain dès aujourd'hui!",
   "hero_get_started": "COMMENCER",
   "how_it_works": {
+    "simple_process": "Processus Simple",
     "title": "Comment Ça Marche",
     "description": "Étapes simples pour recevoir de délicieux repas sains livrés à votre porte",
     "step1": {
@@ -29,5 +30,16 @@
       "title": "RÉCHAUFFEZ, MANGEZ ET SAVOUREZ",
       "description": "Aucune préparation. Aucun désordre. Nos repas arrivent prêts à réchauffer et à manger en quelques minutes."
     }
+  },
+  "fresh_meals": {
+    "badge": "Promesse de Qualité",
+    "main_title": "FRAIS. NUTRITIF. SATISFAISANT.",
+    "main_description": "Nous utilisons uniquement des ingrédients de qualité supérieure de notre réseau de partenaires de confiance. Tous les repas sont préparés par des Chefs et approuvés par des Diététiciens.",
+    "fresh_title": "REPAS FRAIS, JAMAIS CONGELÉS",
+    "fresh_description": "Nous utilisons uniquement des ingrédients de qualité supérieure de notre réseau de partenaires de confiance. Tous les repas sont préparés par des Chefs et approuvés par des Diététiciens.",
+    "chef_title": "REPAS CRÉÉS PAR DES CHEFS",
+    "chef_description": "Notre équipe d'experts culinaires crée des repas si délicieux que vous ne croirez pas qu'ils sont sains.",
+    "dietitian_title": "CONÇUS PAR DES DIÉTÉTICIENS",
+    "dietitian_description": "Nos diététiciens agréés travaillent main dans la main avec notre cuisine pour s'assurer que chaque repas est rempli d'une qualité nutritionnelle premium et scientifiquement prouvée."
   }
 }

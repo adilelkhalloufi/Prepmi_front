@@ -15,6 +15,7 @@
   "hero_subtitle": "Fresh, nutritious meals prepared by professional chefs and delivered straight to your door. Start your healthy lifestyle today!",
   "hero_get_started": "GET STARTED",
   "how_it_works": {
+    "simple_process": "Simple Process",
     "title": "How It Works",
     "description": "Simple steps to get delicious, healthy meals delivered to your door",
     "step1": {
@@ -29,5 +30,16 @@
       "title": "HEAT, EAT & ENJOY",
       "description": "No prep. No mess. Our meals arrive ready to heat and eat in minutes."
     }
+  },
+  "fresh_meals": {
+    "badge": "Quality Promise",
+    "main_title": "FRESH. NUTRITIOUS. SATISFYING.",
+    "main_description": "We only use premium ingredients from our network of trusted partners. All meals are Chef-prepared and Dietitian-approved.",
+    "fresh_title": "FRESH, NEVER-FROZEN MEALS",
+    "fresh_description": "We only use premium ingredients from our network of trusted partners. All meals are Chef-prepared and Dietitian-approved.",
+    "chef_title": "CHEF CRAFTED MEALS",
+    "chef_description": "Our team of culinary experts craft meals so mouthwatering, you won't believe they're healthy.",
+    "dietitian_title": "DESIGNED BY DIETITIANS",
+    "dietitian_description": "Our registered dietitians work hand-in-hand with our kitchen to ensure every meal is packed with premium, science-backed nutritional quality."
   }
 }
