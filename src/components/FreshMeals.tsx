@@ -30,7 +30,7 @@ export function FreshMeals() {
     ]
 
     return (
-        <section className="w-full py-16 md:py-24 bg-gradient-to-br from-slate-50 to-white">
+        <section className="   bg-gradient-to-br from-primary/5 via-orange/5 to-background">
             <div className="container px-4 md:px-6">
                 {/* Header Section */}
                 <div className="text-center mb-16">

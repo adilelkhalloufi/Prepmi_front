@@ -18,10 +18,6 @@ import ThemeSwitcher from "./theme-switcher"
 
 export default function Footer() {
   const { t } = useTranslation()
-  const [isChatOpen, setIsChatOpen] = React.useState(false)
-
-
-
 
   return (
     <footer className="relative border-t bg-background text-foreground transition-colors duration-300">
@@ -30,61 +26,79 @@ export default function Footer() {
           <div className="relative">
             <h2 className="mb-4 text-3xl font-bold tracking-tight">{t('website')}</h2>
             <p className="mb-6 text-muted-foreground">
-              {t('about.description')}
+              {t('footer.company_description')}
             </p>
-            <form className="relative">
-              <Input
-                type="email"
-                placeholder={t('footer.email_placeholder')}
-                className="pr-12 backdrop-blur-sm"
-              />
-              <Button
-                type="submit"
-                size="icon"
-                className="absolute right-1 top-1 h-8 w-8 rounded-full bg-primary text-primary-foreground transition-transform hover:scale-105"
-              >
-                <Send className="h-4 w-4" />
-                <span className="sr-only">{t('footer.subscribe')}</span>
-              </Button>
-            </form>
+            <div className="space-y-2 text-sm text-muted-foreground">
+              <p>{t('footer.delivery_info')}</p>
+              <p>{t('footer.health_certified')}</p>
+            </div>
             <div className="absolute -right-4 top-0 h-24 w-24 rounded-full bg-primary/10 blur-2xl" />
           </div>
           <div>
             <h3 className="mb-4 text-lg font-semibold">{t('footer.quick_links')}</h3>
             <nav className="space-y-2 text-sm">
-              <a href="#" className="block transition-colors hover:text-primary">
+              <Link to="/" className="block transition-colors hover:text-primary">
                 {t('menu_home')}
-              </a>
-              <a href="#" className="block transition-colors hover:text-primary">
+              </Link>
+              <a href="#about" className="block transition-colors hover:text-primary">
                 {t('menu_about')}
               </a>
-              <a href="#" className="block transition-colors hover:text-primary">
-                {t('footer.services')}
+              <a href="#how-it-works" className="block transition-colors hover:text-primary">
+                {t('menu_how_it_works')}
               </a>
-              <a href="#" className="block transition-colors hover:text-primary">
-                {t('footer.products')}
-              </a>
-              <a href="#" className="block transition-colors hover:text-primary">
-                {t('menu_contact')}
-              </a>
+              <Link to={webRoutes.register} className="block transition-colors hover:text-primary">
+                {t('footer.order_now')}
+              </Link>
+              <Link to={webRoutes.login} className="block transition-colors hover:text-primary">
+                {t('menu_login')}
+              </Link>
             </nav>
           </div>
           <div>
-            <h3 className="mb-4 text-lg font-semibold">{t('footer.contact_us')}</h3>
-            <address className="space-y-2 text-sm not-italic">
-              <p>{t('footer.address_line1')}</p>
-              <p>{t('footer.address_line2')}</p>
-              <p>{t('footer.phone')}: {t('footer.phone_number')}</p>
-              <p>{t('footer.email')}: {t('footer.email_address')}</p>
-            </address>
+            <h3 className="mb-4 text-lg font-semibold">{t('footer.meal_categories')}</h3>
+            <nav className="space-y-2 text-sm">
+              <a href="#" className="block transition-colors hover:text-primary">
+                {t('footer.high_protein')}
+              </a>
+              <a href="#" className="block transition-colors hover:text-primary">
+                {t('footer.vegetarian')}
+              </a>
+              <a href="#" className="block transition-colors hover:text-primary">
+                {t('footer.keto_friendly')}
+              </a>
+              <a href="#" className="block transition-colors hover:text-primary">
+                {t('footer.moroccan_classics')}
+              </a>
+              <a href="#" className="block transition-colors hover:text-primary">
+                {t('footer.low_carb')}
+              </a>
+            </nav>
           </div>
           <div className="relative">
-            <h3 className="mb-4 text-lg font-semibold">{t('footer.follow_us')}</h3>
-            <div className="mb-6 flex space-x-4">
+            <h3 className="mb-4 text-lg font-semibold">{t('footer.contact_support')}</h3>
+            <address className="space-y-3 text-sm not-italic mb-6">
+              <p className="flex items-center space-x-2">
+                <span>📍</span>
+                <span>{t('footer.address')}</span>
+              </p>
+              <p className="flex items-center space-x-2">
+                <span>📞</span>
+                <span>{t('footer.phone_number')}</span>
+              </p>
+              <p className="flex items-center space-x-2">
+                <span>✉️</span>
+                <span>{t('footer.email_address')}</span>
+              </p>
+              <p className="flex items-center space-x-2">
+                <span>🕒</span>
+                <span>{t('footer.hours')}</span>
+              </p>
+            </address>
+            <div className="mb-6 flex space-x-3">
               <TooltipProvider>
                 <Tooltip>
                   <TooltipTrigger asChild>
-                    <Button variant="outline" size="icon" className="rounded-full">
+                    <Button variant="outline" size="icon" className="rounded-full hover:bg-blue-50 hover:border-blue-300">
                       <Facebook className="h-4 w-4" />
                       <span className="sr-only">Facebook</span>
                     </Button>
@@ -97,20 +111,7 @@ export default function Footer() {
               <TooltipProvider>
                 <Tooltip>
                   <TooltipTrigger asChild>
-                    <Button variant="outline" size="icon" className="rounded-full">
-                      <Twitter className="h-4 w-4" />
-                      <span className="sr-only">Twitter</span>
-                    </Button>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p>{t('footer.follow_twitter')}</p>
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
-              <TooltipProvider>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <Button variant="outline" size="icon" className="rounded-full">
+                    <Button variant="outline" size="icon" className="rounded-full hover:bg-pink-50 hover:border-pink-300">
                       <Instagram className="h-4 w-4" />
                       <span className="sr-only">Instagram</span>
                     </Button>
@@ -123,7 +124,7 @@ export default function Footer() {
               <TooltipProvider>
                 <Tooltip>
                   <TooltipTrigger asChild>
-                    <Button variant="outline" size="icon" className="rounded-full">
+                    <Button variant="outline" size="icon" className="rounded-full hover:bg-blue-50 hover:border-blue-400">
                       <Linkedin className="h-4 w-4" />
                       <span className="sr-only">LinkedIn</span>
                     </Button>
@@ -143,7 +144,7 @@ export default function Footer() {
           <p className="text-sm text-muted-foreground">
             {t('footer.copyright')}
           </p>
-          <nav className="flex gap-4 text-sm">
+          <nav className="flex flex-wrap gap-4 text-sm justify-center">
             <Link to={webRoutes.privacy_policy} className="transition-colors hover:text-primary">
               {t('footer.privacy_policy')}
             </Link>
@@ -153,6 +154,9 @@ export default function Footer() {
             <Link to={webRoutes.cookie_settings} className="transition-colors hover:text-primary">
               {t('footer.cookie_settings')}
             </Link>
+            <a href="#" className="transition-colors hover:text-primary">
+              {t('footer.faq')}
+            </a>
           </nav>
         </div>
       </div>
