@@ -13,5 +13,21 @@
   "login": "Login",
   "hero_title": "HEALTHY MEALS DELIVERED",
   "hero_subtitle": "Fresh, nutritious meals prepared by professional chefs and delivered straight to your door. Start your healthy lifestyle today!",
-  "hero_get_started": "GET STARTED"
+  "hero_get_started": "GET STARTED",
+  "how_it_works": {
+    "title": "How It Works",
+    "description": "Simple steps to get delicious, healthy meals delivered to your door",
+    "step1": {
+      "title": "CHOOSE YOUR MEALS",
+      "description": "Rotating menu of 16 balanced dishes per week, over 50 meals per month."
+    },
+    "step2": {
+      "title": "WE GET COOKING",
+      "description": "Whilst you do you. Sit back, relax + let our chefs get the pots simmering."
+    },
+    "step3": {
+      "title": "HEAT, EAT & ENJOY",
+      "description": "No prep. No mess. Our meals arrive ready to heat and eat in minutes."
+    }
+  }
 }

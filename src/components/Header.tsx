@@ -42,7 +42,7 @@ export function Header() {
   const admin = useSelector((state: RootState) => state.admin);
 
   return (
-    <header className="fixed z-10 top-0 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+    <header className="fixed z-50 top-0 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-16 items-center justify-between">
         <div className="flex items-center space-x-4">
           <span className="text-xl font-bold flex items-center">

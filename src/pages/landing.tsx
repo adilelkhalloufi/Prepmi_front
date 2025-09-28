@@ -12,8 +12,7 @@ const Index = () => {
 
     <main>
       <Hero />
-      <Sponsors />
-      <HowItWorks />
+       <HowItWorks />
       <About />
       <Cta />
       <Newsletter />

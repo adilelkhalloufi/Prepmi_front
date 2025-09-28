@@ -13,5 +13,21 @@
   "login": "Connexion",
   "hero_title": "REPAS SAINS LIVRÉS",
   "hero_subtitle": "Des repas frais et nutritifs préparés par des chefs professionnels et livrés directement à votre porte. Commencez votre mode de vie sain dès aujourd'hui!",
-  "hero_get_started": "COMMENCER"
+  "hero_get_started": "COMMENCER",
+  "how_it_works": {
+    "title": "Comment Ça Marche",
+    "description": "Étapes simples pour recevoir de délicieux repas sains livrés à votre porte",
+    "step1": {
+      "title": "CHOISISSEZ VOS REPAS",
+      "description": "Menu rotatif de 16 plats équilibrés par semaine, plus de 50 repas par mois."
+    },
+    "step2": {
+      "title": "NOUS CUISINONS",
+      "description": "Pendant que vous vaquez à vos occupations. Détendez-vous et laissez nos chefs faire mijoter les casseroles."
+    },
+    "step3": {
+      "title": "RÉCHAUFFEZ, MANGEZ ET SAVOUREZ",
+      "description": "Aucune préparation. Aucun désordre. Nos repas arrivent prêts à réchauffer et à manger en quelques minutes."
+    }
+  }
 }
