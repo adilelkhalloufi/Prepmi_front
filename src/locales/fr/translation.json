@@ -41,5 +41,33 @@
     "chef_description": "Notre équipe d'experts culinaires crée des repas si délicieux que vous ne croirez pas qu'ils sont sains.",
     "dietitian_title": "CONÇUS PAR DES DIÉTÉTICIENS",
     "dietitian_description": "Nos diététiciens agréés travaillent main dans la main avec notre cuisine pour s'assurer que chaque repas est rempli d'une qualité nutritionnelle premium et scientifiquement prouvée."
+  },
+  "menu": {
+    "badge": "Notre Menu",
+    "title": "REPAS DÉLICIEUX CRÉÉS POUR VOUS",
+    "description": "Explorez notre menu rotatif de repas créés par des chefs et approuvés par des nutritionnistes. Chaque plat est soigneusement conçu pour offrir un goût exceptionnel et une nutrition optimale.",
+    "kcal": "kcal",
+    "protein": "protéine",
+    "mins": "min",
+    "chef_crafted": "Créé par Chef",
+    "vegan": "Végane",
+    "vegetarian": "Végétarien",
+    "gluten_free": "Sans Gluten",
+    "high_protein": "Riche en Protéines",
+    "keto": "Kéto",
+    "spicy": "Épicé",
+    "cta_text": "Prêt à commencer votre parcours santé avec de délicieux repas?"
+  },
+  "reviews": {
+    "badge": "Avis Clients",
+    "title": "AIMÉ PAR LE MAROC",
+    "description": "Découvrez ce que nos clients à travers le Maroc disent de leur expérience de repas sains avec PrepMe.",
+    "morocco": "Maroc",
+    "review1": "PrepMe a transformé mon mode de vie chargé ! Les repas sont incroyablement frais et les saveurs d'inspiration marocaine me rappellent la maison. Parfait pour mon emploi du temps chargé à Casablanca.",
+    "review2": "En tant que professionnel occupé à Rabat, j'avais du mal à manger sainement. Les repas nutritifs de PrepMe ont changé la donne. La qualité et le goût dépassent mes attentes !",
+    "review3": "La variété est incroyable ! Chaque semaine apporte de nouvelles saveurs qui satisfont mon palais. Les touches marocaines traditionnelles dans certains plats me font me sentir connecté à notre belle culture.",
+    "review4": "Vivant à Fès, j'apprécie les saveurs authentiques. PrepMe livre des repas frais et sains qui respectent notre héritage culinaire tout en répondant aux besoins nutritionnels modernes.",
+    "review5": "D'Agadir avec amour ! PrepMe a rendu l'alimentation saine si pratique. Les repas arrivent frais et l'emballage est écologique. Je recommande vivement !",
+    "review6": "Résident de Tanger ici ! Les repas créés par le chef sont de qualité restaurant. Je n'ai jamais aussi bien mangé tout en maintenant mes objectifs de fitness. Simplement exceptionnel !"
   }
 }

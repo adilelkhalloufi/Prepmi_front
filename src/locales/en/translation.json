@@ -41,5 +41,33 @@
     "chef_description": "Our team of culinary experts craft meals so mouthwatering, you won't believe they're healthy.",
     "dietitian_title": "DESIGNED BY DIETITIANS",
     "dietitian_description": "Our registered dietitians work hand-in-hand with our kitchen to ensure every meal is packed with premium, science-backed nutritional quality."
+  },
+  "menu": {
+    "badge": "Our Menu",
+    "title": "DELICIOUS MEALS CRAFTED FOR YOU",
+    "description": "Explore our rotating menu of chef-crafted, nutritionist-approved meals. Each dish is carefully designed to deliver exceptional taste and optimal nutrition.",
+    "kcal": "kcal",
+    "protein": "protein",
+    "mins": "mins",
+    "chef_crafted": "Chef Crafted",
+    "vegan": "Vegan",
+    "vegetarian": "Vegetarian",
+    "gluten_free": "Gluten Free",
+    "high_protein": "High Protein",
+    "keto": "Keto",
+    "spicy": "Spicy",
+    "cta_text": "Ready to start your healthy journey with delicious meals?"
+  },
+  "reviews": {
+    "badge": "Customer Reviews",
+    "title": "LOVED BY MOROCCO",
+    "description": "Discover what our customers across Morocco are saying about their healthy meal experience with PrepMe.",
+    "morocco": "Morocco",
+    "review1": "PrepMe has transformed my busy lifestyle! The meals are incredibly fresh and the Moroccan-inspired flavors remind me of home. Perfect for my hectic schedule in Casablanca.",
+    "review2": "As a busy professional in Rabat, I was struggling to eat healthy. PrepMe's nutritious meals have been a game-changer. The quality and taste exceed my expectations!",
+    "review3": "The variety is amazing! Each week brings new flavors that satisfy my palate. The traditional Moroccan touches in some dishes make me feel connected to our beautiful culture.",
+    "review4": "Living in Fès, I appreciate authentic flavors. PrepMe delivers fresh, healthy meals that respect our culinary heritage while meeting modern nutritional needs.",
+    "review5": "From Agadir with love! PrepMe has made healthy eating so convenient. The meals arrive fresh and the packaging is eco-friendly. Highly recommend!",
+    "review6": "Tanger resident here! The chef-crafted meals are restaurant-quality. I've never eaten so well while maintaining my fitness goals. Simply exceptional!"
   }
 }
