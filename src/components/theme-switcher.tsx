@@ -28,9 +28,9 @@ export default function ThemeSwitcher({ type = "default" }: ThemeSwitcherProps) 
                     onClick={() => setTheme(theme === "light" ? "dark" : "light")}
                 >
                     {theme === "light" ? (
-                        <Moon className="h-5 w-5" />
+                        <Moon className="h-5 w-5 hover:text-primary" />
                     ) : (
-                        <Sun className="h-5 w-5" />
+                        <Sun className="h-5 w-5 hover:text-primary" />
                     )}
                 </Button>
             ) : (

@@ -12,7 +12,7 @@ i18next
   .use(LanguageDetector)
   .use(initReactI18next)
   .init({
-    fallbackLng: "fr",
+    fallbackLng: "en",
     debug: true,
     defaultNS: "ns1",
     resources: {
@@ -26,6 +26,6 @@ i18next
         ns1: arNs1,
       },
     },
-    
+
   });
 export default i18next;

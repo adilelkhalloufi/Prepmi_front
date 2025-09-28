@@ -7,7 +7,7 @@ export function Hero() {
   const { t } = useTranslation();
   const navigator = useNavigate();
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden hero-gradient">
+    <section className="relative  flex items-center justify-center overflow-hidden hero-gradient">
       {/* Animated background elements */}
       <div className="absolute inset-0 opacity-10">
         <div className="absolute top-20 left-10 w-32 h-32 bg-white rounded-full animate-float"></div>
@@ -36,7 +36,7 @@ export function Hero() {
               >
                 {t('hero_get_started')}
               </Button>
-              <Button
+              {/* <Button
                 size="lg"
                 variant="outline"
                 className="border-white text-white hover:bg-white hover:text-primary font-semibold px-8 py-4 text-lg"
@@ -45,7 +45,7 @@ export function Hero() {
                 }}
               >
                 {t('menu_meals')}
-              </Button>
+              </Button> */}
             </div>
           </div>
 
@@ -55,7 +55,7 @@ export function Hero() {
               {/* Main meal image with floating animation */}
               <div className="animate-float">
                 <img
-                  src="/healthy-meal-bowl.jpg"
+                  src="/healthy-meal-bowl.png"
                   alt="Healthy Meal Bowl"
                   className="w-80 h-80 md:w-96 md:h-96 lg:w-[500px] lg:h-[500px] object-cover rounded-full shadow-2xl border-8 border-white/20"
                 />
