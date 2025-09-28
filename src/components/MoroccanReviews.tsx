@@ -80,33 +80,16 @@ export function MoroccanReviews() {
     return (
         <section className="py-16 md:py-24 relative overflow-hidden">
             {/* Moroccan-inspired background */}
-            <div className="absolute inset-0 bg-gradient-to-br from-orange-50 via-red-50 to-amber-50">
-                {/* Geometric patterns inspired by Moroccan tiles */}
-                <div className="absolute inset-0 opacity-10">
-                    <div className="absolute top-0 left-0 w-32 h-32 bg-gradient-to-br from-orange-400 to-red-500 rounded-full transform rotate-45 -translate-x-16 -translate-y-16"></div>
-                    <div className="absolute top-20 right-10 w-24 h-24 bg-gradient-to-br from-amber-400 to-orange-500 transform rotate-12"></div>
-                    <div className="absolute bottom-20 left-20 w-20 h-20 bg-gradient-to-br from-red-400 to-pink-500 rounded-full"></div>
-                    <div className="absolute bottom-0 right-0 w-40 h-40 bg-gradient-to-br from-yellow-400 to-orange-500 transform rotate-45 translate-x-20 translate-y-20"></div>
-                </div>
-
-                {/* Moroccan pattern overlay */}
-                <div className="absolute inset-0 opacity-5">
-                    <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
-                        <defs>
-                            <pattern id="moroccan-pattern" x="0" y="0" width="80" height="80" patternUnits="userSpaceOnUse">
-                                <g fill="#D97706">
-                                    <circle cx="40" cy="40" r="3" />
-                                    <path d="M40 20 L50 30 L40 40 L30 30 Z" />
-                                    <path d="M20 40 L30 50 L40 40 L30 30 Z" />
-                                    <path d="M40 60 L50 50 L40 40 L30 50 Z" />
-                                    <path d="M60 40 L50 50 L40 40 L50 30 Z" />
-                                </g>
-                            </pattern>
-                        </defs>
-                        <rect width="100%" height="100%" fill="url(#moroccan-pattern)" />
-                    </svg>
-                </div>
+            <div
+                className="absolute inset-0 opacity-20"
+                style={{
+                    backgroundImage: 'url(/zlig.png)',
+                    backgroundRepeat: 'repeat',
+                    backgroundSize: 'auto'
+                }}
+            >
             </div>
+            <div className="absolute inset-0 bg-gradient-to-br from-orange-50/70 via-red-50/70 to-amber-50/70"></div>
 
             <div className="container px-4 md:px-6 relative z-10">
                 {/* Header */}
