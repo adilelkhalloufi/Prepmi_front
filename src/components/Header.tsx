@@ -110,7 +110,7 @@ export function Header() {
               </Button>
               <Button
                 onClick={() => {
-                  navigate(webRoutes.register || "/register");
+                  navigate(webRoutes.join_now || "/register");
                 }}
               >
                 {t("menu_get_started")}

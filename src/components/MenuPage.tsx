@@ -14,36 +14,9 @@ import {
     Clock,
     TrendingUp
 } from "lucide-react"
+import { Meal } from "@/interfaces/admin"
 
-interface Meal {
-    name: string;
-    slug: string;
-    description: string;
-    short_description: string;
-    image_path: string;
-    calories: number;
-    protein: number;
-    carbohydrates: number;
-    fats: number;
-    fiber: number;
-    is_vegetarian: boolean;
-    is_vegan: boolean;
-    is_gluten_free: boolean;
-    is_dairy_free: boolean;
-    is_nut_free: boolean;
-    is_keto: boolean;
-    is_paleo: boolean;
-    is_low_carb: boolean;
-    is_high_protein: boolean;
-    is_spicy: boolean;
-    spice_level: number;
-    prep_time_minutes: number;
-    cooking_time_minutes: number;
-    difficulty_level: 'Easy' | 'Medium' | 'Hard';
-    price: number;
-    category: 'weekly' | 'breakfast' | 'drinks';
-    available_date?: string;
-}
+
 
 const mockMeals: Meal[] = [
     // Weekly meals with dates

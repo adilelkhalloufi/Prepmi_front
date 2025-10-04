@@ -58,7 +58,34 @@
     "spicy": "حار",
     "cta_text": "هل أنت مستعد لبدء رحلتك الصحية مع وجبات لذيذة؟",
     "add_to_plan": "إضافة للخطة",
-    "view_full_menu": "عرض القائمة الكاملة"
+    "view_full_menu": "عرض القائمة الكاملة",
+    "fresh_daily": "طازج يومياً",
+    "our_menu": "قائمتنا",
+    "description_page": "اكتشف وجباتنا المحضرة بعناية، المصنوعة بمكونات طازجة والمصممة لتغذية نمط حياتك الصحي.",
+    "weekly_menu": "القائمة الأسبوعية",
+    "breakfasts_snacks": "الإفطار والوجبات الخفيفة",
+    "drinks": "المشروبات",
+    "week_of": "أسبوع",
+    "select_date": "اختر تاريخاً لعرض الوجبات المتاحة",
+    "recipes": "الوصفات",
+    "avg_prep_time": "متوسط وقت التحضير",
+    "satisfaction": "الرضا",
+    "fresh_made": "مصنوع طازج",
+    "no_meals": "لا توجد وجبات متاحة",
+    "no_meals_date": "جرب اختيار تاريخ مختلف",
+    "coming_soon": "المزيد من الخيارات قريباً!",
+    "october": "أكتوبر",
+    "sunday": "الأحد",
+    "monday": "الاثنين",
+    "tuesday": "الثلاثاء",
+    "wednesday": "الأربعاء",
+    "thursday": "الخميس",
+    "friday": "الجمعة",
+    "saturday": "السبت",
+    "daily": "يومياً",
+    "recipes_count": "50+",
+    "avg_time_minutes": "15",
+    "satisfaction_percent": "98%"
   },
   "reviews": {
     "badge": "آراء العملاء",
@@ -135,5 +162,29 @@
     "terms_service": "شروط الخدمة",
     "cookie_settings": "إعدادات ملفات تعريف الارتباط",
     "faq": "الأسئلة الشائعة"
+  },
+
+  "months": {
+    "january": "يناير",
+    "february": "فبراير",
+    "march": "مارس",
+    "april": "أبريل",
+    "may": "مايو",
+    "june": "يونيو",
+    "july": "يوليو",
+    "august": "أغسطس",
+    "september": "سبتمبر",
+    "october": "أكتوبر",
+    "november": "نوفمبر",
+    "december": "ديسمبر"
+  },
+  "days": {
+    "sunday": "الأحد",
+    "monday": "الاثنين",
+    "tuesday": "الثلاثاء",
+    "wednesday": "الأربعاء",
+    "thursday": "الخميس",
+    "friday": "الجمعة",
+    "saturday": "السبت"
   }
 }

@@ -1,6 +1,7 @@
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { useTranslation } from "react-i18next"
+import { useNavigate } from "react-router-dom"
 import {
     Flame,
     Zap,
@@ -11,34 +12,9 @@ import {
     Heart,
     Star
 } from "lucide-react"
+import { Meal } from "@/interfaces/admin";
 
-interface Meal {
-    name: string;
-    slug: string;
-    description: string;
-    short_description: string;
-    image_path: string;
-    calories: number;
-    protein: number;
-    carbohydrates: number;
-    fats: number;
-    fiber: number;
-    is_vegetarian: boolean;
-    is_vegan: boolean;
-    is_gluten_free: boolean;
-    is_dairy_free: boolean;
-    is_nut_free: boolean;
-    is_keto: boolean;
-    is_paleo: boolean;
-    is_low_carb: boolean;
-    is_high_protein: boolean;
-    is_spicy: boolean;
-    spice_level: number;
-    prep_time_minutes: number;
-    cooking_time_minutes: number;
-    difficulty_level: 'Easy' | 'Medium' | 'Hard';
-    price: number;
-}
+
 
 interface MealCardProps {
     meal: Meal;
@@ -46,6 +22,11 @@ interface MealCardProps {
 
 export function MealCard({ meal }: MealCardProps) {
     const { t } = useTranslation();
+    const navigate = useNavigate();
+
+    const handleCardClick = () => {
+        navigate(`/single-product/${meal.id}`);
+    };
 
     const getDietaryIcons = (meal: Meal) => {
         const icons = [];
@@ -68,7 +49,10 @@ export function MealCard({ meal }: MealCardProps) {
     };
 
     return (
-        <Card className="group h-full hover:shadow-2xl hover:shadow-primary/10 transition-all duration-500 border border-border/50 hover:border-primary/30 shadow-lg bg-card/90 dark:bg-card/95 backdrop-blur-sm overflow-hidden hover:-translate-y-1">
+        <Card
+            className="group h-full hover:shadow-2xl hover:shadow-primary/10 transition-all duration-500 border border-border/50 hover:border-primary/30 shadow-lg bg-card/90 dark:bg-card/95 backdrop-blur-sm overflow-hidden hover:-translate-y-1 cursor-pointer"
+            onClick={handleCardClick}
+        >
             {/* Image */}
             <div className="relative h-48 overflow-hidden">
                 <img
@@ -168,7 +152,13 @@ export function MealCard({ meal }: MealCardProps) {
 
                 {/* Action Button */}
                 <div className="mt-4 pt-4 border-t border-border/50">
-                    <button className="w-full bg-gradient-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary text-primary-foreground font-medium py-2 px-4 rounded-lg transition-all duration-300 hover:shadow-lg hover:shadow-primary/25 hover:-translate-y-0.5">
+                    <button
+                        className="w-full bg-gradient-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary text-primary-foreground font-medium py-2 px-4 rounded-lg transition-all duration-300 hover:shadow-lg hover:shadow-primary/25 hover:-translate-y-0.5"
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            // Handle add to plan action here
+                        }}
+                    >
                         {t('menu.add_to_plan')}
                     </button>
                 </div>

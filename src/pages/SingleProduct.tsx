@@ -2,7 +2,7 @@ import i18next from "i18next";
 import { useTranslation } from "react-i18next";
 import { useState } from "react";
 import { Product } from "@/interfaces/admin";
-import { Heart, Package, Tag, CheckCircle, Scale } from "lucide-react";
+import { Heart, Clock, ChefHat, Flame, Leaf, CheckCircle2, AlertCircle } from "lucide-react";
 
 import http from "@/utils/http";
 import { apiRoutes } from "@/routes/api";
@@ -20,24 +20,18 @@ import VendorContact from "@/components/products/VendorContact";
 export const SingleProduct = () => {
   const { t } = useTranslation();
   const { id } = useParams<{ id: string }>();
-  
+
   // State for favorites
   const [isFavorite, setIsFavorite] = useState(false);
 
-   const addToFavorite = (product_id:any)=> {
-    
-
-    http.post(apiRoutes.favoris, {product_id: product_id})
-    .then((res) => {  
-     })
-
-
-
-  
-    
+  const addToFavorite = (product_id: any) => {
+    http.post(apiRoutes.favoris, { product_id: product_id })
+      .then((res) => {
+      })
   }
-  const { isLoading, data: product } = useQuery<Product>({
-    queryKey: ["product"],
+
+  const { isLoading, data: meal } = useQuery<Product>({
+    queryKey: ["meal"],
     queryFn: () =>
       http
         .get<Product>(apiRoutes.product + `/${id}`)
@@ -51,9 +45,21 @@ export const SingleProduct = () => {
         }),
   });
 
+  const getDietaryBadges = (meal: Product) => {
+    const badges = [];
+    if (meal.is_vegetarian) badges.push({ label: "Vegetarian", color: "bg-green-100 text-green-800" });
+    if (meal.is_vegan) badges.push({ label: "Vegan", color: "bg-green-200 text-green-900" });
+    if (meal.is_gluten_free) badges.push({ label: "Gluten Free", color: "bg-blue-100 text-blue-800" });
+    if (meal.is_dairy_free) badges.push({ label: "Dairy Free", color: "bg-purple-100 text-purple-800" });
+    if (meal.is_nut_free) badges.push({ label: "Nut Free", color: "bg-orange-100 text-orange-800" });
+    if (meal.is_keto) badges.push({ label: "Keto", color: "bg-red-100 text-red-800" });
+    if (meal.is_paleo) badges.push({ label: "Paleo", color: "bg-yellow-100 text-yellow-800" });
+    if (meal.is_low_carb) badges.push({ label: "Low Carb", color: "bg-indigo-100 text-indigo-800" });
+    if (meal.is_high_protein) badges.push({ label: "High Protein", color: "bg-pink-100 text-pink-800" });
+    return badges;
+  };
+
   return (
-    // test loading if load show skeleton like single product skeleto
-    // if not show single product
     isLoading ? (
       <ListProductSkeleton />
     ) : (
@@ -61,8 +67,8 @@ export const SingleProduct = () => {
         <div className="grid gap-3 items-start">
           <div className="grid gap-4">
             <img
-              src="/placeholder.svg"
-              alt="Product Image"
+              src={meal?.image_path || "/placeholder.svg"}
+              alt="Meal Image"
               width={600}
               height={900}
               className="aspect-[2/3] object-cover border w-full rounded-lg overflow-hidden"
@@ -111,153 +117,166 @@ export const SingleProduct = () => {
             </div>
           </div>
         </div>
+
         <div className="grid gap-4 md:gap-10 items-start">
           <div className="grid gap-4">
-            <h1 className="font-bold text-3xl lg:text-4xl">{product?.name}</h1>
-            {product?.reference && (
-              <p className="text-sm text-muted-foreground">
-                Reference: <span className="font-mono">{product.reference}</span>
-              </p>
+            <h1 className="font-bold text-3xl lg:text-4xl">{meal?.name}</h1>
+
+            {/* Dietary Badges */}
+            {meal && getDietaryBadges(meal).length > 0 && (
+              <div className="flex flex-wrap gap-2">
+                {getDietaryBadges(meal).map((badge, index) => (
+                  <Badge key={index} className={`${badge.color} border-0`}>
+                    <Leaf className="h-3 w-3 mr-1" />
+                    {badge.label}
+                  </Badge>
+                ))}
+              </div>
             )}
-            
-            {/* Product Attributes Section */}
+
+            {/* Nutritional Information */}
             <div className="grid gap-4 p-4 bg-gray-50 dark:bg-gray-900 rounded-lg border">
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">{t('product.detail')}</h3>
-              
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                {/* Status */}
-                <div className="flex items-center gap-3">
-                  <CheckCircle className="h-5 w-5 text-green-600" />
-                  <div className="flex items-center gap-2">
-                    <span className="text-sm font-medium text-gray-700 dark:text-gray-300">{t('product.status')}</span>
-                    <Badge 
-                      variant={product?.status?.color === "destructive" ? "destructive" : "default"}
-                      className="font-medium"
-                    >
-                      {typeof product?.status?.name === 'object' 
-                        ? product?.status?.name?.[i18next.language] || product?.status?.name?.en || "Available"
-                        : product?.status?.name || "Available"}
-                    </Badge>
-                  </div>
-                </div>
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">Nutritional Information</h3>
 
-                {/* Category */}
-                <div className="flex items-center gap-3">
-                  <Tag className="h-5 w-5 text-blue-600" />
-                  <div className="flex items-center gap-2">
-                    <span className="text-sm font-medium text-gray-700 dark:text-gray-300"> {t('product.categorie')}</span>
-                    <Badge variant="secondary" className="font-medium">
-                      {typeof product?.categorie?.name === 'object' 
-                        ? product?.categorie?.name?.[i18next.language] || product?.categorie?.name?.en || "N/A"
-                        : product?.categorie?.name || "N/A"}
-                    </Badge>
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                {meal?.calories && (
+                  <div className="text-center p-3 bg-white dark:bg-gray-800 rounded-lg">
+                    <Flame className="h-6 w-6 text-orange-500 mx-auto mb-1" />
+                    <div className="text-2xl font-bold text-gray-900 dark:text-gray-100">{meal.calories}</div>
+                    <div className="text-sm text-gray-600 dark:text-gray-400">Calories</div>
                   </div>
-                </div>
-
-                {/* Quantity */}
-                <div className="flex items-center gap-3">
-                  <Package className="h-5 w-5 text-orange-600" />
-                  <div className="flex items-center gap-2">
-                    <span className="text-sm font-medium text-gray-700 dark:text-gray-300">{t('product.qte')}</span>
-                    <Badge variant="outline" className="font-medium">
-                      {product?.quantity || product?.qte || 0}
-                    </Badge>
+                )}
+                {meal?.protein && (
+                  <div className="text-center p-3 bg-white dark:bg-gray-800 rounded-lg">
+                    <div className="text-2xl font-bold text-gray-900 dark:text-gray-100">{meal.protein}g</div>
+                    <div className="text-sm text-gray-600 dark:text-gray-400">Protein</div>
                   </div>
-                </div>
-
-                {/* Unit */}
-                <div className="flex items-center gap-3">
-                  <Scale className="h-5 w-5 text-purple-600" />
-                  <div className="flex items-center gap-2">
-                    <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Unit:</span>
-                    <Badge variant="outline" className="font-medium">
-                      {typeof product?.unite?.name === 'object' 
-                        ? product?.unite?.name?.[i18next.language] || product?.unite?.name?.en || "Unit"
-                        : product?.unite?.name || "Unit"}
-                    </Badge>
+                )}
+                {meal?.carbohydrates && (
+                  <div className="text-center p-3 bg-white dark:bg-gray-800 rounded-lg">
+                    <div className="text-2xl font-bold text-gray-900 dark:text-gray-100">{meal.carbohydrates}g</div>
+                    <div className="text-sm text-gray-600 dark:text-gray-400">Carbs</div>
                   </div>
-                </div>
+                )}
+                {meal?.fats && (
+                  <div className="text-center p-3 bg-white dark:bg-gray-800 rounded-lg">
+                    <div className="text-2xl font-bold text-gray-900 dark:text-gray-100">{meal.fats}g</div>
+                    <div className="text-sm text-gray-600 dark:text-gray-400">Fats</div>
+                  </div>
+                )}
               </div>
             </div>
 
-            <div>
-              <p></p>
-            </div>
-            {/* <div className="flex items-center gap-4">
-              <div className="flex items-center gap-0.5">
-                <StarIcon className="w-5 h-5 fill-primary" />
-                <StarIcon className="w-5 h-5 fill-primary" />
-                <StarIcon className="w-5 h-5 fill-primary" />
-                <StarIcon className="w-5 h-5 fill-muted stroke-muted-foreground" />
-                <StarIcon className="w-5 h-5 fill-muted stroke-muted-foreground" />
+            {/* Preparation Details */}
+            <div className="grid gap-4 p-4 bg-gray-50 dark:bg-gray-900 rounded-lg border">
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">Preparation Details</h3>
+
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                {meal?.prep_time_minutes && (
+                  <div className="flex items-center gap-3">
+                    <Clock className="h-5 w-5 text-blue-600" />
+                    <div>
+                      <div className="text-sm font-medium text-gray-700 dark:text-gray-300">Prep Time</div>
+                      <div className="text-lg font-bold">{meal.prep_time_minutes} min</div>
+                    </div>
+                  </div>
+                )}
+                {meal?.cooking_time_minutes && (
+                  <div className="flex items-center gap-3">
+                    <ChefHat className="h-5 w-5 text-green-600" />
+                    <div>
+                      <div className="text-sm font-medium text-gray-700 dark:text-gray-300">Cook Time</div>
+                      <div className="text-lg font-bold">{meal.cooking_time_minutes} min</div>
+                    </div>
+                  </div>
+                )}
+                {meal?.difficulty_level && (
+                  <div className="flex items-center gap-3">
+                    <CheckCircle2 className="h-5 w-5 text-purple-600" />
+                    <div>
+                      <div className="text-sm font-medium text-gray-700 dark:text-gray-300">Difficulty</div>
+                      <Badge variant="outline" className="font-medium">
+                        {meal.difficulty_level}
+                      </Badge>
+                    </div>
+                  </div>
+                )}
               </div>
-              <div className="text-sm text-muted-foreground">(12 reviews)</div>
-            </div> */}
+
+              {/* Spice Level */}
+              {meal?.is_spicy && meal?.spice_level && (
+                <div className="flex items-center gap-3 pt-2 border-t">
+                  <AlertCircle className="h-5 w-5 text-red-600" />
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Spice Level:</span>
+                    <div className="flex gap-1">
+                      {[1, 2, 3, 4, 5].map((level) => (
+                        <Flame
+                          key={level}
+                          className={`h-4 w-4 ${level <= meal.spice_level ? 'text-red-500' : 'text-gray-300'}`}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+
             <div className="text-4xl font-bold">
-              {" "}
-              {product.price} {t("currency")}{" "}
+              {meal?.price} {t("currency")}
             </div>
           </div>
 
           <Separator />
           <div className="grid gap-4 text-sm leading-loose">
-            {product?.description}
+            {meal?.description}
           </div>
+
           <form className="grid gap-4 md:gap-10">
             <div className="flex flex-col sm:flex-row gap-3">
               <Button size="lg" className="flex-1">
-                {t("product.command")}
+                Order Meal
               </Button>
-              <Button 
-                size="lg" 
-                variant={isFavorite ? "default" : "outline"} 
+              <Button
+                size="lg"
+                variant={isFavorite ? "default" : "outline"}
                 className={`flex items-center gap-2 ${isFavorite ? 'bg-red-600 hover:bg-red-700' : ''}`}
                 onClick={(e) => {
                   e.preventDefault();
                   setIsFavorite(!isFavorite);
-                  addToFavorite(product.id)         
-
+                  addToFavorite(meal?.id)
                 }}
                 type="button"
               >
                 <Heart className={`h-4 w-4 ${isFavorite ? 'fill-white' : ''}`} />
-                {isFavorite ? <>{t("product.added_to_fav")}</> : t("product.add_to_fav")}
+                {isFavorite ? "Added to Favorites" : "Add to Favorites"}
               </Button>
             </div>
           </form>
-          
+
           {/* Vendor Contact Section */}
-          {product?.user && (
+          {meal?.user && (
             <div className="grid gap-4">
-              <VendorContact vendor={product.user} productId={product.id} />
+              <VendorContact vendor={meal.user} productId={meal.id} />
             </div>
           )}
-          
-          {/* <div className="grid gap-4">
-            <h2 className="font-bold text-lg">Customer Reviews</h2>
-         <ReviewCustomer/>
-         <ReviewCustomer/>
 
-          
-          </div> */}
           <div className="grid gap-4">
-            <h2 className="font-bold text-lg">{t("product.related")}</h2>
+            <h2 className="font-bold text-lg">Related Meals</h2>
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-              {product?.relatedProducts?.length > 0 ? (
-                product.relatedProducts.map((relatedProduct) => (
-                  
-                  <RelatedProduct key={relatedProduct.id} product={relatedProduct} />
+              {meal?.relatedProducts?.length > 0 ? (
+                meal.relatedProducts.map((relatedMeal) => (
+                  <RelatedProduct key={relatedMeal.id} product={relatedMeal} />
                 ))
               ) : (
-                <p className="text-muted-foreground">{t("product.no_related_products")}</p>
+                <p className="text-muted-foreground">No related meals found</p>
               )}
-             </div>
+            </div>
           </div>
         </div>
       </div>
     )
   );
-        
-  
 };
+
 export default SingleProduct;

@@ -58,7 +58,34 @@
     "spicy": "Épicé",
     "cta_text": "Prêt à commencer votre parcours santé avec des repas délicieux?",
     "add_to_plan": "Ajouter au Plan",
-    "view_full_menu": "Voir le Menu Complet"
+    "view_full_menu": "Voir le Menu Complet",
+    "fresh_daily": "Frais Quotidien",
+    "our_menu": "Notre Menu",
+    "description_page": "Découvrez nos repas soigneusement préparés, faits avec des ingrédients frais et conçus pour alimenter votre style de vie sain.",
+    "weekly_menu": "Menu Hebdomadaire",
+    "breakfasts_snacks": "Petits-Déjeuners et Collations",
+    "drinks": "Boissons",
+    "week_of": "Semaine du",
+    "select_date": "Sélectionnez une date pour voir les repas disponibles",
+    "recipes": "Recettes",
+    "avg_prep_time": "Temps Moyen de Préparation",
+    "satisfaction": "Satisfaction",
+    "fresh_made": "Fait Frais",
+    "no_meals": "Aucun repas disponible",
+    "no_meals_date": "Essayez de sélectionner une date différente",
+    "coming_soon": "Plus d'options bientôt !",
+    "october": "Octobre",
+    "sunday": "Dimanche",
+    "monday": "Lundi",
+    "tuesday": "Mardi",
+    "wednesday": "Mercredi",
+    "thursday": "Jeudi",
+    "friday": "Vendredi",
+    "saturday": "Samedi",
+    "daily": "Quotidien",
+    "recipes_count": "50+",
+    "avg_time_minutes": "15",
+    "satisfaction_percent": "98%"
   },
   "reviews": {
     "badge": "Avis Clients",
@@ -135,5 +162,29 @@
     "terms_service": "Conditions d'Utilisation",
     "cookie_settings": "Paramètres des Cookies",
     "faq": "FAQ"
+  },
+
+  "months": {
+    "january": "Janvier",
+    "february": "Février",
+    "march": "Mars",
+    "april": "Avril",
+    "may": "Mai",
+    "june": "Juin",
+    "july": "Juillet",
+    "august": "Août",
+    "september": "Septembre",
+    "october": "Octobre",
+    "november": "Novembre",
+    "december": "Décembre"
+  },
+  "days": {
+    "sunday": "Dimanche",
+    "monday": "Lundi",
+    "tuesday": "Mardi",
+    "wednesday": "Mercredi",
+    "thursday": "Jeudi",
+    "friday": "Vendredi",
+    "saturday": "Samedi"
   }
 }

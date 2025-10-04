@@ -5,7 +5,7 @@ export interface Admin {
     favoris?: Favoris[]
 }
 export interface Favoris {
-    id?:any
+    id?: any
 }
 
 export interface Specialitie {
@@ -15,7 +15,7 @@ export interface Specialitie {
     description?: string
 }
 export interface Cart {
-    products: Product[]
+    products: Meal[]
 }
 export interface RegisterForm {
 
@@ -84,10 +84,10 @@ export interface Unite {
     slug?: string
     description?: string
 }
- export interface Order {
+export interface Order {
     id: any
     user?: User
-    product?: Product
+    product?: Meal
     quantity: number
     price: number
     note?: string
@@ -114,27 +114,54 @@ export interface Status {
     color?: "default" | "secondary" | "destructive" | "outline"
 }
 export interface Product {
-
     id: any
     name: any
     image?: string
-    reference?: string
+    available_date?: string
+    slug?: string
     description?: string
+    short_description?: string
+    image_path?: string
     price: number
     coins_cost?: number
     quantity: number
     qte: number
+
+    // Nutritional information
+    calories?: number
+    protein?: number
+    carbohydrates?: number
+    fats?: number
+    fiber?: number
+
+    // Dietary flags
+    is_vegetarian?: boolean
+    is_vegan?: boolean
+    is_gluten_free?: boolean
+    is_dairy_free?: boolean
+    is_nut_free?: boolean
+    is_keto?: boolean
+    is_paleo?: boolean
+    is_low_carb?: boolean
+    is_high_protein?: boolean
+    is_spicy?: boolean
+    spice_level?: number
+
+    // Preparation details
+    prep_time_minutes?: number
+    cooking_time_minutes?: number
+    difficulty_level?: 'Easy' | 'Medium' | 'Hard'
+
+    // Meal category and tags
+    category?: string
+    tags?: string[]
+
+    // E-commerce fields
     categorie?: Categorie
     unite?: Unite
     user?: User
     status?: Status
-        status_id?: number
-
-    availability_status?: string
-    auction?: string
-    date_end_auction?: Date
-    conditions_document?: string
-    conditions_document_price?: number
+    status_id?: number
     show_company?: boolean
     favaris?: boolean
     relatedProducts?: Product[]
@@ -146,3 +173,36 @@ export interface FormModalProps {
 }
 
 
+
+
+export interface Meal {
+    available_date?: string
+    name?: string;
+    slug?: string;
+    description?: string;
+    short_description?: string;
+    image_path?: string;
+    calories?: number;
+    protein?: number;
+    carbohydrates?: number;
+    fats?: number;
+    fiber?: number;
+    is_vegetarian?: boolean;
+    is_vegan?: boolean;
+    is_gluten_free?: boolean;
+    is_dairy_free?: boolean;
+    is_nut_free?: boolean;
+    is_keto?: boolean;
+    is_paleo?: boolean;
+    is_low_carb?: boolean;
+    is_high_protein?: boolean;
+    is_spicy?: boolean;
+    spice_level?: number;
+    prep_time_minutes?: number;
+    cooking_time_minutes?: number;
+    difficulty_level?: 'Easy' | 'Medium' | 'Hard';
+    price?: number;
+    category?: string;
+    tags?: string[];
+
+}

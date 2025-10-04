@@ -4,7 +4,6 @@ import ErrorPage from "@/components/errors/general-error";
 import LayoutLanding from "@/components/landing/LayoutLanding";
 import loadable from "@loadable/component";
 import ProgressBar from "@/components/loader/progressBar";
-import SingleProduct from "@/pages/SingleProduct";
 import SignIn from "@/pages/SignIn";
 import RequireAuth from "./requireAuth";
 import Layout from "@/components/dashboard/layout";
@@ -16,6 +15,7 @@ import PrivacyPolicy from "@/pages/privacy-policy";
 import TermsOfService from "@/pages/terms-of-service";
 import CookieSettings from "@/pages/cookie-settings";
 import { MenuPage } from "@/components/MenuPage";
+import JoinNow from "@/pages/join-now";
 
 
 const fallbackElement = <ProgressBar />;
@@ -61,6 +61,10 @@ export const browserRouter = createBrowserRouter([
       {
         path: webRoutes.menu,
         element: <MenuPage />,
+      },
+      {
+        path: webRoutes.join_now,
+        element: <JoinNow />,
       },
       {
         path: webRoutes.register,
