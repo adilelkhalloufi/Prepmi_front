@@ -56,14 +56,16 @@
     "high_protein": "Riche en Protéines",
     "keto": "Kéto",
     "spicy": "Épicé",
-    "cta_text": "Prêt à commencer votre parcours santé avec de délicieux repas?"
+    "cta_text": "Prêt à commencer votre parcours santé avec des repas délicieux?",
+    "add_to_plan": "Ajouter au Plan",
+    "view_full_menu": "Voir le Menu Complet"
   },
   "reviews": {
     "badge": "Avis Clients",
     "title": "AIMÉ PAR LE MAROC",
     "description": "Découvrez ce que nos clients à travers le Maroc disent de leur expérience de repas sains avec PrepMe.",
     "morocco": "Maroc",
-    "review1": "PrepMe a transformé mon mode de vie chargé ! Les repas sont incroyablement frais et les saveurs d'inspiration marocaine me rappellent la maison. Parfait pour mon emploi du temps chargé à Casablanca.",
+    "review1": "PrepMe a transformé mon mode de vie chargé ! Les repas sont incroyablement frais et les saveurs d'inspiration marocaine me rappellent la maison. Parfait pour mon emploi du temps chargé à Rabat.",
     "review2": "En tant que professionnel occupé à Rabat, j'avais du mal à manger sainement. Les repas nutritifs de PrepMe ont changé la donne. La qualité et le goût dépassent mes attentes !",
     "review3": "La variété est incroyable ! Chaque semaine apporte de nouvelles saveurs qui satisfont mon palais. Les touches marocaines traditionnelles dans certains plats me font me sentir connecté à notre belle culture.",
     "review4": "Vivant à Fès, j'apprécie les saveurs authentiques. PrepMe livre des repas frais et sains qui respectent notre héritage culinaire tout en répondant aux besoins nutritionnels modernes.",
@@ -73,7 +75,7 @@
   "about": {
     "badge": "Notre Histoire",
     "title": "DE NOTRE CUISINE À LA VÔTRE",
-    "story_opening": "Notre histoire a commencé avec un rêve simple au Maroc. Une petite cuisine à Casablanca et une faim de quelque chose de plus. Deux entrepreneurs passionnés avec une famille très soutenante derrière eux.",
+    "story_opening": "Notre histoire a commencé avec un rêve simple au Maroc. Une petite cuisine à Rabat et une faim de quelque chose de plus. Deux entrepreneurs passionnés avec une famille très soutenante derrière eux.",
     "story_problem": "Nous avons remarqué à quel point il était difficile pour les professionnels occupés de maintenir un mode de vie sain. De longues heures de travail, peu de temps pour la préparation des repas, et le manque d'options nutritives et pratiques dans notre beau Maroc.",
     "story_solution": "Alors nous avons pris les recettes traditionnelles de notre grand-mère, les avons combinées avec la science nutritionnelle moderne, et avons créé PrepMe. Nous avons commencé petit, cuisinant des repas frais dans notre cuisine familiale et les livrant à des amis et collègues.",
     "story_growth": "La nouvelle s'est répandue rapidement. Bientôt nous servions des centaines, puis des milliers de personnes à travers le Maroc. La demande était incroyable - les gens avaient faim de repas sains et délicieux qui honoraient notre héritage culinaire.",
@@ -121,7 +123,7 @@
     "moroccan_classics": "Classiques Marocains",
     "low_carb": "Faible en Glucides",
     "contact_support": "Contact et Support",
-    "address": "Casablanca, Maroc",
+    "address": "Rabat, Maroc",
     "phone_number": "+212 5XX-XXXXXX",
     "email_address": "bonjour@prepme.ma",
     "hours": "Lun-Ven: 8h-20h",

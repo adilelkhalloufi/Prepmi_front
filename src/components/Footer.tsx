@@ -1,9 +1,5 @@
-import * as React from "react"
 import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Switch } from "@/components/ui/switch"
-import { Textarea } from "@/components/ui/textarea"
+
 import {
   Tooltip,
   TooltipContent,
@@ -15,6 +11,8 @@ import { useTranslation } from "react-i18next"
 import { Link } from "react-router-dom"
 import { webRoutes } from "@/routes/web"
 import ThemeSwitcher from "./theme-switcher"
+import logo from "../assets/Prepme.svg";
+
 
 export default function Footer() {
   const { t } = useTranslation()
@@ -24,7 +22,7 @@ export default function Footer() {
       <div className="container mx-auto px-4 py-12 md:px-6 lg:px-8">
         <div className="grid gap-12 md:grid-cols-2 lg:grid-cols-4">
           <div className="relative">
-            <h2 className="mb-4 text-3xl font-bold tracking-tight">{t('website')}</h2>
+            <img src={logo} alt="Prepme" className="h-10 mb-4" />
             <p className="mb-6 text-muted-foreground">
               {t('footer.company_description')}
             </p>

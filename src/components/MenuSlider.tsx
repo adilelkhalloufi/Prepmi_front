@@ -20,6 +20,7 @@ import {
     Heart,
     Star
 } from "lucide-react"
+import { MealCard } from "./MealCard"
 
 interface Meal {
     name: string;
@@ -164,37 +165,24 @@ const mockMeals: Meal[] = [
 export function MenuSlider() {
     const { t } = useTranslation();
 
-    const getDietaryIcons = (meal: Meal) => {
-        const icons = [];
-        if (meal.is_vegan) icons.push({ icon: <Leaf className="w-3 h-3" />, label: t('menu.vegan'), color: "bg-green-100 text-green-700" });
-        else if (meal.is_vegetarian) icons.push({ icon: <Leaf className="w-3 h-3" />, label: t('menu.vegetarian'), color: "bg-green-100 text-green-700" });
-        if (meal.is_gluten_free) icons.push({ icon: <Wheat className="w-3 h-3" />, label: t('menu.gluten_free'), color: "bg-yellow-100 text-yellow-700" });
-        if (meal.is_high_protein) icons.push({ icon: <Zap className="w-3 h-3" />, label: t('menu.high_protein'), color: "bg-blue-100 text-blue-700" });
-        if (meal.is_keto) icons.push({ icon: <Heart className="w-3 h-3" />, label: t('menu.keto'), color: "bg-purple-100 text-purple-700" });
-        if (meal.is_spicy) icons.push({ icon: <Flame className="w-3 h-3" />, label: t('menu.spicy'), color: "bg-red-100 text-red-700" });
-        return icons.slice(0, 3); // Show max 3 badges
-    };
-
-    const getDifficultyColor = (difficulty: string) => {
-        switch (difficulty) {
-            case 'Easy': return 'bg-green-100 text-green-700';
-            case 'Medium': return 'bg-yellow-100 text-yellow-700';
-            case 'Hard': return 'bg-red-100 text-red-700';
-            default: return 'bg-gray-100 text-gray-700';
-        }
-    };
-
     return (
-        <section className="py-16 md:py-24 bg-gradient-to-br from-background to-muted/20">
-            <div className="container px-4 md:px-6">
+        <section className="py-16 md:py-24 bg-gradient-to-br from-background via-background to-muted/30 relative overflow-hidden">
+            {/* Background decoration */}
+            <div className="absolute inset-0 bg-grid-black/[0.02] dark:bg-grid-white/[0.02]" />
+            <div className="absolute top-1/4 right-1/4 w-96 h-96 bg-primary/5 rounded-full blur-3xl" />
+            <div className="absolute bottom-1/4 left-1/4 w-96 h-96 bg-secondary/5 rounded-full blur-3xl" />
+
+            <div className="container px-4 md:px-6 relative">
                 {/* Header */}
                 <div className="text-center mb-16">
-                    <div className="inline-block mb-6">
-                        <span className="text-sm font-semibold tracking-wider text-primary uppercase bg-primary/10 px-4 py-2 rounded-full">
+                    <div className="inline-flex items-center gap-2 mb-6">
+                        <span className="w-2 h-2 bg-primary rounded-full animate-pulse"></span>
+                        <span className="text-sm font-semibold tracking-wider text-primary uppercase bg-primary/10 px-4 py-2 rounded-full border border-primary/20">
                             {t('menu.badge')}
                         </span>
+                        <span className="w-2 h-2 bg-secondary rounded-full animate-pulse"></span>
                     </div>
-                    <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-foreground mb-4 leading-tight">
+                    <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold bg-gradient-to-r from-foreground via-foreground to-foreground/70 bg-clip-text text-transparent mb-4 leading-tight">
                         {t('menu.title')}
                     </h2>
                     <p className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
@@ -214,94 +202,28 @@ export function MenuSlider() {
                         <CarouselContent className="-ml-2 md:-ml-4">
                             {mockMeals.map((meal, index) => (
                                 <CarouselItem key={index} className="pl-2 md:pl-4 md:basis-1/2 lg:basis-1/3">
-                                    <Card className="group h-full hover:shadow-xl transition-all duration-300 border-0 shadow-lg bg-card/80 backdrop-blur-sm overflow-hidden">
-                                        {/* Image */}
-                                        <div className="relative h-48 overflow-hidden">
-                                            <img
-                                                src={meal.image_path}
-                                                alt={meal.name}
-                                                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                                            />
-                                            <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-
-                                            {/* Price Badge */}
-                                            <div className="absolute top-4 right-4">
-                                                <Badge className="bg-primary text-primary-foreground font-semibold px-3 py-1 hover:!bg-primary hover:!text-primary-foreground">
-                                                    ${meal.price}
-                                                </Badge>
-                                            </div>
-
-                                            {/* Difficulty Badge */}
-                                            <div className="absolute top-4 left-4">
-                                                <Badge className={`${getDifficultyColor(meal.difficulty_level)} font-medium px-2 py-1 text-xs pointer-events-none`}>
-                                                    <ChefHat className="w-3 h-3 mr-1" />
-                                                    {meal.difficulty_level}
-                                                </Badge>
-                                            </div>
-                                        </div>
-
-                                        <CardContent className="p-6">
-                                            {/* Meal Name */}
-                                            <h3 className="font-bold text-lg mb-2 text-foreground group-hover:text-primary transition-colors">
-                                                {meal.name}
-                                            </h3>
-
-                                            {/* Short Description */}
-                                            <p className="text-muted-foreground text-sm mb-4 line-clamp-2">
-                                                {meal.short_description}
-                                            </p>
-
-                                            {/* Nutrition Info */}
-                                            <div className="flex items-center justify-between mb-4 p-3 bg-muted/50 rounded-lg">
-                                                <div className="flex items-center space-x-4 text-sm">
-                                                    <div className="flex items-center space-x-1">
-                                                        <Flame className="w-4 h-4 text-orange-500" />
-                                                        <span className="font-semibold">{meal.calories}</span>
-                                                        <span className="text-muted-foreground text-xs">{t('menu.kcal')}</span>
-                                                    </div>
-                                                    <div className="flex items-center space-x-1">
-                                                        <Zap className="w-4 h-4 text-blue-500" />
-                                                        <span className="font-semibold">{meal.protein}g</span>
-                                                        <span className="text-muted-foreground text-xs">{t('menu.protein')}</span>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            {/* Dietary Badges */}
-                                            <div className="flex flex-wrap gap-1 mb-4">
-                                                {getDietaryIcons(meal).map((item, i) => (
-                                                    <Badge key={i} className={`${item.color} font-medium px-2 py-1 text-xs flex items-center space-x-1 pointer-events-none`}>
-                                                        {item.icon}
-                                                        <span>{item.label}</span>
-                                                    </Badge>
-                                                ))}
-                                            </div>
-
-                                            {/* Time Info */}
-                                            <div className="flex items-center justify-between text-xs text-muted-foreground">
-                                                <div className="flex items-center space-x-1">
-                                                    <Clock className="w-3 h-3" />
-                                                    <span>{meal.prep_time_minutes + meal.cooking_time_minutes} {t('menu.mins')}</span>
-                                                </div>
-                                                <div className="flex items-center space-x-1">
-                                                    <Star className="w-3 h-3 text-yellow-500" />
-                                                    <span>{t('menu.chef_crafted')}</span>
-                                                </div>
-                                            </div>
-                                        </CardContent>
-                                    </Card>
+                                    <MealCard meal={meal} />
                                 </CarouselItem>
                             ))}
                         </CarouselContent>
-                        <CarouselPrevious className="left-4" />
-                        <CarouselNext className="right-4" />
+                        <CarouselPrevious className="left-4 bg-primary/10 border-primary/20 text-primary hover:bg-primary hover:text-primary-foreground" />
+                        <CarouselNext className="right-4 bg-primary/10 border-primary/20 text-primary hover:bg-primary hover:text-primary-foreground" />
                     </Carousel>
                 </div>
 
                 {/* Bottom CTA */}
-                <div className="text-center mt-12">
-                    <p className="text-muted-foreground mb-4">{t('menu.cta_text')}</p>
-                    <div className="w-24 h-1 bg-gradient-to-r from-primary to-primary/60 mx-auto rounded-full"></div>
+                <div className="text-center mt-16">
+                    <p className="text-muted-foreground mb-6 text-lg">{t('menu.cta_text')}</p>
+                    <div className="flex items-center justify-center space-x-4 mb-4">
+                        <div className="w-16 h-1 bg-gradient-to-r from-transparent to-primary rounded-full"></div>
+                        <div className="w-3 h-3 bg-primary rounded-full animate-pulse"></div>
+                        <div className="w-16 h-1 bg-gradient-to-r from-primary via-secondary to-transparent rounded-full"></div>
+                        <div className="w-3 h-3 bg-secondary rounded-full animate-pulse"></div>
+                        <div className="w-16 h-1 bg-gradient-to-r from-secondary to-transparent rounded-full"></div>
+                    </div>
+                    <button className="bg-gradient-to-r from-primary to-secondary hover:from-primary/90 hover:to-secondary/90 text-primary-foreground font-bold py-3 px-8 rounded-full transition-all duration-300 hover:shadow-lg hover:shadow-primary/25 hover:-translate-y-1">
+                        {t('menu.view_full_menu')}
+                    </button>
                 </div>
             </div>
         </section>

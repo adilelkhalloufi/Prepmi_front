@@ -38,22 +38,23 @@ export function HowItWorks() {
       icon: <IconToolsKitchen2 className="w-8 h-8 text-white" />,
       title: t('how_it_works.step1.title'),
       description: t('how_it_works.step1.description'),
-      gradient: "from-emerald-500 to-teal-600",
-      iconBg: "bg-gradient-to-br from-emerald-400 to-teal-500"
+      gradient: "from-primary to-primary/80",
+      iconBg: "bg-gradient-to-br from-primary to-primary/90"
     },
     {
       icon: <IconChefHat className="w-8 h-8 text-white" />,
       title: t('how_it_works.step2.title'),
       description: t('how_it_works.step2.description'),
-      gradient: "from-orange-500 to-red-600",
-      iconBg: "bg-gradient-to-br from-orange-400 to-red-500"
+      gradient: "from-primary to-secondary",
+      iconBg: "bg-gradient-to-br from-primary/80 to-secondary/80"
     },
     {
       icon: <IconFlame className="w-8 h-8 text-white" />,
       title: t('how_it_works.step3.title'),
       description: t('how_it_works.step3.description'),
-      gradient: "from-purple-500 to-pink-600",
-      iconBg: "bg-gradient-to-br from-purple-400 to-pink-500"
+      gradient: "from-secondary to-secondary/80",
+      iconBg: "bg-gradient-to-br from-secondary to-secondary/90"
+
     },
   ];
 
@@ -97,7 +98,7 @@ export function HowItWorks() {
                 {/* Step card */}
                 <div className="relative bg-card/50 backdrop-blur-sm border border-border/50 rounded-2xl p-8 text-center hover:shadow-2xl hover:shadow-primary/10 transition-all duration-500 hover:-translate-y-2 group">
                   {/* Step number */}
-                  <div className={`absolute ${step.iconBg}  text-white   -top-4 left-8 bg-background border border-border rounded-full w-8 h-8 flex items-center justify-center text-sm font-bold text-muted-foreground`}>
+                  <div className={`absolute ${step.iconBg} text-white -top-4 left-8 bg-background dark:bg-card border border-border rounded-full w-8 h-8 flex items-center justify-center text-sm font-bold text-muted-foreground`}>
                     {i + 1}
                   </div>
 

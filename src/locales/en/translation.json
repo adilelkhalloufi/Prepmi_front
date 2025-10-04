@@ -56,14 +56,16 @@
     "high_protein": "High Protein",
     "keto": "Keto",
     "spicy": "Spicy",
-    "cta_text": "Ready to start your healthy journey with delicious meals?"
+    "cta_text": "Ready to start your healthy journey with delicious meals?",
+    "add_to_plan": "Add to Plan",
+    "view_full_menu": "View Full Menu"
   },
   "reviews": {
     "badge": "Customer Reviews",
     "title": "LOVED BY MOROCCO",
     "description": "Discover what our customers across Morocco are saying about their healthy meal experience with PrepMe.",
     "morocco": "Morocco",
-    "review1": "PrepMe has transformed my busy lifestyle! The meals are incredibly fresh and the Moroccan-inspired flavors remind me of home. Perfect for my hectic schedule in Casablanca.",
+    "review1": "PrepMe has transformed my busy lifestyle! The meals are incredibly fresh and the Moroccan-inspired flavors remind me of home. Perfect for my hectic schedule in Rabat.",
     "review2": "As a busy professional in Rabat, I was struggling to eat healthy. PrepMe's nutritious meals have been a game-changer. The quality and taste exceed my expectations!",
     "review3": "The variety is amazing! Each week brings new flavors that satisfy my palate. The traditional Moroccan touches in some dishes make me feel connected to our beautiful culture.",
     "review4": "Living in Fès, I appreciate authentic flavors. PrepMe delivers fresh, healthy meals that respect our culinary heritage while meeting modern nutritional needs.",
@@ -73,7 +75,7 @@
   "about": {
     "badge": "Our Story",
     "title": "FROM OUR KITCHEN TO YOURS",
-    "story_opening": "Our story started with a simple dream in Morocco. A small kitchen in Casablanca and a hunger for something more. Two passionate entrepreneurs with a very supportive family behind them.",
+    "story_opening": "Our story started with a simple dream in Morocco. A small kitchen in Rabat and a hunger for something more. Two passionate entrepreneurs with a very supportive family behind them.",
     "story_problem": "We noticed how difficult it was for busy professionals to maintain a healthy lifestyle. Long work hours, limited time for meal prep, and the lack of nutritious, convenient options in our beautiful Morocco.",
     "story_solution": "So we took our grandmother's traditional recipes, combined them with modern nutritional science, and created PrepMe. We started small, cooking fresh meals in our home kitchen and delivering them to friends and colleagues.",
     "story_growth": "Word spread quickly. Soon we were serving hundreds, then thousands across Morocco. The demand was incredible - people were hungry for healthy, delicious meals that honored our culinary heritage.",
@@ -121,7 +123,7 @@
     "moroccan_classics": "Moroccan Classics",
     "low_carb": "Low Carb",
     "contact_support": "Contact & Support",
-    "address": "Casablanca, Morocco",
+    "address": "Rabat, Morocco",
     "phone_number": "+212 5XX-XXXXXX",
     "email_address": "hello@prepme.ma",
     "hours": "Mon-Fri: 8AM-8PM",

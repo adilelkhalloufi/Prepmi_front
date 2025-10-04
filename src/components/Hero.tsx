@@ -7,14 +7,14 @@ export function Hero() {
   const { t } = useTranslation();
   const navigator = useNavigate();
   return (
-    <section className="relative  flex items-center justify-center overflow-hidden hero-gradient">
+    <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-background">
+      {/* Background with gradient overlay */}
+      <div className="absolute inset-0 bg-grid-black/[0.02] dark:bg-grid-white/[0.02]" />
+      <div className="absolute inset-0 hero-gradient-overlay" />
+
       {/* Animated background elements */}
-      <div className="absolute inset-0 opacity-10">
-        <div className="absolute top-20 left-10 w-32 h-32 bg-white rounded-full animate-float"></div>
-        <div className="absolute top-40 right-20 w-24 h-24 bg-white rounded-full animate-float-delay"></div>
-        <div className="absolute bottom-32 left-1/4 w-20 h-20 bg-white rounded-full animate-bounce-slow"></div>
-        <div className="absolute bottom-20 right-1/3 w-28 h-28 bg-white rounded-full animate-pulse-slow"></div>
-      </div>
+      <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary/10 dark:bg-primary/5 rounded-full blur-3xl animate-float" />
+      <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-secondary/10 dark:bg-secondary/5 rounded-full blur-3xl animate-float-delay" />
 
       <div className="container px-4 py-16 md:py-24">
         <div className="grid lg:grid-cols-2 gap-12 items-center">
