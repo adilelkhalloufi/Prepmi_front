@@ -186,5 +186,89 @@
     "thursday": "Jeudi",
     "friday": "Vendredi",
     "saturday": "Samedi"
+  },
+  "common": {
+    "selected": "Sélectionné",
+    "meal": "repas",
+    "meals": "repas",
+    "perWeek": "par semaine",
+    "free": "GRATUIT",
+    "off": "Réduction"
+  },
+  "navigation": {
+    "previous": "Précédent",
+    "next": "Suivant",
+    "previousStep": "Étape Précédente",
+    "nextStep": "Étape Suivante"
+  },
+  "plan": {
+    "title": "Créez Votre",
+    "titleHighlight": "Plan de Repas Parfait",
+    "subtitle": "Personnalisez votre livraison de repas hebdomadaire avec des options fraîches et saines adaptées à vos préférences",
+    "protein": {
+      "title": "Choisissez Votre Préférence Protéinique",
+      "subtitle": "Vos préférences nous aideront à vous montrer les repas les plus pertinents en premier. Vous pourrez toujours voir tous les repas.",
+      "options": {
+        "meatVegan": {
+          "label": "Viande et Végan",
+          "description": "Toutes les options de repas disponibles"
+        },
+        "meatOnly": {
+          "label": "Viande Seulement",
+          "description": "Repas à base de viande uniquement"
+        },
+        "veganOnly": {
+          "label": "Végan Seulement",
+          "description": "Repas à base de plantes uniquement"
+        }
+      }
+    },
+    "portion": {
+      "title": "Choisissez Votre Préférence de Portion",
+      "options": {
+        "standard": {
+          "label": "Standard",
+          "calories": "500-600kcal",
+          "protein": "30-40g protéines"
+        },
+        "large": {
+          "label": "Grande",
+          "calories": "700-900kcal",
+          "protein": "50-65g protéines"
+        },
+        "lean": {
+          "label": "Minceur",
+          "calories": "500-600kcal",
+          "protein": "50-60g protéines"
+        }
+      }
+    },
+    "meals": {
+      "title": "Sélectionnez les Repas par Semaine",
+      "subtitle": "Ce nombre n'inclut pas les petits-déjeuners ou les collations, vous pouvez les ajouter plus tard."
+    },
+    "summary": {
+      "title": "Résumé de Commande",
+      "pricePerMeal": "Prix par Repas:",
+      "mainMeals": "Repas Principaux",
+      "discount": "Remise",
+      "delivery": "Livraison (Gratuite pour la 1ère Commande)",
+      "total": "Total",
+      "free": "GRATUIT",
+      "off": "Réduction"
+    }
+  },
+  "joinNow": {
+    "steps": {
+      "plan": "Plan",
+      "details": "Détails",
+      "meals": "Repas",
+      "address": "Adresse",
+      "payment": "Paiement"
+    },
+    "navigation": {
+      "previous": "Précédent",
+      "next": "Suivant"
+    }
   }
 }

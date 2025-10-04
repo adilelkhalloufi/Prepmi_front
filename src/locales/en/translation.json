@@ -186,5 +186,89 @@
     "thursday": "Thursday",
     "friday": "Friday",
     "saturday": "Saturday"
+  },
+  "common": {
+    "selected": "Selected",
+    "meal": "meal",
+    "meals": "meals",
+    "perWeek": "per week",
+    "free": "FREE",
+    "off": "Off"
+  },
+  "navigation": {
+    "previous": "Previous",
+    "next": "Next",
+    "previousStep": "Previous Step",
+    "nextStep": "Next Step"
+  },
+  "plan": {
+    "title": "Build Your Perfect",
+    "titleHighlight": "Meal Plan",
+    "subtitle": "Customize your weekly meal delivery with fresh, healthy options tailored to your preferences",
+    "protein": {
+      "title": "Choose Your Protein Preference",
+      "subtitle": "Your preferences will help us show you the most relevant meals first. You will still be able to view all meals.",
+      "options": {
+        "meatVegan": {
+          "label": "Meat & Vegan",
+          "description": "All meal options available"
+        },
+        "meatOnly": {
+          "label": "Meat Only",
+          "description": "Meat-based meals only"
+        },
+        "veganOnly": {
+          "label": "Vegan Only",
+          "description": "Plant-based meals only"
+        }
+      }
+    },
+    "portion": {
+      "title": "Choose Your Portion Preference",
+      "options": {
+        "standard": {
+          "label": "Standard",
+          "calories": "500-600kcal",
+          "protein": "30-40g protein"
+        },
+        "large": {
+          "label": "Large",
+          "calories": "700-900kcal",
+          "protein": "50-65g protein"
+        },
+        "lean": {
+          "label": "Lean",
+          "calories": "500-600kcal",
+          "protein": "50-60g protein"
+        }
+      }
+    },
+    "meals": {
+      "title": "Select Meals Per Week",
+      "subtitle": "This number doesn't include breakfasts or snacks, you can add those later."
+    },
+    "summary": {
+      "title": "Order Summary",
+      "pricePerMeal": "Price Per Meal:",
+      "mainMeals": "Main Meals",
+      "discount": "Discount",
+      "delivery": "Delivery (Free On 1st Order)",
+      "total": "Total",
+      "free": "FREE",
+      "off": "Off"
+    }
+  },
+  "joinNow": {
+    "steps": {
+      "plan": "Plan",
+      "details": "Details",
+      "meals": "Meals",
+      "address": "Address",
+      "payment": "Payment"
+    },
+    "navigation": {
+      "previous": "Previous",
+      "next": "Next"
+    }
   }
 }

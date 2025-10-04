@@ -2,6 +2,7 @@ import { useState } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
+import { useTranslation } from "react-i18next"
 
 interface PlanProps {
     data: {
@@ -13,36 +14,37 @@ interface PlanProps {
 }
 
 export const Plan = ({ data, onUpdate }: PlanProps) => {
+    const { t } = useTranslation()
     const [selectedProtein, setSelectedProtein] = useState(data.protein)
     const [selectedPortion, setSelectedPortion] = useState(data.portion)
     const [selectedMeals, setSelectedMeals] = useState(data.mealsPerWeek)
 
     const proteinOptions = [
-        { id: 'meat-vegan', label: 'Meat & Vegan', description: 'All meal options available' },
-        { id: 'meat-only', label: 'Meat Only', description: 'Meat-based meals only' },
-        { id: 'vegan-only', label: 'Vegan Only', description: 'Plant-based meals only' }
+        { id: 'meat-vegan', label: t('plan.protein.options.meatVegan.label'), description: t('plan.protein.options.meatVegan.description') },
+        { id: 'meat-only', label: t('plan.protein.options.meatOnly.label'), description: t('plan.protein.options.meatOnly.description') },
+        { id: 'vegan-only', label: t('plan.protein.options.veganOnly.label'), description: t('plan.protein.options.veganOnly.description') }
     ]
 
     const portionOptions = [
         {
             id: 'standard',
-            label: 'Standard',
-            calories: '500-600kcal',
-            protein: '30-40g protein',
+            label: t('plan.portion.options.standard.label'),
+            calories: t('plan.portion.options.standard.calories'),
+            protein: t('plan.portion.options.standard.protein'),
             price: 0
         },
         {
             id: 'large',
-            label: 'Large',
-            calories: '700-900kcal',
-            protein: '50-65g protein',
+            label: t('plan.portion.options.large.label'),
+            calories: t('plan.portion.options.large.calories'),
+            protein: t('plan.portion.options.large.protein'),
             price: 1.99
         },
         {
             id: 'lean',
-            label: 'Lean',
-            calories: '500-600kcal',
-            protein: '50-60g protein',
+            label: t('plan.portion.options.lean.label'),
+            calories: t('plan.portion.options.lean.calories'),
+            protein: t('plan.portion.options.lean.protein'),
             price: 1.99
         }
     ]
@@ -84,15 +86,15 @@ export const Plan = ({ data, onUpdate }: PlanProps) => {
     const totals = calculateTotal()
 
     return (
-        <div className="min-h-screen   py-16">
+        <div className="min-h-screen py-16">
             <div className="container mx-auto px-4 max-w-6xl">
                 <div className="text-center mb-16">
                     <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
-                        Build Your Perfect
-                        <span className="text-primary"> Meal Plan</span>
+                        {t('plan.title')}
+                        <span className="text-primary"> {t('plan.titleHighlight')}</span>
                     </h1>
                     <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-                        Customize your weekly meal delivery with fresh, healthy options tailored to your preferences
+                        {t('plan.subtitle')}
                     </p>
                 </div>
 
@@ -104,10 +106,10 @@ export const Plan = ({ data, onUpdate }: PlanProps) => {
                                 1
                             </div>
                             <h2 className="text-3xl font-bold text-gray-900 mb-4">
-                                Choose Your Protein Preference
+                                {t('plan.protein.title')}
                             </h2>
                             <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-                                Your preferences will help us show you the most relevant meals first. You will still be able to view all meals.
+                                {t('plan.protein.subtitle')}
                             </p>
                         </div>
 
@@ -126,7 +128,7 @@ export const Plan = ({ data, onUpdate }: PlanProps) => {
                                         <p className="text-gray-600">{option.description}</p>
                                         {selectedProtein === option.id && (
                                             <div className="mt-4">
-                                                <Badge className="bg-primary text-primary-foreground">Selected</Badge>
+                                                <Badge className="bg-primary text-primary-foreground">{t('common.selected')}</Badge>
                                             </div>
                                         )}
                                     </CardContent>
@@ -142,7 +144,7 @@ export const Plan = ({ data, onUpdate }: PlanProps) => {
                                 2
                             </div>
                             <h2 className="text-3xl font-bold text-gray-900 mb-4">
-                                Choose Your Portion Preference
+                                {t('plan.portion.title')}
                             </h2>
                         </div>
 
@@ -158,7 +160,7 @@ export const Plan = ({ data, onUpdate }: PlanProps) => {
                                 >
                                     {option.price > 0 && (
                                         <Badge className="absolute -top-3 -right-3 bg-secondary text-secondary-foreground">
-                                            +£{option.price}/meal
+                                            +£{option.price}/{t('common.meal')}
                                         </Badge>
                                     )}
                                     <CardContent className="p-8 text-center">
@@ -167,7 +169,7 @@ export const Plan = ({ data, onUpdate }: PlanProps) => {
                                         <p className="text-gray-600 font-medium">{option.protein}</p>
                                         {selectedPortion === option.id && (
                                             <div className="mt-4">
-                                                <Badge className="bg-primary text-primary-foreground">Selected</Badge>
+                                                <Badge className="bg-primary text-primary-foreground">{t('common.selected')}</Badge>
                                             </div>
                                         )}
                                     </CardContent>
@@ -183,10 +185,10 @@ export const Plan = ({ data, onUpdate }: PlanProps) => {
                                 3
                             </div>
                             <h2 className="text-3xl font-bold text-gray-900 mb-4">
-                                Select Meals Per Week
+                                {t('plan.meals.title')}
                             </h2>
                             <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-                                This number doesn't include breakfasts or snacks, you can add those later.
+                                {t('plan.meals.subtitle')}
                             </p>
                         </div>
 
@@ -206,11 +208,11 @@ export const Plan = ({ data, onUpdate }: PlanProps) => {
                                             (£{option.originalPrice.toFixed(2)})
                                         </div>
                                         <div className="text-lg font-bold text-primary">
-                                            £{option.discountPrice.toFixed(2)}/meal
+                                            £{option.discountPrice.toFixed(2)}/{t('common.meal')}
                                         </div>
                                         {selectedMeals === option.count && (
                                             <div className="mt-3">
-                                                <Badge className="bg-primary text-primary-foreground">Selected</Badge>
+                                                <Badge className="bg-primary text-primary-foreground">{t('common.selected')}</Badge>
                                             </div>
                                         )}
                                     </CardContent>
@@ -221,12 +223,12 @@ export const Plan = ({ data, onUpdate }: PlanProps) => {
                         {/* Order Summary */}
                         <Card className="bg-white border-2 border-gray-100 shadow-xl max-w-2xl mx-auto">
                             <CardHeader className="bg-gradient-to-r from-primary to-secondary text-primary-foreground">
-                                <CardTitle className="text-2xl font-bold text-center">Order Summary</CardTitle>
+                                <CardTitle className="text-2xl font-bold text-center">{t('plan.summary.title')}</CardTitle>
                             </CardHeader>
                             <CardContent className="p-8">
                                 <div className="space-y-6">
                                     <div className="flex justify-between items-center py-3 border-b border-gray-100">
-                                        <span className="font-semibold text-gray-700">Price Per Meal:</span>
+                                        <span className="font-semibold text-gray-700">{t('plan.summary.pricePerMeal')}</span>
                                         <div className="text-right">
                                             <span className="line-through text-gray-500 mr-3 text-sm">
                                                 £{mealOptions.find(o => o.count === selectedMeals)?.originalPrice.toFixed(2) || '0.00'}
@@ -238,7 +240,7 @@ export const Plan = ({ data, onUpdate }: PlanProps) => {
                                     </div>
 
                                     <div className="flex justify-between items-center py-3 border-b border-gray-100">
-                                        <span className="text-gray-700">Main Meals ({selectedMeals})</span>
+                                        <span className="text-gray-700">{t('plan.summary.mainMeals')} ({selectedMeals})</span>
                                         <div className="text-right">
                                             <span className="line-through text-gray-500 mr-3 text-sm">
                                                 £{((mealOptions.find(o => o.count === selectedMeals)?.originalPrice || 0) * selectedMeals).toFixed(2)}
@@ -250,21 +252,21 @@ export const Plan = ({ data, onUpdate }: PlanProps) => {
                                     </div>
 
                                     <div className="flex justify-between items-center py-3 border-b border-gray-100">
-                                        <span className="text-green-600 font-medium">Discount</span>
-                                        <span className="font-semibold text-green-600">-£{totals.discount.toFixed(2)}</span>
+                                        <span className="text-green-600 font-medium">{t('plan.summary.discount')}</span>
+                                        <span className="font-semibold text-green-600">-£{totals.discount.toFixed(2)} {t('plan.summary.off')}</span>
                                     </div>
 
                                     <div className="flex justify-between items-center py-3 border-b border-gray-100">
-                                        <span className="text-gray-700">Delivery (Free On 1st Order)</span>
+                                        <span className="text-gray-700">{t('plan.summary.delivery')}</span>
                                         <div className="text-right">
                                             <span className="line-through text-gray-500 mr-3 text-sm">£{totals.delivery.toFixed(2)}</span>
-                                            <span className="font-semibold text-green-600">FREE</span>
+                                            <span className="font-semibold text-green-600">{t('plan.summary.free')}</span>
                                         </div>
                                     </div>
 
                                     <div className="bg-primary/10 p-6 rounded-lg">
                                         <div className="flex justify-between items-center">
-                                            <span className="text-2xl font-bold text-gray-900">Total</span>
+                                            <span className="text-2xl font-bold text-gray-900">{t('plan.summary.total')}</span>
                                             <div className="text-right">
                                                 <span className="line-through text-gray-500 mr-3">
                                                     £{(totals.subtotal + totals.delivery).toFixed(2)}
@@ -277,21 +279,7 @@ export const Plan = ({ data, onUpdate }: PlanProps) => {
                             </CardContent>
                         </Card>
 
-                        {/* Navigation Buttons */}
-                        <div className="flex justify-between items-center max-w-2xl mx-auto mt-8">
-                            <Button
-                                variant="outline"
-                                className="px-8 py-3 text-lg border-primary text-primary hover:bg-primary hover:text-primary-foreground"
-                            >
-                                ← Previous Step
-                            </Button>
 
-                            <Button
-                                className="px-8 py-3 text-lg bg-primary hover:bg-primary/90 text-primary-foreground"
-                            >
-                                Next Step →
-                            </Button>
-                        </div>
                     </div>
                 </div>
             </div>

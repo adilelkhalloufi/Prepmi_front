@@ -2,8 +2,10 @@ import { useState } from "react"
 import { Plan } from "@/components/Plan"
 import { Button } from "@/components/ui/button"
 import { ChevronLeft, ChevronRight } from "lucide-react"
+import { useTranslation } from "react-i18next"
 
 const JoinNow = () => {
+    const { t } = useTranslation()
     const [currentStep, setCurrentStep] = useState(1)
     const [planData, setPlanData] = useState({
         protein: '',
@@ -12,11 +14,11 @@ const JoinNow = () => {
     })
 
     const steps = [
-        { id: 1, title: 'Plan', component: Plan },
-        { id: 2, title: 'Details', component: null },
-        { id: 3, title: 'Meals', component: null },
-        { id: 4, title: 'Address', component: null },
-        { id: 5, title: 'Payment', component: null }
+        { id: 1, title: t('joinNow.steps.plan'), component: Plan },
+        { id: 2, title: t('joinNow.steps.details'), component: null },
+        { id: 3, title: t('joinNow.steps.meals'), component: null },
+        { id: 4, title: t('joinNow.steps.address'), component: null },
+        { id: 5, title: t('joinNow.steps.payment'), component: null }
     ]
 
     const handleNext = () => {
@@ -79,7 +81,7 @@ const JoinNow = () => {
                         className="flex items-center gap-2 border-primary text-primary hover:bg-primary hover:text-primary-foreground"
                     >
                         <ChevronLeft className="h-4 w-4" />
-                        Previous
+                        {t('joinNow.navigation.previous')}
                     </Button>
 
                     <Button
@@ -87,7 +89,7 @@ const JoinNow = () => {
                         disabled={currentStep === steps.length}
                         className="flex items-center gap-2 bg-primary hover:bg-primary/90 text-primary-foreground"
                     >
-                        Next
+                        {t('joinNow.navigation.next')}
                         <ChevronRight className="h-4 w-4" />
                     </Button>
                 </div>
