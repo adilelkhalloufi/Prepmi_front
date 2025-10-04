@@ -58,7 +58,34 @@
     "spicy": "Spicy",
     "cta_text": "Ready to start your healthy journey with delicious meals?",
     "add_to_plan": "Add to Plan",
-    "view_full_menu": "View Full Menu"
+    "view_full_menu": "View Full Menu",
+    "fresh_daily": "Fresh Daily",
+    "our_menu": "Our Menu",
+    "description_page": "Discover our carefully crafted meals, made with fresh ingredients and designed to fuel your healthy lifestyle.",
+    "weekly_menu": "Weekly Menu",
+    "breakfasts_snacks": "Breakfasts & Snacks",
+    "drinks": "Drinks",
+    "week_of": "Week of",
+    "select_date": "Select a date to view available meals",
+    "recipes": "Recipes",
+    "avg_prep_time": "Avg Prep Time",
+    "satisfaction": "Satisfaction",
+    "fresh_made": "Fresh Made",
+    "no_meals": "No meals available",
+    "no_meals_date": "Try selecting a different date",
+    "coming_soon": "More options coming soon!",
+    "october": "October",
+    "sunday": "Sunday",
+    "monday": "Monday",
+    "tuesday": "Tuesday",
+    "wednesday": "Wednesday",
+    "thursday": "Thursday",
+    "friday": "Friday",
+    "saturday": "Saturday",
+    "daily": "Daily",
+    "recipes_count": "50+",
+    "avg_time_minutes": "15",
+    "satisfaction_percent": "98%"
   },
   "reviews": {
     "badge": "Customer Reviews",
@@ -135,5 +162,29 @@
     "terms_service": "Terms of Service",
     "cookie_settings": "Cookie Settings",
     "faq": "FAQ"
+  },
+
+  "months": {
+    "january": "January",
+    "february": "February",
+    "march": "March",
+    "april": "April",
+    "may": "May",
+    "june": "June",
+    "july": "July",
+    "august": "August",
+    "september": "September",
+    "october": "October",
+    "november": "November",
+    "december": "December"
+  },
+  "days": {
+    "sunday": "Sunday",
+    "monday": "Monday",
+    "tuesday": "Tuesday",
+    "wednesday": "Wednesday",
+    "thursday": "Thursday",
+    "friday": "Friday",
+    "saturday": "Saturday"
   }
 }

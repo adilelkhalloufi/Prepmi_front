@@ -21,7 +21,7 @@ export function Header() {
   const routeList: RouteProps[] = [
 
     {
-      href: "#meals",
+      href: webRoutes.menu,
       label: t("menu_meals"),
     },
     {

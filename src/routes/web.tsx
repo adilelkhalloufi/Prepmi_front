@@ -5,21 +5,7 @@ export const webRoutes = {
   register: '/register',
   checkout: '/checkout',
   Dashboard: '/dashbord',
-  Facture: '/Facture',
-  Produit: '/Produit',
-  SingleProduit: '/Produit/:id',
-  Commandes: '/Commandes',
-  Parametre: '/Parametre',
-  Societe: '/Société',
-  stagnant: '/stagnant',
-  scarp: '/scrap',
-  favorite: '/favorite',
-  dashboard_product: '/dashboard/product',
-  dashboard_order: '/dashboard/order',
-  dashboard_order_seller: '/dashboard/order/seller',
-  dashboard_favris: '/dashboard/favris',
-  dashboard_profile: '/dashboard/profile',
-  privacy_policy: '/privacy-policy',
-  terms_service: '/terms-of-service',
-  cookie_settings: '/cookie-settings'
+  menu: '/menu',
+
+
 };

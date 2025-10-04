@@ -15,6 +15,7 @@ import { ProfileForm } from "@/pages/dashboard/profile";
 import PrivacyPolicy from "@/pages/privacy-policy";
 import TermsOfService from "@/pages/terms-of-service";
 import CookieSettings from "@/pages/cookie-settings";
+import { MenuPage } from "@/components/MenuPage";
 
 
 const fallbackElement = <ProgressBar />;
@@ -58,16 +59,8 @@ export const browserRouter = createBrowserRouter([
         element: <Landing />,
       },
       {
-        path: webRoutes.stagnant,
-        element: <Stagnant />,
-      },
-      {
-        path: webRoutes.scarp,
-        element: <Stagnant />,
-      },
-      {
-        path: webRoutes.SingleProduit,
-        element: <SingleProduct />,
+        path: webRoutes.menu,
+        element: <MenuPage />,
       },
       {
         path: webRoutes.register,
@@ -85,7 +78,7 @@ export const browserRouter = createBrowserRouter([
         path: webRoutes.cookie_settings,
         element: <CookieSettings />,
       },
-  
+
 
     ],
   },
@@ -149,9 +142,9 @@ export const browserRouter = createBrowserRouter([
     element: <LogoutPage />,
     // errorElement: errorElement,
   },
-  
 
- 
+
+
   {
     path: "*",
     element: <ErrorPage />,
