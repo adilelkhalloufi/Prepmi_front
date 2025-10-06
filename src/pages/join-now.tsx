@@ -2,6 +2,7 @@ import { useState } from "react"
 import { Plan } from "@/components/Plan"
 import { Meals } from "@/components/Meals"
 import { Address } from "@/components/Address"
+import { Payment } from "@/components/Payment"
 import { Button } from "@/components/ui/button"
 import { ChevronLeft, ChevronRight } from "lucide-react"
 import { useTranslation } from "react-i18next"
@@ -18,14 +19,17 @@ const JoinNow = () => {
         phoneNumber: '',
         country: 'UK',
         address: '',
-        hearAboutUs: ''
+        hearAboutUs: '',
+        selectedMeals: {},
+        selectedBreakfasts: {},
+        selectedDrinks: {}
     })
 
     const steps = [
         { id: 1, title: t('joinNow.steps.plan'), component: Plan },
         { id: 2, title: t('joinNow.steps.meals'), component: Meals },
         { id: 3, title: t('joinNow.steps.address'), component: Address },
-        { id: 4, title: t('joinNow.steps.payment'), component: null }
+        { id: 4, title: t('joinNow.steps.payment'), component: Payment }
     ]
 
     const handleNext = () => {
