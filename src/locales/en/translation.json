@@ -326,7 +326,21 @@
         "cashOnDelivery": "Cash on Delivery",
         "payWhenReceive": "Pay when you receive",
         "placeOrderCOD": "Place Order (COD)",
-        "payAmount": "Pay ${{amount}}"
+        "payAmount": "Pay ${{amount}}",
+        "loyaltyPoints": "Loyalty Points",
+        "pointsCollected": "points collected",
+        "rewardAvailable": "You've earned a free PrepMe meal! Use it on your next order.",
+        "pointsUntilReward": "{{points}} more points until your free meal",
+        "willEarnPoints": "You will earn {{points}} points with this purchase",
+        "useFreeMeal": "Use Free Meal Reward",
+        "freeMealReward": "Free Meal Reward",
+        "applied": "Applied",
+        "use": "Use",
+        "deliveryOptions": "Delivery Options",
+        "standardDelivery": "Standard Delivery",
+        "standardDeliveryTime": "3-5 business days",
+        "expressDelivery": "Express Delivery",
+        "expressDeliveryTime": "1-2 business days"
       },
       "address": {
         "title": "DELIVERY DETAILS",

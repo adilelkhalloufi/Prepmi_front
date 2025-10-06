@@ -20,7 +20,11 @@ import {
     User,
     Coffee,
     Utensils,
-    Check
+    Check,
+    Clock,
+    Zap,
+    Gift,
+    Star
 } from "lucide-react"
 import { useDispatch, useSelector } from "react-redux"
 import { RootState } from "@/store"
@@ -48,12 +52,20 @@ export function Payment() {
     const planData = useSelector((state: RootState) => state.joinProcess.planData)
 
     const [paymentMethod, setPaymentMethod] = useState<'COD' | 'ONLINE'>('ONLINE')
+    const [deliveryType, setDeliveryType] = useState<'STANDARD' | 'EXPRESS'>('STANDARD')
     const [discountCode, setDiscountCode] = useState('')
     const [appliedDiscount, setAppliedDiscount] = useState<{ code: string, amount: number } | null>(null)
     const [isEditingMeals, setIsEditingMeals] = useState(false)
     const [selectedMeals, setSelectedMeals] = useState(mockSelectedMeals)
     const [selectedBreakfasts, setSelectedBreakfasts] = useState(mockSelectedBreakfasts)
     const [selectedDrinks, setSelectedDrinks] = useState(mockSelectedDrinks)
+
+    // Loyalty Points System
+    const [currentPoints, setCurrentPoints] = useState(8) // Mock current points
+    const [useReward, setUseReward] = useState(false)
+    const rewardThreshold = 12
+    const rewardValue = 49 // MAD
+    const canUseReward = currentPoints >= rewardThreshold
 
     // Update local state when Redux state changes
     useEffect(() => {
@@ -121,13 +133,32 @@ export function Payment() {
     const breakfastSubtotal = selectedBreakfasts.reduce((sum, item) => sum + (item.price * item.quantity), 0)
     const drinksSubtotal = selectedDrinks.reduce((sum, item) => sum + (item.price * item.quantity), 0)
     const subtotal = mealsSubtotal + breakfastSubtotal + drinksSubtotal
-    const deliveryFee = subtotal > 50 ? 0 : 4.99
-    const discountAmount = appliedDiscount ? (subtotal * appliedDiscount.amount / 100) : 0
-    const total = subtotal + deliveryFee - discountAmount
 
     const totalItems = selectedMeals.reduce((sum, meal) => sum + meal.quantity, 0) +
         selectedBreakfasts.reduce((sum, item) => sum + item.quantity, 0) +
         selectedDrinks.reduce((sum, item) => sum + item.quantity, 0)
+
+    // Calculate delivery fee based on type
+    const getDeliveryFee = () => {
+        if (subtotal > 50) return 0
+        return deliveryType === 'EXPRESS' ? 9.99 : 4.99
+    }
+
+    const deliveryFee = getDeliveryFee()
+
+    // Calculate points earned based on total meals
+    const calculatePointsEarned = () => {
+        if (totalItems >= 10) return 5
+        if (totalItems >= 8) return 4
+        if (totalItems >= 6) return 3
+        if (totalItems >= 4) return 2
+        return 0
+    }
+
+    const pointsEarned = calculatePointsEarned()
+    const rewardDiscount = useReward && canUseReward ? rewardValue : 0
+    const discountAmount = appliedDiscount ? (subtotal * appliedDiscount.amount / 100) : 0
+    const total = subtotal + deliveryFee - discountAmount - rewardDiscount
 
     return (
         <div className="space-y-8">
@@ -372,6 +403,78 @@ export function Payment() {
 
                 {/* Payment Section */}
                 <div className="space-y-6">
+                    {/* Loyalty Points Card */}
+                    <Card className="border-gradient-to-r from-primary/20 to-secondary/20">
+                        <CardHeader>
+                            <CardTitle className="flex items-center space-x-2 text-base">
+                                <Star className="w-5 h-5 text-primary" />
+                                <span>{t('joinNow.payment.loyaltyPoints')}</span>
+                            </CardTitle>
+                        </CardHeader>
+                        <CardContent className="space-y-4">
+                            {/* Current Points Display */}
+                            <div className="text-center space-y-2">
+                                <div className="flex items-center justify-center space-x-2">
+                                    <span className="text-2xl font-bold text-primary">{currentPoints}</span>
+                                    <span className="text-muted-foreground">/ {rewardThreshold}</span>
+                                    <span className="text-sm text-muted-foreground">{t('joinNow.payment.pointsCollected')}</span>
+                                </div>
+
+                                {/* Progress Bar */}
+                                <div className="w-full bg-secondary rounded-full h-2">
+                                    <div
+                                        className="bg-gradient-to-r from-primary to-secondary h-2 rounded-full transition-all duration-300"
+                                        style={{ width: `${Math.min((currentPoints / rewardThreshold) * 100, 100)}%` }}
+                                    ></div>
+                                </div>
+
+                                {canUseReward ? (
+                                    <p className="text-sm text-primary font-medium">
+                                        🎉 {t('joinNow.payment.rewardAvailable')}
+                                    </p>
+                                ) : (
+                                    <p className="text-sm text-muted-foreground">
+                                        {t('joinNow.payment.pointsUntilReward', { points: rewardThreshold - currentPoints })}
+                                    </p>
+                                )}
+                            </div>
+
+                            {/* Points Earning Preview */}
+                            {pointsEarned > 0 && (
+                                <div className="p-3 bg-primary/5 rounded-lg border border-primary/20">
+                                    <div className="flex items-center space-x-2">
+                                        <Gift className="w-4 h-4 text-primary" />
+                                        <span className="text-sm font-medium text-primary">
+                                            {t('joinNow.payment.willEarnPoints', { points: pointsEarned })}
+                                        </span>
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* Use Reward Toggle */}
+                            {canUseReward && (
+                                <div className="p-3 bg-gradient-to-r from-primary/10 to-secondary/10 rounded-lg border">
+                                    <div className="flex items-center justify-between">
+                                        <div className="flex items-center space-x-2">
+                                            <Gift className="w-4 h-4 text-primary" />
+                                            <div>
+                                                <p className="font-medium text-sm">{t('joinNow.payment.useFreeMeal')}</p>
+                                                <p className="text-xs text-muted-foreground">-{rewardValue} MAD</p>
+                                            </div>
+                                        </div>
+                                        <Button
+                                            variant={useReward ? "default" : "outline"}
+                                            size="sm"
+                                            onClick={() => setUseReward(!useReward)}
+                                        >
+                                            {useReward ? t('joinNow.payment.applied') : t('joinNow.payment.use')}
+                                        </Button>
+                                    </div>
+                                </div>
+                            )}
+                        </CardContent>
+                    </Card>
+
                     {/* Order Total */}
                     <Card className="sticky top-4">
                         <CardHeader>
@@ -400,8 +503,17 @@ export function Payment() {
                                 )}
                                 <div className="flex justify-between text-sm">
                                     <div className="flex items-center space-x-1">
-                                        <Truck className="w-3 h-3" />
-                                        <span>{t('joinNow.payment.delivery')}</span>
+                                        {deliveryType === 'EXPRESS' ? (
+                                            <Zap className="w-3 h-3 text-orange-500" />
+                                        ) : (
+                                            <Truck className="w-3 h-3" />
+                                        )}
+                                        <span>
+                                            {deliveryType === 'EXPRESS'
+                                                ? t('joinNow.payment.expressDelivery')
+                                                : t('joinNow.payment.delivery')
+                                            }
+                                        </span>
                                     </div>
                                     <span>{deliveryFee > 0 ? `$${deliveryFee.toFixed(2)}` : t('joinNow.payment.free')}</span>
                                 </div>
@@ -409,6 +521,15 @@ export function Payment() {
                                     <div className="flex justify-between text-sm text-primary">
                                         <span>{t('joinNow.payment.discount')} ({appliedDiscount.code})</span>
                                         <span>-${discountAmount.toFixed(2)}</span>
+                                    </div>
+                                )}
+                                {useReward && canUseReward && (
+                                    <div className="flex justify-between text-sm text-primary">
+                                        <div className="flex items-center space-x-1">
+                                            <Gift className="w-3 h-3" />
+                                            <span>{t('joinNow.payment.freeMealReward')}</span>
+                                        </div>
+                                        <span>-${rewardValue.toFixed(2)}</span>
                                     </div>
                                 )}
                             </div>
@@ -522,7 +643,10 @@ export function Payment() {
                             // Handle order submission
                             console.log('Order placed:', {
                                 paymentMethod,
+                                deliveryType,
                                 total,
+                                pointsEarned,
+                                rewardUsed: useReward && canUseReward,
                                 items: { selectedMeals, selectedBreakfasts, selectedDrinks }
                             })
                         }}

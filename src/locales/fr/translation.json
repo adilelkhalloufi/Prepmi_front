@@ -327,7 +327,21 @@
       "cashOnDelivery": "Paiement à la Livraison",
       "payWhenReceive": "Payer à la réception",
       "placeOrderCOD": "Passer Commande (COD)",
-      "payAmount": "Payer ${{amount}}"
+      "payAmount": "Payer ${{amount}}",
+      "loyaltyPoints": "Points de Fidélité",
+      "pointsCollected": "points collectés",
+      "rewardAvailable": "Vous avez gagné un repas PrepMe gratuit ! Utilisez-le lors de votre prochaine commande.",
+      "pointsUntilReward": "Encore {{points}} points avant votre repas gratuit",
+      "willEarnPoints": "Vous gagnerez {{points}} points avec cet achat",
+      "useFreeMeal": "Utiliser Repas Gratuit",
+      "freeMealReward": "Récompense Repas Gratuit",
+      "applied": "Appliqué",
+      "use": "Utiliser",
+      "deliveryOptions": "Options de Livraison",
+      "standardDelivery": "Livraison Standard",
+      "standardDeliveryTime": "3-5 jours ouvrables",
+      "expressDelivery": "Livraison Express",
+      "expressDeliveryTime": "1-2 jours ouvrables"
     },
     "address": {
       "title": "DÉTAILS DE LIVRAISON",
