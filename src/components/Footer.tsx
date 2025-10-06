@@ -134,7 +134,7 @@ export default function Footer() {
               </TooltipProvider>
             </div>
             <div className="flex items-center space-x-2">
-              <ThemeSwitcher type="checkbox" />
+              {/* <ThemeSwitcher type="checkbox" /> */}
             </div>
           </div>
         </div>
