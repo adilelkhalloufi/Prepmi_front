@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -22,24 +22,9 @@ import {
     Utensils,
     Check
 } from "lucide-react"
-
-interface PaymentProps {
-    data: {
-        protein: string
-        portion: string
-        mealsPerWeek: number
-        firstName: string
-        lastName: string
-        phoneNumber: string
-        country: string
-        address: string
-        hearAboutUs: string
-        selectedMeals?: { [key: number]: number }
-        selectedBreakfasts?: { [key: number]: number }
-        selectedDrinks?: { [key: number]: number }
-    }
-    onUpdate: (data: any) => void
-}
+import { useDispatch, useSelector } from "react-redux"
+import { RootState } from "@/store"
+import { updatePlanData } from "@/store/slices/joinProcessSlice"
 
 // Mock data - replace with actual data from previous steps
 const mockSelectedMeals = [
@@ -57,8 +42,11 @@ const mockSelectedDrinks = [
     { id: 201, name: "Fresh Green Smoothie", price: 4.99, quantity: 5, image: "/api/placeholder/100/100" }
 ]
 
-export function Payment({ data, onUpdate }: PaymentProps) {
+export function Payment() {
     const { t } = useTranslation()
+    const dispatch = useDispatch()
+    const planData = useSelector((state: RootState) => state.joinProcess.planData)
+
     const [paymentMethod, setPaymentMethod] = useState<'COD' | 'ONLINE'>('ONLINE')
     const [discountCode, setDiscountCode] = useState('')
     const [appliedDiscount, setAppliedDiscount] = useState<{ code: string, amount: number } | null>(null)
@@ -66,6 +54,14 @@ export function Payment({ data, onUpdate }: PaymentProps) {
     const [selectedMeals, setSelectedMeals] = useState(mockSelectedMeals)
     const [selectedBreakfasts, setSelectedBreakfasts] = useState(mockSelectedBreakfasts)
     const [selectedDrinks, setSelectedDrinks] = useState(mockSelectedDrinks)
+
+    // Update local state when Redux state changes
+    useEffect(() => {
+        if (planData) {
+            // You can also sync the selected items from Redux if they exist
+            // setSelectedMeals based on planData.selectedMeals etc.
+        }
+    }, [planData])
 
     const applyDiscount = () => {
         // Mock discount validation
@@ -162,15 +158,15 @@ export function Payment({ data, onUpdate }: PaymentProps) {
                         </CardHeader>
                         <CardContent className="space-y-4">
                             <div>
-                                <p className="font-semibold">{data.firstName} {data.lastName}</p>
-                                <p className="text-sm text-muted-foreground">{data.phoneNumber}</p>
+                                <p className="font-semibold">{planData?.firstName || 'N/A'} {planData?.lastName || ''}</p>
+                                <p className="text-sm text-muted-foreground">{planData?.phoneNumber || 'N/A'}</p>
                             </div>
                             <div className="flex items-start space-x-2">
                                 <MapPin className="w-4 h-4 text-muted-foreground mt-1" />
                                 <div>
                                     <p className="text-sm font-medium">Delivery Address</p>
-                                    <p className="text-sm text-muted-foreground">{data.address}</p>
-                                    <p className="text-sm text-muted-foreground">{data.country}</p>
+                                    <p className="text-sm text-muted-foreground">{planData?.address || 'N/A'}</p>
+                                    <p className="text-sm text-muted-foreground">{planData?.country || 'N/A'}</p>
                                 </div>
                             </div>
                         </CardContent>
@@ -480,15 +476,15 @@ export function Payment({ data, onUpdate }: PaymentProps) {
                             <div className="space-y-3">
                                 <div
                                     className={`p-4 rounded-lg border cursor-pointer transition-all ${paymentMethod === 'ONLINE'
-                                            ? 'border-primary bg-primary/5'
-                                            : 'border-border hover:border-primary/50'
+                                        ? 'border-primary bg-primary/5'
+                                        : 'border-border hover:border-primary/50'
                                         }`}
                                     onClick={() => setPaymentMethod('ONLINE')}
                                 >
                                     <div className="flex items-center space-x-3">
                                         <div className={`w-4 h-4 rounded-full border-2 ${paymentMethod === 'ONLINE'
-                                                ? 'border-primary bg-primary'
-                                                : 'border-border'
+                                            ? 'border-primary bg-primary'
+                                            : 'border-border'
                                             }`} />
                                         <div>
                                             <p className="font-medium">Online Payment</p>
@@ -499,15 +495,15 @@ export function Payment({ data, onUpdate }: PaymentProps) {
 
                                 <div
                                     className={`p-4 rounded-lg border cursor-pointer transition-all ${paymentMethod === 'COD'
-                                            ? 'border-primary bg-primary/5'
-                                            : 'border-border hover:border-primary/50'
+                                        ? 'border-primary bg-primary/5'
+                                        : 'border-border hover:border-primary/50'
                                         }`}
                                     onClick={() => setPaymentMethod('COD')}
                                 >
                                     <div className="flex items-center space-x-3">
                                         <div className={`w-4 h-4 rounded-full border-2 ${paymentMethod === 'COD'
-                                                ? 'border-primary bg-primary'
-                                                : 'border-border'
+                                            ? 'border-primary bg-primary'
+                                            : 'border-border'
                                             }`} />
                                         <div>
                                             <p className="font-medium">Cash on Delivery</p>
@@ -538,3 +534,4 @@ export function Payment({ data, onUpdate }: PaymentProps) {
         </div>
     )
 }
+

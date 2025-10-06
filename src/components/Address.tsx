@@ -1,10 +1,13 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { useTranslation } from "react-i18next"
+import { useDispatch, useSelector } from "react-redux"
+import { RootState } from "@/store"
+import { updatePlanData } from "@/store/slices/joinProcessSlice"
 import {
     User,
     Phone,
@@ -15,18 +18,6 @@ import {
     Mail,
     Globe
 } from "lucide-react"
-
-interface AddressProps {
-    data: {
-        firstName: string
-        lastName: string
-        phoneNumber: string
-        country: string
-        address: string
-        hearAboutUs: string
-    }
-    onUpdate: (data: any) => void
-}
 
 const countries = [
     { value: 'UK', label: 'United Kingdom' },
@@ -46,22 +37,39 @@ const hearAboutUsOptions = [
     { value: 'other', label: 'Other' }
 ]
 
-export function Address({ data, onUpdate }: AddressProps) {
+export function Address() {
     const { t } = useTranslation()
+    const dispatch = useDispatch()
+    const planData = useSelector((state: RootState) => state.joinProcess.planData)
+
     const [addressData, setAddressData] = useState({
-        firstName: data.firstName || '',
-        lastName: data.lastName || '',
-        phoneNumber: data.phoneNumber || '',
-        country: data.country || 'UK',
-        address: data.address || '',
-        hearAboutUs: data.hearAboutUs || ''
+        firstName: planData?.firstName || '',
+        lastName: planData?.lastName || '',
+        phoneNumber: planData?.phoneNumber || '',
+        country: planData?.country || 'UK',
+        address: planData?.address || '',
+        hearAboutUs: planData?.hearAboutUs || ''
     })
     const [isManualAddress, setIsManualAddress] = useState(false)
+
+    // Update local state when Redux state changes
+    useEffect(() => {
+        if (planData) {
+            setAddressData({
+                firstName: planData.firstName || '',
+                lastName: planData.lastName || '',
+                phoneNumber: planData.phoneNumber || '',
+                country: planData.country || 'UK',
+                address: planData.address || '',
+                hearAboutUs: planData.hearAboutUs || ''
+            })
+        }
+    }, [planData])
 
     const handleInputChange = (field: string, value: string) => {
         const updatedData = { ...addressData, [field]: value }
         setAddressData(updatedData)
-        onUpdate(updatedData)
+        dispatch(updatePlanData({ [field]: value }))
     }
 
     const isFormValid = () => {

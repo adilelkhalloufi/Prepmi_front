@@ -1,23 +1,28 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { useTranslation } from "react-i18next"
+import { useDispatch, useSelector } from "react-redux"
+import { RootState } from "@/store"
+import { updatePlanData } from "@/store/slices/joinProcessSlice"
 
-interface PlanProps {
-    data: {
-        protein: string
-        portion: string
-        mealsPerWeek: number
-    }
-    onUpdate: (data: any) => void
-}
-
-export const Plan = ({ data, onUpdate }: PlanProps) => {
+export const Plan = () => {
     const { t } = useTranslation()
-    const [selectedProtein, setSelectedProtein] = useState(data.protein)
-    const [selectedPortion, setSelectedPortion] = useState(data.portion)
-    const [selectedMeals, setSelectedMeals] = useState(data.mealsPerWeek)
+    const dispatch = useDispatch()
+    const planData = useSelector((state: RootState) => state.joinProcess.planData)
+
+    const [selectedProtein, setSelectedProtein] = useState(planData?.protein || '')
+    const [selectedPortion, setSelectedPortion] = useState(planData?.portion || '')
+    const [selectedMeals, setSelectedMeals] = useState(planData?.mealsPerWeek || 10)
+
+    // Update local state when Redux state changes
+    useEffect(() => {
+        if (planData) {
+            setSelectedProtein(planData.protein || '')
+            setSelectedPortion(planData.portion || '')
+            setSelectedMeals(planData.mealsPerWeek || 10)
+        }
+    }, [planData])
 
     const proteinOptions = [
         { id: 'meat-vegan', label: t('plan.protein.options.meatVegan.label'), description: t('plan.protein.options.meatVegan.description') },
@@ -60,17 +65,17 @@ export const Plan = ({ data, onUpdate }: PlanProps) => {
 
     const handleProteinSelect = (protein: string) => {
         setSelectedProtein(protein)
-        onUpdate({ ...data, protein })
+        dispatch(updatePlanData({ protein }))
     }
 
     const handlePortionSelect = (portion: string) => {
         setSelectedPortion(portion)
-        onUpdate({ ...data, portion })
+        dispatch(updatePlanData({ portion }))
     }
 
     const handleMealSelect = (meals: number) => {
         setSelectedMeals(meals)
-        onUpdate({ ...data, mealsPerWeek: meals })
+        dispatch(updatePlanData({ mealsPerWeek: meals }))
     }
 
     const calculateTotal = () => {

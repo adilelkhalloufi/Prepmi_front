@@ -5,13 +5,14 @@ import { Payment } from "@/components/Payment"
 import { Button } from "@/components/ui/button"
 import { ChevronLeft, ChevronRight } from "lucide-react"
 import { useTranslation } from "react-i18next"
-import { useAppDispatch, useAppSelector } from "@/hooks/redux"
+import { useDispatch, useSelector } from "react-redux"
+import { RootState } from "@/store"
 import { nextStep, prevStep } from "@/store/slices/joinProcessSlice"
 
 const JoinNow = () => {
     const { t } = useTranslation()
-    const dispatch = useAppDispatch()
-    const { currentStep, planData } = useAppSelector((state) => state.joinProcess)
+    const dispatch = useDispatch()
+    const { currentStep, planData } = useSelector((state: RootState) => state.joinProcess)
 
     const steps = [
         { id: 1, title: t('joinNow.steps.plan'), component: Plan },
@@ -87,25 +88,6 @@ const JoinNow = () => {
                 </div>
             </div>
         </main>
-    )
-}
-
-export default JoinNow
-    < ChevronLeft className = "h-4 w-4" />
-        { t('joinNow.navigation.previous') }
-                    </Button >
-
-    <Button
-        onClick={handleNext}
-        disabled={currentStep === steps.length}
-        className="flex items-center gap-2 bg-primary hover:bg-primary/90 text-primary-foreground"
-    >
-        {t('joinNow.navigation.next')}
-        <ChevronRight className="h-4 w-4" />
-    </Button>
-                </div >
-            </div >
-        </main >
     )
 }
 

@@ -50,6 +50,25 @@ export interface User {
     company?: string
 }
 
+export interface joinProcess {
+    currentStep: number,
+    planData: {
+        protein: string
+        portion: string
+        mealsPerWeek: number
+        firstName: string
+        lastName: string
+        phoneNumber: string
+        country: string
+        address: string
+        hearAboutUs: string
+        selectedMeals: Record<string, any>
+        selectedBreakfasts: Record<string, any>
+        selectedDrinks: Record<string, any>
+
+    }
+}
+
 export interface ModalOption {
     handleCancel?: any
     isModalVisible?: any

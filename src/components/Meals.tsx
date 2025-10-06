@@ -3,6 +3,9 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { useTranslation } from "react-i18next"
+import { useDispatch, useSelector } from "react-redux"
+import { RootState } from "@/store"
+import { updatePlanData } from "@/store/slices/joinProcessSlice"
 import { MealCard } from "@/components/MealCard"
 import { Meal } from "@/interfaces/admin"
 import {
@@ -15,15 +18,6 @@ import {
     Check,
     X
 } from "lucide-react"
-
-interface MealsProps {
-    data: {
-        protein: string
-        portion: string
-        mealsPerWeek: number
-    }
-    onUpdate: (data: any) => void
-}
 
 // Mock data - replace with actual API call
 const mockMeals: Meal[] = [
@@ -73,28 +67,44 @@ const mockDrinks = [
     }
 ]
 
-export function Meals({ data, onUpdate }: MealsProps) {
+export function Meals() {
     const { t } = useTranslation()
-    const [selectedMeals, setSelectedMeals] = useState<{ [key: number]: number }>({})
-    const [selectedBreakfasts, setSelectedBreakfasts] = useState<{ [key: number]: number }>({})
-    const [selectedDrinks, setSelectedDrinks] = useState<{ [key: number]: number }>({})
+    const dispatch = useDispatch()
+    const planData = useSelector((state: RootState) => state.joinProcess.planData)
+
+    const [selectedMeals, setSelectedMeals] = useState<{ [key: number]: number }>(planData?.selectedMeals || {})
+    const [selectedBreakfasts, setSelectedBreakfasts] = useState<{ [key: number]: number }>(planData?.selectedBreakfasts || {})
+    const [selectedDrinks, setSelectedDrinks] = useState<{ [key: number]: number }>(planData?.selectedDrinks || {})
     const [showBreakfast, setShowBreakfast] = useState(false)
     const [showDrinks, setShowDrinks] = useState(false)
 
+    // Update local state when Redux state changes
+    useEffect(() => {
+        if (planData) {
+            setSelectedMeals(planData.selectedMeals || {})
+            setSelectedBreakfasts(planData.selectedBreakfasts || {})
+            setSelectedDrinks(planData.selectedDrinks || {})
+        }
+    }, [planData])
+
     const totalSelectedMeals = Object.values(selectedMeals).reduce((sum, qty) => sum + qty, 0)
-    const remainingMeals = data.mealsPerWeek - totalSelectedMeals
+    const remainingMeals = (planData?.mealsPerWeek || 10) - totalSelectedMeals
 
     const handleMealQuantityChange = (mealId: number, change: number) => {
         setSelectedMeals(prev => {
             const currentQty = prev[mealId] || 0
             const newQty = Math.max(0, Math.min(currentQty + change, remainingMeals + currentQty))
 
+            let newSelectedMeals
             if (newQty === 0) {
                 const { [mealId]: removed, ...rest } = prev
-                return rest
+                newSelectedMeals = rest
+            } else {
+                newSelectedMeals = { ...prev, [mealId]: newQty }
             }
 
-            return { ...prev, [mealId]: newQty }
+            dispatch(updatePlanData({ selectedMeals: newSelectedMeals }))
+            return newSelectedMeals
         })
     }
 
@@ -103,12 +113,16 @@ export function Meals({ data, onUpdate }: MealsProps) {
             const currentQty = prev[itemId] || 0
             const newQty = Math.max(0, currentQty + change)
 
+            let newSelectedBreakfasts
             if (newQty === 0) {
                 const { [itemId]: removed, ...rest } = prev
-                return rest
+                newSelectedBreakfasts = rest
+            } else {
+                newSelectedBreakfasts = { ...prev, [itemId]: newQty }
             }
 
-            return { ...prev, [itemId]: newQty }
+            dispatch(updatePlanData({ selectedBreakfasts: newSelectedBreakfasts }))
+            return newSelectedBreakfasts
         })
     }
 
@@ -117,12 +131,16 @@ export function Meals({ data, onUpdate }: MealsProps) {
             const currentQty = prev[itemId] || 0
             const newQty = Math.max(0, currentQty + change)
 
+            let newSelectedDrinks
             if (newQty === 0) {
                 const { [itemId]: removed, ...rest } = prev
-                return rest
+                newSelectedDrinks = rest
+            } else {
+                newSelectedDrinks = { ...prev, [itemId]: newQty }
             }
 
-            return { ...prev, [itemId]: newQty }
+            dispatch(updatePlanData({ selectedDrinks: newSelectedDrinks }))
+            return newSelectedDrinks
         })
     }
 
@@ -148,7 +166,7 @@ export function Meals({ data, onUpdate }: MealsProps) {
                             </div>
                             <div>
                                 <p className="text-sm text-muted-foreground">Protein Preference</p>
-                                <p className="font-semibold text-foreground">{data.protein}</p>
+                                <p className="font-semibold text-foreground">{planData?.protein || 'Not selected'}</p>
                             </div>
                         </div>
 
@@ -158,17 +176,17 @@ export function Meals({ data, onUpdate }: MealsProps) {
                             </div>
                             <div>
                                 <p className="text-sm text-muted-foreground">Portion Size</p>
-                                <p className="font-semibold text-foreground">{data.portion}</p>
+                                <p className="font-semibold text-foreground">{planData?.portion || 'Not selected'}</p>
                             </div>
                         </div>
 
                         <div className="flex items-center space-x-3">
                             <div className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center">
-                                <Badge className="w-5 h-5 bg-primary text-primary-foreground">{data.mealsPerWeek}</Badge>
+                                <Badge className="w-5 h-5 bg-primary text-primary-foreground">{planData?.mealsPerWeek || 0}</Badge>
                             </div>
                             <div>
                                 <p className="text-sm text-muted-foreground">Main Meals</p>
-                                <p className="font-semibold text-foreground">{totalSelectedMeals}/{data.mealsPerWeek}</p>
+                                <p className="font-semibold text-foreground">{totalSelectedMeals}/{planData?.mealsPerWeek || 0}</p>
                             </div>
                         </div>
 
