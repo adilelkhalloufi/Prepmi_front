@@ -1,4 +1,3 @@
-import { useState } from "react"
 import { Plan } from "@/components/Plan"
 import { Meals } from "@/components/Meals"
 import { Address } from "@/components/Address"
@@ -6,24 +5,13 @@ import { Payment } from "@/components/Payment"
 import { Button } from "@/components/ui/button"
 import { ChevronLeft, ChevronRight } from "lucide-react"
 import { useTranslation } from "react-i18next"
+import { useAppDispatch, useAppSelector } from "@/hooks/redux"
+import { nextStep, prevStep } from "@/store/slices/joinProcessSlice"
 
 const JoinNow = () => {
     const { t } = useTranslation()
-    const [currentStep, setCurrentStep] = useState(1)
-    const [planData, setPlanData] = useState({
-        protein: '',
-        portion: '',
-        mealsPerWeek: 10,
-        firstName: '',
-        lastName: '',
-        phoneNumber: '',
-        country: 'UK',
-        address: '',
-        hearAboutUs: '',
-        selectedMeals: {},
-        selectedBreakfasts: {},
-        selectedDrinks: {}
-    })
+    const dispatch = useAppDispatch()
+    const { currentStep, planData } = useAppSelector((state) => state.joinProcess)
 
     const steps = [
         { id: 1, title: t('joinNow.steps.plan'), component: Plan },
@@ -33,15 +21,11 @@ const JoinNow = () => {
     ]
 
     const handleNext = () => {
-        if (currentStep < steps.length) {
-            setCurrentStep(currentStep + 1)
-        }
+        dispatch(nextStep())
     }
 
     const handlePrev = () => {
-        if (currentStep > 1) {
-            setCurrentStep(currentStep - 1)
-        }
+        dispatch(prevStep())
     }
 
     const CurrentStepComponent = steps.find(step => step.id === currentStep)?.component
@@ -76,10 +60,7 @@ const JoinNow = () => {
                 {/* Step Content */}
                 <div className="max-w-4xl mx-auto">
                     {CurrentStepComponent && (
-                        <CurrentStepComponent
-                            data={planData}
-                            onUpdate={setPlanData}
-                        />
+                        <CurrentStepComponent />
                     )}
                 </div>
 
@@ -106,6 +87,25 @@ const JoinNow = () => {
                 </div>
             </div>
         </main>
+    )
+}
+
+export default JoinNow
+    < ChevronLeft className = "h-4 w-4" />
+        { t('joinNow.navigation.previous') }
+                    </Button >
+
+    <Button
+        onClick={handleNext}
+        disabled={currentStep === steps.length}
+        className="flex items-center gap-2 bg-primary hover:bg-primary/90 text-primary-foreground"
+    >
+        {t('joinNow.navigation.next')}
+        <ChevronRight className="h-4 w-4" />
+    </Button>
+                </div >
+            </div >
+        </main >
     )
 }
 

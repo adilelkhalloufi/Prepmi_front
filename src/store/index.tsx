@@ -3,6 +3,7 @@ import adminSlice, { AdminState } from './slices/adminSlice';
 import registerSlice from './slices/registerSlice';
 import cartSlice from './slices/cartSlice';
 import userSlice, { UserState } from './slices/userSlice';
+import joinProcessSlice, { JoinProcessState } from './slices/joinProcessSlice';
 
 
 
@@ -29,6 +30,7 @@ const rootReducer = combineReducers({
   register: registerSlice,
   cart: cartSlice,
   user: userSlice,
+  joinProcess: joinProcessSlice,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
@@ -48,5 +50,6 @@ export type RootState = {
   register: RegisterForm;
   cart: Cart;
   user: UserState;
+  joinProcess: JoinProcessState;
 };
 export type AppDispatch = typeof store.dispatch;
