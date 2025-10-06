@@ -84,10 +84,10 @@ export function Address() {
             {/* Header */}
             <div className="text-center mb-8">
                 <h2 className="text-3xl font-bold text-foreground mb-2">
-                    {t('joinNow.address.title', 'DELIVERY DETAILS')}
+                    {t('joinNow.address.title')}
                 </h2>
                 <p className="text-muted-foreground">
-                    {t('joinNow.address.subtitle', 'Tell us where to deliver your delicious meals')}
+                    {t('joinNow.address.subtitle')}
                 </p>
             </div>
 
@@ -96,14 +96,14 @@ export function Address() {
                 <CardHeader>
                     <CardTitle className="flex items-center space-x-2">
                         <User className="w-5 h-5 text-primary" />
-                        <span>Personal Information</span>
+                        <span>{t('joinNow.address.personalInformation')}</span>
                     </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-6">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div className="space-y-2">
                             <Label htmlFor="firstName" className="text-foreground font-medium">
-                                {t('joinNow.address.firstName', 'FIRST NAME')} *
+                                {t('joinNow.address.firstName')} *
                             </Label>
                             <Input
                                 id="firstName"
@@ -118,7 +118,7 @@ export function Address() {
 
                         <div className="space-y-2">
                             <Label htmlFor="lastName" className="text-foreground font-medium">
-                                {t('joinNow.address.lastName', 'LAST NAME')} *
+                                {t('joinNow.address.lastName')} *
                             </Label>
                             <Input
                                 id="lastName"
@@ -135,7 +135,7 @@ export function Address() {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div className="space-y-2">
                             <Label htmlFor="country" className="text-foreground font-medium">
-                                {t('joinNow.address.country', 'COUNTRY')}
+                                {t('joinNow.address.country')}
                             </Label>
                             <Select
                                 value={addressData.country}
@@ -161,7 +161,7 @@ export function Address() {
 
                         <div className="space-y-2">
                             <Label htmlFor="phoneNumber" className="text-foreground font-medium">
-                                {t('joinNow.address.phoneNumber', 'PHONE NUMBER')} *
+                                {t('joinNow.address.phoneNumber')} *
                             </Label>
                             <div className="relative">
                                 <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
@@ -185,7 +185,7 @@ export function Address() {
                 <CardHeader>
                     <CardTitle className="flex items-center space-x-2">
                         <MapPin className="w-5 h-5 text-primary" />
-                        <span>DELIVERY ADDRESS *</span>
+                        <span>{t('joinNow.address.deliveryAddress')} *</span>
                     </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-6">
@@ -207,7 +207,7 @@ export function Address() {
                                     onClick={() => setIsManualAddress(true)}
                                     className="text-primary hover:text-primary/80 h-auto p-0 font-normal"
                                 >
-                                    {t('joinNow.address.manualEntry', 'Or enter your address manually')}
+                                    {t('joinNow.address.manualEntry')}
                                 </Button>
                             </div>
                         ) : (
@@ -224,7 +224,7 @@ export function Address() {
                                     onClick={() => setIsManualAddress(false)}
                                     className="text-primary hover:text-primary/80 h-auto p-0 font-normal"
                                 >
-                                    {t('joinNow.address.searchAddress', 'Search for address instead')}
+                                    {t('joinNow.address.searchAddress')}
                                 </Button>
                             </div>
                         )}
@@ -239,7 +239,7 @@ export function Address() {
                                 </div>
                                 <div>
                                     <p className="text-sm font-medium text-foreground">
-                                        {t('joinNow.address.freshness', 'Insulated packaging keeps your meals fresh for up to 12 hours')}
+                                        {t('joinNow.address.freshness')}
                                     </p>
                                 </div>
                             </div>
@@ -250,7 +250,7 @@ export function Address() {
                                 </div>
                                 <div>
                                     <p className="text-sm font-medium text-foreground">
-                                        {t('joinNow.address.updates', 'Delivery slot updates on the day via text and email')}
+                                        {t('joinNow.address.updates')}
                                     </p>
                                 </div>
                             </div>
@@ -261,7 +261,7 @@ export function Address() {
                                 </div>
                                 <div>
                                     <p className="text-sm font-medium text-foreground">
-                                        {t('joinNow.address.delivery', 'Free delivery on all orders over $50')}
+                                        {t('joinNow.address.delivery')}
                                     </p>
                                 </div>
                             </div>
@@ -274,7 +274,7 @@ export function Address() {
             <Card>
                 <CardHeader>
                     <CardTitle className="text-lg font-semibold">
-                        {t('joinNow.address.hearAbout', 'HOW DID YOU HEAR ABOUT PREPME?')}
+                        {t('joinNow.address.hearAbout')}
                     </CardTitle>
                 </CardHeader>
                 <CardContent>
@@ -283,7 +283,7 @@ export function Address() {
                         onValueChange={(value) => handleInputChange('hearAboutUs', value)}
                     >
                         <SelectTrigger className="border-border focus:border-primary">
-                            <SelectValue placeholder={t('joinNow.address.selectSource', 'Select how you heard about us')} />
+                            <SelectValue placeholder={t('joinNow.address.selectSource')} />
                         </SelectTrigger>
                         <SelectContent>
                             {hearAboutUsOptions.map((option) => (
@@ -300,7 +300,7 @@ export function Address() {
             {!isFormValid() && (
                 <div className="text-center">
                     <p className="text-sm text-muted-foreground">
-                        {t('joinNow.address.requiredFields', 'Please fill in all required fields to continue')}
+                        {t('joinNow.address.requiredFields')}
                     </p>
                 </div>
             )}

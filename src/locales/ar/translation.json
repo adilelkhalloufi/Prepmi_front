@@ -270,5 +270,152 @@
       "previous": "السابق",
       "next": "التالي"
     }
+  },
+  "joinNow": {
+    "steps": {
+      "plan": "اختيار الخطة",
+      "meals": "اختيار الوجبات",
+      "address": "عنوان التوصيل",
+      "payment": "تفاصيل الدفع"
+    },
+    "navigation": {
+      "previous": "السابق",
+      "next": "التالي",
+      "continue": "متابعة",
+      "finish": "إكمال الطلب",
+      "back": "رجوع"
+    },
+    "titles": {
+      "joinProcess": "انضم الآن - أكمل طلبك",
+      "stepProgress": "الخطوة {{current}} من {{total}}"
+    },
+    "buttons": {
+      "selectPlan": "اختيار هذه الخطة",
+      "addMeal": "إضافة وجبة",
+      "removeMeal": "إزالة وجبة",
+      "saveAddress": "حفظ العنوان",
+      "processPayment": "معالجة الدفع"
+    },
+    "payment": {
+      "title": "ملخص الطلب والدفع",
+      "subtitle": "راجع طلبك وأكمل عملية الشراء",
+      "customerDetails": "تفاصيل العميل",
+      "edit": "تحرير",
+      "done": "تم",
+      "deliveryAddress": "عنوان التوصيل",
+      "yourOrder": "طلبك ({{count}} عنصر)",
+      "mainMeals": "الوجبات الرئيسية",
+      "breakfast": "الإفطار",
+      "drinks": "المشروبات",
+      "each": "لكل واحدة",
+      "qty": "الكمية",
+      "orderSummary": "ملخص الطلب",
+      "mealsSubtotal": "المجموع الفرعي للوجبات",
+      "breakfastSubtotal": "المجموع الفرعي للإفطار",
+      "drinksSubtotal": "المجموع الفرعي للمشروبات",
+      "delivery": "التوصيل",
+      "free": "مجاني",
+      "discount": "الخصم",
+      "total": "المجموع",
+      "discountCode": "كود الخصم",
+      "enterDiscountCode": "أدخل كود الخصم",
+      "apply": "تطبيق",
+      "off": "خصم",
+      "paymentMethod": "طريقة الدفع",
+      "onlinePayment": "الدفع الإلكتروني",
+      "paySecurely": "ادفع بأمان بالبطاقة",
+      "cashOnDelivery": "الدفع عند التسليم",
+      "payWhenReceive": "ادفع عند الاستلام",
+      "placeOrderCOD": "تأكيد الطلب (الدفع عند التسليم)",
+      "payAmount": "ادفع ${{amount}}"
+    },
+    "address": {
+      "title": "تفاصيل التوصيل",
+      "subtitle": "أخبرنا أين نوصل وجباتك اللذيذة",
+      "personalInformation": "المعلومات الشخصية",
+      "firstName": "الاسم الأول",
+      "lastName": "اسم العائلة",
+      "country": "البلد",
+      "phoneNumber": "رقم الهاتف",
+      "firstNamePlaceholder": "أدخل اسمك الأول",
+      "lastNamePlaceholder": "أدخل اسم عائلتك",
+      "phoneNumberPlaceholder": "رقم الهاتف",
+      "deliveryAddress": "عنوان التوصيل",
+      "addressSearch": "ابدأ بكتابة عنوانك...",
+      "manualEntry": "أو أدخل عنوانك يدوياً",
+      "fullAddress": "أدخل عنوانك الكامل",
+      "searchAddress": "البحث عن العنوان بدلاً من ذلك",
+      "freshness": "العبوة المعزولة تحافظ على طزاجة وجباتك لمدة تصل إلى 12 ساعة",
+      "updates": "تحديثات موعد التوصيل في نفس اليوم عبر الرسائل والإيميل",
+      "delivery": "توصيل مجاني على جميع الطلبات أكثر من 50$",
+      "hearAbout": "كيف سمعت عن بريبمي؟",
+      "selectSource": "اختر كيف سمعت عنا",
+      "requiredFields": "يرجى ملء جميع الحقول المطلوبة للمتابعة"
+    },
+    "meals": {
+      "title": "اختر وجباتك",
+      "subtitle": "القائمة تتغير أسبوعياً مع أكثر من 50 خيار شهرياً"
+    }
+  },
+  "plan": {
+    "title": "اصنع خطة",
+    "titleHighlight": "وجباتك المثالية",
+    "subtitle": "خصص توصيل وجباتك الأسبوعي ليتناسب مع نمط حياتك وتفضيلاتك الغذائية",
+    "protein": {
+      "title": "اختر تفضيل البروتين",
+      "subtitle": "اختر نوع الوجبات التي تناسب متطلباتك الغذائية",
+      "options": {
+        "meatVegan": {
+          "label": "مزيج اللحوم + النباتي",
+          "description": "مجموعة متوازنة من الوجبات النباتية والوجبات القائمة على اللحوم"
+        },
+        "meatOnly": {
+          "label": "اللحوم فقط",
+          "description": "وجبات غنية بالبروتين تحتوي على الدجاج واللحم والسمك واللحوم الأخرى"
+        },
+        "veganOnly": {
+          "label": "نباتي فقط",
+          "description": "وجبات نباتية 100% مليئة بالعناصر الغذائية والنكهة"
+        }
+      }
+    },
+    "portion": {
+      "title": "اختر حجم الحصة",
+      "options": {
+        "standard": {
+          "label": "عادي",
+          "calories": "400-500 سعرة حرارية",
+          "protein": "25-35 جرام بروتين"
+        },
+        "large": {
+          "label": "كبير",
+          "calories": "500-650 سعرة حرارية",
+          "protein": "35-45 جرام بروتين"
+        },
+        "lean": {
+          "label": "قليل الدسم وخفيف",
+          "calories": "300-400 سعرة حرارية",
+          "protein": "30-40 جرام بروتين"
+        }
+      }
+    },
+    "meals": {
+      "title": "كم وجبة في الأسبوع؟",
+      "subtitle": "اختر عدد الوجبات التي تناسب جدولك وشهيتك"
+    },
+    "summary": {
+      "title": "ملخص طلبك",
+      "pricePerMeal": "السعر لكل وجبة",
+      "mainMeals": "الوجبات الرئيسية",
+      "discount": "خصم الطلب الأول",
+      "off": "خصم",
+      "delivery": "التوصيل",
+      "free": "مجاني",
+      "total": "المجموع"
+    }
+  },
+  "common": {
+    "selected": "مختار",
+    "meal": "وجبة"
   }
 }

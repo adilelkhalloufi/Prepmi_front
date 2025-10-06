@@ -134,10 +134,10 @@ export function Payment() {
             {/* Header */}
             <div className="text-center mb-8">
                 <h2 className="text-3xl font-bold text-foreground mb-2">
-                    {t('joinNow.payment.title', 'ORDER SUMMARY & PAYMENT')}
+                    {t('joinNow.payment.title')}
                 </h2>
                 <p className="text-muted-foreground">
-                    {t('joinNow.payment.subtitle', 'Review your order and complete your purchase')}
+                    {t('joinNow.payment.subtitle')}
                 </p>
             </div>
 
@@ -149,11 +149,11 @@ export function Payment() {
                         <CardHeader className="flex flex-row items-center justify-between">
                             <CardTitle className="flex items-center space-x-2">
                                 <User className="w-5 h-5 text-primary" />
-                                <span>Customer Details</span>
+                                <span>{t('joinNow.payment.customerDetails')}</span>
                             </CardTitle>
                             <Button variant="ghost" size="sm" className="text-primary">
                                 <Edit className="w-4 h-4 mr-1" />
-                                Edit
+                                {t('joinNow.payment.edit')}
                             </Button>
                         </CardHeader>
                         <CardContent className="space-y-4">
@@ -164,7 +164,7 @@ export function Payment() {
                             <div className="flex items-start space-x-2">
                                 <MapPin className="w-4 h-4 text-muted-foreground mt-1" />
                                 <div>
-                                    <p className="text-sm font-medium">Delivery Address</p>
+                                    <p className="text-sm font-medium">{t('joinNow.payment.deliveryAddress')}</p>
                                     <p className="text-sm text-muted-foreground">{planData?.address || 'N/A'}</p>
                                     <p className="text-sm text-muted-foreground">{planData?.country || 'N/A'}</p>
                                 </div>
@@ -177,7 +177,7 @@ export function Payment() {
                         <CardHeader className="flex flex-row items-center justify-between">
                             <CardTitle className="flex items-center space-x-2">
                                 <ShoppingCart className="w-5 h-5 text-primary" />
-                                <span>Your Order ({totalItems} items)</span>
+                                <span>{t('joinNow.payment.yourOrder', { count: totalItems })}</span>
                             </CardTitle>
                             <Button
                                 variant="ghost"
@@ -186,7 +186,7 @@ export function Payment() {
                                 onClick={() => setIsEditingMeals(!isEditingMeals)}
                             >
                                 <Edit className="w-4 h-4 mr-1" />
-                                {isEditingMeals ? 'Done' : 'Edit'}
+                                {isEditingMeals ? t('joinNow.payment.done') : t('joinNow.payment.edit')}
                             </Button>
                         </CardHeader>
                         <CardContent className="space-y-6">
@@ -195,7 +195,7 @@ export function Payment() {
                                 <div>
                                     <div className="flex items-center space-x-2 mb-4">
                                         <Utensils className="w-4 h-4 text-primary" />
-                                        <h4 className="font-semibold text-foreground">Main Meals</h4>
+                                        <h4 className="font-semibold text-foreground">{t('joinNow.payment.mainMeals')}</h4>
                                     </div>
                                     <div className="space-y-3">
                                         {selectedMeals.map((meal) => (
@@ -207,7 +207,7 @@ export function Payment() {
                                                 />
                                                 <div className="flex-1">
                                                     <h5 className="font-medium text-foreground">{meal.name}</h5>
-                                                    <p className="text-sm text-muted-foreground">${meal.price} each</p>
+                                                    <p className="text-sm text-muted-foreground">${meal.price} {t('joinNow.payment.each')}</p>
                                                 </div>
                                                 {isEditingMeals ? (
                                                     <div className="flex items-center space-x-2">
@@ -239,7 +239,7 @@ export function Payment() {
                                                     </div>
                                                 ) : (
                                                     <div className="text-right">
-                                                        <p className="text-sm text-muted-foreground">Qty: {meal.quantity}</p>
+                                                        <p className="text-sm text-muted-foreground">{t('joinNow.payment.qty')}: {meal.quantity}</p>
                                                         <p className="font-semibold">${(meal.price * meal.quantity).toFixed(2)}</p>
                                                     </div>
                                                 )}
@@ -254,7 +254,7 @@ export function Payment() {
                                 <div>
                                     <div className="flex items-center space-x-2 mb-4">
                                         <Coffee className="w-4 h-4 text-secondary" />
-                                        <h4 className="font-semibold text-foreground">Breakfast</h4>
+                                        <h4 className="font-semibold text-foreground">{t('joinNow.payment.breakfast')}</h4>
                                     </div>
                                     <div className="space-y-3">
                                         {selectedBreakfasts.map((item) => (
@@ -298,7 +298,7 @@ export function Payment() {
                                                     </div>
                                                 ) : (
                                                     <div className="text-right">
-                                                        <p className="text-sm text-muted-foreground">Qty: {item.quantity}</p>
+                                                        <p className="text-sm text-muted-foreground">{t('joinNow.payment.qty')}: {item.quantity}</p>
                                                         <p className="font-semibold">${(item.price * item.quantity).toFixed(2)}</p>
                                                     </div>
                                                 )}
@@ -313,7 +313,7 @@ export function Payment() {
                                 <div>
                                     <div className="flex items-center space-x-2 mb-4">
                                         <Coffee className="w-4 h-4 text-accent" />
-                                        <h4 className="font-semibold text-foreground">Drinks</h4>
+                                        <h4 className="font-semibold text-foreground">{t('joinNow.payment.drinks')}</h4>
                                     </div>
                                     <div className="space-y-3">
                                         {selectedDrinks.map((item) => (
@@ -357,7 +357,7 @@ export function Payment() {
                                                     </div>
                                                 ) : (
                                                     <div className="text-right">
-                                                        <p className="text-sm text-muted-foreground">Qty: {item.quantity}</p>
+                                                        <p className="text-sm text-muted-foreground">{t('joinNow.payment.qty')}: {item.quantity}</p>
                                                         <p className="font-semibold">${(item.price * item.quantity).toFixed(2)}</p>
                                                     </div>
                                                 )}
@@ -377,37 +377,37 @@ export function Payment() {
                         <CardHeader>
                             <CardTitle className="flex items-center space-x-2">
                                 <Receipt className="w-5 h-5 text-primary" />
-                                <span>Order Summary</span>
+                                <span>{t('joinNow.payment.orderSummary')}</span>
                             </CardTitle>
                         </CardHeader>
                         <CardContent className="space-y-4">
                             <div className="space-y-2">
                                 <div className="flex justify-between text-sm">
-                                    <span>Meals Subtotal</span>
+                                    <span>{t('joinNow.payment.mealsSubtotal')}</span>
                                     <span>${mealsSubtotal.toFixed(2)}</span>
                                 </div>
                                 {breakfastSubtotal > 0 && (
                                     <div className="flex justify-between text-sm">
-                                        <span>Breakfast Subtotal</span>
+                                        <span>{t('joinNow.payment.breakfastSubtotal')}</span>
                                         <span>${breakfastSubtotal.toFixed(2)}</span>
                                     </div>
                                 )}
                                 {drinksSubtotal > 0 && (
                                     <div className="flex justify-between text-sm">
-                                        <span>Drinks Subtotal</span>
+                                        <span>{t('joinNow.payment.drinksSubtotal')}</span>
                                         <span>${drinksSubtotal.toFixed(2)}</span>
                                     </div>
                                 )}
                                 <div className="flex justify-between text-sm">
                                     <div className="flex items-center space-x-1">
                                         <Truck className="w-3 h-3" />
-                                        <span>Delivery</span>
+                                        <span>{t('joinNow.payment.delivery')}</span>
                                     </div>
-                                    <span>{deliveryFee > 0 ? `$${deliveryFee.toFixed(2)}` : 'FREE'}</span>
+                                    <span>{deliveryFee > 0 ? `$${deliveryFee.toFixed(2)}` : t('joinNow.payment.free')}</span>
                                 </div>
                                 {appliedDiscount && (
                                     <div className="flex justify-between text-sm text-primary">
-                                        <span>Discount ({appliedDiscount.code})</span>
+                                        <span>{t('joinNow.payment.discount')} ({appliedDiscount.code})</span>
                                         <span>-${discountAmount.toFixed(2)}</span>
                                     </div>
                                 )}
@@ -416,7 +416,7 @@ export function Payment() {
                             <Separator />
 
                             <div className="flex justify-between text-lg font-bold">
-                                <span>Total</span>
+                                <span>{t('joinNow.payment.total')}</span>
                                 <span>${total.toFixed(2)}</span>
                             </div>
                         </CardContent>
@@ -427,14 +427,14 @@ export function Payment() {
                         <CardHeader>
                             <CardTitle className="flex items-center space-x-2 text-base">
                                 <Tag className="w-4 h-4 text-primary" />
-                                <span>Discount Code</span>
+                                <span>{t('joinNow.payment.discountCode')}</span>
                             </CardTitle>
                         </CardHeader>
                         <CardContent className="space-y-4">
                             {!appliedDiscount ? (
                                 <div className="flex space-x-2">
                                     <Input
-                                        placeholder="Enter discount code"
+                                        placeholder={t('joinNow.payment.enterDiscountCode')}
                                         value={discountCode}
                                         onChange={(e) => setDiscountCode(e.target.value.toUpperCase())}
                                         className="flex-1"
@@ -444,7 +444,7 @@ export function Payment() {
                                         disabled={!discountCode}
                                         size="sm"
                                     >
-                                        Apply
+                                        {t('joinNow.payment.apply')}
                                     </Button>
                                 </div>
                             ) : (
@@ -453,7 +453,7 @@ export function Payment() {
                                         <Check className="w-4 h-4 text-primary" />
                                         <span className="font-medium text-primary">{appliedDiscount.code}</span>
                                         <span className="text-sm text-muted-foreground">
-                                            {appliedDiscount.amount}% off
+                                            {appliedDiscount.amount}% {t('joinNow.payment.off')}
                                         </span>
                                     </div>
                                     <Button variant="ghost" size="sm" onClick={removeDiscount}>
@@ -469,7 +469,7 @@ export function Payment() {
                         <CardHeader>
                             <CardTitle className="flex items-center space-x-2 text-base">
                                 <CreditCard className="w-4 h-4 text-primary" />
-                                <span>Payment Method</span>
+                                <span>{t('joinNow.payment.paymentMethod')}</span>
                             </CardTitle>
                         </CardHeader>
                         <CardContent className="space-y-4">
@@ -487,8 +487,8 @@ export function Payment() {
                                             : 'border-border'
                                             }`} />
                                         <div>
-                                            <p className="font-medium">Online Payment</p>
-                                            <p className="text-sm text-muted-foreground">Pay securely with card</p>
+                                            <p className="font-medium">{t('joinNow.payment.onlinePayment')}</p>
+                                            <p className="text-sm text-muted-foreground">{t('joinNow.payment.paySecurely')}</p>
                                         </div>
                                     </div>
                                 </div>
@@ -506,8 +506,8 @@ export function Payment() {
                                             : 'border-border'
                                             }`} />
                                         <div>
-                                            <p className="font-medium">Cash on Delivery</p>
-                                            <p className="text-sm text-muted-foreground">Pay when you receive</p>
+                                            <p className="font-medium">{t('joinNow.payment.cashOnDelivery')}</p>
+                                            <p className="text-sm text-muted-foreground">{t('joinNow.payment.payWhenReceive')}</p>
                                         </div>
                                     </div>
                                 </div>
@@ -527,7 +527,7 @@ export function Payment() {
                             })
                         }}
                     >
-                        {paymentMethod === 'COD' ? 'Place Order (COD)' : `Pay $${total.toFixed(2)}`}
+                        {paymentMethod === 'COD' ? t('joinNow.payment.placeOrderCOD') : t('joinNow.payment.payAmount', { amount: total.toFixed(2) })}
                     </Button>
                 </div>
             </div>

@@ -270,5 +270,152 @@
       "previous": "Précédent",
       "next": "Suivant"
     }
+  },
+  "joinNow": {
+    "steps": {
+      "plan": "Choisir un Plan",
+      "meals": "Sélectionner Repas",
+      "address": "Adresse de Livraison",
+      "payment": "Détails de Paiement"
+    },
+    "navigation": {
+      "previous": "Précédent",
+      "next": "Suivant",
+      "continue": "Continuer",
+      "finish": "Finaliser Commande",
+      "back": "Retour"
+    },
+    "titles": {
+      "joinProcess": "Rejoignez-nous - Complétez Votre Commande",
+      "stepProgress": "Étape {{current}} sur {{total}}"
+    },
+    "buttons": {
+      "selectPlan": "Sélectionner ce Plan",
+      "addMeal": "Ajouter Repas",
+      "removeMeal": "Retirer Repas",
+      "saveAddress": "Sauvegarder Adresse",
+      "processPayment": "Traiter le Paiement"
+    },
+    "payment": {
+      "title": "RÉSUMÉ DE COMMANDE ET PAIEMENT",
+      "subtitle": "Vérifiez votre commande et finalisez votre achat",
+      "customerDetails": "Détails du Client",
+      "edit": "Modifier",
+      "done": "Terminé",
+      "deliveryAddress": "Adresse de Livraison",
+      "yourOrder": "Votre Commande ({{count}} articles)",
+      "mainMeals": "Repas Principaux",
+      "breakfast": "Petit-déjeuner",
+      "drinks": "Boissons",
+      "each": "chacun",
+      "qty": "Qté",
+      "orderSummary": "Résumé de Commande",
+      "mealsSubtotal": "Sous-total Repas",
+      "breakfastSubtotal": "Sous-total Petit-déjeuner",
+      "drinksSubtotal": "Sous-total Boissons",
+      "delivery": "Livraison",
+      "free": "GRATUITE",
+      "discount": "Remise",
+      "total": "Total",
+      "discountCode": "Code de Remise",
+      "enterDiscountCode": "Entrer le code de remise",
+      "apply": "Appliquer",
+      "off": "de réduction",
+      "paymentMethod": "Méthode de Paiement",
+      "onlinePayment": "Paiement en Ligne",
+      "paySecurely": "Paiement sécurisé par carte",
+      "cashOnDelivery": "Paiement à la Livraison",
+      "payWhenReceive": "Payer à la réception",
+      "placeOrderCOD": "Passer Commande (COD)",
+      "payAmount": "Payer ${{amount}}"
+    },
+    "address": {
+      "title": "DÉTAILS DE LIVRAISON",
+      "subtitle": "Dites-nous où livrer vos délicieux repas",
+      "personalInformation": "Informations Personnelles",
+      "firstName": "PRÉNOM",
+      "lastName": "NOM DE FAMILLE",
+      "country": "PAYS",
+      "phoneNumber": "NUMÉRO DE TÉLÉPHONE",
+      "firstNamePlaceholder": "Entrez votre prénom",
+      "lastNamePlaceholder": "Entrez votre nom de famille",
+      "phoneNumberPlaceholder": "numéro de téléphone",
+      "deliveryAddress": "ADRESSE DE LIVRAISON",
+      "addressSearch": "commencez à taper votre adresse...",
+      "manualEntry": "Ou saisissez votre adresse manuellement",
+      "fullAddress": "Entrez votre adresse complète",
+      "searchAddress": "Rechercher une adresse à la place",
+      "freshness": "L'emballage isolé garde vos repas frais jusqu'à 12 heures",
+      "updates": "Mises à jour du créneau de livraison le jour même par SMS et email",
+      "delivery": "Livraison gratuite sur toutes les commandes de plus de 50$",
+      "hearAbout": "COMMENT AVEZ-VOUS ENTENDU PARLER DE PREPME?",
+      "selectSource": "Sélectionnez comment vous avez entendu parler de nous",
+      "requiredFields": "Veuillez remplir tous les champs obligatoires pour continuer"
+    },
+    "meals": {
+      "title": "CHOISISSEZ VOS REPAS",
+      "subtitle": "Le menu change chaque semaine avec plus de 50 options par mois"
+    }
+  },
+  "plan": {
+    "title": "Créez Votre Plan de",
+    "titleHighlight": "Repas Parfait",
+    "subtitle": "Personnalisez votre livraison de repas hebdomadaire selon votre style de vie et préférences alimentaires",
+    "protein": {
+      "title": "Choisissez Votre Préférence de Protéines",
+      "subtitle": "Sélectionnez le type de repas qui correspond à vos besoins alimentaires",
+      "options": {
+        "meatVegan": {
+          "label": "Mélange Viande + Végétalien",
+          "description": "Une sélection équilibrée de repas à base de viande et de plantes"
+        },
+        "meatOnly": {
+          "label": "Viande Seulement",
+          "description": "Repas riches en protéines avec poulet, bœuf, poisson et autres viandes"
+        },
+        "veganOnly": {
+          "label": "Végétalien Seulement",
+          "description": "Repas 100% végétaux riches en nutriments et en saveur"
+        }
+      }
+    },
+    "portion": {
+      "title": "Sélectionnez Votre Taille de Portion",
+      "options": {
+        "standard": {
+          "label": "Standard",
+          "calories": "400-500 kcal",
+          "protein": "25-35g de protéines"
+        },
+        "large": {
+          "label": "Large",
+          "calories": "500-650 kcal",
+          "protein": "35-45g de protéines"
+        },
+        "lean": {
+          "label": "Léger et Mince",
+          "calories": "300-400 kcal",
+          "protein": "30-40g de protéines"
+        }
+      }
+    },
+    "meals": {
+      "title": "Combien de Repas Par Semaine?",
+      "subtitle": "Choisissez le nombre de repas qui correspond à votre horaire et appétit"
+    },
+    "summary": {
+      "title": "Résumé de Votre Commande",
+      "pricePerMeal": "Prix par repas",
+      "mainMeals": "Repas principaux",
+      "discount": "Remise Première Commande",
+      "off": "DE RÉDUCTION",
+      "delivery": "Livraison",
+      "free": "GRATUITE",
+      "total": "Total"
+    }
+  },
+  "common": {
+    "selected": "Sélectionné",
+    "meal": "repas"
   }
 }
