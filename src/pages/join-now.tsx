@@ -36,22 +36,28 @@ const JoinNow = () => {
             <div className="container mx-auto px-4 py-8">
                 {/* Progress Bar */}
                 <div className="mb-8">
-                    <div className="flex items-center justify-between max-w-4xl mx-auto">
+                    <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between max-w-4xl mx-auto gap-4 sm:gap-0">
                         {steps.map((step, index) => (
-                            <div key={step.id} className="flex items-center">
-                                <div className={`w-10 h-10 rounded-full flex items-center justify-center font-semibold ${currentStep >= step.id
+                            <div key={step.id} className="flex items-center w-full sm:w-auto">
+                                <div className={`w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center font-semibold text-sm sm:text-base flex-shrink-0 ${currentStep >= step.id
                                     ? 'bg-primary text-primary-foreground'
                                     : 'bg-gray-200 text-gray-500'
                                     }`}>
                                     {step.id}
                                 </div>
-                                <span className={`ml-2 font-medium ${currentStep >= step.id ? 'text-primary' : 'text-gray-500'
+                                <span className={`ml-2 font-medium text-sm sm:text-base ${currentStep >= step.id ? 'text-primary' : 'text-gray-500'
                                     }`}>
                                     {step.title}
                                 </span>
                                 {index < steps.length - 1 && (
-                                    <div className={`w-16 h-1 mx-4 ${currentStep > step.id ? 'bg-primary' : 'bg-gray-200'
-                                        }`} />
+                                    <>
+                                        {/* Mobile: Vertical connector */}
+                                        <div className={`sm:hidden w-1 h-8 ml-4 ${currentStep > step.id ? 'bg-primary' : 'bg-gray-200'
+                                            }`} />
+                                        {/* Desktop: Horizontal connector */}
+                                        <div className={`hidden sm:block w-16 h-1 mx-4 ${currentStep > step.id ? 'bg-primary' : 'bg-gray-200'
+                                            }`} />
+                                    </>
                                 )}
                             </div>
                         ))}
@@ -66,12 +72,12 @@ const JoinNow = () => {
                 </div>
 
                 {/* Navigation */}
-                <div className="flex justify-between items-center max-w-4xl mx-auto mt-8">
+                <div className="flex flex-col sm:flex-row justify-between items-center max-w-4xl mx-auto mt-8 gap-4 sm:gap-0">
                     <Button
                         variant="outline"
                         onClick={handlePrev}
                         disabled={currentStep === 1}
-                        className="flex items-center gap-2 border-primary text-primary hover:bg-primary hover:text-primary-foreground"
+                        className="flex items-center gap-2 border-primary text-primary hover:bg-primary hover:text-primary-foreground w-full sm:w-auto order-2 sm:order-1"
                     >
                         <ChevronLeft className="h-4 w-4" />
                         {t('joinNow.navigation.previous')}
@@ -80,7 +86,7 @@ const JoinNow = () => {
                     <Button
                         onClick={handleNext}
                         disabled={currentStep === steps.length}
-                        className="flex items-center gap-2 bg-primary hover:bg-primary/90 text-primary-foreground"
+                        className="flex items-center gap-2 bg-primary hover:bg-primary/90 text-primary-foreground w-full sm:w-auto order-1 sm:order-2"
                     >
                         {t('joinNow.navigation.next')}
                         <ChevronRight className="h-4 w-4" />
