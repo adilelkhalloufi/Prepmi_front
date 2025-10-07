@@ -2,6 +2,7 @@ import { UserAuthForm } from '@/components/login/UserAuthForm'
 import { IconRecycle } from '@tabler/icons-react'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
+import logo from '../assets/Prepme.svg'
 
 export default function SignIn() {
   const { t } = useTranslation()
@@ -9,15 +10,12 @@ export default function SignIn() {
     <>
       <div className='container relative grid h-svh flex-col items-center justify-center lg:max-w-none lg:grid-cols-2 lg:px-0'>
         <div className='relative hidden h-full flex-col bg-muted p-10 text-white dark:border-r lg:flex'>
-          <div className='absolute inset-0 bg-zinc-900' />
+          <div className='absolute inset-0 bg-primary' />
           <div className='relative z-20 flex items-center text-lg font-medium'>
 
-            <IconRecycle width={24} height={24} />
-
-            {t('website')}
           </div>
           <div className='flex justify-center items-center h-full'>
-            <IconRecycle width={301} height={301} className='z-50' />
+            <img src={logo} alt='logo' className='h-20 w-full filter brightness-0 invert' />
 
           </div>
 
