@@ -10,6 +10,9 @@ export const webRoutes = {
   menu: '/menu',
   join_now: '/join-now',
   single_product: '/product/:id',
+  privacy_policy: '/privacy-policy',
+  terms_service: '/terms-of-service',
+  cookie_settings: '/cookie-settings',
 
 
 };

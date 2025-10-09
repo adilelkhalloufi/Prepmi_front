@@ -6,124 +6,119 @@ import {
     CardTitle,
 } from '@/components/ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { setPageTitle } from '@/utils'
-import { IconUsersGroup, IconZoomMoney } from '@tabler/icons-react'
 import { Button } from '@/components/ui/button'
+import {
+    IconUsersGroup,
+    IconZoomMoney,
+    IconTruck,
+    IconChefHat,
+    IconUser,
+    IconClipboardList,
+    IconApple,
+    IconMeat,
+    IconBread
+} from '@tabler/icons-react'
+import ClientDashboard from '@/components/dashboard/ClientDashboard'
+import AdminDashboard from '@/components/dashboard/AdminDashboard'
+import DeliveryDashboard from '@/components/dashboard/DeliveryDashboard'
+import CuisineDashboard from '@/components/dashboard/CuisineDashboard'
 
+// Types pour les rôles utilisateur
+type UserRole = 'client' | 'admin' | 'delivery' | 'cuisine'
 
 export default function Dashboard() {
+    // Simuler le rôle utilisateur - à remplacer par votre système d'auth
+    const [userRole, setUserRole] = useState<UserRole>('client')
+
     useEffect(() => {
-        setPageTitle("Dashboard")
+        setPageTitle("Tableau de Bord")
     }, [])
 
+    const getDashboardTitle = () => {
+        switch (userRole) {
+            case 'client': return 'Tableau de Bord - Client'
+            case 'admin': return 'Tableau de Bord - Administrateur'
+            case 'delivery': return 'Tableau de Bord - Livreur'
+            case 'cuisine': return 'Tableau de Bord - Cuisine'
+            default: return 'Tableau de Bord'
+        }
+    }
+
+
     return (
-
         <>
-
             <div className='mb-2 flex items-center justify-between space-y-2'>
-                <h1 className='text-2xl font-bold tracking-tight'>Dashboard</h1>
+                <h1 className='text-2xl font-bold tracking-tight'>{getDashboardTitle()}</h1>
                 <div className='flex items-center space-x-2'>
-                    <Button>Download</Button>
+                    {/* Sélecteur de rôle pour demo - à supprimer en production */}
+                    <select
+                        value={userRole}
+                        onChange={(e) => setUserRole(e.target.value as UserRole)}
+                        className='px-3 py-1 border rounded'
+                    >
+                        <option value="client">Client</option>
+                        <option value="admin">Admin</option>
+                        <option value="delivery">Livreur</option>
+                        <option value="cuisine">Cuisine</option>
+                    </select>
                 </div>
             </div>
+
             <Tabs
                 orientation='vertical'
                 defaultValue='overview'
                 className='space-y-4'
             >
                 <div className='w-full overflow-x-auto pb-2'>
-                    <TabsList>
-                        <TabsTrigger value='overview'>Overview</TabsTrigger>
-
-                    </TabsList>
+                    {/* <TabsList>
+                        <TabsTrigger value='overview'>Aperçu</TabsTrigger>
+                    </TabsList> */}
                 </div>
                 <TabsContent value='overview' className='space-y-4'>
-                    <div className='grid gap-4 sm:grid-cols-2 lg:grid-cols-4'>
-                        <Card>
-                            <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
-                                <CardTitle className='text-sm font-medium'>
-                                    Total de chiffre d'affaire
-                                </CardTitle>
-                                <IconZoomMoney />
-                            </CardHeader>
-                            <CardContent>
-                                <div className='text-2xl font-bold'>10 DH</div>
-                                <p className='text-xs text-muted-foreground'>
-                                    Par jour
-                                </p>
-                            </CardContent>
-                        </Card>
+                    {userRole === 'client' && <ClientDashboard />}
+                    {userRole === 'admin' && <AdminDashboard />}
+                    {userRole === 'delivery' && <DeliveryDashboard />}
+                    {userRole === 'cuisine' && <CuisineDashboard />}
 
-                        <Card>
-                            <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
-                                <CardTitle className='text-sm font-medium'>
-                                    Total Viste
-                                </CardTitle>
-                                <IconUsersGroup />
-                            </CardHeader>
-                            <CardContent>
-                                <div className='text-2xl font-bold'>10 </div>
-                                <p className='text-xs text-muted-foreground'>
-                                    Par jour
-                                </p>
-                            </CardContent>
-                        </Card>
 
-                        <Card>
-                            <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
-                                <CardTitle className='text-sm font-medium'>
-                                    Total de chiffre d'affaires
-                                </CardTitle>
-                                <IconZoomMoney />
-                            </CardHeader>
-                            <CardContent>
-                                <div className='text-2xl font-bold'>10 DH</div>
-                                <p className='text-xs text-muted-foreground'>
-                                    Par Mois
-                                </p>
-                            </CardContent>
-                        </Card>
-
-                        <Card>
-                            <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
-                                <CardTitle className='text-sm font-medium'>
-                                    Total Viste
-                                </CardTitle>
-                                <IconUsersGroup />
-                            </CardHeader>
-                            <CardContent>
-                                <div className='text-2xl font-bold'>10 </div>
-                                <p className='text-xs text-muted-foreground'>
-                                    Par Mois
-                                </p>
-                            </CardContent>
-                        </Card>
-                    </div>
                     <div className='grid grid-cols-1 gap-4 lg:grid-cols-7'>
                         <Card className='col-span-1 lg:col-span-4'>
                             <CardHeader>
-                                <CardTitle>Overview</CardTitle>
+                                <CardTitle>
+                                    {userRole === 'client' && 'Évolution nutritionnelle'}
+                                    {userRole === 'admin' && 'Évolution du chiffre d\'affaires'}
+                                    {userRole === 'delivery' && 'Itinéraires du jour'}
+                                    {userRole === 'cuisine' && 'Planning de production'}
+                                </CardTitle>
                             </CardHeader>
                             <CardContent className='pl-2'>
-                                {/* <Overview /> */}
+                                {/* Graphiques spécifiques selon le rôle */}
                             </CardContent>
                         </Card>
                         <Card className='col-span-1 lg:col-span-3'>
                             <CardHeader>
-                                <CardTitle>Recent Sales</CardTitle>
+                                <CardTitle>
+                                    {userRole === 'client' && 'Commandes récentes'}
+                                    {userRole === 'admin' && 'Ventes récentes'}
+                                    {userRole === 'delivery' && 'Prochaines livraisons'}
+                                    {userRole === 'cuisine' && 'Commandes prioritaires'}
+                                </CardTitle>
                                 <CardDescription>
-                                    You made 265 sales this month.
+                                    {userRole === 'client' && 'Vos dernières commandes'}
+                                    {userRole === 'admin' && 'Vous avez fait 265 ventes ce mois'}
+                                    {userRole === 'delivery' && 'Livraisons programmées'}
+                                    {userRole === 'cuisine' && 'À préparer en priorité'}
                                 </CardDescription>
                             </CardHeader>
                             <CardContent>
-                                {/* <RecentSales /> */}
+                                {/* Contenu spécifique selon le rôle */}
                             </CardContent>
                         </Card>
                     </div>
                 </TabsContent>
             </Tabs>
-
         </>
     )
 }

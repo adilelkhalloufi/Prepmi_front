@@ -91,7 +91,7 @@ export function Header() {
             <Button
               variant="ghost"
               onClick={() => {
-                navigate(webRoutes.Dashboard);
+                navigate(webRoutes.dashboard);
               }}
             >
               <IconUser />
@@ -108,16 +108,16 @@ export function Header() {
                 <IconLogin className="mr-2 w-5 h-5" />
                 {t("menu_login")}
               </Button>
-              <Button
-                onClick={() => {
-                  navigate(webRoutes.join_now || "/register");
-                }}
-              >
-                {t("menu_get_started")}
-              </Button>
+
             </>
           )}
-
+          <Button
+            onClick={() => {
+              navigate(webRoutes.join_now || "/register");
+            }}
+          >
+            {t("menu_get_started")}
+          </Button>
         </div>
       </div>
     </header>

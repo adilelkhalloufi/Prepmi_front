@@ -40,9 +40,7 @@ const DashboardOrderSeller = loadable(() => import('../pages/dashboard/seller_or
   fallback: fallbackElement,
 });
 
-// const DashboardProfile = loadable(() => import('../pages/dashboard/profile'), {
-//   fallback: fallbackElement,
-// });
+
 const Landing = loadable(() => import("../pages/landing"), {
   fallback: fallbackElement,
 });
@@ -95,31 +93,29 @@ export const browserRouter = createBrowserRouter([
     ),
     children: [
       {
-        path: webRoutes.Dashboard,
+        path: webRoutes.dashboard,
         element: <Dashboard />,
       },
       {
-        path: webRoutes.dashboard_product,
+        path: webRoutes.dashboard + '/products',
         element: <DashboardProduct />,
-      }
-      ,
+      },
       {
-        path: webRoutes.dashboard_favris,
+        path: webRoutes.dashboard + '/favoris',
         element: <DashboardFavoris />,
       },
       {
-        path: webRoutes.dashboard_order,
+        path: webRoutes.dashboard + '/orders',
         element: <DashboardOrder />,
       },
       {
-        path: webRoutes.dashboard_order_seller,
+        path: webRoutes.dashboard + '/seller-orders',
         element: <DashboardOrderSeller />,
       },
       {
-        path: webRoutes.dashboard_profile,
+        path: webRoutes.dashboard + '/profile',
         element: <ProfileForm />,
-      }
-
+      },
     ],
   },
   {

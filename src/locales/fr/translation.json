@@ -12,7 +12,7 @@
   "menu_stagnant": "Stagnant",
   "login": "Connexion",
   "hero_title": "REPAS SAINS LIVRÉS",
-  "hero_subtitle": "Des repas frais et nutritifs préparés par des chefs professionnels et livrés directement à votre porte. Commencez votre mode de vie sain dès aujourd'hui!",
+  "hero_description": "Des repas frais et nutritifs préparés par des chefs professionnels et livrés directement à votre porte. Commencez votre mode de vie sain dès aujourd'hui!",
   "hero_get_started": "COMMENCER",
   "how_it_works": {
     "simple_process": "Processus Simple",
@@ -431,5 +431,21 @@
   "common": {
     "selected": "Sélectionné",
     "meal": "repas"
+  },
+  "login": {
+    "title": "Connexion",
+    "email": "E-mail",
+    "password": "Mot de passe",
+    "description": "Entrez vos informations ci-dessous pour vous connecter à votre compte",
+    "condition": "En cliquant sur Se connecter, vous acceptez nos Conditions d'utilisation et notre Politique de confidentialité."
+  },
+  "validation": {
+    "emailRequired": "L'e-mail est requis",
+    "passwordRequired": "Le mot de passe est requis",
+    "passwordMinLength": "Le mot de passe doit contenir au moins 4 caractères"
+  },
+  "register": {
+    "message": "Vous n'avez pas de compte ? ",
+    "create": "Créer un compte"
   }
 }

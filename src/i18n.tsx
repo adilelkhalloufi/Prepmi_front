@@ -18,6 +18,7 @@ i18next
     resources: {
       en: {
         ns1: enNs1,
+
       },
       fr: {
         ns1: frNs1,

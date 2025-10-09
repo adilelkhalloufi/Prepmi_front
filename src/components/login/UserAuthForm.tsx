@@ -28,20 +28,6 @@ import { login } from '@/store/slices/adminSlice'
 
 interface UserAuthFormProps extends HTMLAttributes<HTMLDivElement> { }
 
-const formSchema = z.object({
-  email: z
-    .string()
-    .min(1, { message: 'Please enter your email' }),
-  password: z
-    .string()
-    .min(1, {
-      message: 'Please enter your password',
-    })
-    .min(4, {
-      message: 'Password must be at least 7 characters long',
-    }),
-})
-
 export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
 
   const { t } = useTranslation();
@@ -49,8 +35,22 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
   const navigate = useNavigate();
   const location = useLocation();
   const [isLoading, setIsLoading] = useState<boolean>(false)
-  const from = location.state?.from?.pathname || webRoutes.Dashboard;
+  const from = location.state?.from?.pathname || webRoutes.dashboard;
   const admin = useSelector((state: RootState) => state.admin);
+
+  const formSchema = z.object({
+    email: z
+      .string()
+      .min(1, { message: t('validation.emailRequired') }),
+    password: z
+      .string()
+      .min(1, {
+        message: t('validation.passwordRequired'),
+      })
+      .min(4, {
+        message: t('validation.passwordMinLength'),
+      }),
+  })
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -142,7 +142,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
             <Button className='mt-2' variant='secondary'
               loading={isLoading}
             >
-              {t('login')}
+              {t('login.title')}
             </Button>
 
           </div>
