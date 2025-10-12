@@ -24,29 +24,23 @@ const fallbackElement = <ProgressBar />;
 const Dashboard = loadable(() => import('../pages/dashboard'), {
   fallback: fallbackElement,
 });
-const DashboardProduct = loadable(() => import('../pages/dashboard/product'), {
+const DashboardMeals = loadable(() => import('../pages/dashboard/meals'), {
   fallback: fallbackElement,
 });
 
-const DashboardFavoris = loadable(() => import('../pages/dashboard/favoris'), {
+const DashboardMealsAdd = loadable(() => import('../pages/dashboard/meals/add'), {
   fallback: fallbackElement,
 });
 
-const DashboardOrder = loadable(() => import('../pages/dashboard/order'), {
-  fallback: fallbackElement,
-});
 
-const DashboardOrderSeller = loadable(() => import('../pages/dashboard/seller_order'), {
-  fallback: fallbackElement,
-});
+
+
 
 
 const Landing = loadable(() => import("../pages/landing"), {
   fallback: fallbackElement,
 });
-const Stagnant = loadable(() => import("../pages/ProductList"), {
-  fallback: fallbackElement,
-});
+
 
 export const browserRouter = createBrowserRouter([
   {
@@ -97,25 +91,14 @@ export const browserRouter = createBrowserRouter([
         element: <Dashboard />,
       },
       {
-        path: webRoutes.dashboard + '/products',
-        element: <DashboardProduct />,
+        path: webRoutes.dashboard_meals,
+        element: <DashboardMeals />,
       },
       {
-        path: webRoutes.dashboard + '/favoris',
-        element: <DashboardFavoris />,
-      },
-      {
-        path: webRoutes.dashboard + '/orders',
-        element: <DashboardOrder />,
-      },
-      {
-        path: webRoutes.dashboard + '/seller-orders',
-        element: <DashboardOrderSeller />,
-      },
-      {
-        path: webRoutes.dashboard + '/profile',
-        element: <ProfileForm />,
-      },
+        path: webRoutes.dashboard_meals_add,
+        element: <DashboardMealsAdd />,
+      }
+
     ],
   },
   {

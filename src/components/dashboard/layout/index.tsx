@@ -48,7 +48,7 @@ const Layout = () => {
           <LayoutDashbord.Header>
             <TopNav links={topNav} />
             <div className='ml-auto flex items-center space-x-4'>
-              <ThemeSwitcher  />
+              <ThemeSwitcher />
               <UserNav />
             </div>
           </LayoutDashbord.Header>

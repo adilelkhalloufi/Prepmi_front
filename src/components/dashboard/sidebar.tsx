@@ -90,7 +90,7 @@ export default function Sidebar({
           closeNav={() => setNavOpened(false)}
           isCollapsed={isCollapsed}
           links={sidelinksVisible}
-        />
+        />z
 
         {/* Scrollbar width toggle button */}
         <Button

@@ -24,44 +24,21 @@ export interface SideLink extends NavLink {
 }
 
 export const sidelinks: SideLink[] = [
-  // {
-  //   title: 'Tableau de bord',
-  //   label: '',
-  //   href: webRoutes.Dashboard,
-  //   icon: <IconLayoutDashboard size={18} />,
-  //   role: [RoleEnum.BUYER, RoleEnum.SELLER, RoleEnum.ADMIN,RoleEnum.USER]
-  // },
   {
-    title: 'Produit',
+    title: 'Tableau de bord',
     label: '',
-    href: webRoutes.dashboard_product,
+    href: webRoutes.dashboard,
+    icon: <IconLayoutDashboard size={18} />,
+    role: [RoleEnum.BUYER, RoleEnum.SELLER, RoleEnum.ADMIN, RoleEnum.USER]
+  },
+  {
+    title: 'Repas',
+    label: '',
+    href: webRoutes.dashboard_meals,
     icon: <IconBox size={18} />,
-    role: [RoleEnum.BUYER, RoleEnum.SELLER, RoleEnum.ADMIN,RoleEnum.USER]
+    role: [RoleEnum.BUYER, RoleEnum.SELLER, RoleEnum.ADMIN, RoleEnum.USER]
 
   },
-  {
-    title: 'Votre Commandes',
-    label: '',
-    href: webRoutes.dashboard_order,
-    icon: <IconShoppingCart size={18} />,
-    role: [RoleEnum.BUYER, RoleEnum.SELLER, RoleEnum.ADMIN,RoleEnum.USER]
 
-  },
-  {
-    title: 'Commandes des clients',
-    label: '',
-    href: webRoutes.dashboard_order_seller,
-    icon: <IconShoppingCart size={18} />,
-    role: [RoleEnum.SELLER]
 
-  },
-  {
-    title: 'Favorites',
-    label: '',
-    href: webRoutes.dashboard_favris,
-    icon: <IconHeart size={18} />,
-    role: [RoleEnum.BUYER, RoleEnum.SELLER, RoleEnum.ADMIN,RoleEnum.USER]
-
-  },
- 
 ]
