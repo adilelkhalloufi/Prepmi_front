@@ -32,8 +32,19 @@ const DashboardMealsAdd = loadable(() => import('../pages/dashboard/meals/add'),
   fallback: fallbackElement,
 });
 
-
-
+// Weekly Menu Components
+const WeeklyMenuManager = loadable(() => import('../pages/dashboard/weekly-menus'), {
+  fallback: fallbackElement,
+});
+const WeeklyMenuCreate = loadable(() => import('../pages/dashboard/weekly-menus/create'), {
+  fallback: fallbackElement,
+});
+const WeeklyMenuEdit = loadable(() => import('../pages/dashboard/weekly-menus/edit'), {
+  fallback: fallbackElement,
+});
+const WeeklyMenuDetail = loadable(() => import('../pages/dashboard/weekly-menus/detail'), {
+  fallback: fallbackElement,
+});
 
 
 
@@ -97,8 +108,24 @@ export const browserRouter = createBrowserRouter([
       {
         path: webRoutes.dashboard_meals_add,
         element: <DashboardMealsAdd />,
-      }
-
+      },
+      // Weekly Menu Routes
+      {
+        path: '/dashboard/weekly-menus',
+        element: <WeeklyMenuManager />,
+      },
+      {
+        path: '/dashboard/weekly-menus/create',
+        element: <WeeklyMenuCreate />,
+      },
+      {
+        path: '/dashboard/weekly-menus/:id',
+        element: <WeeklyMenuDetail />,
+      },
+      {
+        path: '/dashboard/weekly-menus/:id/edit',
+        element: <WeeklyMenuEdit />,
+      },
     ],
   },
   {
