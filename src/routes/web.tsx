@@ -10,6 +10,7 @@ export const webRoutes = {
   dashboard_menus: '/dashboard/menus',
   dashboard_meals: '/dashboard/meals',
   dashboard_meals_add: '/dashboard/meals/add',
+  dashboard_meals_edit: '/dashboard/meals/edit/:id',
   menu: '/menu',
   join_now: '/join-now',
   single_product: '/product/:id',

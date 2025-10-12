@@ -14,6 +14,7 @@ import {
 
 import { Checkbox } from "@/components/ui/checkbox"
 import { Badge } from "@/components/ui/badge"
+import { useNavigate } from "react-router-dom"
 
 export const columns: ColumnDef<meal>[] = [
   {
@@ -142,7 +143,8 @@ export const columns: ColumnDef<meal>[] = [
   {
     id: "actions",
     cell: ({ row }) => {
-      const payment = row.original
+      const meal = row.original
+      const navigate = useNavigate()
 
       return (
         <DropdownMenu>
@@ -154,14 +156,12 @@ export const columns: ColumnDef<meal>[] = [
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            {/* <DropdownMenuItem
-              onClick={() => navigator.clipboard.writeText(payment.id)}
-            >
-              Copy payment ID
+            <DropdownMenuItem onClick={() => navigate(`/dashboard/meals/edit/${meal.id}`)}>
+              Modifier
             </DropdownMenuItem>
-            <DropdownMenuSeparator /> */}
-            <DropdownMenuItem>Edit</DropdownMenuItem>
-            <DropdownMenuItem>Delete</DropdownMenuItem>
+            <DropdownMenuItem className="text-red-600">
+              Supprimer
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       )
