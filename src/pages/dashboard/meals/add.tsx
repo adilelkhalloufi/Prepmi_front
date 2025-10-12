@@ -14,6 +14,10 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { useNavigate } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import { webRoutes } from "@/routes/web";
+import { useQuery } from "@tanstack/react-query";
+import { Categorie } from "@/interfaces/admin";
+import { defaultHttp } from "@/utils/http";
+import i18next from "i18next";
 
 export default function AddMeal() {
     const navigate = useNavigate();
@@ -25,6 +29,7 @@ export default function AddMeal() {
         short_description: "",
         image_path: "",
         gallery_images: [],
+        category_id: "",
 
         // Nutritional info
         calories: "",
@@ -78,6 +83,18 @@ export default function AddMeal() {
     const [success, setSuccess] = useState(false);
     const [imagePreview, setImagePreview] = useState<string | null>(null);
     const [galleryPreviews, setGalleryPreviews] = useState<string[]>([]);
+
+    const { data: categories = [] } = useQuery<Categorie[]>({
+        queryKey: ['categories'],
+        queryFn: () =>
+            defaultHttp
+                .get<Categorie[]>(apiRoutes.categories)
+                .then((res) => res.data)
+                .catch((e) => {
+                    handleErrorResponse(e)
+                    return []
+                }),
+    });
 
     const handleChange = (e) => {
         const { name, value, type, checked } = e.target;
@@ -217,6 +234,27 @@ export default function AddMeal() {
                                 <div>
                                     <Label>Slug</Label>
                                     <Input name="slug" value={formData.slug} onChange={handleChange} />
+                                </div>
+                                <div>
+                                    <Label>Catégorie</Label>
+                                    <Select
+                                        onValueChange={(value) => handleSelectChange("category_id", value)}
+                                    >
+                                        <SelectTrigger>
+                                            <SelectValue placeholder="Sélectionnez une catégorie" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            {categories.map((category) => (
+                                                <SelectItem key={category.id} value={category.id}>
+                                                    {category.name[i18next.language] || category.name}
+                                                </SelectItem>
+                                            ))}
+                                        </SelectContent>
+                                    </Select>
+                                </div>
+                                <div>
+                                    <Label>Prix</Label>
+                                    <Input type="number" name="price" value={formData.price} onChange={handleChange} step="0.01" />
                                 </div>
                                 <div className="col-span-2">
                                     <Label>Description courte</Label>

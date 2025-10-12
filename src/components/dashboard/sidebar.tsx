@@ -31,7 +31,7 @@ export default function Sidebar({
     }
   }, [navOpened]);
 
-  const role : number = useSelector((state : RootState) => state.admin.user.role);
+  const role: number = useSelector((state: RootState) => state.admin.user.role);
   const sidelinksVisible = sidelinks.filter((link) => link.role.includes(role));
 
   return (
@@ -59,7 +59,7 @@ export default function Sidebar({
 
             <IconRecycle width={24} height={24} />
             <a
-            href={webRoutes.home}
+              href={webRoutes.home}
               className={`flex flex-col justify-end truncate ${isCollapsed ? "invisible w-0" : "visible w-auto"
                 }`}
             >
@@ -90,7 +90,7 @@ export default function Sidebar({
           closeNav={() => setNavOpened(false)}
           isCollapsed={isCollapsed}
           links={sidelinksVisible}
-        />z
+        />
 
         {/* Scrollbar width toggle button */}
         <Button

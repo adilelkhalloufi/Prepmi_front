@@ -167,4 +167,18 @@ export const columns: ColumnDef<meal>[] = [
       )
     },
   },
+  {
+    accessorKey: "category.name",
+    header: "Catégorie",
+    cell: ({ row }) => {
+      const meal = row.original
+      return meal.category ? (
+        <Badge variant="outline">
+          {meal.category.name[i18next.language] || meal.category.name}
+        </Badge>
+      ) : (
+        <span className="text-gray-400">-</span>
+      )
+    }
+  },
 ]
