@@ -132,47 +132,72 @@ export interface Status {
     name: any
     color?: "default" | "secondary" | "destructive" | "outline"
 }
+export interface Nutrition {
+    calories: number
+    protein: string
+    carbohydrates: string
+    fats: string
+    fiber: string
+    sodium: string
+    sugar: string
+}
+
+export interface DietaryInfo {
+    is_vegetarian: boolean
+    is_vegan: boolean
+    is_gluten_free: boolean
+    is_dairy_free: boolean
+    is_nut_free: boolean
+    is_keto: boolean
+    is_paleo: boolean
+    is_low_carb: boolean
+    is_high_protein: boolean
+}
+
+export interface Preparation {
+    prep_time_minutes: number
+    cooking_time_minutes: number
+    total_time_minutes: number
+    difficulty_level: number
+    instructions: string | null
+    storage_instructions: string | null
+}
+
 export interface Meal {
     id: any
     name: any
-    image?: string
-    available_date?: string
     slug?: string
-    description?: string
-    short_description?: string
-    image_path?: string
-    price: number
-    coins_cost?: number
-    quantity: number
-    qte: number
-
-    // Nutritional information
-    calories?: number
-    protein?: number
-    carbohydrates?: number
-    fats?: number
-    fiber?: number
-
-    // Dietary flags
-    is_vegetarian?: boolean
-    is_vegan?: boolean
-    is_gluten_free?: boolean
-    is_dairy_free?: boolean
-    is_nut_free?: boolean
-    is_keto?: boolean
-    is_paleo?: boolean
-    is_low_carb?: boolean
-    is_high_protein?: boolean
+    description?: string | null
+    short_description?: string | null
+    image_path?: string | null
+    gallery_images?: string[]
+    price: string | number
+    weight_grams?: number
+    serving_size?: string | null
+    nutrition?: Nutrition
+    ingredients?: string | null
+    allergens?: string | null
+    dietary_info?: DietaryInfo
+    preparation?: Preparation
     is_spicy?: boolean
     spice_level?: number
+    chef_notes?: string | null
+    available_from?: string | null
+    available_to?: string | null
+    is_active?: boolean
+    cost_per_serving?: string
+    created_at?: string
+    updated_at?: string
 
-    // Preparation details
-    prep_time_minutes?: number
-    cooking_time_minutes?: number
-    difficulty_level?: 'Easy' | 'Medium' | 'Hard'
+    // Additional fields for frontend use
+    image?: string
+    available_date?: string
+    coins_cost?: number
+    quantity?: number
+    qte?: number
 
     // Meal category and tags
-    category?: string
+    category?: any
     tags?: string[]
 
     // E-commerce fields

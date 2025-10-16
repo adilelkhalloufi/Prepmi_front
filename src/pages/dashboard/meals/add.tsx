@@ -24,21 +24,21 @@ export default function AddMeal() {
     const [formData, setFormData] = useState({
         // Basic info
         name: "",
-        slug: "",
+       
         description: "",
         short_description: "",
         image_path: "",
         gallery_images: [],
-        category_id: "",
+        category_id: 1, // Menu Default
 
         // Nutritional info
-        calories: "",
-        protein: "",
-        carbohydrates: "",
-        fats: "",
-        fiber: "",
-        sodium: "",
-        sugar: "",
+        calories: 0,
+        protein: 0,
+        carbohydrates: 0,
+        fats: 0,
+        fiber: 0,
+        sodium: 0,
+        sugar: 0,
 
         // Ingredients & preparation
         ingredients: "",
@@ -59,17 +59,17 @@ export default function AddMeal() {
 
         // Spice & difficulty
         is_spicy: false,
-        spice_level: "1",
-        difficulty_level: "1",
+        spice_level: 1,
+        difficulty_level: 1,
 
         // Timing
-        prep_time_minutes: "",
-        cooking_time_minutes: "",
+        prep_time_minutes: 0,
+        cooking_time_minutes: 0,
 
         // Pricing & serving
-        price: "",
-        cost_per_serving: "",
-        weight_grams: "",
+        price: 0,
+        cost_per_serving: 0,
+        weight_grams: 0,
         serving_size: "",
 
         // Chef notes & availability
@@ -84,17 +84,11 @@ export default function AddMeal() {
     const [imagePreview, setImagePreview] = useState<string | null>(null);
     const [galleryPreviews, setGalleryPreviews] = useState<string[]>([]);
 
-    const { data: categories = [] } = useQuery<Categorie[]>({
-        queryKey: ['categories'],
-        queryFn: () =>
-            defaultHttp
-                .get<Categorie[]>(apiRoutes.categories)
-                .then((res) => res.data)
-                .catch((e) => {
-                    handleErrorResponse(e)
-                    return []
-                }),
-    });
+    const categories = [
+        { id: 1, name: 'Menus' },
+        { id: 2, name: 'Breakfast' },
+        { id: 3, name: 'Drinks' },
+    ];
 
     const handleChange = (e) => {
         const { name, value, type, checked } = e.target;
@@ -145,10 +139,11 @@ export default function AddMeal() {
     };
 
     const handleSubmit = () => {
+        console.log("formData", formData);
         setError(false);
         setSuccess(false);
 
-        if (formData.name && formData.description) {
+        if (formData.name) {
             http.post(apiRoutes.meals, formData)
                 .then((res) => {
                     setSuccess(true);
@@ -231,14 +226,12 @@ export default function AddMeal() {
                                     <Label>Nom *</Label>
                                     <Input name="name" value={formData.name} onChange={handleChange} />
                                 </div>
-                                <div>
-                                    <Label>Slug</Label>
-                                    <Input name="slug" value={formData.slug} onChange={handleChange} />
-                                </div>
+                             
                                 <div>
                                     <Label>Catégorie</Label>
                                     <Select
                                         onValueChange={(value) => handleSelectChange("category_id", value)}
+                                        defaultValue={formData.category_id}
                                     >
                                         <SelectTrigger>
                                             <SelectValue placeholder="Sélectionnez une catégorie" />

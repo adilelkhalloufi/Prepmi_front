@@ -46,6 +46,20 @@ export const columns: ColumnDef<meal>[] = [
       )
     },
   },
+    {
+    accessorKey: "category_id",
+    header: "Catégorie",
+    cell: ({ row }) => {
+      const meal = row.original
+      return meal.category_id ? (
+        <Badge variant="outline">
+          {meal.category_id }
+        </Badge>
+      ) : (
+        <span className="text-gray-400">-</span>
+      )
+    }
+  },
   {
     accessorKey: "short_description",
     header: "Description",
@@ -62,22 +76,27 @@ export const columns: ColumnDef<meal>[] = [
     accessorKey: "price",
     header: "Prix",
     cell: ({ row }) => {
-      const price = row.getValue("price") as number
+      const price = parseFloat(row.getValue("price") as string)
       return new Intl.NumberFormat("fr-FR", {
         style: "currency",
-        currency: "EUR"
+        currency: "MAD"
       }).format(price)
     }
   },
   {
-    accessorKey: "calories",
+    accessorKey: "nutrition.calories",
     header: "Calories",
+    cell: ({ row }) => {
+      const meal = row.original
+      return meal.nutrition?.calories || "-"
+    }
   },
   {
-    accessorKey: "prep_time_minutes",
+    accessorKey: "preparation.prep_time_minutes",
     header: "Temps préparation",
     cell: ({ row }) => {
-      const time = row.getValue("prep_time_minutes") as number
+      const meal = row.original
+      const time = meal.preparation?.prep_time_minutes
       return time ? `${time} min` : "-"
     }
   },
@@ -88,10 +107,10 @@ export const columns: ColumnDef<meal>[] = [
       const meal = row.original
       const badges = []
 
-      if (meal.is_vegetarian) badges.push("Végétarien")
-      if (meal.is_vegan) badges.push("Vegan")
-      if (meal.is_gluten_free) badges.push("Sans gluten")
-      if (meal.is_keto) badges.push("Keto")
+      if (meal.dietary_info?.is_vegetarian) badges.push("Végétarien")
+      if (meal.dietary_info?.is_vegan) badges.push("Vegan")
+      if (meal.dietary_info?.is_gluten_free) badges.push("Sans gluten")
+      if (meal.dietary_info?.is_keto) badges.push("Keto")
 
       return (
         <div className="flex gap-1 flex-wrap">
@@ -114,6 +133,15 @@ export const columns: ColumnDef<meal>[] = [
     header: "Disponibilité",
     cell: ({ row }) => {
       const meal = row.original
+      
+      if (!meal.available_from || !meal.available_to) {
+        return (
+          <Badge variant="outline">
+            Non défini
+          </Badge>
+        )
+      }
+
       const now = new Date()
       const availableFrom = new Date(meal.available_from)
       const availableTo = new Date(meal.available_to)
@@ -167,18 +195,5 @@ export const columns: ColumnDef<meal>[] = [
       )
     },
   },
-  {
-    accessorKey: "category.name",
-    header: "Catégorie",
-    cell: ({ row }) => {
-      const meal = row.original
-      return meal.category ? (
-        <Badge variant="outline">
-          {meal.category.name[i18next.language] || meal.category.name}
-        </Badge>
-      ) : (
-        <span className="text-gray-400">-</span>
-      )
-    }
-  },
+
 ]

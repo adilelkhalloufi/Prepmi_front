@@ -15,7 +15,8 @@ export default function index() {
 
   useEffect(() => {
     http.get(apiRoutes.meals).then((res) => {
-      setData(res.data);
+      console.log(res.data.data);
+      setData(res.data.data);
       setLoading(false);
     });
   }, []);
