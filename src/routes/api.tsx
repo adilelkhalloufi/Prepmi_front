@@ -9,5 +9,7 @@ export const apiRoutes = {
   users: `${API_URL}/user`,
   meals: `${API_URL}/meals`,
   menus: `${API_URL}/menus`,
+  weeklyMenus: `${API_URL}/weekly-menus`,
+  menuMeals: `${API_URL}/menu-meals`,
 
 };

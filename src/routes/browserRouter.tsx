@@ -38,16 +38,16 @@ const DashboardMealsEdit = loadable(() => import('../pages/dashboard/meals/edit'
 
 
 // Weekly Menu Components
-const WeeklyMenuManager = loadable(() => import('../pages/dashboard/weekly-menus'), {
+const WeeklyMenuManager = loadable(() => import('../pages/dashboard/weekly-menus/index'), {
   fallback: fallbackElement,
 });
-const WeeklyMenuCreate = loadable(() => import('../pages/dashboard/weekly-menus/create'), {
+const WeeklyMenuCreate = loadable(() => import('../pages/dashboard/weekly-menus/add'), {
   fallback: fallbackElement,
 });
 const WeeklyMenuEdit = loadable(() => import('../pages/dashboard/weekly-menus/edit'), {
   fallback: fallbackElement,
 });
-const WeeklyMenuDetail = loadable(() => import('../pages/dashboard/weekly-menus/detail'), {
+const WeeklyMenuDetail = loadable(() => import('../pages/dashboard/weekly-menus/view'), {
   fallback: fallbackElement,
 });
 
@@ -120,19 +120,19 @@ export const browserRouter = createBrowserRouter([
       },
       // Weekly Menu Routes
       {
-        path: '/dashboard/weekly-menus',
+        path: webRoutes.dashboard_weekly_plans,
         element: <WeeklyMenuManager />,
       },
       {
-        path: '/dashboard/weekly-menus/create',
+        path: webRoutes.dashboard_weekly_plans_add,
         element: <WeeklyMenuCreate />,
       },
       {
-        path: '/dashboard/weekly-menus/:id',
+        path: webRoutes.dashboard_weekly_plans_edit,
         element: <WeeklyMenuDetail />,
       },
       {
-        path: '/dashboard/weekly-menus/:id/edit',
+        path: webRoutes.dashboard_weekly_plans_edit,
         element: <WeeklyMenuEdit />,
       },
     ],

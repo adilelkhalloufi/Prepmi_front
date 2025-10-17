@@ -8,6 +8,7 @@ import {
   IconSettings,
   IconSettings2,
   IconShoppingCart,
+  IconCalendarMonth
 
 } from '@tabler/icons-react'
 
@@ -29,14 +30,23 @@ export const sidelinks: SideLink[] = [
     label: '',
     href: webRoutes.dashboard,
     icon: <IconLayoutDashboard size={18} />,
-    role: [RoleEnum.BUYER, RoleEnum.SELLER, RoleEnum.ADMIN, RoleEnum.USER]
+    role: [RoleEnum.ADMIN, RoleEnum.CUSINIER, RoleEnum.LIVRAEUR, RoleEnum.CLIENT]
   },
   {
     title: 'Repas',
     label: '',
     href: webRoutes.dashboard_meals,
     icon: <IconBox size={18} />,
-    role: [RoleEnum.BUYER, RoleEnum.SELLER, RoleEnum.ADMIN, RoleEnum.USER]
+    role: [RoleEnum.ADMIN]
+
+  },
+
+    {
+    title: 'Weekly Plans',
+    label: '',
+    href: webRoutes.dashboard_weekly_plans,
+    icon: <IconCalendarMonth size={18} />,
+    role: [RoleEnum.ADMIN]
 
   },
 

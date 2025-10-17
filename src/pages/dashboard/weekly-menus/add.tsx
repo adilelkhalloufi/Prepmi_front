@@ -10,9 +10,10 @@ import http from "@/utils/http";
 import { apiRoutes } from "@/routes/api";
 import { handleErrorResponse } from "@/utils";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { useNavigate, useParams } from "react-router-dom";
-import { ArrowLeft, Plus, Trash2, GripVertical, Star, Loader2 } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { ArrowLeft, Plus, Trash2, GripVertical, Star } from "lucide-react";
 import { webRoutes } from "@/routes/web";
+import { Badge } from "@/components/ui/badge";
 import { Meal, MenuMeal } from "@/interfaces/admin";
 import {
   Dialog,
@@ -22,10 +23,10 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { Checkbox } from "@/components/ui/checkbox";
 
-export default function EditWeeklyMenu() {
+export default function AddWeeklyMenu() {
     const navigate = useNavigate();
-    const { id } = useParams();
     const [formData, setFormData] = useState({
         title: "",
         description: "",
@@ -38,7 +39,6 @@ export default function EditWeeklyMenu() {
     const [error, setError] = useState(false);
     const [success, setSuccess] = useState(false);
     const [loading, setLoading] = useState(false);
-    const [loadingMenu, setLoadingMenu] = useState(true);
     const [selectedMeals, setSelectedMeals] = useState<MenuMeal[]>([]);
     const [availableMeals, setAvailableMeals] = useState<Meal[]>([]);
     const [loadingMeals, setLoadingMeals] = useState(false);
@@ -46,37 +46,8 @@ export default function EditWeeklyMenu() {
     const [searchQuery, setSearchQuery] = useState("");
 
     useEffect(() => {
-        if (id) {
-            fetchWeeklyMenu();
-        }
         fetchAvailableMeals();
-    }, [id]);
-
-    const fetchWeeklyMenu = () => {
-        setLoadingMenu(true);
-        http.get(`${apiRoutes.weeklyMenus}/${id}`)
-            .then((res) => {
-                const menu = res.data.data;
-                setFormData({
-                    title: menu.title || "",
-                    description: menu.description || "",
-                    week_start_date: menu.week_start_date?.split('T')[0] || "",
-                    week_end_date: menu.week_end_date?.split('T')[0] || "",
-                    is_active: menu.is_active !== undefined ? menu.is_active : true,
-                    is_published: menu.is_published !== undefined ? menu.is_published : false,
-                });
-                
-                if (menu.meals && Array.isArray(menu.meals)) {
-                    setSelectedMeals(menu.meals);
-                }
-                
-                setLoadingMenu(false);
-            })
-            .catch((error) => {
-                console.error("Error fetching weekly menu:", error);
-                setLoadingMenu(false);
-            });
-    };
+    }, []);
 
     const fetchAvailableMeals = () => {
         setLoadingMeals(true);
@@ -107,7 +78,7 @@ export default function EditWeeklyMenu() {
         const exists = selectedMeals.find(m => m.meal_id === meal.id);
         if (!exists) {
             const newMenuMeal: MenuMeal = {
-                weekly_menu_id: parseInt(id || "0"),
+                weekly_menu_id: 0, // Will be set after menu creation
                 meal_id: meal.id,
                 position: selectedMeals.length + 1,
                 is_featured: false,
@@ -161,7 +132,7 @@ export default function EditWeeklyMenu() {
                 }))
             };
 
-            http.put(`${apiRoutes.weeklyMenus}/${id}`, submitData)
+            http.post(apiRoutes.weeklyMenus, submitData)
                 .then((res) => {
                     setSuccess(true);
                     setTimeout(() => {
@@ -186,16 +157,6 @@ export default function EditWeeklyMenu() {
         meal.description?.toLowerCase().includes(searchQuery.toLowerCase())
     );
 
-    if (loadingMenu) {
-        return (
-            <div className="container mx-auto p-6 max-w-6xl">
-                <div className="flex items-center justify-center h-96">
-                    <Loader2 className="w-8 h-8 animate-spin" />
-                </div>
-            </div>
-        );
-    }
-
     return (
         <div className="container mx-auto p-6 max-w-6xl">
             <div className="flex items-center gap-4 mb-6">
@@ -210,8 +171,8 @@ export default function EditWeeklyMenu() {
                             Retour
                         </Button>
                         <div>
-                            <h1 className="text-3xl font-bold">Modifier le menu hebdomadaire</h1>
-                            <p className="text-muted-foreground">Mettez à jour les informations du menu</p>
+                            <h1 className="text-3xl font-bold">Nouveau menu hebdomadaire</h1>
+                            <p className="text-muted-foreground">Créez un nouveau menu pour la semaine</p>
                         </div>
                     </div>
                     <div className="flex justify-end space-x-2">
@@ -222,7 +183,7 @@ export default function EditWeeklyMenu() {
                             Annuler
                         </Button>
                         <Button onClick={handleSubmit} disabled={loading}>
-                            {loading ? "Enregistrement..." : "Enregistrer"}
+                            {loading ? "Création..." : "Créer le menu"}
                         </Button>
                     </div>
                 </div>
@@ -241,7 +202,7 @@ export default function EditWeeklyMenu() {
                 <Alert className="mb-4 border-green-500 text-green-700">
                     <AlertTitle>Succès</AlertTitle>
                     <AlertDescription>
-                        Le menu hebdomadaire a été mis à jour avec succès. Redirection en cours...
+                        Le menu hebdomadaire a été créé avec succès. Redirection en cours...
                     </AlertDescription>
                 </Alert>
             )}
@@ -484,12 +445,6 @@ export default function EditWeeklyMenu() {
                                                                 />
                                                             </div>
                                                         </div>
-
-                                                        {menuMeal.sold_count !== undefined && (
-                                                            <div className="text-xs text-muted-foreground">
-                                                                Vendus: {menuMeal.sold_count} / {menuMeal.availability_count}
-                                                            </div>
-                                                        )}
                                                     </div>
                                                 </div>
                                             </CardContent>
