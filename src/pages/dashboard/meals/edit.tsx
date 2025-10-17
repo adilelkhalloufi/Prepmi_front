@@ -14,29 +14,37 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { useNavigate, useParams } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import { webRoutes } from "@/routes/web";
+import i18next from "i18next";
 
 export default function EditMeal() {
     const navigate = useNavigate();
     const { id } = useParams();
-    const [loading, setLoading] = useState(true);
     const [formData, setFormData] = useState({
+        // Basic info
         name: "",
-        slug: "",
+       
         description: "",
         short_description: "",
         image_path: "",
         gallery_images: [],
-        calories: "",
-        protein: "",
-        carbohydrates: "",
-        fats: "",
-        fiber: "",
-        sodium: "",
-        sugar: "",
+        category_id: 1, // Menu Default
+
+        // Nutritional info
+        calories: 0,
+        protein: 0,
+        carbohydrates: 0,
+        fats: 0,
+        fiber: 0,
+        sodium: 0,
+        sugar: 0,
+
+        // Ingredients & preparation
         ingredients: "",
         allergens: "",
         preparation_instructions: "",
         storage_instructions: "",
+
+        // Dietary restrictions
         is_vegetarian: false,
         is_vegan: false,
         is_gluten_free: false,
@@ -46,15 +54,23 @@ export default function EditMeal() {
         is_paleo: false,
         is_low_carb: false,
         is_high_protein: false,
+
+        // Spice & difficulty
         is_spicy: false,
-        spice_level: "1",
-        difficulty_level: "1",
-        prep_time_minutes: "",
-        cooking_time_minutes: "",
-        price: "",
-        cost_per_serving: "",
-        weight_grams: "",
+        spice_level: 1,
+        difficulty_level: 1,
+
+        // Timing
+        prep_time_minutes: 0,
+        cooking_time_minutes: 0,
+
+        // Pricing & serving
+        price: 0,
+        cost_per_serving: 0,
+        weight_grams: 0,
         serving_size: "",
+
+        // Chef notes & availability
         chef_notes: "",
         available_from: "",
         available_to: "",
@@ -63,42 +79,83 @@ export default function EditMeal() {
 
     const [error, setError] = useState(false);
     const [success, setSuccess] = useState(false);
+    const [loading, setLoading] = useState(false);
+    const [loadingMeal, setLoadingMeal] = useState(true);
     const [imagePreview, setImagePreview] = useState<string | null>(null);
     const [galleryPreviews, setGalleryPreviews] = useState<string[]>([]);
 
+    const categories = [
+        { id: 1, name: 'Menus' },
+        { id: 2, name: 'Breakfast' },
+        { id: 3, name: 'Drinks' },
+    ];
+
+    // Fetch meal data on component mount
     useEffect(() => {
         if (id) {
+            setLoadingMeal(true);
             http.get(`${apiRoutes.meals}/${id}`)
                 .then((res) => {
-                    const meal = res.data;
+                    const meal = res.data.data;
                     setFormData({
-                        ...meal,
-                        calories: meal.calories?.toString() || "",
-                        protein: meal.protein?.toString() || "",
-                        carbohydrates: meal.carbohydrates?.toString() || "",
-                        fats: meal.fats?.toString() || "",
-                        fiber: meal.fiber?.toString() || "",
-                        sodium: meal.sodium?.toString() || "",
-                        sugar: meal.sugar?.toString() || "",
-                        prep_time_minutes: meal.prep_time_minutes?.toString() || "",
-                        cooking_time_minutes: meal.cooking_time_minutes?.toString() || "",
-                        price: meal.price?.toString() || "",
-                        cost_per_serving: meal.cost_per_serving?.toString() || "",
-                        weight_grams: meal.weight_grams?.toString() || "",
-                        available_from: meal.available_from ? new Date(meal.available_from).toISOString().slice(0, 16) : "",
-                        available_to: meal.available_to ? new Date(meal.available_to).toISOString().slice(0, 16) : "",
+                        name: meal.name || "",
+                        description: meal.description || "",
+                        short_description: meal.short_description || "",
+                        image_path: meal.image_url || "",
+                        gallery_images: meal.gallery_images || [],
+                        category_id: meal.category_id || 1,
+                        calories: meal.calories || 0,
+                        protein: meal.protein || 0,
+                        carbohydrates: meal.carbohydrates || 0,
+                        fats: meal.fats || 0,
+                        fiber: meal.fiber || 0,
+                        sodium: meal.sodium || 0,
+                        sugar: meal.sugar || 0,
+                        ingredients: meal.ingredients || "",
+                        allergens: meal.allergens || "",
+                        preparation_instructions: meal.preparation_instructions || "",
+                        storage_instructions: meal.storage_instructions || "",
+                        is_vegetarian: meal.is_vegetarian || false,
+                        is_vegan: meal.is_vegan || false,
+                        is_gluten_free: meal.is_gluten_free || false,
+                        is_dairy_free: meal.is_dairy_free || false,
+                        is_nut_free: meal.is_nut_free || false,
+                        is_keto: meal.is_keto || false,
+                        is_paleo: meal.is_paleo || false,
+                        is_low_carb: meal.is_low_carb || false,
+                        is_high_protein: meal.is_high_protein || false,
+                        is_spicy: meal.is_spicy || false,
+                        spice_level: meal.spice_level || 1,
+                        difficulty_level: meal.difficulty_level || 1,
+                        prep_time_minutes: meal.prep_time_minutes || 0,
+                        cooking_time_minutes: meal.cooking_time_minutes || 0,
+                        price: meal.price || 0,
+                        cost_per_serving: meal.cost_per_serving || 0,
+                        weight_grams: meal.weight_grams || 0,
+                        serving_size: meal.serving_size || "",
+                        chef_notes: meal.chef_notes || "",
+                        available_from: meal.available_from || "",
+                        available_to: meal.available_to || "",
+                        is_active: meal.is_active !== undefined ? meal.is_active : true,
                     });
-
-                    // Set existing image preview
-                    if (meal.image_path) {
-                        setImagePreview(meal.image_path);
+                    
+                    // Set image preview if exists
+                    if (meal.image_path && typeof meal.image_path === 'string') {
+                        setImagePreview(meal.image_url);
                     }
-
-                    setLoading(false);
+                    
+                    // Set gallery previews if exists
+                    if (meal.gallery_urls && Array.isArray(meal.gallery_urls)) {
+                        console.log("meal.gallery_images", meal.gallery_urls);
+                        setGalleryPreviews(meal.gallery_urls);
+                    }
                 })
                 .catch((e) => {
                     handleErrorResponse(e);
-                    setLoading(false);
+                    setError(true);
+                })
+                .finally(() => {
+                    setLoadingMeal(false);
                 });
         }
     }, [id]);
@@ -116,7 +173,9 @@ export default function EditMeal() {
     };
 
     const handleSelectChange = (name: string, value: string) => {
-        setFormData((prev) => ({ ...prev, [name]: value }));
+        const numericFields = ['category_id', 'spice_level', 'difficulty_level'];
+        const parsedValue = numericFields.includes(name) ? parseInt(value, 10) : value;
+        setFormData((prev) => ({ ...prev, [name]: parsedValue }));
     };
 
     const handleImageChange = (e) => {
@@ -152,11 +211,48 @@ export default function EditMeal() {
     };
 
     const handleSubmit = () => {
+        console.log("formData", formData);
         setError(false);
         setSuccess(false);
+        setLoading(true);
+        if (formData.name && id) {
+            // Create FormData for file upload
+            const submitData = new FormData();
+            
+            // Append all form fields
+            Object.keys(formData).forEach((key) => {
+                const value = formData[key as keyof typeof formData];
+                
+                if (key === 'image_path' && value instanceof File) {
+                    // Append the image file
+                    submitData.append('image_path', value);
+                } else if (key === 'image_path' && typeof value === 'string' && value) {
+                    // Skip existing image path string (don't send if not changed)
+                    // The backend will keep the existing image
+                } else if (key === 'gallery_images' && Array.isArray(value)) {
+                    // Append gallery images
+                    value.forEach((file: any, index: number) => {
+                        if (file instanceof File) {
+                            submitData.append(`gallery_images[${index}]`, file);
+                        }
+                    });
+                } else if (typeof value === 'boolean') {
+                    // Convert boolean to 1 or 0 for backend
+                    submitData.append(key, value ? '1' : '0');
+                } else if (value !== null && value !== undefined && key !== 'image_path') {
+                    // Append other fields
+                    submitData.append(key, String(value));
+                }
+            });
 
-        if (formData.name && formData.description) {
-            http.put(`${apiRoutes.meals}/${id}`, formData)
+            // Add _method for Laravel PUT request via POST with FormData
+            submitData.append('_method', 'PUT');
+
+            http.post(`${apiRoutes.meals}/${id}`, submitData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+            })
                 .then((res) => {
                     setSuccess(true);
                     setTimeout(() => {
@@ -166,17 +262,22 @@ export default function EditMeal() {
                 .catch((e) => {
                     handleErrorResponse(e);
                     setError(true);
+                })
+                .finally(() => {
+                    setLoading(false);
                 });
         } else {
             setError(true);
+            setLoading(false);
         }
     };
 
-    if (loading) {
+    if (loadingMeal) {
         return (
-            <div className="container mx-auto p-6 max-w-6xl">
-                <div className="flex items-center justify-center h-64">
-                    <p>Chargement...</p>
+            <div className="container mx-auto p-6 max-w-6xl flex items-center justify-center min-h-screen">
+                <div className="text-center">
+                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
+                    <p className="text-muted-foreground">Chargement du repas...</p>
                 </div>
             </div>
         );
@@ -186,7 +287,7 @@ export default function EditMeal() {
         <div className="container mx-auto p-6 max-w-6xl">
             <div className="flex items-center gap-4 mb-6">
                 <div className="flex justify-between items-center w-full">
-                    <div className="flex items-center space-x-4">
+                    <div className="flex items-center space-x-4 justify-between">
                         <Button
                             variant="ghost"
                             size="sm"
@@ -197,19 +298,22 @@ export default function EditMeal() {
                         </Button>
                         <h1 className="text-3xl font-bold">Modifier le repas</h1>
                     </div>
-                    <div className="flex justify-end space-x-2">
-                        <Button onClick={handleSubmit} disabled={success}>
-                            {success ? "Modifié..." : "Modifier le repas"}
+                    <div className="flex justify-end space-x-2 pt-4">
+
+                        <Button onClick={handleSubmit} loading={loading}>
+                            Enregistrer les modifications
                         </Button>
                     </div>
+
                 </div>
+
             </div>
 
             {error && (
                 <Alert variant="destructive" className="mb-4">
                     <AlertTitle>Erreur</AlertTitle>
                     <AlertDescription>
-                        Veuillez remplir tous les champs obligatoires (nom, description)
+                        Veuillez remplir tous les champs obligatoires (nom, prix, description)
                     </AlertDescription>
                 </Alert>
             )}
@@ -223,80 +327,308 @@ export default function EditMeal() {
                 </Alert>
             )}
 
-            <Tabs defaultValue="basic" className="w-full">
-                <TabsList className="grid w-full grid-cols-4">
-                    <TabsTrigger value="basic">Informations</TabsTrigger>
-                    <TabsTrigger value="nutrition">Nutrition</TabsTrigger>
-                    <TabsTrigger value="preparation">Préparation</TabsTrigger>
-                    <TabsTrigger value="dietary">Régime</TabsTrigger>
-                </TabsList>
+            <div className="container mx-auto p-6 max-w-6xl">
 
-                {/* Copy all tab content from add.tsx but with the loaded formData */}
-                <TabsContent value="basic" className="space-y-4">
-                    <Card>
-                        <CardHeader>
-                            <CardTitle>Informations de base</CardTitle>
-                            <CardDescription>Informations générales du repas</CardDescription>
-                        </CardHeader>
-                        <CardContent className="grid grid-cols-2 gap-4">
-                            <div>
-                                <Label>Nom *</Label>
-                                <Input name="name" value={formData.name} onChange={handleChange} />
-                            </div>
-                            <div>
-                                <Label>Slug</Label>
-                                <Input name="slug" value={formData.slug} onChange={handleChange} />
-                            </div>
-                            <div className="col-span-2">
-                                <Label>Description courte</Label>
-                                <Textarea
-                                    name="short_description"
-                                    value={formData.short_description}
-                                    onChange={handleChange}
-                                    rows={2}
-                                />
-                            </div>
-                            <div className="col-span-2">
-                                <Label>Description complète *</Label>
-                                <Textarea
-                                    name="description"
-                                    value={formData.description}
-                                    onChange={handleChange}
-                                    rows={4}
-                                />
-                            </div>
-                            <div className="col-span-2 flex items-center space-x-2">
-                                <Switch
-                                    checked={formData.is_active}
-                                    onCheckedChange={(checked) => handleSwitchChange("is_active", checked)}
-                                />
-                                <Label>Actif</Label>
-                            </div>
-                            <div>
-                                <Label>Image principale</Label>
-                                <Input
-                                    type="file"
-                                    name="image_path"
-                                    onChange={handleImageChange}
-                                    accept="image/*"
-                                />
-                                {imagePreview && (
-                                    <div className="mt-2">
-                                        <img
-                                            src={imagePreview}
-                                            alt="Aperçu"
-                                            className="w-32 h-32 object-cover rounded-md border"
-                                        />
+
+                <Tabs defaultValue="basic" className="w-full">
+                    <TabsList className="grid w-full grid-cols-4">
+                        <TabsTrigger value="basic">Informations</TabsTrigger>
+                        <TabsTrigger value="nutrition">Nutrition</TabsTrigger>
+                        <TabsTrigger value="preparation">Préparation</TabsTrigger>
+                        <TabsTrigger value="dietary">Régime</TabsTrigger>
+                    </TabsList>
+
+                    <TabsContent value="basic" className="space-y-4">
+                        <Card>
+                            <CardHeader>
+                                <CardTitle>Informations de base</CardTitle>
+                                <CardDescription>Informations générales du repas</CardDescription>
+                            </CardHeader>
+                            <CardContent className="grid grid-cols-2 gap-4">
+                                <div>
+                                    <Label>Nom *</Label>
+                                    <Input name="name" value={formData.name} onChange={handleChange} />
+                                </div>
+                             
+                                <div>
+                                    <Label>Catégorie</Label>
+                                    <Select
+                                        onValueChange={(value) => handleSelectChange("category_id", value)}
+                                        value={String(formData.category_id)}
+                                    >
+                                        <SelectTrigger>
+                                            <SelectValue placeholder="Sélectionnez une catégorie" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            {categories.map((category) => (
+                                                <SelectItem key={category.id} value={String(category.id)}>
+                                                    {category.name[i18next.language] || category.name}
+                                                </SelectItem>
+                                            ))}
+                                        </SelectContent>
+                                    </Select>
+                                </div>
+                                <div>
+                                    <Label>Prix</Label>
+                                    <Input type="number" name="price" value={formData.price} onChange={handleChange} step="0.01" />
+                                </div>
+                                <div className="col-span-2">
+                                    <Label>Description courte</Label>
+                                    <Textarea
+                                        name="short_description"
+                                        value={formData.short_description}
+                                        onChange={handleChange}
+                                        rows={2}
+                                    />
+                                </div>
+                                <div className="col-span-2">
+                                    <Label>Description complète</Label>
+                                    <Textarea
+                                        name="description"
+                                        value={formData.description}
+                                        onChange={handleChange}
+                                        rows={4}
+                                    />
+                                </div>
+                                <div className="col-span-2 flex items-center space-x-2">
+                                    <Switch
+                                        checked={formData.is_active}
+                                        onCheckedChange={(checked) => handleSwitchChange("is_active", checked)}
+                                    />
+                                    <Label>Actif</Label>
+                                </div>
+                                <div>
+                                    <Label>Image principale</Label>
+                                    <Input
+                                        type="file"
+                                        name="image_path"
+                                        onChange={handleImageChange}
+                                        accept="image/*"
+                                    />
+                                    {imagePreview && (
+                                        <div className="mt-2">
+                                            <img
+                                                src={imagePreview}
+                                                alt="Aperçu"
+                                                className="w-32 h-32 object-cover rounded-md border"
+                                            />
+                                        </div>
+                                    )}
+                                </div>
+
+                                <div>
+                                    <Label>Images galerie</Label>
+                                    <Input
+                                        type="file"
+                                        name="gallery_images"
+                                        onChange={handleGalleryChange}
+                                        accept="image/*"
+                                        multiple
+                                    />
+                                    {galleryPreviews.length > 0 && (
+                                        <div className="mt-2 grid grid-cols-3 gap-2">
+                                            {galleryPreviews.map((preview, index) => (
+                                                <img
+                                                    key={index}
+                                                    src={preview}
+                                                    alt={`Aperçu ${index + 1}`}
+                                                    className="w-20 h-20 object-cover rounded-md border"
+                                                />
+                                            ))}
+                                        </div>
+                                    )}
+                                </div>
+                            </CardContent>
+                        </Card>
+                    </TabsContent>
+
+                    <TabsContent value="nutrition" className="space-y-4">
+                        <Card>
+                            <CardHeader>
+                                <CardTitle>Informations nutritionnelles</CardTitle>
+                                <CardDescription>Valeurs nutritionnelles par portion</CardDescription>
+                            </CardHeader>
+                            <CardContent className="grid grid-cols-3 gap-4">
+                                <div>
+                                    <Label>Calories</Label>
+                                    <Input type="number" name="calories" value={formData.calories} onChange={handleChange} />
+                                </div>
+                                <div>
+                                    <Label>Protéines (g)</Label>
+                                    <Input type="number" name="protein" value={formData.protein} onChange={handleChange} />
+                                </div>
+                                <div>
+                                    <Label>Glucides (g)</Label>
+                                    <Input type="number" name="carbohydrates" value={formData.carbohydrates} onChange={handleChange} />
+                                </div>
+                                <div>
+                                    <Label>Lipides (g)</Label>
+                                    <Input type="number" name="fats" value={formData.fats} onChange={handleChange} />
+                                </div>
+                                <div>
+                                    <Label>Fibres (g)</Label>
+                                    <Input type="number" name="fiber" value={formData.fiber} onChange={handleChange} />
+                                </div>
+                                <div>
+                                    <Label>Sodium (mg)</Label>
+                                    <Input type="number" name="sodium" value={formData.sodium} onChange={handleChange} />
+                                </div>
+                                <div>
+                                    <Label>Sucre (g)</Label>
+                                    <Input type="number" name="sugar" value={formData.sugar} onChange={handleChange} />
+                                </div>
+                                <div>
+                                    <Label>Poids (g)</Label>
+                                    <Input type="number" name="weight_grams" value={formData.weight_grams} onChange={handleChange} />
+                                </div>
+                                <div>
+                                    <Label>Taille portion</Label>
+                                    <Input name="serving_size" value={formData.serving_size} onChange={handleChange} />
+                                </div>
+                            </CardContent>
+                        </Card>
+                    </TabsContent>
+
+                    <TabsContent value="preparation" className="space-y-4">
+                        <Card>
+                            <CardHeader>
+                                <CardTitle>Préparation & Ingrédients</CardTitle>
+                                <CardDescription>Instructions et informations de préparation</CardDescription>
+                            </CardHeader>
+                            <CardContent className="space-y-4">
+                                <div>
+                                    <Label>Ingrédients</Label>
+                                    <Textarea
+                                        name="ingredients"
+                                        value={formData.ingredients}
+                                        onChange={handleChange}
+                                        rows={3}
+                                        placeholder="Liste des ingrédients..."
+                                    />
+                                </div>
+                                <div>
+                                    <Label>Allergènes</Label>
+                                    <Input name="allergens" value={formData.allergens} onChange={handleChange} />
+                                </div>
+                                <div>
+                                    <Label>Instructions de préparation</Label>
+                                    <Textarea
+                                        name="preparation_instructions"
+                                        value={formData.preparation_instructions}
+                                        onChange={handleChange}
+                                        rows={4}
+                                    />
+                                </div>
+                                <div>
+                                    <Label>Instructions de conservation</Label>
+                                    <Textarea
+                                        name="storage_instructions"
+                                        value={formData.storage_instructions}
+                                        onChange={handleChange}
+                                        rows={2}
+                                    />
+                                </div>
+                                <div className="grid grid-cols-3 gap-4">
+                                    <div>
+                                        <Label>Temps préparation (min)</Label>
+                                        <Input type="number" name="prep_time_minutes" value={formData.prep_time_minutes} onChange={handleChange} />
                                     </div>
-                                )}
-                            </div>
-                            {/* ...rest of the form fields... */}
-                        </CardContent>
-                    </Card>
-                </TabsContent>
+                                    <div>
+                                        <Label>Temps cuisson (min)</Label>
+                                        <Input type="number" name="cooking_time_minutes" value={formData.cooking_time_minutes} onChange={handleChange} />
+                                    </div>
+                                    <div>
+                                        <Label>Niveau de difficulté</Label>
+                                        <Select 
+                                            onValueChange={(value) => handleSelectChange("difficulty_level", value)}
+                                            value={String(formData.difficulty_level)}
+                                        >
+                                            <SelectTrigger>
+                                                <SelectValue placeholder="Sélectionner" />
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                                <SelectItem value="1">Facile</SelectItem>
+                                                <SelectItem value="2">Moyen</SelectItem>
+                                                <SelectItem value="3">Difficile</SelectItem>
+                                            </SelectContent>
+                                        </Select>
+                                    </div>
+                                </div>
+                                <div className="grid grid-cols-2 gap-4">
+                                    <div className="flex items-center space-x-2">
+                                        <Switch
+                                            checked={formData.is_spicy}
+                                            onCheckedChange={(checked) => handleSwitchChange("is_spicy", checked)}
+                                        />
+                                        <Label>Plat épicé</Label>
+                                    </div>
+                                    {formData.is_spicy && (
+                                        <div>
+                                            <Label>Niveau épicé</Label>
+                                            <Select 
+                                                onValueChange={(value) => handleSelectChange("spice_level", value)}
+                                                value={String(formData.spice_level)}
+                                            >
+                                                <SelectTrigger>
+                                                    <SelectValue placeholder="Sélectionner" />
+                                                </SelectTrigger>
+                                                <SelectContent>
+                                                    <SelectItem value="1">Doux</SelectItem>
+                                                    <SelectItem value="2">Moyen</SelectItem>
+                                                    <SelectItem value="3">Fort</SelectItem>
+                                                    <SelectItem value="4">Très fort</SelectItem>
+                                                </SelectContent>
+                                            </Select>
+                                        </div>
+                                    )}
+                                </div>
+                                <div>
+                                    <Label>Notes du chef</Label>
+                                    <Textarea
+                                        name="chef_notes"
+                                        value={formData.chef_notes}
+                                        onChange={handleChange}
+                                        rows={3}
+                                    />
+                                </div>
+                            </CardContent>
+                        </Card>
+                    </TabsContent>
 
-                {/* Include all other tabs with the same structure as add.tsx */}
-            </Tabs>
+                    <TabsContent value="dietary" className="space-y-4">
+                        <Card>
+                            <CardHeader>
+                                <CardTitle>Restrictions alimentaires</CardTitle>
+                                <CardDescription>Sélectionnez les régimes compatibles</CardDescription>
+                            </CardHeader>
+                            <CardContent className="grid grid-cols-2 gap-4">
+                                {[
+                                    { key: "is_vegetarian", label: "Végétarien" },
+                                    { key: "is_vegan", label: "Vegan" },
+                                    { key: "is_gluten_free", label: "Sans gluten" },
+                                    { key: "is_dairy_free", label: "Sans lactose" },
+                                    { key: "is_nut_free", label: "Sans noix" },
+                                    { key: "is_keto", label: "Keto" },
+                                    { key: "is_paleo", label: "Paleo" },
+                                    { key: "is_low_carb", label: "Faible en glucides" },
+                                    { key: "is_high_protein", label: "Riche en protéines" },
+                                ].map(({ key, label }) => (
+                                    <div key={key} className="flex items-center space-x-2">
+                                        <Switch
+                                            checked={formData[key]}
+                                            onCheckedChange={(checked) => handleSwitchChange(key, checked)}
+                                        />
+                                        <Label>{label}</Label>
+                                    </div>
+                                ))}
+                            </CardContent>
+                        </Card>
+                    </TabsContent>
+
+                </Tabs>
+
+
+            </div>
         </div>
     );
 }

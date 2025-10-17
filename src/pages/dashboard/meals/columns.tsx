@@ -25,7 +25,7 @@ export const columns: ColumnDef<meal>[] = [
 
       return (
         <img
-          src={meal.image_path}
+          src={meal.image_url}
           alt={meal.name}
           className="w-10 h-10 rounded-md object-cover"
         />

@@ -14,9 +14,6 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { useNavigate } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import { webRoutes } from "@/routes/web";
-import { useQuery } from "@tanstack/react-query";
-import { Categorie } from "@/interfaces/admin";
-import { defaultHttp } from "@/utils/http";
 import i18next from "i18next";
 
 export default function AddMeal() {
@@ -81,6 +78,7 @@ export default function AddMeal() {
 
     const [error, setError] = useState(false);
     const [success, setSuccess] = useState(false);
+    const [loading, setLoading] = useState(false);
     const [imagePreview, setImagePreview] = useState<string | null>(null);
     const [galleryPreviews, setGalleryPreviews] = useState<string[]>([]);
 
@@ -103,7 +101,9 @@ export default function AddMeal() {
     };
 
     const handleSelectChange = (name: string, value: string) => {
-        setFormData((prev) => ({ ...prev, [name]: value }));
+        const numericFields = ['category_id', 'spice_level', 'difficulty_level'];
+        const parsedValue = numericFields.includes(name) ? parseInt(value, 10) : value;
+        setFormData((prev) => ({ ...prev, [name]: parsedValue }));
     };
 
     const handleImageChange = (e) => {
@@ -142,9 +142,39 @@ export default function AddMeal() {
         console.log("formData", formData);
         setError(false);
         setSuccess(false);
-
+        setLoading(true);
         if (formData.name) {
-            http.post(apiRoutes.meals, formData)
+            // Create FormData for file upload
+            const submitData = new FormData();
+            
+            // Append all form fields
+            Object.keys(formData).forEach((key) => {
+                const value = formData[key as keyof typeof formData];
+                
+                if (key === 'image_path' && value instanceof File) {
+                    // Append the image file
+                    submitData.append('image_path', value);
+                } else if (key === 'gallery_images' && Array.isArray(value)) {
+                    // Append gallery images
+                    value.forEach((file: any, index: number) => {
+                        if (file instanceof File) {
+                            submitData.append(`gallery_images[${index}]`, file);
+                        }
+                    });
+                } else if (typeof value === 'boolean') {
+                    // Convert boolean to 1 or 0 for backend
+                    submitData.append(key, value ? '1' : '0');
+                } else if (value !== null && value !== undefined) {
+                    // Append other fields
+                    submitData.append(key, String(value));
+                }
+            });
+
+            http.post(apiRoutes.meals, submitData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+            })
                 .then((res) => {
                     setSuccess(true);
                     setTimeout(() => {
@@ -154,9 +184,13 @@ export default function AddMeal() {
                 .catch((e) => {
                     handleErrorResponse(e);
                     setError(true);
+                })
+                .finally(() => {
+                    setLoading(false);
                 });
         } else {
             setError(true);
+            setLoading(false);
         }
     };
 
@@ -177,7 +211,7 @@ export default function AddMeal() {
                     </div>
                     <div className="flex justify-end space-x-2 pt-4">
 
-                        <Button onClick={handleSubmit}>
+                        <Button onClick={handleSubmit} loading={loading}>
                             Ajouter le repas
                         </Button>
                     </div>
@@ -231,14 +265,14 @@ export default function AddMeal() {
                                     <Label>Catégorie</Label>
                                     <Select
                                         onValueChange={(value) => handleSelectChange("category_id", value)}
-                                        defaultValue={formData.category_id}
+                                        defaultValue={String(formData.category_id)}
                                     >
                                         <SelectTrigger>
                                             <SelectValue placeholder="Sélectionnez une catégorie" />
                                         </SelectTrigger>
                                         <SelectContent>
                                             {categories.map((category) => (
-                                                <SelectItem key={category.id} value={category.id}>
+                                                <SelectItem key={category.id} value={String(category.id)}>
                                                     {category.name[i18next.language] || category.name}
                                                 </SelectItem>
                                             ))}

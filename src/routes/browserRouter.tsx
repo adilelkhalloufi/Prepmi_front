@@ -32,6 +32,11 @@ const DashboardMealsAdd = loadable(() => import('../pages/dashboard/meals/add'),
   fallback: fallbackElement,
 });
 
+const DashboardMealsEdit = loadable(() => import('../pages/dashboard/meals/edit'), {
+  fallback: fallbackElement,
+});
+
+
 // Weekly Menu Components
 const WeeklyMenuManager = loadable(() => import('../pages/dashboard/weekly-menus'), {
   fallback: fallbackElement,
@@ -108,6 +113,10 @@ export const browserRouter = createBrowserRouter([
       {
         path: webRoutes.dashboard_meals_add,
         element: <DashboardMealsAdd />,
+      },
+      {
+        path: webRoutes.dashboard_meals_edit,
+        element: <DashboardMealsEdit />,
       },
       // Weekly Menu Routes
       {
