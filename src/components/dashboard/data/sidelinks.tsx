@@ -8,6 +8,7 @@ import {
   IconSettings,
   IconSettings2,
   IconShoppingCart,
+  IconUser,
   IconCalendarMonth
 
 } from '@tabler/icons-react'
@@ -41,14 +42,24 @@ export const sidelinks: SideLink[] = [
 
   },
 
-    {
+  {
     title: 'Weekly Plans',
     label: '',
-    href: webRoutes.dashboard_weekly_plans,
+    href: webRoutes.dashboard_weekly_menus,
     icon: <IconCalendarMonth size={18} />,
     role: [RoleEnum.ADMIN]
 
   },
+
+  {
+    title: 'Utilisateurs',
+    label: '',
+    href: webRoutes.dashboard_users,
+    icon: <IconUser size={18} />,
+    role: [RoleEnum.ADMIN]
+
+  },
+
 
 
 ]

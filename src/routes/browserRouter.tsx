@@ -53,6 +53,25 @@ const WeeklyMenuDetail = loadable(() => import('../pages/dashboard/weekly-menus/
 
 
 
+const UserManager = loadable(() => import('../pages/dashboard/users'), {
+  fallback: fallbackElement,
+});
+
+const UserCreate = loadable(() => import('../pages/dashboard/users/add'), {
+  fallback: fallbackElement,
+});
+
+const UserEdit = loadable(() => import('../pages/dashboard/users/edit'), {
+  fallback: fallbackElement,
+});
+
+const UserView = loadable(() => import('../pages/dashboard/users/view'), {
+  fallback: fallbackElement,
+});
+
+
+
+
 const Landing = loadable(() => import("../pages/landing"), {
   fallback: fallbackElement,
 });
@@ -120,20 +139,36 @@ export const browserRouter = createBrowserRouter([
       },
       // Weekly Menu Routes
       {
-        path: webRoutes.dashboard_weekly_plans,
+        path: webRoutes.dashboard_weekly_menus,
         element: <WeeklyMenuManager />,
       },
       {
-        path: webRoutes.dashboard_weekly_plans_add,
+        path: webRoutes.dashboard_weekly_menus_add,
         element: <WeeklyMenuCreate />,
       },
       {
-        path: webRoutes.dashboard_weekly_plans_edit,
+        path: webRoutes.dashboard_weekly_menus_view,
         element: <WeeklyMenuDetail />,
       },
       {
-        path: webRoutes.dashboard_weekly_plans_edit,
+        path: webRoutes.dashboard_weekly_menus_edit,
         element: <WeeklyMenuEdit />,
+      },
+      {
+        path: webRoutes.dashboard_users,
+        element: <UserManager />,
+      },
+      {
+        path: webRoutes.dashboard_users_add,
+        element: <UserCreate />,
+      },
+      {
+        path: webRoutes.dashboard_users_edit,
+        element: <UserEdit />,
+      },
+      {
+        path: webRoutes.dashboard_users_view,
+        element: <UserView />,
       },
     ],
   },

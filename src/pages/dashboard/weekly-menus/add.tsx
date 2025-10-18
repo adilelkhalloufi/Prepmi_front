@@ -13,17 +13,15 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { useNavigate } from "react-router-dom";
 import { ArrowLeft, Plus, Trash2, GripVertical, Star } from "lucide-react";
 import { webRoutes } from "@/routes/web";
-import { Badge } from "@/components/ui/badge";
 import { Meal, MenuMeal } from "@/interfaces/admin";
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
 } from "@/components/ui/dialog";
-import { Checkbox } from "@/components/ui/checkbox";
 
 export default function AddWeeklyMenu() {
     const navigate = useNavigate();
@@ -96,21 +94,21 @@ export default function AddWeeklyMenu() {
     };
 
     const handleToggleFeatured = (mealId: number) => {
-        setSelectedMeals(selectedMeals.map(m => 
+        setSelectedMeals(selectedMeals.map(m =>
             m.meal_id === mealId ? { ...m, is_featured: !m.is_featured } : m
         ));
     };
 
     const handleSpecialPriceChange = (mealId: number, price: string) => {
         const numericPrice = price === "" ? null : parseFloat(price);
-        setSelectedMeals(selectedMeals.map(m => 
+        setSelectedMeals(selectedMeals.map(m =>
             m.meal_id === mealId ? { ...m, special_price: numericPrice } : m
         ));
     };
 
     const handleAvailabilityChange = (mealId: number, count: string) => {
         const numericCount = parseInt(count) || 0;
-        setSelectedMeals(selectedMeals.map(m => 
+        setSelectedMeals(selectedMeals.map(m =>
             m.meal_id === mealId ? { ...m, availability_count: numericCount } : m
         ));
     };
@@ -123,13 +121,7 @@ export default function AddWeeklyMenu() {
         if (formData.title && formData.week_start_date && formData.week_end_date) {
             const submitData = {
                 ...formData,
-                meals: selectedMeals.map(m => ({
-                    meal_id: m.meal_id,
-                    position: m.position,
-                    is_featured: m.is_featured,
-                    special_price: m.special_price,
-                    availability_count: m.availability_count
-                }))
+                meal_ids: selectedMeals.map(m => m.meal_id)
             };
 
             http.post(apiRoutes.weeklyMenus, submitData)
@@ -137,7 +129,7 @@ export default function AddWeeklyMenu() {
                     setSuccess(true);
                     setTimeout(() => {
                         navigate(webRoutes.dashboard_weekly_menus);
-                    }, 2000);
+                    }, 1000);
                 })
                 .catch((e) => {
                     handleErrorResponse(e);
@@ -152,7 +144,7 @@ export default function AddWeeklyMenu() {
         }
     };
 
-    const filteredMeals = availableMeals.filter(meal => 
+    const filteredMeals = availableMeals.filter(meal =>
         meal.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
         meal.description?.toLowerCase().includes(searchQuery.toLowerCase())
     );
@@ -176,8 +168,8 @@ export default function AddWeeklyMenu() {
                         </div>
                     </div>
                     <div className="flex justify-end space-x-2">
-                        <Button 
-                            variant="outline" 
+                        <Button
+                            variant="outline"
                             onClick={() => navigate(webRoutes.dashboard_weekly_menus)}
                         >
                             Annuler
@@ -225,9 +217,9 @@ export default function AddWeeklyMenu() {
                             <div className="grid grid-cols-2 gap-4">
                                 <div className="col-span-2">
                                     <Label>Titre du menu *</Label>
-                                    <Input 
-                                        name="title" 
-                                        value={formData.title} 
+                                    <Input
+                                        name="title"
+                                        value={formData.title}
                                         onChange={handleChange}
                                         placeholder="Menu de la semaine du 7 au 13 octobre"
                                     />
@@ -235,20 +227,20 @@ export default function AddWeeklyMenu() {
 
                                 <div>
                                     <Label>Date de début *</Label>
-                                    <Input 
+                                    <Input
                                         type="date"
-                                        name="week_start_date" 
-                                        value={formData.week_start_date} 
+                                        name="week_start_date"
+                                        value={formData.week_start_date}
                                         onChange={handleChange}
                                     />
                                 </div>
 
                                 <div>
                                     <Label>Date de fin *</Label>
-                                    <Input 
+                                    <Input
                                         type="date"
-                                        name="week_end_date" 
-                                        value={formData.week_end_date} 
+                                        name="week_end_date"
+                                        value={formData.week_end_date}
                                         onChange={handleChange}
                                     />
                                 </div>
@@ -331,8 +323,8 @@ export default function AddWeeklyMenu() {
                                             />
                                             <div className="grid grid-cols-2 gap-4">
                                                 {filteredMeals.map((meal) => (
-                                                    <Card 
-                                                        key={meal.id} 
+                                                    <Card
+                                                        key={meal.id}
                                                         className="cursor-pointer hover:border-primary transition-colors"
                                                         onClick={() => {
                                                             handleAddMeal(meal);
@@ -342,8 +334,8 @@ export default function AddWeeklyMenu() {
                                                         <CardContent className="p-4">
                                                             <div className="flex gap-3">
                                                                 {meal.image_path && (
-                                                                    <img 
-                                                                        src={meal.image_path} 
+                                                                    <img
+                                                                        src={meal.image_path}
                                                                         alt={meal.name}
                                                                         className="w-20 h-20 object-cover rounded"
                                                                     />
@@ -387,8 +379,8 @@ export default function AddWeeklyMenu() {
                                                     </div>
 
                                                     {menuMeal.meal?.image_path && (
-                                                        <img 
-                                                            src={menuMeal.meal.image_path} 
+                                                        <img
+                                                            src={menuMeal.meal.image_path}
                                                             alt={menuMeal.meal.name}
                                                             className="w-16 h-16 object-cover rounded"
                                                         />

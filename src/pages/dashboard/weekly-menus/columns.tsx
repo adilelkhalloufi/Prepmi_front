@@ -63,7 +63,7 @@ export const columns: ColumnDef<WeeklyMenu>[] = [
       try {
         const startDate = new Date(menu.week_start_date)
         const endDate = new Date(menu.week_end_date)
-        
+
         return (
           <div className="flex flex-col text-sm">
             <span className="font-medium">
@@ -86,14 +86,14 @@ export const columns: ColumnDef<WeeklyMenu>[] = [
       const menu = row.original
       const mealsCount = menu.meals?.length || 0
       const featuredCount = menu.meals?.filter(m => m.is_featured)?.length || 0
-      
+
       return (
-        <div className="flex gap-2">
-          <Badge variant="secondary">
+        <div className="flex gap-1 flex-wrap">
+          <Badge variant="outline" className="text-blue-700 border-blue-200 bg-blue-50">
             {mealsCount} repas
           </Badge>
           {featuredCount > 0 && (
-            <Badge variant="default">
+            <Badge className="bg-amber-500 hover:bg-amber-600 text-white">
               {featuredCount} vedette
             </Badge>
           )}
@@ -110,13 +110,13 @@ export const columns: ColumnDef<WeeklyMenu>[] = [
 
       if (menu.is_published) {
         badges.push(
-          <Badge key="published" variant="default" className="bg-green-500">
+          <Badge key="published" className="bg-green-500 hover:bg-green-600 text-white">
             Publié
           </Badge>
         )
       } else {
         badges.push(
-          <Badge key="draft" variant="outline">
+          <Badge key="draft" variant="outline" className="text-gray-600 border-gray-300 bg-gray-50">
             Brouillon
           </Badge>
         )
@@ -124,7 +124,7 @@ export const columns: ColumnDef<WeeklyMenu>[] = [
 
       if (menu.is_active) {
         badges.push(
-          <Badge key="active" variant="secondary">
+          <Badge key="active" className="bg-blue-500 hover:bg-blue-600 text-white">
             Actif
           </Badge>
         )
@@ -138,31 +138,33 @@ export const columns: ColumnDef<WeeklyMenu>[] = [
     header: "Disponibilité",
     cell: ({ row }) => {
       const menu = row.original
-      
+
       try {
         const now = new Date()
         const startDate = new Date(menu.week_start_date)
         const endDate = new Date(menu.week_end_date)
 
-        let variant: "default" | "secondary" | "outline" | "destructive" = "outline"
+        let className = ""
         let status = "À venir"
 
         if (now >= startDate && now <= endDate) {
-          variant = "default"
+          className = "bg-emerald-500 hover:bg-emerald-600 text-white"
           status = "En cours"
         } else if (now > endDate) {
-          variant = "destructive"
+          className = "bg-red-500 hover:bg-red-600 text-white"
           status = "Terminé"
+        } else {
+          className = "bg-orange-500 hover:bg-orange-600 text-white"
         }
 
         return (
-          <Badge variant={variant}>
+          <Badge className={className}>
             {status}
           </Badge>
         )
       } catch (error) {
         return (
-          <Badge variant="outline">
+          <Badge variant="outline" className="text-gray-500 border-gray-300">
             Non défini
           </Badge>
         )
@@ -174,7 +176,7 @@ export const columns: ColumnDef<WeeklyMenu>[] = [
     header: "Publication",
     cell: ({ row }) => {
       const menu = row.original
-      
+
       if (!menu.published_at) {
         return <span className="text-muted-foreground text-sm">-</span>
       }
