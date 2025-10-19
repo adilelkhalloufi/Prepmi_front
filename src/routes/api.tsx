@@ -6,7 +6,7 @@ export const apiRoutes = {
   logout: `${API_URL}/logout`,
   register: `${API_URL}/register`,
   categories: `${API_URL}/categories`,
-  users: `${API_URL}/user`,
+  users: `${API_URL}/users`,
   meals: `${API_URL}/meals`,
   menus: `${API_URL}/menus`,
   weeklyMenus: `${API_URL}/weekly-menus`,

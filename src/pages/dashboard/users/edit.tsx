@@ -14,21 +14,22 @@ import { ArrowLeft } from "lucide-react";
 import { webRoutes } from "@/routes/web";
 import { RoleEnum } from "@/enum/RoleEnum";
 
+
 export default function EditUser() {
     const navigate = useNavigate();
     const { id } = useParams();
     const [formData, setFormData] = useState({
-        name: "",
+        first_name: "",
         email: "",
         password: "",
         password_confirmation: "",
         phone: "",
-        role_id: RoleEnum.CLIENT,
+        role: RoleEnum.CLIENT,
         address: "",
         city: "",
         postal_code: "",
         profile_image: "",
-        is_active: true,
+        status: true,
     });
 
     const [error, setError] = useState(false);
@@ -49,19 +50,20 @@ export default function EditUser() {
             setLoadingUser(true);
             http.get(`${apiRoutes.users}/${id}`)
                 .then((res) => {
-                    const user = res.data.data;
+                    console.log("ss ", res.data);
+                    const user = res.data;
                     setFormData({
-                        name: user.name || "",
+                        first_name: user.first_name || "",
                         email: user.email || "",
                         password: "",
                         password_confirmation: "",
                         phone: user.phone || "",
-                        role_id: user.role_id || RoleEnum.CLIENT,
+                        role: user.role || RoleEnum.CLIENT,
                         address: user.address || "",
                         city: user.city || "",
                         postal_code: user.postal_code || "",
                         profile_image: user.profile_image || "",
-                        is_active: user.is_active !== undefined ? user.is_active : true,
+                        status: user.status !== undefined ? user.status : true,
                     });
 
                     if (user.profile_image_url) {
@@ -112,7 +114,7 @@ export default function EditUser() {
         setSuccess(false);
         setLoading(true);
 
-        if (formData.name && formData.email && id) {
+        if (formData.first_name && formData.email && id) {
             const submitData = new FormData();
 
             Object.keys(formData).forEach((key) => {
@@ -219,7 +221,7 @@ export default function EditUser() {
                     <div className="grid grid-cols-2 gap-4">
                         <div>
                             <Label>Nom *</Label>
-                            <Input name="name" value={formData.name} onChange={handleChange} />
+                            <Input name="first_name" value={formData.first_name} onChange={handleChange} />
                         </div>
                         <div>
                             <Label>Email *</Label>
@@ -240,8 +242,8 @@ export default function EditUser() {
                         <div>
                             <Label>Rôle</Label>
                             <Select
-                                onValueChange={(value) => handleSelectChange("role_id", value)}
-                                value={String(formData.role_id)}
+                                onValueChange={(value) => handleSelectChange("role", value)}
+                                value={String(formData.role)}
                             >
                                 <SelectTrigger>
                                     <SelectValue placeholder="Sélectionnez un rôle" />
@@ -287,8 +289,8 @@ export default function EditUser() {
                         </div>
                         <div className="col-span-2 flex items-center space-x-2">
                             <Switch
-                                checked={formData.is_active}
-                                onCheckedChange={(checked) => handleSwitchChange("is_active", checked)}
+                                checked={formData.status}
+                                onCheckedChange={(checked) => handleSwitchChange("status", checked)}
                             />
                             <Label>Actif</Label>
                         </div>

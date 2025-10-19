@@ -48,26 +48,18 @@ export const columns: ColumnDef<User>[] = [
         accessorKey: "profile_image",
         header: "Photo",
         cell: ({ row }) => {
-            const user = row.original
+            const user: User = row.original
             return (
                 <div className="w-10 h-10 rounded-full overflow-hidden bg-gray-200 flex items-center justify-center">
-                    {user.profile_image_url ? (
-                        <img
-                            src={user.profile_image_url}
-                            alt={user.name}
-                            className="w-full h-full object-cover"
-                        />
-                    ) : (
-                        <span className="text-gray-500 font-semibold">
-                            {user.name.charAt(0).toUpperCase()}
-                        </span>
-                    )}
+                    <span className="text-gray-500 font-semibold">
+                        {user.first_name.charAt(0).toUpperCase()}
+                    </span>
                 </div>
             )
         }
     },
     {
-        accessorKey: "name",
+        accessorKey: "first_name",
         header: ({ column }) => {
             return (
                 <Button
@@ -98,8 +90,8 @@ export const columns: ColumnDef<User>[] = [
         cell: ({ row }) => {
             const user = row.original
             return (
-                <Badge className={getRoleColor(user.role_id)}>
-                    {getRoleName(user.role_id)}
+                <Badge className={getRoleColor(user.role)}>
+                    {getRoleName(user.role)}
                 </Badge>
             )
         }
@@ -120,10 +112,11 @@ export const columns: ColumnDef<User>[] = [
         accessorKey: "is_active",
         header: "Statut",
         cell: ({ row }) => {
-            const isActive = row.getValue("is_active")
+            const user: User = row.original
+
             return (
-                <Badge className={isActive ? "bg-green-500" : "bg-red-500"}>
-                    {isActive ? "Actif" : "Inactif"}
+                <Badge className={user.status ? "bg-green-500" : "bg-red-500"}>
+                    {user.status ? "Actif" : "Inactif"}
                 </Badge>
             )
         }

@@ -17,12 +17,12 @@ import { RoleEnum } from "@/enum/RoleEnum";
 export default function AddUser() {
     const navigate = useNavigate();
     const [formData, setFormData] = useState({
-        name: "",
+        first_name: "",
         email: "",
         password: "",
         password_confirmation: "",
         phone: "",
-        role_id: RoleEnum.CLIENT,
+        role: RoleEnum.CLIENT,
         address: "",
         city: "",
         postal_code: "",
@@ -76,7 +76,7 @@ export default function AddUser() {
         setSuccess(false);
         setLoading(true);
 
-        if (formData.name && formData.email && formData.password) {
+        if (formData.first_name && formData.email && formData.password) {
             const submitData = new FormData();
 
             Object.keys(formData).forEach((key) => {
@@ -163,7 +163,7 @@ export default function AddUser() {
                     <div className="grid grid-cols-2 gap-4">
                         <div>
                             <Label>Nom *</Label>
-                            <Input name="name" value={formData.name} onChange={handleChange} />
+                            <Input name="first_name" value={formData.first_name} onChange={handleChange} />
                         </div>
                         <div>
                             <Label>Email *</Label>
@@ -184,8 +184,8 @@ export default function AddUser() {
                         <div>
                             <Label>Rôle</Label>
                             <Select
-                                onValueChange={(value) => handleSelectChange("role_id", value)}
-                                defaultValue={String(formData.role_id)}
+                                onValueChange={(value) => handleSelectChange("role", value)}
+                                defaultValue={String(formData.role)}
                             >
                                 <SelectTrigger>
                                     <SelectValue placeholder="Sélectionnez un rôle" />
