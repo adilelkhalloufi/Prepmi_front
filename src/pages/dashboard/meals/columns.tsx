@@ -46,14 +46,14 @@ export const columns: ColumnDef<meal>[] = [
       )
     },
   },
-    {
+  {
     accessorKey: "category_id",
     header: "Catégorie",
     cell: ({ row }) => {
       const meal = row.original
       return meal.category_id ? (
         <Badge variant="outline">
-          {meal.category_id }
+          {meal.category_id}
         </Badge>
       ) : (
         <span className="text-gray-400">-</span>
@@ -133,7 +133,7 @@ export const columns: ColumnDef<meal>[] = [
     header: "Disponibilité",
     cell: ({ row }) => {
       const meal = row.original
-      
+
       if (!meal.available_from || !meal.available_to) {
         return (
           <Badge variant="outline">
@@ -184,6 +184,9 @@ export const columns: ColumnDef<meal>[] = [
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
+            <DropdownMenuItem onClick={() => navigate(`/dashboard/meals/details/${meal.id}`)}>
+              Voir les détails
+            </DropdownMenuItem>
             <DropdownMenuItem onClick={() => navigate(`/dashboard/meals/edit/${meal.id}`)}>
               Modifier
             </DropdownMenuItem>

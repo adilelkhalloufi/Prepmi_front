@@ -69,6 +69,34 @@ const UserView = loadable(() => import('../pages/dashboard/users/view'), {
   fallback: fallbackElement,
 });
 
+const OrderManger = loadable(() => import('../pages/dashboard/orders'), {
+  fallback: fallbackElement,
+});
+
+const OrderCreate = loadable(() => import('../pages/dashboard/orders/add'), {
+  fallback: fallbackElement,
+});
+const OrderEdit = loadable(() => import('../pages/dashboard/orders/edit'), {
+  fallback: fallbackElement,
+});
+const OrderView = loadable(() => import('../pages/dashboard/orders/details'), {
+  fallback: fallbackElement,
+});
+
+const PlanManager = loadable(() => import('../pages/dashboard/plans'), {
+  fallback: fallbackElement,
+});
+
+const PlanCreate = loadable(() => import('../pages/dashboard/plans/add'), {
+  fallback: fallbackElement,
+});
+const PlanEdit = loadable(() => import('../pages/dashboard/plans/edit'), {
+  fallback: fallbackElement,
+});
+const PlanView = loadable(() => import('../pages/dashboard/plans/view'), {
+  fallback: fallbackElement,
+});
+
 
 
 
@@ -170,6 +198,40 @@ export const browserRouter = createBrowserRouter([
         path: webRoutes.dashboard_users_view,
         element: <UserView />,
       },
+
+      {
+        path: webRoutes.dashboard_orders,
+        element: <OrderManger />,
+      },
+      {
+        path: webRoutes.dashboard_orders_add,
+        element: <OrderCreate />,
+      },
+      {
+        path: webRoutes.dashboard_orders_edit,
+        element: <OrderEdit />,
+      },
+      {
+        path: webRoutes.dashboard_orders_view,
+        element: <OrderView />,
+      },
+      {
+        path: webRoutes.dashboard_plans,
+        element: <PlanManager />,
+      },
+      {
+        path: webRoutes.dashboard_plans_add,
+        element: <PlanCreate />,
+      },
+      {
+        path: webRoutes.dashboard_plans_edit,
+        element: <PlanEdit />,
+      },
+      {
+        path: webRoutes.dashboard_plans_view,
+        element: <PlanView />,
+      },
+
     ],
   },
   {

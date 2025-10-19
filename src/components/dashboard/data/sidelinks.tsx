@@ -59,6 +59,20 @@ export const sidelinks: SideLink[] = [
     role: [RoleEnum.ADMIN]
 
   },
+  {
+    title: 'Commandes',
+    label: '',
+    href: webRoutes.dashboard_orders,
+    icon: <IconShoppingCart size={18} />,
+    role: [RoleEnum.ADMIN]
+
+  }, {
+    title: 'Plans',
+    label: '',
+    href: webRoutes.dashboard_plans,
+    icon: <IconFileInvoice size={18} />,
+    role: [RoleEnum.ADMIN]
+  }
 
 
 
