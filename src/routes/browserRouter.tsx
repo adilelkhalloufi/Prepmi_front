@@ -83,6 +83,10 @@ const OrderView = loadable(() => import('../pages/dashboard/orders/details'), {
   fallback: fallbackElement,
 });
 
+const MealPreparation = loadable(() => import('../pages/dashboard/meal-preparation'), {
+  fallback: fallbackElement,
+});
+
 const PlanManager = loadable(() => import('../pages/dashboard/plans'), {
   fallback: fallbackElement,
 });
@@ -94,6 +98,21 @@ const PlanEdit = loadable(() => import('../pages/dashboard/plans/edit'), {
   fallback: fallbackElement,
 });
 const PlanView = loadable(() => import('../pages/dashboard/plans/view'), {
+  fallback: fallbackElement,
+});
+
+// categories components
+const DashboardCategories = loadable(() => import('../pages/dashboard/categories'), {
+  fallback: fallbackElement,
+});
+
+const DashboardCategoriesAdd = loadable(() => import('../pages/dashboard/categories/add'), {
+  fallback: fallbackElement,
+});
+const DashboardCategoriesEdit = loadable(() => import('../pages/dashboard/categories/edit'), {
+  fallback: fallbackElement,
+});
+const DashboardCategoriesView = loadable(() => import('../pages/dashboard/categories/details'), {
   fallback: fallbackElement,
 });
 
@@ -216,6 +235,10 @@ export const browserRouter = createBrowserRouter([
         element: <OrderView />,
       },
       {
+        path: webRoutes.dashboard_meal_preparation,
+        element: <MealPreparation />,
+      },
+      {
         path: webRoutes.dashboard_plans,
         element: <PlanManager />,
       },
@@ -231,6 +254,22 @@ export const browserRouter = createBrowserRouter([
         path: webRoutes.dashboard_plans_view,
         element: <PlanView />,
       },
+      {
+        path: webRoutes.dashboard_categories,
+        element: <DashboardCategories />,
+      },
+      {
+        path: webRoutes.dashboard_categories_add,
+        element: <DashboardCategoriesAdd />,
+      },
+      {
+        path: webRoutes.dashboard_categories_edit,
+        element: <DashboardCategoriesEdit />,
+      },
+      {
+        path: webRoutes.dashboard_categories_view,
+        element: <DashboardCategoriesView />,
+      }
 
     ],
   },

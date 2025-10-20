@@ -28,6 +28,11 @@ export const webRoutes = {
   dashboard_plans_add: '/dashboard/plans/add',
   dashboard_plans_edit: '/dashboard/plans/edit/:id',
   dashboard_plans_view: '/dashboard/plans/view/:id',
+  dashboard_categories: '/dashboard/categories',
+  dashboard_categories_add: '/dashboard/categories/add',
+  dashboard_categories_edit: '/dashboard/categories/edit/:id',
+  dashboard_categories_view: '/dashboard/categories/view/:id',
+  dashboard_meal_preparation: '/dashboard/meal-preparation',
 
   menu: '/menu',
   join_now: '/join-now',

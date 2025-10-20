@@ -101,6 +101,18 @@ export interface Categorie {
     subcategories?: Categorie[]
 }
 
+export interface Category {
+    id: any
+    name: string
+    slug: string
+    description?: string
+    image?: string | File
+    image_url?: string
+    is_active: boolean
+    created_at?: string
+    updated_at?: string
+}
+
 export interface Unite {
     id: any
     name: any
@@ -248,6 +260,25 @@ export interface WeeklyMenu {
     updated_at?: string
     meals?: MenuMeal[]
 }
+
+export interface MealPreparation {
+    id: number
+    order_id: number
+    order?: Order
+    meal_id: number
+    meal?: Meal
+    quantity: number
+    preparation_status: 'pending' | 'preparing' | 'ready_for_delivery' | 'delivered' | 'cancelled'
+    preparation_date: string
+    delivery_date?: string
+    notes?: string
+    customer_name?: string
+    created_at?: string
+    updated_at?: string
+}
+
+
+
 
 
 
