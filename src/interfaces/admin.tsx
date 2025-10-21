@@ -181,29 +181,75 @@ export interface Preparation {
 
 export interface Meal {
     id: any
-    name: any
+    name: string
     slug?: string
     description?: string | null
     short_description?: string | null
     image_path?: string | null
+    image_url?: string
     gallery_images?: string[]
+    gallery_urls?: string[]
+    
+    // Pricing & serving
     price: string | number
+    cost_per_serving?: string | number
     weight_grams?: number
     serving_size?: string | null
-    nutrition?: Nutrition
+    
+    // Nutritional info (flat structure for form compatibility)
+    calories?: number
+    protein?: number | string
+    carbohydrates?: number | string
+    fats?: number | string
+    fiber?: number | string
+    sodium?: number | string
+    sugar?: number | string
+    
+    // Ingredients & preparation
     ingredients?: string | null
     allergens?: string | null
-    dietary_info?: DietaryInfo
-    preparation?: Preparation
+    preparation_instructions?: string | null
+    storage_instructions?: string | null
+    
+    // Dietary restrictions (flat structure)
+    is_vegetarian?: boolean
+    is_vegan?: boolean
+    is_gluten_free?: boolean
+    is_dairy_free?: boolean
+    is_nut_free?: boolean
+    is_keto?: boolean
+    is_paleo?: boolean
+    is_low_carb?: boolean
+    is_high_protein?: boolean
+    
+    // Spice & difficulty
     is_spicy?: boolean
     spice_level?: number
+    difficulty_level?: number
+    
+    // Timing
+    prep_time_minutes?: number
+    cooking_time_minutes?: number
+    total_time_minutes?: number
+    
+    // Chef notes & availability
     chef_notes?: string | null
     available_from?: string | null
     available_to?: string | null
     is_active?: boolean
-    cost_per_serving?: string
+    
+    // Category & Type
+    category_id?: number
+    type_id?: number
+    
+    // Timestamps
     created_at?: string
     updated_at?: string
+
+    // Nested objects (for backward compatibility with API responses)
+    nutrition?: Nutrition
+    dietary_info?: DietaryInfo
+    preparation?: Preparation
 
     // Additional fields for frontend use
     image?: string

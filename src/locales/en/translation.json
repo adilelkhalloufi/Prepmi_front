@@ -162,7 +162,6 @@
     "cookie_settings": "Cookie Settings",
     "faq": "FAQ"
   },
-
   "months": {
     "january": "January",
     "february": "February",
@@ -446,5 +445,6 @@
   "register": {
     "message": "Don't have an account? ",
     "create": "Create account"
-  }
+  },
+  "menu.currency": "MAD"
 }

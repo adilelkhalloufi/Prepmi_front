@@ -137,6 +137,10 @@ export const browserRouter = createBrowserRouter([
         element: <MenuPage />,
       },
       {
+        path: webRoutes.meal_single,
+        element: <MealDetail />,
+      },
+      {
         path: webRoutes.join_now,
         element: <JoinNow />,
       },
@@ -172,6 +176,7 @@ export const browserRouter = createBrowserRouter([
         path: webRoutes.dashboard,
         element: <Dashboard />,
       },
+
       {
         path: webRoutes.dashboard_meals,
         element: <DashboardMeals />,

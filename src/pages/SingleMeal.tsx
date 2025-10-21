@@ -1,7 +1,7 @@
 import i18next from "i18next";
 import { useTranslation } from "react-i18next";
 import { useState } from "react";
-import { Product } from "@/interfaces/admin";
+import { Meal } from "@/interfaces/admin";
 import { Heart, Clock, ChefHat, Flame, Leaf, CheckCircle2, AlertCircle } from "lucide-react";
 
 import http from "@/utils/http";
@@ -17,7 +17,7 @@ import { Separator } from "@/components/ui/separator";
 import RelatedProduct from "@/components/products/RelatedProduct";
 import VendorContact from "@/components/products/VendorContact";
 
-export const SingleProduct = () => {
+export const SingleMeal = () => {
   const { t } = useTranslation();
   const { id } = useParams<{ id: string }>();
 
@@ -25,18 +25,18 @@ export const SingleProduct = () => {
   const [isFavorite, setIsFavorite] = useState(false);
 
   const addToFavorite = (product_id: any) => {
-    http.post(apiRoutes.favoris, { product_id: product_id })
-      .then((res) => {
-      })
+    // http.post(apiRoutes.favoris, { product_id: product_id })
+    //   .then((res) => {
+    //   })
   }
 
-  const { isLoading, data: meal } = useQuery<Product>({
-    queryKey: ["meal"],
+  const { isLoading, data: mealResponse } = useQuery<{data: Meal}>({
+    queryKey: ["meal", id],
     queryFn: () =>
       http
-        .get<Product>(apiRoutes.product + `/${id}`)
+        .get(apiRoutes.meals + `/${id}`)
         .then((res) => {
-          setIsFavorite(res.data.favaris || false);
+          // setIsFavorite(res.data.data.favaris || false);
           return res.data;
         })
         .catch((e) => {
@@ -45,18 +45,28 @@ export const SingleProduct = () => {
         }),
   });
 
-  const getDietaryBadges = (meal: Product) => {
+  const meal = mealResponse?.data;
+
+  const getDietaryBadges = (meal: Meal) => {
     const badges = [];
-    if (meal.is_vegetarian) badges.push({ label: "Vegetarian", color: "bg-green-100 text-green-800" });
-    if (meal.is_vegan) badges.push({ label: "Vegan", color: "bg-green-200 text-green-900" });
-    if (meal.is_gluten_free) badges.push({ label: "Gluten Free", color: "bg-blue-100 text-blue-800" });
-    if (meal.is_dairy_free) badges.push({ label: "Dairy Free", color: "bg-purple-100 text-purple-800" });
-    if (meal.is_nut_free) badges.push({ label: "Nut Free", color: "bg-orange-100 text-orange-800" });
-    if (meal.is_keto) badges.push({ label: "Keto", color: "bg-red-100 text-red-800" });
-    if (meal.is_paleo) badges.push({ label: "Paleo", color: "bg-yellow-100 text-yellow-800" });
-    if (meal.is_low_carb) badges.push({ label: "Low Carb", color: "bg-indigo-100 text-indigo-800" });
-    if (meal.is_high_protein) badges.push({ label: "High Protein", color: "bg-pink-100 text-pink-800" });
+    // Check both flat and nested structures
+    if (meal.dietary_info?.is_vegetarian || meal.is_vegetarian) badges.push({ label: "Vegetarian", color: "bg-green-100 text-green-800" });
+    if (meal.dietary_info?.is_vegan || meal.is_vegan) badges.push({ label: "Vegan", color: "bg-green-200 text-green-900" });
+    if (meal.dietary_info?.is_gluten_free || meal.is_gluten_free) badges.push({ label: "Gluten Free", color: "bg-blue-100 text-blue-800" });
+    if (meal.dietary_info?.is_dairy_free || meal.is_dairy_free) badges.push({ label: "Dairy Free", color: "bg-purple-100 text-purple-800" });
+    if (meal.dietary_info?.is_nut_free || meal.is_nut_free) badges.push({ label: "Nut Free", color: "bg-orange-100 text-orange-800" });
+    if (meal.dietary_info?.is_keto || meal.is_keto) badges.push({ label: "Keto", color: "bg-red-100 text-red-800" });
+    if (meal.dietary_info?.is_paleo || meal.is_paleo) badges.push({ label: "Paleo", color: "bg-yellow-100 text-yellow-800" });
+    if (meal.dietary_info?.is_low_carb || meal.is_low_carb) badges.push({ label: "Low Carb", color: "bg-indigo-100 text-indigo-800" });
+    if (meal.dietary_info?.is_high_protein || meal.is_high_protein) badges.push({ label: "High Protein", color: "bg-pink-100 text-pink-800" });
     return badges;
+  };
+
+  const getDifficultyLevel = (difficulty?: number) => {
+    if (difficulty === 1) return 'Easy';
+    if (difficulty === 2) return 'Medium';
+    if (difficulty === 3) return 'Hard';
+    return 'Easy';
   };
 
   return (
@@ -67,53 +77,40 @@ export const SingleProduct = () => {
         <div className="grid gap-3 items-start">
           <div className="grid gap-4">
             <img
-              src={meal?.image_path || "/placeholder.svg"}
+              src={meal?.image_url || meal?.image_path || "/placeholder.svg"}
               alt="Meal Image"
               width={600}
               height={900}
               className="aspect-[2/3] object-cover border w-full rounded-lg overflow-hidden"
             />
             <div className="hidden md:grid grid-cols-4 gap-3">
-              <button className="border hover:border-primary rounded-lg overflow-hidden transition-colors">
-                <img
-                  src="/placeholder.svg"
-                  alt="Preview thumbnail"
-                  width={100}
-                  height={120}
-                  className="aspect-[5/6] object-cover"
-                />
-                <span className="sr-only">View Image 1</span>
-              </button>
-              <button className="border hover:border-primary rounded-lg overflow-hidden transition-colors">
-                <img
-                  src="/placeholder.svg"
-                  alt="Preview thumbnail"
-                  width={100}
-                  height={120}
-                  className="aspect-[5/6] object-cover"
-                />
-                <span className="sr-only">View Image 2</span>
-              </button>
-              <button className="border hover:border-primary rounded-lg overflow-hidden transition-colors">
-                <img
-                  src="/placeholder.svg"
-                  alt="Preview thumbnail"
-                  width={100}
-                  height={120}
-                  className="aspect-[5/6] object-cover"
-                />
-                <span className="sr-only">View Image 3</span>
-              </button>
-              <button className="border hover:border-primary rounded-lg overflow-hidden transition-colors">
-                <img
-                  src="/placeholder.svg"
-                  alt="Preview thumbnail"
-                  width={100}
-                  height={120}
-                  className="aspect-[5/6] object-cover"
-                />
-                <span className="sr-only">View Image 4</span>
-              </button>
+              {meal?.gallery_urls && meal.gallery_urls.length > 0 ? (
+                meal.gallery_urls.slice(0, 4).map((url, index) => (
+                  <button key={index} className="border hover:border-primary rounded-lg overflow-hidden transition-colors">
+                    <img
+                      src={url || "/placeholder.svg"}
+                      alt={`Preview thumbnail ${index + 1}`}
+                      width={100}
+                      height={120}
+                      className="aspect-[5/6] object-cover"
+                    />
+                    <span className="sr-only">View Image {index + 1}</span>
+                  </button>
+                ))
+              ) : (
+                Array.from({ length: 4 }).map((_, index) => (
+                  <button key={index} className="border hover:border-primary rounded-lg overflow-hidden transition-colors">
+                    <img
+                      src="/placeholder.svg"
+                      alt={`Preview thumbnail ${index + 1}`}
+                      width={100}
+                      height={120}
+                      className="aspect-[5/6] object-cover"
+                    />
+                    <span className="sr-only">View Image {index + 1}</span>
+                  </button>
+                ))
+              )}
             </div>
           </div>
         </div>
@@ -139,28 +136,28 @@ export const SingleProduct = () => {
               <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">Nutritional Information</h3>
 
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-                {meal?.calories && (
+                {(meal?.nutrition?.calories || meal?.calories) && (
                   <div className="text-center p-3 bg-white dark:bg-gray-800 rounded-lg">
                     <Flame className="h-6 w-6 text-orange-500 mx-auto mb-1" />
-                    <div className="text-2xl font-bold text-gray-900 dark:text-gray-100">{meal.calories}</div>
+                    <div className="text-2xl font-bold text-gray-900 dark:text-gray-100">{meal.nutrition?.calories || meal.calories}</div>
                     <div className="text-sm text-gray-600 dark:text-gray-400">Calories</div>
                   </div>
                 )}
-                {meal?.protein && (
+                {(meal?.nutrition?.protein || meal?.protein) && (
                   <div className="text-center p-3 bg-white dark:bg-gray-800 rounded-lg">
-                    <div className="text-2xl font-bold text-gray-900 dark:text-gray-100">{meal.protein}g</div>
+                    <div className="text-2xl font-bold text-gray-900 dark:text-gray-100">{meal.nutrition?.protein || meal.protein}g</div>
                     <div className="text-sm text-gray-600 dark:text-gray-400">Protein</div>
                   </div>
                 )}
-                {meal?.carbohydrates && (
+                {(meal?.nutrition?.carbohydrates || meal?.carbohydrates) && (
                   <div className="text-center p-3 bg-white dark:bg-gray-800 rounded-lg">
-                    <div className="text-2xl font-bold text-gray-900 dark:text-gray-100">{meal.carbohydrates}g</div>
+                    <div className="text-2xl font-bold text-gray-900 dark:text-gray-100">{meal.nutrition?.carbohydrates || meal.carbohydrates}g</div>
                     <div className="text-sm text-gray-600 dark:text-gray-400">Carbs</div>
                   </div>
                 )}
-                {meal?.fats && (
+                {(meal?.nutrition?.fats || meal?.fats) && (
                   <div className="text-center p-3 bg-white dark:bg-gray-800 rounded-lg">
-                    <div className="text-2xl font-bold text-gray-900 dark:text-gray-100">{meal.fats}g</div>
+                    <div className="text-2xl font-bold text-gray-900 dark:text-gray-100">{meal.nutrition?.fats || meal.fats}g</div>
                     <div className="text-sm text-gray-600 dark:text-gray-400">Fats</div>
                   </div>
                 )}
@@ -172,31 +169,31 @@ export const SingleProduct = () => {
               <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">Preparation Details</h3>
 
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                {meal?.prep_time_minutes && (
+                {(meal?.preparation?.prep_time_minutes || meal?.prep_time_minutes) && (
                   <div className="flex items-center gap-3">
                     <Clock className="h-5 w-5 text-blue-600" />
                     <div>
                       <div className="text-sm font-medium text-gray-700 dark:text-gray-300">Prep Time</div>
-                      <div className="text-lg font-bold">{meal.prep_time_minutes} min</div>
+                      <div className="text-lg font-bold">{meal.preparation?.prep_time_minutes || meal.prep_time_minutes} min</div>
                     </div>
                   </div>
                 )}
-                {meal?.cooking_time_minutes && (
+                {(meal?.preparation?.cooking_time_minutes || meal?.cooking_time_minutes) && (
                   <div className="flex items-center gap-3">
                     <ChefHat className="h-5 w-5 text-green-600" />
                     <div>
                       <div className="text-sm font-medium text-gray-700 dark:text-gray-300">Cook Time</div>
-                      <div className="text-lg font-bold">{meal.cooking_time_minutes} min</div>
+                      <div className="text-lg font-bold">{meal.preparation?.cooking_time_minutes || meal.cooking_time_minutes} min</div>
                     </div>
                   </div>
                 )}
-                {meal?.difficulty_level && (
+                {(meal?.preparation?.difficulty_level || meal?.difficulty_level) && (
                   <div className="flex items-center gap-3">
                     <CheckCircle2 className="h-5 w-5 text-purple-600" />
                     <div>
                       <div className="text-sm font-medium text-gray-700 dark:text-gray-300">Difficulty</div>
                       <Badge variant="outline" className="font-medium">
-                        {meal.difficulty_level}
+                        {getDifficultyLevel(meal.preparation?.difficulty_level || meal.difficulty_level)}
                       </Badge>
                     </div>
                   </div>
@@ -213,7 +210,7 @@ export const SingleProduct = () => {
                       {[1, 2, 3, 4, 5].map((level) => (
                         <Flame
                           key={level}
-                          className={`h-4 w-4 ${level <= meal.spice_level ? 'text-red-500' : 'text-gray-300'}`}
+                          className={`h-4 w-4 ${level <= (meal.spice_level || 0) ? 'text-red-500' : 'text-gray-300'}`}
                         />
                       ))}
                     </div>
@@ -223,14 +220,59 @@ export const SingleProduct = () => {
             </div>
 
             <div className="text-4xl font-bold">
-              {meal?.price} {t("currency")}
+              {typeof meal?.price === 'number' ? meal.price.toFixed(2) : meal?.price} {t("currency")}
             </div>
           </div>
 
           <Separator />
+          
+          {/* Description */}
           <div className="grid gap-4 text-sm leading-loose">
             {meal?.description}
           </div>
+
+          {/* Ingredients */}
+          {meal?.ingredients && (
+            <div className="grid gap-2 p-4 bg-gray-50 dark:bg-gray-900 rounded-lg border">
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Ingredients</h3>
+              <p className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed">{meal.ingredients}</p>
+            </div>
+          )}
+
+          {/* Allergens */}
+          {meal?.allergens && (
+            <div className="grid gap-2 p-4 bg-red-50 dark:bg-red-900/20 rounded-lg border border-red-200 dark:border-red-800">
+              <h3 className="text-lg font-semibold text-red-900 dark:text-red-100">Allergen Information</h3>
+              <p className="text-sm text-red-700 dark:text-red-300 leading-relaxed">{meal.allergens}</p>
+            </div>
+          )}
+
+          {/* Preparation Instructions */}
+          {meal?.preparation_instructions && (
+            <div className="grid gap-2 p-4 bg-gray-50 dark:bg-gray-900 rounded-lg border">
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Preparation Instructions</h3>
+              <p className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed whitespace-pre-line">{meal.preparation_instructions}</p>
+            </div>
+          )}
+
+          {/* Storage Instructions */}
+          {meal?.storage_instructions && (
+            <div className="grid gap-2 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800">
+              <h3 className="text-lg font-semibold text-blue-900 dark:text-blue-100">Storage Instructions</h3>
+              <p className="text-sm text-blue-700 dark:text-blue-300 leading-relaxed">{meal.storage_instructions}</p>
+            </div>
+          )}
+
+          {/* Chef Notes */}
+          {meal?.chef_notes && (
+            <div className="grid gap-2 p-4 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg border border-yellow-200 dark:border-yellow-800">
+              <h3 className="text-lg font-semibold text-yellow-900 dark:text-yellow-100 flex items-center gap-2">
+                <ChefHat className="h-5 w-5" />
+                Chef's Notes
+              </h3>
+              <p className="text-sm text-yellow-700 dark:text-yellow-300 leading-relaxed">{meal.chef_notes}</p>
+            </div>
+          )}
 
           <form className="grid gap-4 md:gap-10">
             <div className="flex flex-col sm:flex-row gap-3">
@@ -279,4 +321,4 @@ export const SingleProduct = () => {
   );
 };
 
-export default SingleProduct;
+export default SingleMeal;

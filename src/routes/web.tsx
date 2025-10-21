@@ -35,6 +35,7 @@ export const webRoutes = {
   dashboard_meal_preparation: '/dashboard/meal-preparation',
 
   menu: '/menu',
+  meal_single: '/menu/:id',
   join_now: '/join-now',
   single_product: '/product/:id',
   privacy_policy: '/privacy-policy',
