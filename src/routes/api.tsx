@@ -11,6 +11,7 @@ export const apiRoutes = {
   menus: `${API_URL}/menus`,
   orders: `${API_URL}/orders`,
   plans: `${API_URL}/plans`,  
+  categories: `${API_URL}/categories`,
   weeklyMenus: `${API_URL}/weekly-menus`,
   menuMeals: `${API_URL}/menu-meals`,
   mealPreparations: `${API_URL}/meal-preparations`,

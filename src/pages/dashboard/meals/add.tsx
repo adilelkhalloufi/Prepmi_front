@@ -27,6 +27,7 @@ export default function AddMeal() {
         image_path: "",
         gallery_images: [],
         category_id: 1, // Menu Default
+        type_id: 1,
 
         // Nutritional info
         calories: 0,
@@ -81,12 +82,29 @@ export default function AddMeal() {
     const [loading, setLoading] = useState(false);
     const [imagePreview, setImagePreview] = useState<string | null>(null);
     const [galleryPreviews, setGalleryPreviews] = useState<string[]>([]);
+    const [categories, setCategories] = useState([]);
+    const [loadingCategories, setLoadingCategories] = useState(true);
 
-    const categories = [
+    const types = [
         { id: 1, name: 'Menus' },
         { id: 2, name: 'Breakfast' },
         { id: 3, name: 'Drinks' },
     ];
+
+    // Fetch categories on component mount
+    useEffect(() => {
+        setLoadingCategories(true);
+        http.get(apiRoutes.categories)
+            .then((res) => {
+                setCategories(res.data.data || res.data);
+            })
+            .catch((e) => {
+                handleErrorResponse(e);
+            })
+            .finally(() => {
+                setLoadingCategories(false);
+            });
+    }, []);
 
     const handleChange = (e) => {
         const { name, value, type, checked } = e.target;
@@ -101,7 +119,7 @@ export default function AddMeal() {
     };
 
     const handleSelectChange = (name: string, value: string) => {
-        const numericFields = ['category_id', 'spice_level', 'difficulty_level'];
+        const numericFields = ['category_id', 'type_id', 'spice_level', 'difficulty_level'];
         const parsedValue = numericFields.includes(name) ? parseInt(value, 10) : value;
         setFormData((prev) => ({ ...prev, [name]: parsedValue }));
     };
@@ -266,14 +284,37 @@ export default function AddMeal() {
                                     <Select
                                         onValueChange={(value) => handleSelectChange("category_id", value)}
                                         defaultValue={String(formData.category_id)}
+                                        disabled={loadingCategories}
                                     >
                                         <SelectTrigger>
-                                            <SelectValue placeholder="Sélectionnez une catégorie" />
+                                            <SelectValue placeholder={loadingCategories ? "Chargement..." : "Sélectionnez une catégorie"} />
                                         </SelectTrigger>
                                         <SelectContent>
-                                            {categories.map((category) => (
-                                                <SelectItem key={category.id} value={String(category.id)}>
-                                                    {category.name[i18next.language] || category.name}
+                                            {categories.length > 0 ? (
+                                                categories.map((category: any) => (
+                                                    <SelectItem key={category.id} value={String(category.id)}>
+                                                        {category.name[i18next.language] || category.name}
+                                                    </SelectItem>
+                                                ))
+                                            ) : (
+                                                <SelectItem value="0" disabled>Aucune catégorie disponible</SelectItem>
+                                            )}
+                                        </SelectContent>
+                                    </Select>
+                                </div>
+                                <div>
+                                    <Label>Type</Label>
+                                    <Select
+                                        onValueChange={(value) => handleSelectChange("type_id", value)}
+                                        defaultValue={String(formData.type_id)}
+                                    >
+                                        <SelectTrigger>
+                                            <SelectValue placeholder="Sélectionnez un type" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            {types.map((type) => (
+                                                <SelectItem key={type.id} value={String(type.id)}>
+                                                    {type.name[i18next.language] || type.name}
                                                 </SelectItem>
                                             ))}
                                         </SelectContent>
