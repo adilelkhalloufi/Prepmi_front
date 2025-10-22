@@ -195,7 +195,12 @@
   },
   "common": {
     "selected": "مختار",
-    "meal": "وجبة"
+    "meal": "وجبة",
+    "meals": "وجبات",
+    "week": "أسبوع",
+    "perWeek": "في الأسبوع",
+    "free": "مجاني",
+    "off": "خصم"
   },
   "navigation": {
     "previous": "السابق",
@@ -273,6 +278,10 @@
       "continue": "متابعة",
       "finish": "إكمال الطلب",
       "back": "رجوع"
+    },
+    "validation": {
+      "selectProtein": "يرجى اختيار تفضيل البروتين قبل المتابعة",
+      "selectPlan": "يرجى اختيار خطة وجبات قبل المتابعة"
     },
     "titles": {
       "joinProcess": "انضم الآن - أكمل طلبك",

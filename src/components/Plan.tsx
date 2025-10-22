@@ -5,6 +5,11 @@ import { useTranslation } from "react-i18next"
 import { useDispatch, useSelector } from "react-redux"
 import { RootState } from "@/store"
 import { updatePlanData } from "@/store/slices/joinProcessSlice"
+import { useQuery } from "@tanstack/react-query"
+import http from "@/utils/http"
+import { apiRoutes } from "@/routes/api"
+import { handleErrorResponse } from "@/utils"
+import type { Plan as PlanType } from "@/interfaces/admin"
 
 export const Plan = () => {
     const { t } = useTranslation()
@@ -24,11 +29,51 @@ export const Plan = () => {
         }
     }, [planData])
 
-    const proteinOptions = [
-        { id: 'meat-vegan', label: t('plan.protein.options.meatVegan.label'), description: t('plan.protein.options.meatVegan.description') },
-        { id: 'meat-only', label: t('plan.protein.options.meatOnly.label'), description: t('plan.protein.options.meatOnly.description') },
-        { id: 'vegan-only', label: t('plan.protein.options.veganOnly.label'), description: t('plan.protein.options.veganOnly.description') }
-    ]
+    // Fetch categories from API
+    const { isLoading: isLoadingCategories, data: categoriesResponse } = useQuery<{data: any[]}>({
+        queryKey: ["categories"],
+        queryFn: () =>
+            http
+                .get(apiRoutes.categories)
+                .then((res) => {
+                    return res.data;
+                })
+                .catch((e) => {
+                    handleErrorResponse(e);
+                    throw e;
+                }),
+    });
+
+    // Fetch plans from API
+    const { isLoading: isLoadingPlans, data: plansResponse } = useQuery<{data: any[]}>({
+        queryKey: ["plans"],
+        queryFn: () =>
+            http
+                .get(apiRoutes.plans)
+                .then((res) => {
+                    return res.data;
+                })
+                .catch((e) => {
+                    handleErrorResponse(e);
+                    throw e;
+                }),
+    });
+
+    const categories = categoriesResponse?.data || [];
+    const plans = plansResponse?.data || [];
+
+    // Map categories to protein options format
+    const proteinOptions = categories.length > 0 
+        ? categories.map((category: any) => ({
+            id: category.id?.toString() || category.slug,
+            label: category.name,
+            description: category.description || ''
+        }))
+        : [
+            { id: 'meat-vegan', label: t('plan.protein.options.meatVegan.label'), description: t('plan.protein.options.meatVegan.description') },
+            { id: 'meat-only', label: t('plan.protein.options.meatOnly.label'), description: t('plan.protein.options.meatOnly.description') },
+            { id: 'vegan-only', label: t('plan.protein.options.veganOnly.label'), description: t('plan.protein.options.veganOnly.description') }
+        ];
 
     const portionOptions = [
         {
@@ -54,14 +99,8 @@ export const Plan = () => {
         }
     ]
 
-    const mealOptions = [
-        { count: 6, originalPrice: 7.96, discountPrice: 6.05 },
-        { count: 8, originalPrice: 7.89, discountPrice: 6.00 },
-        { count: 10, originalPrice: 7.49, discountPrice: 5.69 },
-        { count: 12, originalPrice: 7.49, discountPrice: 5.69 },
-        { count: 15, originalPrice: 7.49, discountPrice: 5.69 },
-        { count: 18, originalPrice: 7.49, discountPrice: 5.69 }
-    ]
+    // Map plans to meal options format
+    const mealOptions: PlanType[] = plans;
 
     const handleProteinSelect = (protein: string) => {
         setSelectedProtein(protein)
@@ -74,18 +113,29 @@ export const Plan = () => {
     }
 
     const handleMealSelect = (meals: number) => {
-        setSelectedMeals(meals)
-        dispatch(updatePlanData({ mealsPerWeek: meals }))
+        const selectedPlan = mealOptions.find(plan => plan.meals_per_week === meals)
+        
+        if (selectedPlan) {
+            setSelectedMeals(meals)
+            dispatch(updatePlanData({ 
+                planId: selectedPlan.id,
+                mealsPerWeek: meals,
+                pricePerWeek: Number(selectedPlan.price_per_week),
+                deliveryFee: Number(selectedPlan.delivery_fee || 0),
+                isFreeShipping: selectedPlan.is_free_shipping
+            }))
+        }
     }
 
     const calculateTotal = () => {
-        const selectedMealOption = mealOptions.find(option => option.count === selectedMeals)
+        const selectedPlan = mealOptions.find(plan => plan.meals_per_week === selectedMeals)
         const portionExtra = selectedPortion && selectedPortion !== 'standard' ? 1.99 * selectedMeals : 0
-        const subtotal = (selectedMealOption?.discountPrice || 0) * selectedMeals + portionExtra
-        const discount = ((selectedMealOption?.originalPrice || 0) - (selectedMealOption?.discountPrice || 0)) * selectedMeals
-        const delivery = 6.99
+        const pricePerWeek = Number(selectedPlan?.price_per_week || 0)
+        const subtotal = pricePerWeek + portionExtra
+        const discount = 0 // Calculate discount if you have original price field
+        const delivery = selectedPlan?.is_free_shipping ? 0 : Number(selectedPlan?.delivery_fee || 0)
 
-        return { subtotal, discount, delivery, total: subtotal }
+        return { subtotal, discount, delivery, total: subtotal + delivery }
     }
 
     const totals = calculateTotal()
@@ -118,32 +168,46 @@ export const Plan = () => {
                             </p>
                         </div>
 
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                            {proteinOptions.map((option) => (
-                                <Card
-                                    key={option.id}
-                                    className={`cursor-pointer transition-all duration-300 hover:shadow-lg border-2 ${selectedProtein === option.id
-                                        ? 'border-primary bg-primary/10 shadow-lg'
-                                        : 'border-gray-200 hover:border-primary/30'
-                                        }`}
-                                    onClick={() => handleProteinSelect(option.id)}
-                                >
-                                    <CardContent className="p-8 text-center">
-                                        <h3 className="text-xl font-bold text-gray-900 mb-3">{option.label}</h3>
-                                        <p className="text-gray-600">{option.description}</p>
-                                        {selectedProtein === option.id && (
-                                            <div className="mt-4">
-                                                <Badge className="bg-primary text-primary-foreground">{t('common.selected')}</Badge>
+                        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                            {isLoadingCategories ? (
+                                // Loading skeleton
+                                Array.from({ length: 3 }).map((_, index) => (
+                                    <Card key={index} className="border-2 border-gray-200">
+                                        <CardContent className="p-8 text-center">
+                                            <div className="animate-pulse">
+                                                <div className="h-6 bg-gray-200 rounded mb-3 mx-auto w-3/4"></div>
+                                                <div className="h-4 bg-gray-200 rounded mx-auto w-full"></div>
                                             </div>
-                                        )}
-                                    </CardContent>
-                                </Card>
-                            ))}
+                                        </CardContent>
+                                    </Card>
+                                ))
+                            ) : (
+                                proteinOptions.map((option) => (
+                                    <Card
+                                        key={option.id}
+                                        className={`cursor-pointer transition-all duration-300 hover:shadow-lg border-2 ${selectedProtein === option.id
+                                            ? 'border-primary bg-primary/10 shadow-lg'
+                                            : 'border-gray-200 hover:border-primary/30'
+                                            }`}
+                                        onClick={() => handleProteinSelect(option.id)}
+                                    >
+                                        <CardContent className="p-8 text-center">
+                                            <h3 className="text-xl font-bold text-gray-900 mb-3">{option.label}</h3>
+                                            <p className="text-gray-600">{option.description}</p>
+                                            {selectedProtein === option.id && (
+                                                <div className="mt-4">
+                                                    <Badge className="bg-primary text-primary-foreground">{t('common.selected')}</Badge>
+                                                </div>
+                                            )}
+                                        </CardContent>
+                                    </Card>
+                                ))
+                            )}
                         </div>
                     </div>
 
                     {/* Portion Preference */}
-                    <div className="space-y-8">
+                    {/* <div className="space-y-8">
                         <div className="text-center">
                             <div className="inline-flex items-center justify-center w-12 h-12 bg-primary text-primary-foreground rounded-full font-bold text-xl mb-4">
                                 2
@@ -165,7 +229,7 @@ export const Plan = () => {
                                 >
                                     {option.price > 0 && (
                                         <Badge className="absolute -top-3 -right-3 bg-secondary text-secondary-foreground">
-                                            +£{option.price}/{t('common.meal')}
+                                            +{t('menu.currency')}{option.price}/{t('common.meal')}
                                         </Badge>
                                     )}
                                     <CardContent className="p-8 text-center">
@@ -181,13 +245,13 @@ export const Plan = () => {
                                 </Card>
                             ))}
                         </div>
-                    </div>
+                    </div> */}
 
                     {/* Meals Per Week */}
                     <div className="space-y-8">
                         <div className="text-center">
                             <div className="inline-flex items-center justify-center w-12 h-12 bg-primary text-primary-foreground rounded-full font-bold text-xl mb-4">
-                                3
+                                2
                             </div>
                             <h2 className="text-3xl font-bold text-gray-900 mb-4">
                                 {t('plan.meals.title')}
@@ -197,32 +261,50 @@ export const Plan = () => {
                             </p>
                         </div>
 
-                        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-12">
-                            {mealOptions.map((option) => (
-                                <Card
-                                    key={option.count}
-                                    className={`cursor-pointer transition-all duration-300 hover:shadow-lg border-2 ${selectedMeals === option.count
-                                        ? 'border-primary bg-primary/10 shadow-lg'
-                                        : 'border-gray-200 hover:border-primary/30'
-                                        }`}
-                                    onClick={() => handleMealSelect(option.count)}
-                                >
-                                    <CardContent className="p-6 text-center">
-                                        <div className="text-3xl font-bold text-gray-900 mb-2">{option.count}</div>
-                                        <div className="text-sm line-through text-gray-500 mb-1">
-                                            (£{option.originalPrice.toFixed(2)})
-                                        </div>
-                                        <div className="text-lg font-bold text-primary">
-                                            £{option.discountPrice.toFixed(2)}/{t('common.meal')}
-                                        </div>
-                                        {selectedMeals === option.count && (
-                                            <div className="mt-3">
-                                                <Badge className="bg-primary text-primary-foreground">{t('common.selected')}</Badge>
+                        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-12">
+                             {isLoadingPlans ? (
+                                // Loading skeleton
+                                Array.from({ length: 6 }).map((_, index) => (
+                                    <Card key={index} className="border-2 border-gray-200">
+                                        <CardContent className="p-6 text-center">
+                                            <div className="animate-pulse">
+                                                <div className="h-8 bg-gray-200 rounded mb-2 mx-auto w-1/2"></div>
+                                                <div className="h-4 bg-gray-200 rounded mb-1 mx-auto w-3/4"></div>
+                                                <div className="h-5 bg-gray-200 rounded mx-auto w-2/3"></div>
                                             </div>
-                                        )}
-                                    </CardContent>
-                                </Card>
-                            ))}
+                                        </CardContent>
+                                    </Card>
+                                ))
+                            ) : (
+                                mealOptions.filter(plan => plan.is_active).map((plan) => (
+                                    <Card
+                                        key={plan.id}
+                                        className={`cursor-pointer transition-all duration-300 hover:shadow-lg border-2 ${selectedMeals === plan.meals_per_week
+                                            ? 'border-primary bg-primary/10 shadow-lg'
+                                            : 'border-gray-200 hover:border-primary/30'
+                                            }`}
+                                        onClick={() => handleMealSelect(plan.meals_per_week)}
+                                    >
+                                        <CardContent className="p-6 text-center">
+                                            <div className="text-3xl font-bold text-gray-900 mb-2">{plan.meals_per_week}</div>
+                                            <div className="text-sm text-gray-600 mb-1">
+                                                {plan.name}
+                                            </div>
+                                            <div className="text-lg font-bold text-primary">
+                                                {t('menu.currency')} {Number(plan.price_per_week).toFixed(2)}/{t('common.week')}
+                                            </div>
+                                            {plan.is_free_shipping && (
+                                                <Badge className="mt-2 bg-green-500 text-white text-xs">{t('plan.summary.free')} {t('plan.summary.delivery')}</Badge>
+                                            )}
+                                            {selectedMeals === plan.meals_per_week && (
+                                                <div className="mt-3">
+                                                    <Badge className="bg-primary text-primary-foreground">{t('common.selected')}</Badge>
+                                                </div>
+                                            )}
+                                        </CardContent>
+                                    </Card>
+                                ))
+                            )}
                         </div>
 
                         {/* Order Summary */}
@@ -235,11 +317,9 @@ export const Plan = () => {
                                     <div className="flex justify-between items-center py-3 border-b border-gray-100">
                                         <span className="font-semibold text-gray-700">{t('plan.summary.pricePerMeal')}</span>
                                         <div className="text-right">
-                                            <span className="line-through text-gray-500 mr-3 text-sm">
-                                                £{mealOptions.find(o => o.count === selectedMeals)?.originalPrice.toFixed(2) || '0.00'}
-                                            </span>
                                             <span className="font-bold text-xl text-primary">
-                                                £{mealOptions.find(o => o.count === selectedMeals)?.discountPrice.toFixed(2) || '0.00'}
+                                                {(Number(mealOptions.find(o => o.meals_per_week === selectedMeals)?.price_per_week || 0) / selectedMeals).toFixed(2)}
+                                                {t('menu.currency')}
                                             </span>
                                         </div>
                                     </div>
@@ -247,25 +327,32 @@ export const Plan = () => {
                                     <div className="flex justify-between items-center py-3 border-b border-gray-100">
                                         <span className="text-gray-700">{t('plan.summary.mainMeals')} ({selectedMeals})</span>
                                         <div className="text-right">
-                                            <span className="line-through text-gray-500 mr-3 text-sm">
-                                                £{((mealOptions.find(o => o.count === selectedMeals)?.originalPrice || 0) * selectedMeals).toFixed(2)}
-                                            </span>
                                             <span className="font-semibold text-lg">
-                                                £{totals.subtotal.toFixed(2)}
+                                                {totals.subtotal.toFixed(2)}
+                                                {t('menu.currency')}
                                             </span>
                                         </div>
                                     </div>
 
-                                    <div className="flex justify-between items-center py-3 border-b border-gray-100">
-                                        <span className="text-green-600 font-medium">{t('plan.summary.discount')}</span>
-                                        <span className="font-semibold text-green-600">-£{totals.discount.toFixed(2)} {t('plan.summary.off')}</span>
-                                    </div>
+                                    {totals.discount > 0 && (
+                                        <div className="flex justify-between items-center py-3 border-b border-gray-100">
+                                            <span className="text-green-600 font-medium">{t('plan.summary.discount')}</span>
+                                            <span className="font-semibold text-green-600">
+                                                -{totals.discount.toFixed(2)} 
+                                                {t('menu.currency')}
+                                                {t('plan.summary.off')}
+                                                </span>
+                                        </div>
+                                    )}
 
                                     <div className="flex justify-between items-center py-3 border-b border-gray-100">
                                         <span className="text-gray-700">{t('plan.summary.delivery')}</span>
                                         <div className="text-right">
-                                            <span className="line-through text-gray-500 mr-3 text-sm">£{totals.delivery.toFixed(2)}</span>
-                                            <span className="font-semibold text-green-600">{t('plan.summary.free')}</span>
+                                            {totals.delivery > 0 ? (
+                                                <span className="font-semibold">{t('menu.currency')}{totals.delivery.toFixed(2)}</span>
+                                            ) : (
+                                                <span className="font-semibold text-green-600">{t('plan.summary.free')}</span>
+                                            )}
                                         </div>
                                     </div>
 
@@ -273,10 +360,7 @@ export const Plan = () => {
                                         <div className="flex justify-between items-center">
                                             <span className="text-2xl font-bold text-gray-900">{t('plan.summary.total')}</span>
                                             <div className="text-right">
-                                                <span className="line-through text-gray-500 mr-3">
-                                                    £{(totals.subtotal + totals.delivery).toFixed(2)}
-                                                </span>
-                                                <span className="text-3xl font-bold text-primary">£{totals.total.toFixed(2)}</span>
+                                                <span className="text-3xl font-bold text-primary">{t('menu.currency')}{totals.total.toFixed(2)}</span>
                                             </div>
                                         </div>
                                     </div>

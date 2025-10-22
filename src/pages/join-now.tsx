@@ -8,6 +8,8 @@ import { useTranslation } from "react-i18next"
 import { useDispatch, useSelector } from "react-redux"
 import { RootState } from "@/store"
 import { nextStep, prevStep } from "@/store/slices/joinProcessSlice"
+import { useEffect } from "react"
+import { toast } from "sonner"
 
 const JoinNow = () => {
     const { t } = useTranslation()
@@ -21,7 +23,24 @@ const JoinNow = () => {
         { id: 4, title: t('joinNow.steps.payment'), component: Payment }
     ]
 
+    // Scroll to top when step changes
+    useEffect(() => {
+        window.scrollTo({ top: 0, behavior: 'smooth' })
+    }, [currentStep])
+
     const handleNext = () => {
+        // Validate Plan step (step 1)
+        if (currentStep === 1) {
+            if (!planData.protein || planData.protein === '') {
+                toast.error(t('joinNow.validation.selectProtein'))
+                return
+            }
+            if (!planData.mealsPerWeek || planData.mealsPerWeek === 0) {
+                toast.error(t('joinNow.validation.selectPlan'))
+                return
+            }
+        }
+        
         dispatch(nextStep())
     }
 

@@ -54,22 +54,43 @@ export interface User {
     company?: string
 }
 
+export interface Plan {
+    id?: number
+    name: string
+    meals_per_week: number
+    price_per_week: number
+    is_active: boolean
+    points_value?: number
+    delivery_fee: number
+    is_free_shipping: boolean
+    created_at?: string
+    updated_at?: string
+}
+
 export interface joinProcess {
     currentStep: number,
     planData: {
+        // Plan selection
+        planId?: number
         protein: string
         portion: string
         mealsPerWeek: number
+        pricePerWeek?: number
+        deliveryFee?: number
+        isFreeShipping?: boolean
+        
+        // Personal details
         firstName: string
         lastName: string
         phoneNumber: string
         country: string
         address: string
         hearAboutUs: string
+        
+        // Meal selections
         selectedMeals: Record<string, any>
         selectedBreakfasts: Record<string, any>
         selectedDrinks: Record<string, any>
-
     }
 }
 
@@ -206,7 +227,7 @@ export interface Meal {
     sugar?: number | string
     
     // Ingredients & preparation
-    ingredients?: string | null
+    ingredients?: string | string[] | null
     allergens?: string | null
     preparation_instructions?: string | null
     storage_instructions?: string | null
@@ -241,6 +262,7 @@ export interface Meal {
     // Category & Type
     category_id?: number
     type_id?: number
+    type?: string
     
     // Timestamps
     created_at?: string

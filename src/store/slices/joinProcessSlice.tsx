@@ -3,19 +3,27 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 export type JoinProcessState = {
   currentStep?: number,
   planData?: {
+    // Plan selection
+    planId?: number
     protein?: string
     portion?: string
     mealsPerWeek?: number
+    pricePerWeek?: number
+    deliveryFee?: number
+    isFreeShipping?: boolean
+    
+    // Personal details
     firstName?: string
     lastName?: string
     phoneNumber?: string
     country?: string
     address?: string
     hearAboutUs?: string
+    
+    // Meal selections
     selectedMeals?: Record<string, any>
     selectedBreakfasts?: Record<string, any>
-    selectedDrinks: Record<string, any>
-
+    selectedDrinks?: Record<string, any>
   }
 }
 
@@ -23,9 +31,13 @@ export type JoinProcessState = {
 const initialState: JoinProcessState = {
   currentStep: 1,
   planData: {
+    planId: undefined,
     protein: '',
     portion: '',
     mealsPerWeek: 10,
+    pricePerWeek: 0,
+    deliveryFee: 0,
+    isFreeShipping: false,
     firstName: '',
     lastName: '',
     phoneNumber: '',

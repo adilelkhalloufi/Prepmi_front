@@ -16,6 +16,7 @@ import TermsOfService from "@/pages/terms-of-service";
 import CookieSettings from "@/pages/cookie-settings";
 import { MenuPage } from "@/components/MenuPage";
 import JoinNow from "@/pages/join-now";
+import MealDetails from "@/pages/dashboard/meals/details";
 
 
 const fallbackElement = <ProgressBar />;
@@ -116,7 +117,9 @@ const DashboardCategoriesView = loadable(() => import('../pages/dashboard/catego
   fallback: fallbackElement,
 });
 
-
+const SingleMeal = loadable(() => import("../pages/SingleMeal"), {
+  fallback: fallbackElement,
+});
 
 
 const Landing = loadable(() => import("../pages/landing"), {
@@ -138,7 +141,7 @@ export const browserRouter = createBrowserRouter([
       },
       {
         path: webRoutes.meal_single,
-        element: <MealDetail />,
+        element: <SingleMeal />,
       },
       {
         path: webRoutes.join_now,

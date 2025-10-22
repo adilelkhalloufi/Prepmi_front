@@ -194,7 +194,12 @@
   },
   "common": {
     "selected": "Sélectionné",
-    "meal": "repas"
+    "meal": "repas",
+    "meals": "repas",
+    "week": "semaine",
+    "perWeek": "par semaine",
+    "free": "GRATUIT",
+    "off": "Réduit"
   },
   "navigation": {
     "previous": "Précédent",
@@ -272,6 +277,10 @@
       "continue": "Continuer",
       "finish": "Finaliser Commande",
       "back": "Retour"
+    },
+    "validation": {
+      "selectProtein": "Veuillez sélectionner votre préférence de protéines avant de continuer",
+      "selectPlan": "Veuillez sélectionner un plan de repas avant de continuer"
     },
     "titles": {
       "joinProcess": "Rejoignez-nous - Complétez Votre Commande",

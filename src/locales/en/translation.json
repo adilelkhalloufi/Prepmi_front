@@ -189,6 +189,7 @@
     "selected": "Selected",
     "meal": "meal",
     "meals": "meals",
+    "week": "week",
     "perWeek": "per week",
     "free": "FREE",
     "off": "Off"
@@ -267,6 +268,10 @@
     "navigation": {
       "previous": "Previous",
       "next": "Next"
+    },
+    "validation": {
+      "selectProtein": "Please select your protein preference before continuing",
+      "selectPlan": "Please select a meal plan before continuing"
     },
     "joinNow": {
       "steps": {

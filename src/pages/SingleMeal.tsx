@@ -46,7 +46,7 @@ export const SingleMeal = () => {
   });
 
   const meal = mealResponse?.data;
-
+  console.log("MEAL DATA:", meal);
   const getDietaryBadges = (meal: Meal) => {
     const badges = [];
     // Check both flat and nested structures
@@ -119,11 +119,25 @@ export const SingleMeal = () => {
           <div className="grid gap-4">
             <h1 className="font-bold text-3xl lg:text-4xl">{meal?.name}</h1>
 
+            {/* Short Description */}
+            {meal?.short_description && (
+              <p className="text-lg text-gray-600 dark:text-gray-400">{meal.short_description}</p>
+            )}
+
+            {/* Meal Type Badge */}
+            {meal?.type && (
+              <div className="flex items-center gap-2">
+                <Badge variant="secondary" className="text-sm text-white px-3 py-1 transition-all duration-300 hover:scale-105 hover:text-white hover:bg-primary hover:border-primary cursor-pointer">
+                  {meal.type}
+                </Badge>
+              </div>
+            )}
+
             {/* Dietary Badges */}
             {meal && getDietaryBadges(meal).length > 0 && (
               <div className="flex flex-wrap gap-2">
                 {getDietaryBadges(meal).map((badge, index) => (
-                  <Badge key={index} className={`${badge.color} border-0`}>
+                  <Badge key={index} className={`${badge.color} border-0 transition-all duration-300 hover:scale-105 hover:text-white hover:bg-primary hover:border-primary cursor-pointer`}>
                     <Leaf className="h-3 w-3 mr-1" />
                     {badge.label}
                   </Badge>
@@ -145,20 +159,44 @@ export const SingleMeal = () => {
                 )}
                 {(meal?.nutrition?.protein || meal?.protein) && (
                   <div className="text-center p-3 bg-white dark:bg-gray-800 rounded-lg">
+                    <ChefHat className="h-6 w-6 text-red-500 mx-auto mb-1" />
                     <div className="text-2xl font-bold text-gray-900 dark:text-gray-100">{meal.nutrition?.protein || meal.protein}g</div>
                     <div className="text-sm text-gray-600 dark:text-gray-400">Protein</div>
                   </div>
                 )}
                 {(meal?.nutrition?.carbohydrates || meal?.carbohydrates) && (
                   <div className="text-center p-3 bg-white dark:bg-gray-800 rounded-lg">
+                    <Leaf className="h-6 w-6 text-yellow-500 mx-auto mb-1" />
                     <div className="text-2xl font-bold text-gray-900 dark:text-gray-100">{meal.nutrition?.carbohydrates || meal.carbohydrates}g</div>
                     <div className="text-sm text-gray-600 dark:text-gray-400">Carbs</div>
                   </div>
                 )}
                 {(meal?.nutrition?.fats || meal?.fats) && (
                   <div className="text-center p-3 bg-white dark:bg-gray-800 rounded-lg">
+                    <Heart className="h-6 w-6 text-purple-500 mx-auto mb-1" />
                     <div className="text-2xl font-bold text-gray-900 dark:text-gray-100">{meal.nutrition?.fats || meal.fats}g</div>
                     <div className="text-sm text-gray-600 dark:text-gray-400">Fats</div>
+                  </div>
+                )}
+                {(meal?.nutrition?.fiber || meal?.fiber) && (
+                  <div className="text-center p-3 bg-white dark:bg-gray-800 rounded-lg">
+                    <Leaf className="h-6 w-6 text-green-500 mx-auto mb-1" />
+                    <div className="text-2xl font-bold text-gray-900 dark:text-gray-100">{meal.nutrition?.fiber || meal.fiber}g</div>
+                    <div className="text-sm text-gray-600 dark:text-gray-400">Fiber</div>
+                  </div>
+                )}
+                {(meal?.nutrition?.sodium || meal?.sodium) && (
+                  <div className="text-center p-3 bg-white dark:bg-gray-800 rounded-lg">
+                    <AlertCircle className="h-6 w-6 text-blue-500 mx-auto mb-1" />
+                    <div className="text-2xl font-bold text-gray-900 dark:text-gray-100">{meal.nutrition?.sodium || meal.sodium}mg</div>
+                    <div className="text-sm text-gray-600 dark:text-gray-400">Sodium</div>
+                  </div>
+                )}
+                {(meal?.nutrition?.sugar || meal?.sugar) && (
+                  <div className="text-center p-3 bg-white dark:bg-gray-800 rounded-lg">
+                    <Flame className="h-6 w-6 text-pink-500 mx-auto mb-1" />
+                    <div className="text-2xl font-bold text-gray-900 dark:text-gray-100">{meal.nutrition?.sugar || meal.sugar}g</div>
+                    <div className="text-sm text-gray-600 dark:text-gray-400">Sugar</div>
                   </div>
                 )}
               </div>
@@ -187,18 +225,45 @@ export const SingleMeal = () => {
                     </div>
                   </div>
                 )}
+                {(meal?.preparation?.total_time_minutes || meal?.total_time_minutes) && (
+                  <div className="flex items-center gap-3">
+                    <Clock className="h-5 w-5 text-indigo-600" />
+                    <div>
+                      <div className="text-sm font-medium text-gray-700 dark:text-gray-300">Total Time</div>
+                      <div className="text-lg font-bold">{meal.preparation?.total_time_minutes || meal.total_time_minutes} min</div>
+                    </div>
+                  </div>
+                )}
                 {(meal?.preparation?.difficulty_level || meal?.difficulty_level) && (
                   <div className="flex items-center gap-3">
                     <CheckCircle2 className="h-5 w-5 text-purple-600" />
                     <div>
                       <div className="text-sm font-medium text-gray-700 dark:text-gray-300">Difficulty</div>
-                      <Badge variant="outline" className="font-medium">
+                      <Badge variant="outline" className="font-medium transition-all duration-300 hover:scale-105 hover:text-white hover:bg-primary hover:border-primary cursor-pointer">
                         {getDifficultyLevel(meal.preparation?.difficulty_level || meal.difficulty_level)}
                       </Badge>
                     </div>
                   </div>
                 )}
               </div>
+
+              {/* Serving Info */}
+              {(meal?.serving_size || meal?.weight_grams) && (
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2 border-t">
+                  {meal?.serving_size && (
+                    <div className="flex items-center gap-2">
+                      <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Serving Size:</span>
+                      <span className="text-sm text-gray-600 dark:text-gray-400">{meal.serving_size}</span>
+                    </div>
+                  )}
+                  {meal?.weight_grams && (
+                    <div className="flex items-center gap-2">
+                      <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Weight:</span>
+                      <span className="text-sm text-gray-600 dark:text-gray-400">{meal.weight_grams}g</span>
+                    </div>
+                  )}
+                </div>
+              )}
 
               {/* Spice Level */}
               {meal?.is_spicy && meal?.spice_level && (
@@ -219,8 +284,15 @@ export const SingleMeal = () => {
               )}
             </div>
 
-            <div className="text-4xl font-bold">
-              {typeof meal?.price === 'number' ? meal.price.toFixed(2) : meal?.price} {t("currency")}
+            <div className="grid gap-2">
+              <div className="text-4xl font-bold">
+                {typeof meal?.price === 'number' ? meal.price.toFixed(2) : meal?.price} {t("menu.currency")}
+              </div>
+              {meal?.cost_per_serving && (
+                <div className="text-sm text-gray-600 dark:text-gray-400">
+                  Cost per serving: {typeof meal.cost_per_serving === 'number' ? meal.cost_per_serving.toFixed(2) : meal.cost_per_serving} {t("currency")}
+                </div>
+              )}
             </div>
           </div>
 
@@ -235,7 +307,15 @@ export const SingleMeal = () => {
           {meal?.ingredients && (
             <div className="grid gap-2 p-4 bg-gray-50 dark:bg-gray-900 rounded-lg border">
               <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Ingredients</h3>
-              <p className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed">{meal.ingredients}</p>
+              {Array.isArray(meal.ingredients) ? (
+                <ul className="list-disc list-inside space-y-1">
+                  {meal.ingredients.map((ingredient, index) => (
+                    <li key={index} className="text-sm text-gray-700 dark:text-gray-300">{ingredient}</li>
+                  ))}
+                </ul>
+              ) : (
+                <p className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed">{meal.ingredients}</p>
+              )}
             </div>
           )}
 
@@ -248,18 +328,22 @@ export const SingleMeal = () => {
           )}
 
           {/* Preparation Instructions */}
-          {meal?.preparation_instructions && (
+          {(meal?.preparation_instructions || meal?.preparation?.instructions) && (
             <div className="grid gap-2 p-4 bg-gray-50 dark:bg-gray-900 rounded-lg border">
               <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Preparation Instructions</h3>
-              <p className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed whitespace-pre-line">{meal.preparation_instructions}</p>
+              <p className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed whitespace-pre-line">
+                {meal.preparation_instructions || meal.preparation?.instructions}
+              </p>
             </div>
           )}
 
           {/* Storage Instructions */}
-          {meal?.storage_instructions && (
+          {(meal?.storage_instructions || meal?.preparation?.storage_instructions) && (
             <div className="grid gap-2 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800">
               <h3 className="text-lg font-semibold text-blue-900 dark:text-blue-100">Storage Instructions</h3>
-              <p className="text-sm text-blue-700 dark:text-blue-300 leading-relaxed">{meal.storage_instructions}</p>
+              <p className="text-sm text-blue-700 dark:text-blue-300 leading-relaxed">
+                {meal.storage_instructions || meal.preparation?.storage_instructions}
+              </p>
             </div>
           )}
 
@@ -273,7 +357,7 @@ export const SingleMeal = () => {
               <p className="text-sm text-yellow-700 dark:text-yellow-300 leading-relaxed">{meal.chef_notes}</p>
             </div>
           )}
-
+{/* 
           <form className="grid gap-4 md:gap-10">
             <div className="flex flex-col sm:flex-row gap-3">
               <Button size="lg" className="flex-1">
@@ -294,7 +378,7 @@ export const SingleMeal = () => {
                 {isFavorite ? "Added to Favorites" : "Add to Favorites"}
               </Button>
             </div>
-          </form>
+          </form> */}
 
           {/* Vendor Contact Section */}
           {meal?.user && (
