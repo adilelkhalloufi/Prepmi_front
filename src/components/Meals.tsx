@@ -34,12 +34,22 @@ export function Meals() {
     const [showBreakfast, setShowBreakfast] = useState(false)
     const [showDrinks, setShowDrinks] = useState(false)
 
-    // Fetch weekly menu from API
+    // Get current week's start date (Monday)
+    const getCurrentWeekStart = () => {
+        const today = new Date();
+        const day = today.getDay();
+        const diff = today.getDate() - day + (day === 0 ? -6 : 1); // Adjust when day is Sunday
+        const monday = new Date(today.setDate(diff));
+        monday.setHours(0, 0, 0, 0);
+        return monday.toISOString().split('T')[0]; // Format: YYYY-MM-DD
+    };
+
+    // Fetch weekly menu from API for current week
     const { isLoading: isLoadingMenu, data: weeklyMenuResponse } = useQuery<{data: any[]}>({
-        queryKey: ["weeklyMenus", "active"],
+        queryKey: ["weeklyMenus", "current-week"],
         queryFn: () =>
             http
-                .get(`${apiRoutes.weeklyMenus}?is_active=1&is_published=1`)
+                .get(`${apiRoutes.weeklyMenus}?is_active=1&is_published=1&week_start_date=${getCurrentWeekStart()}`)
                 .then((res) => {
                     return res.data;
                 })
@@ -67,8 +77,8 @@ export function Meals() {
     const weeklyMenu = weeklyMenuResponse?.data?.[0] || null;
     const allMeals = mealsResponse?.data || [];
     
-    // Get main meals from weekly menu
-    const mainMeals = weeklyMenu?.meals?.map((menuMeal: any) => menuMeal.meal).filter(Boolean) || [];
+    // Get main meals from weekly menu - meals are directly in the array
+    const mainMeals = weeklyMenu?.meals || [];
     
     // Filter breakfasts and drinks from all meals
     const breakfasts = allMeals.filter(meal => 
@@ -108,7 +118,7 @@ export function Meals() {
             return newSelectedMeals
         })
     }
-
+    console.log('planData.portion', planData)
     const handleBreakfastQuantityChange = (itemId: number, change: number) => {
         setSelectedBreakfasts(prev => {
             const currentQty = prev[itemId] || 0
@@ -175,18 +185,19 @@ export function Meals() {
             {/* Plan Summary */}
             <Card className="bg-gradient-to-r from-primary/5 to-primary/10 border-primary/20">
                 <CardContent className="p-6">
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                         <div className="flex items-center space-x-3">
                             <div className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center">
                                 <Utensils className="w-5 h-5 text-primary" />
                             </div>
                             <div>
                                 <p className="text-sm text-muted-foreground">Protein Preference</p>
-                                <p className="font-semibold text-foreground">{planData?.protein || 'Not selected'}</p>
+                                <p className="font-semibold text-foreground">{planData?.category?.name}</p>
                             </div>
+
                         </div>
 
-                        <div className="flex items-center space-x-3">
+                        {/* <div className="flex items-center space-x-3">
                             <div className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center">
                                 <Users className="w-5 h-5 text-primary" />
                             </div>
@@ -194,7 +205,7 @@ export function Meals() {
                                 <p className="text-sm text-muted-foreground">Portion Size</p>
                                 <p className="font-semibold text-foreground">{planData?.portion || 'Not selected'}</p>
                             </div>
-                        </div>
+                        </div> */}
 
                         <div className="flex items-center space-x-3">
                             <div className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center">
@@ -212,7 +223,18 @@ export function Meals() {
                             </div>
                             <div>
                                 <p className="text-sm text-muted-foreground">Delivery Date</p>
-                                <p className="font-semibold text-foreground">Sunday, 12th October</p>
+                                <p className="font-semibold text-foreground">
+                                    {weeklyMenu ? 
+                                        `${new Date(weeklyMenu.week_start_date).toLocaleDateString('en-GB', { 
+                                            day: 'numeric', 
+                                            month: 'short' 
+                                        })} - ${new Date(weeklyMenu.week_end_date).toLocaleDateString('en-GB', { 
+                                            day: 'numeric', 
+                                            month: 'short' 
+                                        })}` 
+                                        : t('joinNow.meals.deliveryWeek', 'During the week')
+                                    }
+                                </p>
                             </div>
                         </div>
                     </div>

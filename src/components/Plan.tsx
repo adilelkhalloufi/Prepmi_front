@@ -102,9 +102,16 @@ export const Plan = () => {
     // Map plans to meal options format
     const mealOptions: PlanType[] = plans;
 
-    const handleProteinSelect = (protein: string) => {
-        setSelectedProtein(protein)
-        dispatch(updatePlanData({ protein }))
+    const handleProteinSelect = (proteinId: string) => {
+        const selectedCategory = categories.find(cat => cat.id?.toString() === proteinId)
+        
+        setSelectedProtein(proteinId)
+        dispatch(updatePlanData({ 
+            protein: proteinId,
+            categoryId: selectedCategory?.id,
+            categoryName: selectedCategory?.name,
+            category: selectedCategory // Store the complete category object
+        }))
     }
 
     const handlePortionSelect = (portion: string) => {
@@ -119,10 +126,13 @@ export const Plan = () => {
             setSelectedMeals(meals)
             dispatch(updatePlanData({ 
                 planId: selectedPlan.id,
-                mealsPerWeek: meals,
+                planName: selectedPlan.name,
+                mealsPerWeek: selectedPlan.meals_per_week,
                 pricePerWeek: Number(selectedPlan.price_per_week),
                 deliveryFee: Number(selectedPlan.delivery_fee || 0),
-                isFreeShipping: selectedPlan.is_free_shipping
+                isFreeShipping: selectedPlan.is_free_shipping,
+                pointsValue: selectedPlan.points_value,
+                plan: selectedPlan // Store the complete plan object
             }))
         }
     }

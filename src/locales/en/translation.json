@@ -370,7 +370,8 @@
       },
       "meals": {
         "title": "CHOOSE YOUR MEALS",
-        "subtitle": "Menu changes weekly with 50+ options per month"
+        "subtitle": "Menu changes weekly with 50+ options per month",
+        "deliveryWeek": "During the week"
       }
     },
     "plan": {

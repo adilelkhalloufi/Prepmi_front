@@ -365,7 +365,8 @@
     },
     "meals": {
       "title": "CHOISISSEZ VOS REPAS",
-      "subtitle": "Le menu change chaque semaine avec plus de 50 options par mois"
+      "subtitle": "Le menu change chaque semaine avec plus de 50 options par mois",
+      "deliveryWeek": "Au cours de la semaine"
     }
   },
   "validation": {

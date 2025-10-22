@@ -72,12 +72,18 @@ export interface joinProcess {
     planData: {
         // Plan selection
         planId?: number
+        planName?: string
         protein: string
+        categoryId?: number
+        categoryName?: string
+        category?: Category // Store the complete category object
         portion: string
         mealsPerWeek: number
         pricePerWeek?: number
         deliveryFee?: number
         isFreeShipping?: boolean
+        pointsValue?: number
+        plan?: Plan // Store the complete plan object
         
         // Personal details
         firstName: string
