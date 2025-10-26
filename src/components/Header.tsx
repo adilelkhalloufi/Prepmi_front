@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { useTranslation } from "react-i18next";
 import { webRoutes } from "@/routes/web";
-import { IconBasket, IconLogin, IconRecycle, IconUser } from "@tabler/icons-react";
+import { IconBasket, IconCactus, IconLogin, IconRecycle, IconUser } from "@tabler/icons-react";
 import i18next from "../i18n";
 import { LangToggle } from "./lang-toggle";
 import ThemeSwitcher from "./theme-switcher";
@@ -39,7 +39,7 @@ export function Header() {
 
   ];
   const cart = useSelector((state: RootState) => state.cart);
-  const admin = useSelector((state: RootState) => state.admin);
+  const admin = useSelector((state: RootState) => state.admin.user);
 
   return (
     <header className="fixed z-50 top-0 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -87,33 +87,34 @@ export function Header() {
 
 
           </Button>
-          {admin && (
+
+
+          {/* Connection & Admin Panel */}
+          {admin && admin.id ? (
             <Button
               variant="ghost"
               onClick={() => {
                 navigate(webRoutes.dashboard);
               }}
             >
-              <IconUser />
+              <IconCactus className="mr-2 w-5 h-5" />
+            </Button>
+          ) : (
+            <Button
+              variant="ghost"
+              onClick={() => {
+                navigate(webRoutes.login);
+              }}
+            >
+              <IconLogin className="mr-2 w-5 h-5" />
+              {t("menu_login")}
             </Button>
           )}
-          {!admin && (
-            <>
-              <Button
-                variant="ghost"
-                onClick={() => {
-                  navigate(webRoutes.login);
-                }}
-              >
-                <IconLogin className="mr-2 w-5 h-5" />
-                {t("menu_login")}
-              </Button>
 
-            </>
-          )}
+          {/* Get Started */}
           <Button
             onClick={() => {
-              navigate(webRoutes.join_now || "/register");
+              navigate(webRoutes.join_now);
             }}
           >
             {t("menu_get_started")}

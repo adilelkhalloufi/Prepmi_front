@@ -37,6 +37,7 @@ export const webRoutes = {
   menu: '/menu',
   meal_single: '/meal/:id',
   join_now: '/join-now',
+  thank_you: '/thank-you/:orderId',
   single_product: '/product/:id',
   privacy_policy: '/privacy-policy',
   terms_service: '/terms-of-service',

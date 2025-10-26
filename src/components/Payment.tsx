@@ -2,14 +2,11 @@ import { useState, useEffect } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Badge } from "@/components/ui/badge"
-import { Separator } from "@/components/ui/separator"
 import { useTranslation } from "react-i18next"
 import {
     CreditCard,
-    Truck,
-    Tag,
+
+
     Edit,
     Trash2,
     Plus,
@@ -20,123 +17,174 @@ import {
     User,
     Coffee,
     Utensils,
-    Check,
-    Clock,
-    Zap,
+
     Gift,
     Star
 } from "lucide-react"
 import { useDispatch, useSelector } from "react-redux"
 import { RootState } from "@/store"
-import { updatePlanData } from "@/store/slices/joinProcessSlice"
+import { resetJoinProcess, updatePlanData } from "@/store/slices/joinProcessSlice"
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog"
+import http, { defaultHttp } from "@/utils/http"
+import { apiRoutes } from "@/routes/api"
+import { toast } from "sonner"
+import { handleErrorResponse } from "@/utils"
+import { useNavigate } from "react-router-dom"
+import { webRoutes } from "@/routes/web"
 
-// Mock data - replace with actual data from previous steps
-const mockSelectedMeals = [
-    { id: 1, name: "Grilled Chicken Teriyaki", price: 12.99, quantity: 3, image: "/api/placeholder/100/100" },
-    { id: 2, name: "Salmon with Quinoa", price: 14.99, quantity: 2, image: "/api/placeholder/100/100" },
-    { id: 3, name: "Beef Stir Fry", price: 13.99, quantity: 3, image: "/api/placeholder/100/100" },
-    { id: 4, name: "Vegetarian Buddha Bowl", price: 11.99, quantity: 2, image: "/api/placeholder/100/100" }
-]
 
-const mockSelectedBreakfasts = [
-    { id: 101, name: "Overnight Oats Bowl", price: 6.99, quantity: 7, image: "/api/placeholder/100/100" }
-]
 
-const mockSelectedDrinks = [
-    { id: 201, name: "Fresh Green Smoothie", price: 4.99, quantity: 5, image: "/api/placeholder/100/100" }
-]
 
 export function Payment() {
     const { t } = useTranslation()
     const dispatch = useDispatch()
+    const navigate = useNavigate()
     const planData = useSelector((state: RootState) => state.joinProcess.planData)
+    const admin = useSelector((state: RootState) => state.admin.user)
+    console.log("admin :", admin)
+    console.log("plan :", planData)
 
-    const [paymentMethod, setPaymentMethod] = useState<'COD' | 'ONLINE'>('ONLINE')
+    const [paymentMethod, setPaymentMethod] = useState<'COD' | 'ONLINE'>(planData?.paymentMethod || 'COD')
     const [deliveryType, setDeliveryType] = useState<'STANDARD' | 'EXPRESS'>('STANDARD')
-    const [discountCode, setDiscountCode] = useState('')
     const [appliedDiscount, setAppliedDiscount] = useState<{ code: string, amount: number } | null>(null)
     const [isEditingMeals, setIsEditingMeals] = useState(false)
-    const [selectedMeals, setSelectedMeals] = useState(mockSelectedMeals)
-    const [selectedBreakfasts, setSelectedBreakfasts] = useState(mockSelectedBreakfasts)
-    const [selectedDrinks, setSelectedDrinks] = useState(mockSelectedDrinks)
+    const [editModalOpen, setEditModalOpen] = useState(false)
+    const [editData, setEditData] = useState({
+        firstName: planData?.firstName || '',
+        lastName: planData?.lastName || '',
+        phoneNumber: planData?.phoneNumber || '',
+        address: planData?.address || '',
+        country: planData?.country || ''
+    })
 
     // Loyalty Points System
-    const [currentPoints, setCurrentPoints] = useState(8) // Mock current points
+    const [currentPoints, setCurrentPoints] = useState(0)
+    const [pointsLoading, setPointsLoading] = useState(false)
     const [useReward, setUseReward] = useState(false)
     const rewardThreshold = 12
     const rewardValue = 49 // MAD
     const canUseReward = currentPoints >= rewardThreshold
+
+    useEffect(() => {
+        if (admin?.id) {
+            setPointsLoading(true)
+            http.get(apiRoutes.totalPointsEarned)
+                .then(res => {
+                    setCurrentPoints(res.data?.total_points_earned ?? 0)
+                })
+                .catch(() => {
+                    setCurrentPoints(0)
+                })
+                .finally(() => setPointsLoading(false))
+        }
+    }, [admin?.id])
+
+    // add loading state
+    const [isPlacingOrder, setIsPlacingOrder] = useState(false)
+
+    // Get selected meals and drinks as arrays of objects
+    const selectedMeals = Object.values(planData.selectedMeals || {})
+    const selectedDrinks = Object.values(planData.selectedDrinks || {})
 
     // Update local state when Redux state changes
     useEffect(() => {
         if (planData) {
             // You can also sync the selected items from Redux if they exist
             // setSelectedMeals based on planData.selectedMeals etc.
+            setEditData({
+                firstName: planData.firstName || '',
+                lastName: planData.lastName || '',
+                phoneNumber: planData.phoneNumber || '',
+                address: planData.address || '',
+                country: planData.country || ''
+            })
         }
     }, [planData])
 
-    const applyDiscount = () => {
-        // Mock discount validation
-        const validCodes = {
-            'WELCOME10': 10,
-            'FIRST15': 15,
-            'SAVE20': 20
+    // Sync paymentMethod with Redux store
+    useEffect(() => {
+        if (planData?.paymentMethod && planData.paymentMethod !== paymentMethod) {
+            setPaymentMethod(planData.paymentMethod)
         }
-
-        if (validCodes[discountCode as keyof typeof validCodes]) {
-            setAppliedDiscount({
-                code: discountCode,
-                amount: validCodes[discountCode as keyof typeof validCodes]
-            })
-        }
-    }
-
-    const removeDiscount = () => {
-        setAppliedDiscount(null)
-        setDiscountCode('')
-    }
+    }, [planData?.paymentMethod])
 
     const updateQuantity = (type: 'meal' | 'breakfast' | 'drink', id: number, change: number) => {
         if (type === 'meal') {
-            setSelectedMeals(prev => prev.map(meal =>
-                meal.id === id
-                    ? { ...meal, quantity: Math.max(0, meal.quantity + change) }
-                    : meal
-            ).filter(meal => meal.quantity > 0))
+            const updatedMeals = selectedMeals
+                .map(meal =>
+                    meal.id === id
+                        ? { ...meal, quantity: Math.max(0, (meal.quantity || 0) + change) }
+                        : meal
+                )
+                .filter(meal => meal.quantity > 0)
+            dispatch(updatePlanData({
+                selectedMeals: Object.fromEntries(updatedMeals.map(m => [m.id, m]))
+            }))
         } else if (type === 'breakfast') {
-            setSelectedBreakfasts(prev => prev.map(item =>
-                item.id === id
-                    ? { ...item, quantity: Math.max(0, item.quantity + change) }
-                    : item
-            ).filter(item => item.quantity > 0))
+            // const updatedBreakfasts = selectedBreakfasts
+            //     .map(item =>
+            //         item.id === id
+            //             ? { ...item, quantity: Math.max(0, (item.quantity || 0) + change) }
+            //             : item
+            //     )
+            //     .filter(item => item.quantity > 0)
+            // dispatch(updatePlanData({
+            //     selectedBreakfasts: Object.fromEntries(updatedBreakfasts.map(b => [b.id, b]))
+            // }))
         } else if (type === 'drink') {
-            setSelectedDrinks(prev => prev.map(item =>
-                item.id === id
-                    ? { ...item, quantity: Math.max(0, item.quantity + change) }
-                    : item
-            ).filter(item => item.quantity > 0))
+            const updatedDrinks = selectedDrinks
+                .map(drink =>
+                    drink.id === id
+                        ? { ...drink, quantity: Math.max(0, (drink.quantity || 0) + change) }
+                        : drink
+                )
+                .filter(drink => drink.quantity > 0)
+            dispatch(updatePlanData({
+                selectedDrinks: Object.fromEntries(updatedDrinks.map(d => [d.id, d]))
+            }))
         }
     }
 
     const removeItem = (type: 'meal' | 'breakfast' | 'drink', id: number) => {
         if (type === 'meal') {
-            setSelectedMeals(prev => prev.filter(meal => meal.id !== id))
+            const updatedMeals = selectedMeals.filter(meal => meal.id !== id)
+            dispatch(updatePlanData({
+                selectedMeals: Object.fromEntries(updatedMeals.map(m => [m.id, m]))
+            }))
         } else if (type === 'breakfast') {
-            setSelectedBreakfasts(prev => prev.filter(item => item.id !== id))
+            // If you use selectedBreakfasts, apply similar logic:
+            // const updatedBreakfasts = selectedBreakfasts.filter(item => item.id !== id)
+            // dispatch(updatePlanData({
+            //     selectedBreakfasts: Object.fromEntries(updatedBreakfasts.map(b => [b.id, b]))
+            // }))
         } else if (type === 'drink') {
-            setSelectedDrinks(prev => prev.filter(item => item.id !== id))
+            const updatedDrinks = selectedDrinks.filter(drink => drink.id !== id)
+            dispatch(updatePlanData({
+                selectedDrinks: Object.fromEntries(updatedDrinks.map(d => [d.id, d]))
+            }))
         }
     }
 
-    // Calculate totals
-    const mealsSubtotal = selectedMeals.reduce((sum, meal) => sum + (meal.price * meal.quantity), 0)
-    const breakfastSubtotal = selectedBreakfasts.reduce((sum, item) => sum + (item.price * item.quantity), 0)
-    const drinksSubtotal = selectedDrinks.reduce((sum, item) => sum + (item.price * item.quantity), 0)
-    const subtotal = mealsSubtotal + breakfastSubtotal + drinksSubtotal
+    const handleEditChange = (field: string, value: string) => {
+        setEditData(prev => ({ ...prev, [field]: value }))
+    }
 
-    const totalItems = selectedMeals.reduce((sum, meal) => sum + meal.quantity, 0) +
-        selectedBreakfasts.reduce((sum, item) => sum + item.quantity, 0) +
-        selectedDrinks.reduce((sum, item) => sum + item.quantity, 0)
+    const handleEditSave = () => {
+        dispatch(updatePlanData(editData))
+        setEditModalOpen(false)
+    }
+
+    // Calculate totals
+    const mealsSubtotal = selectedMeals.reduce((sum, meal) => sum + ((meal.price || 0) * (meal.quantity || 0)), 0)
+    // const breakfastSubtotal = selectedBreakfasts.reduce((sum, item) => sum + ((item.price || 0) * (item.quantity || 0)), 0)
+    const drinksSubtotal = selectedDrinks.reduce((sum, item) => sum + ((item.price || 0) * (item.quantity || 0)), 0)
+    const subtotal = mealsSubtotal + drinksSubtotal
+
+    // Always use arrays for totalItems calculation
+    const totalItems =
+        selectedMeals.reduce((sum, meal) => sum + (meal.quantity || 0), 0) +
+        // selectedBreakfasts.reduce((sum, item) => sum + (item.quantity || 0), 0) +
+        selectedDrinks.reduce((sum, item) => sum + (item.quantity || 0), 0)
 
     // Calculate delivery fee based on type
     const getDeliveryFee = () => {
@@ -155,10 +203,52 @@ export function Payment() {
         return 0
     }
 
-    const pointsEarned = calculatePointsEarned()
+    const pointsEarned = planData?.plan?.points_value ?? 0
     const rewardDiscount = useReward && canUseReward ? rewardValue : 0
     const discountAmount = appliedDiscount ? (subtotal * appliedDiscount.amount / 100) : 0
     const total = subtotal + deliveryFee - discountAmount - rewardDiscount
+
+    // Replace mockSelectedMeals with Redux selectedMeals
+    const mealList = selectedMeals
+
+    // Replace mockSelectedDrinks with Redux selectedDrinks
+
+    // Simulate user authentication (replace with your actual auth logic)
+    const isUserConnected = !!admin?.id // or use your auth state
+
+    // make handlePlaceOrder async and set loading state
+    const handlePlaceOrder = async () => {
+        setIsPlacingOrder(true)
+        const payload = {
+            paymentMethod: paymentMethod,
+            plan: planData?.plan || null,
+            meals: selectedMeals, // array of meal objects
+            drinks: selectedDrinks, // array of drink objects
+            totalAmount: totalItems,
+            infos: {
+                firstName: planData?.firstName,
+                lastName: planData?.lastName,
+                phoneNumber: planData?.phoneNumber,
+                country: planData?.country,
+                address: planData?.address
+            },
+            user_id: admin?.id || null
+        }
+
+        defaultHttp.post(apiRoutes.orders, payload).then((response) => {
+            // Optionally redirect to order confirmation page
+            toast.success(t('joinNow.payment.orderSuccess'))
+            dispatch(resetJoinProcess())
+            navigate(webRoutes.thank_you)
+
+        }).catch((error) => {
+            handleErrorResponse(error);
+
+            setIsPlacingOrder(false)
+        });
+
+    }
+
 
     return (
         <div className="space-y-8">
@@ -182,7 +272,12 @@ export function Payment() {
                                 <User className="w-5 h-5 text-primary" />
                                 <span>{t('joinNow.payment.customerDetails')}</span>
                             </CardTitle>
-                            <Button variant="ghost" size="sm" className="text-primary">
+                            <Button
+                                variant="ghost"
+                                size="sm"
+                                className="text-primary"
+                                onClick={() => setEditModalOpen(true)}
+                            >
                                 <Edit className="w-4 h-4 mr-1" />
                                 {t('joinNow.payment.edit')}
                             </Button>
@@ -202,6 +297,40 @@ export function Payment() {
                             </div>
                         </CardContent>
                     </Card>
+                    {/* Edit Modal */}
+                    <Dialog open={editModalOpen} onOpenChange={setEditModalOpen}>
+                        <DialogContent>
+                            <DialogHeader>
+                                <DialogTitle>{t('joinNow.payment.editDetails')}</DialogTitle>
+                            </DialogHeader>
+                            <div className="space-y-4">
+                                <Input
+                                    placeholder={t('joinNow.address.firstName')}
+                                    value={editData.firstName}
+                                    onChange={e => handleEditChange('firstName', e.target.value)}
+                                />
+                                <Input
+                                    placeholder={t('joinNow.address.lastName')}
+                                    value={editData.lastName}
+                                    onChange={e => handleEditChange('lastName', e.target.value)}
+                                />
+                                <Input
+                                    placeholder={t('joinNow.address.phoneNumber')}
+                                    value={editData.phoneNumber}
+                                    onChange={e => handleEditChange('phoneNumber', e.target.value)}
+                                />
+                                <Input
+                                    placeholder={t('joinNow.address.deliveryAddress')}
+                                    value={editData.address}
+                                    onChange={e => handleEditChange('address', e.target.value)}
+                                />
+
+                            </div>
+                            <DialogFooter>
+                                <Button onClick={handleEditSave}>{t('joinNow.payment.save')}</Button>
+                            </DialogFooter>
+                        </DialogContent>
+                    </Dialog>
 
                     {/* Order Items */}
                     <Card>
@@ -222,122 +351,42 @@ export function Payment() {
                         </CardHeader>
                         <CardContent className="space-y-6">
                             {/* Main Meals */}
-                            {selectedMeals.length > 0 && (
+                            {mealList.length > 0 ? (
                                 <div>
                                     <div className="flex items-center space-x-2 mb-4">
                                         <Utensils className="w-4 h-4 text-primary" />
                                         <h4 className="font-semibold text-foreground">{t('joinNow.payment.mainMeals')}</h4>
                                     </div>
                                     <div className="space-y-3">
-                                        {selectedMeals.map((meal) => (
+                                        {mealList.map((meal) => (
                                             <div key={meal.id} className="flex items-center space-x-4 p-3 bg-muted/30 rounded-lg">
                                                 <img
-                                                    src={meal.image}
+                                                    src={meal?.image}
                                                     alt={meal.name}
                                                     className="w-16 h-16 object-cover rounded-md"
                                                 />
                                                 <div className="flex-1">
                                                     <h5 className="font-medium text-foreground">{meal.name}</h5>
-                                                    <p className="text-sm text-muted-foreground">${meal.price} {t('joinNow.payment.each')}</p>
+                                                    <p className="text-sm text-muted-foreground">
+                                                        {/* {meal.price ? `$${meal.price}` : ''} {t('joinNow.payment.each')} */}
+                                                    </p>
                                                 </div>
-                                                {isEditingMeals ? (
-                                                    <div className="flex items-center space-x-2">
-                                                        <Button
-                                                            size="sm"
-                                                            variant="outline"
-                                                            className="h-6 w-6 p-0"
-                                                            onClick={() => updateQuantity('meal', meal.id, -1)}
-                                                        >
-                                                            <Minus className="h-3 w-3" />
-                                                        </Button>
-                                                        <span className="w-6 text-center text-sm font-semibold">{meal.quantity}</span>
-                                                        <Button
-                                                            size="sm"
-                                                            variant="outline"
-                                                            className="h-6 w-6 p-0"
-                                                            onClick={() => updateQuantity('meal', meal.id, 1)}
-                                                        >
-                                                            <Plus className="h-3 w-3" />
-                                                        </Button>
-                                                        <Button
-                                                            size="sm"
-                                                            variant="ghost"
-                                                            className="h-6 w-6 p-0 text-destructive"
-                                                            onClick={() => removeItem('meal', meal.id)}
-                                                        >
-                                                            <Trash2 className="h-3 w-3" />
-                                                        </Button>
-                                                    </div>
-                                                ) : (
-                                                    <div className="text-right">
-                                                        <p className="text-sm text-muted-foreground">{t('joinNow.payment.qty')}: {meal.quantity}</p>
-                                                        <p className="font-semibold">${(meal.price * meal.quantity).toFixed(2)}</p>
-                                                    </div>
-                                                )}
+                                                <div className="text-right">
+                                                    <p className="text-sm text-muted-foreground">{t('joinNow.payment.qty')}: {meal.quantity}</p>
+                                                    <p className="font-semibold">
+                                                        {/* {meal.price ? `$${(meal.price * meal.quantity).toFixed(2)}` : ''} */}
+                                                    </p>
+                                                </div>
                                             </div>
                                         ))}
                                     </div>
+                                </div>
+                            ) : (
+                                <div className="text-center py-8">
+                                    <p className="text-muted-foreground">No meals selected.</p>
                                 </div>
                             )}
 
-                            {/* Breakfast Items */}
-                            {selectedBreakfasts.length > 0 && (
-                                <div>
-                                    <div className="flex items-center space-x-2 mb-4">
-                                        <Coffee className="w-4 h-4 text-secondary" />
-                                        <h4 className="font-semibold text-foreground">{t('joinNow.payment.breakfast')}</h4>
-                                    </div>
-                                    <div className="space-y-3">
-                                        {selectedBreakfasts.map((item) => (
-                                            <div key={item.id} className="flex items-center space-x-4 p-3 bg-secondary/10 rounded-lg">
-                                                <img
-                                                    src={item.image}
-                                                    alt={item.name}
-                                                    className="w-16 h-16 object-cover rounded-md"
-                                                />
-                                                <div className="flex-1">
-                                                    <h5 className="font-medium text-foreground">{item.name}</h5>
-                                                    <p className="text-sm text-muted-foreground">${item.price} each</p>
-                                                </div>
-                                                {isEditingMeals ? (
-                                                    <div className="flex items-center space-x-2">
-                                                        <Button
-                                                            size="sm"
-                                                            variant="outline"
-                                                            className="h-6 w-6 p-0"
-                                                            onClick={() => updateQuantity('breakfast', item.id, -1)}
-                                                        >
-                                                            <Minus className="h-3 w-3" />
-                                                        </Button>
-                                                        <span className="w-6 text-center text-sm font-semibold">{item.quantity}</span>
-                                                        <Button
-                                                            size="sm"
-                                                            variant="outline"
-                                                            className="h-6 w-6 p-0"
-                                                            onClick={() => updateQuantity('breakfast', item.id, 1)}
-                                                        >
-                                                            <Plus className="h-3 w-3" />
-                                                        </Button>
-                                                        <Button
-                                                            size="sm"
-                                                            variant="ghost"
-                                                            className="h-6 w-6 p-0 text-destructive"
-                                                            onClick={() => removeItem('breakfast', item.id)}
-                                                        >
-                                                            <Trash2 className="h-3 w-3" />
-                                                        </Button>
-                                                    </div>
-                                                ) : (
-                                                    <div className="text-right">
-                                                        <p className="text-sm text-muted-foreground">{t('joinNow.payment.qty')}: {item.quantity}</p>
-                                                        <p className="font-semibold">${(item.price * item.quantity).toFixed(2)}</p>
-                                                    </div>
-                                                )}
-                                            </div>
-                                        ))}
-                                    </div>
-                                </div>
-                            )}
 
                             {/* Drinks */}
                             {selectedDrinks.length > 0 && (
@@ -356,7 +405,7 @@ export function Payment() {
                                                 />
                                                 <div className="flex-1">
                                                     <h5 className="font-medium text-foreground">{item.name}</h5>
-                                                    <p className="text-sm text-muted-foreground">${item.price} each</p>
+                                                    <p className="text-sm text-muted-foreground">{item.price} {t('menu.currency')} {t('joinNow.payment.each')}</p>
                                                 </div>
                                                 {isEditingMeals ? (
                                                     <div className="flex items-center space-x-2">
@@ -389,7 +438,7 @@ export function Payment() {
                                                 ) : (
                                                     <div className="text-right">
                                                         <p className="text-sm text-muted-foreground">{t('joinNow.payment.qty')}: {item.quantity}</p>
-                                                        <p className="font-semibold">${(item.price * item.quantity).toFixed(2)}</p>
+                                                        <p className="font-semibold">{(item.price * item.quantity).toFixed(2)} {t('menu.currency')}</p>
                                                     </div>
                                                 )}
                                             </div>
@@ -404,76 +453,101 @@ export function Payment() {
                 {/* Payment Section */}
                 <div className="space-y-6">
                     {/* Loyalty Points Card */}
-                    <Card className="border-gradient-to-r from-primary/20 to-secondary/20">
-                        <CardHeader>
-                            <CardTitle className="flex items-center space-x-2 text-base">
-                                <Star className="w-5 h-5 text-primary" />
-                                <span>{t('joinNow.payment.loyaltyPoints')}</span>
-                            </CardTitle>
-                        </CardHeader>
-                        <CardContent className="space-y-4">
-                            {/* Current Points Display */}
-                            <div className="text-center space-y-2">
-                                <div className="flex items-center justify-center space-x-2">
-                                    <span className="text-2xl font-bold text-primary">{currentPoints}</span>
-                                    <span className="text-muted-foreground">/ {rewardThreshold}</span>
-                                    <span className="text-sm text-muted-foreground">{t('joinNow.payment.pointsCollected')}</span>
-                                </div>
-
-                                {/* Progress Bar */}
-                                <div className="w-full bg-secondary rounded-full h-2">
-                                    <div
-                                        className="bg-gradient-to-r from-primary to-secondary h-2 rounded-full transition-all duration-300"
-                                        style={{ width: `${Math.min((currentPoints / rewardThreshold) * 100, 100)}%` }}
-                                    ></div>
-                                </div>
-
-                                {canUseReward ? (
-                                    <p className="text-sm text-primary font-medium">
-                                        🎉 {t('joinNow.payment.rewardAvailable')}
-                                    </p>
-                                ) : (
-                                    <p className="text-sm text-muted-foreground">
-                                        {t('joinNow.payment.pointsUntilReward', { points: rewardThreshold - currentPoints })}
-                                    </p>
-                                )}
-                            </div>
-
-                            {/* Points Earning Preview */}
-                            {pointsEarned > 0 && (
-                                <div className="p-3 bg-primary/5 rounded-lg border border-primary/20">
-                                    <div className="flex items-center space-x-2">
-                                        <Gift className="w-4 h-4 text-primary" />
-                                        <span className="text-sm font-medium text-primary">
-                                            {t('joinNow.payment.willEarnPoints', { points: pointsEarned })}
-                                        </span>
+                    {isUserConnected ? (
+                        <Card className="border-gradient-to-r from-primary/20 to-secondary/20">
+                            <CardHeader>
+                                <CardTitle className="flex items-center space-x-2 text-base">
+                                    <Star className="w-5 h-5 text-primary" />
+                                    <span>{t('joinNow.payment.loyaltyPoints')}</span>
+                                </CardTitle>
+                            </CardHeader>
+                            <CardContent className="space-y-4">
+                                {/* Current Points Display */}
+                                <div className="text-center space-y-2">
+                                    <div className="flex items-center justify-center space-x-2">
+                                        {pointsLoading ? (
+                                            <span className="text-muted-foreground text-sm">Loading...</span>
+                                        ) : (
+                                            <>
+                                                <span className="text-2xl font-bold text-primary">{currentPoints}</span>
+                                                <span className="text-muted-foreground">/ {rewardThreshold}</span>
+                                                <span className="text-sm text-muted-foreground">{t('joinNow.payment.pointsCollected')}</span>
+                                            </>
+                                        )}
                                     </div>
-                                </div>
-                            )}
 
-                            {/* Use Reward Toggle */}
-                            {canUseReward && (
-                                <div className="p-3 bg-gradient-to-r from-primary/10 to-secondary/10 rounded-lg border">
-                                    <div className="flex items-center justify-between">
+                                    {/* Progress Bar */}
+                                    <div className="w-full bg-secondary rounded-full h-2">
+                                        <div
+                                            className="bg-gradient-to-r from-primary to-secondary h-2 rounded-full transition-all duration-300"
+                                            style={{ width: `${Math.min((currentPoints / rewardThreshold) * 100, 100)}%` }}
+                                        ></div>
+                                    </div>
+
+                                    {canUseReward ? (
+                                        <p className="text-sm text-primary font-medium">
+                                            🎉 {t('joinNow.payment.rewardAvailable')}
+                                        </p>
+                                    ) : (
+                                        <p className="text-sm text-muted-foreground">
+                                            {t('joinNow.payment.pointsUntilReward', { points: rewardThreshold - currentPoints })}
+                                        </p>
+                                    )}
+                                </div>
+
+                                {/* Points Earning Preview */}
+                                {pointsEarned > 0 && (
+                                    <div className="p-3 bg-primary/5 rounded-lg border border-primary/20">
                                         <div className="flex items-center space-x-2">
                                             <Gift className="w-4 h-4 text-primary" />
-                                            <div>
-                                                <p className="font-medium text-sm">{t('joinNow.payment.useFreeMeal')}</p>
-                                                <p className="text-xs text-muted-foreground">-{rewardValue} MAD</p>
-                                            </div>
+                                            <span className="text-sm font-medium text-primary">
+                                                {t('joinNow.payment.willEarnPoints', { points: pointsEarned })}
+                                            </span>
                                         </div>
-                                        <Button
-                                            variant={useReward ? "default" : "outline"}
-                                            size="sm"
-                                            onClick={() => setUseReward(!useReward)}
-                                        >
-                                            {useReward ? t('joinNow.payment.applied') : t('joinNow.payment.use')}
-                                        </Button>
                                     </div>
+                                )}
+
+                                {/* Use Reward Toggle */}
+                                {canUseReward && (
+                                    <div className="p-3 bg-gradient-to-r from-primary/10 to-secondary/10 rounded-lg border">
+                                        <div className="flex items-center justify-between">
+                                            <div className="flex items-center space-x-2">
+                                                <Gift className="w-4 h-4 text-primary" />
+                                                <div>
+                                                    <p className="font-medium text-sm">{t('joinNow.payment.useFreeMeal')}</p>
+                                                    <p className="text-xs text-muted-foreground">-{rewardValue} MAD</p>
+                                                </div>
+                                            </div>
+                                            <Button
+                                                variant={useReward ? "default" : "outline"}
+                                                size="sm"
+                                                onClick={() => setUseReward(!useReward)}
+                                            >
+                                                {useReward ? t('joinNow.payment.applied') : t('joinNow.payment.use')}
+                                            </Button>
+                                        </div>
+                                    </div>
+                                )}
+                            </CardContent>
+                        </Card>
+                    ) : (
+                        <Card className="border-gradient-to-r from-primary/20 to-secondary/20">
+                            <CardHeader>
+                                <CardTitle className="flex items-center space-x-2 text-base">
+                                    <Star className="w-5 h-5 text-primary" />
+                                    <span>{t('joinNow.payment.loyaltyPoints')}</span>
+                                </CardTitle>
+                            </CardHeader>
+                            <CardContent>
+                                <div className="text-center py-6">
+                                    <p className="text-muted-foreground">
+                                        {t('joinNow.payment.connectToSeePoints', 'Connect your account to view and use loyalty points.')}
+                                    </p>
+                                    {/* Optionally add a connect/login button here */}
                                 </div>
-                            )}
-                        </CardContent>
-                    </Card>
+                            </CardContent>
+                        </Card>
+                    )}
 
                     {/* Order Total */}
                     <Card className="sticky top-4">
@@ -485,105 +559,34 @@ export function Payment() {
                         </CardHeader>
                         <CardContent className="space-y-4">
                             <div className="space-y-2">
-                                <div className="flex justify-between text-sm">
-                                    <span>{t('joinNow.payment.mealsSubtotal')}</span>
-                                    <span>${mealsSubtotal.toFixed(2)}</span>
-                                </div>
-                                {breakfastSubtotal > 0 && (
-                                    <div className="flex justify-between text-sm">
-                                        <span>{t('joinNow.payment.breakfastSubtotal')}</span>
-                                        <span>${breakfastSubtotal.toFixed(2)}</span>
+                                {/* Show plan total */}
+                                {planData.pricePerWeek && (
+                                    <div className="flex justify-between text-base font-semibold">
+                                        <span>{t('joinNow.payment.total')}</span>
+                                        <span>{Number(planData.plan.price_per_week).toFixed(2)} {t('menu.currency')}</span>
                                     </div>
                                 )}
+                                {/* Show drinks total if any drinks selected */}
                                 {drinksSubtotal > 0 && (
-                                    <div className="flex justify-between text-sm">
+                                    <div className="flex justify-between text-base font-semibold">
                                         <span>{t('joinNow.payment.drinksSubtotal')}</span>
-                                        <span>${drinksSubtotal.toFixed(2)}</span>
+                                        <span>{drinksSubtotal.toFixed(2)} {t('menu.currency')}</span>
                                     </div>
                                 )}
-                                <div className="flex justify-between text-sm">
-                                    <div className="flex items-center space-x-1">
-                                        {deliveryType === 'EXPRESS' ? (
-                                            <Zap className="w-3 h-3 text-orange-500" />
-                                        ) : (
-                                            <Truck className="w-3 h-3" />
-                                        )}
-                                        <span>
-                                            {deliveryType === 'EXPRESS'
-                                                ? t('joinNow.payment.expressDelivery')
-                                                : t('joinNow.payment.delivery')
-                                            }
-                                        </span>
-                                    </div>
-                                    <span>{deliveryFee > 0 ? `$${deliveryFee.toFixed(2)}` : t('joinNow.payment.free')}</span>
+                                {/* Show overall total */}
+                                <div className="flex justify-between text-lg font-bold mt-2">
+                                    <span>{t('joinNow.payment.total')}</span>
+                                    <span>
+                                        {(Number(planData.plan.price_per_week) + drinksSubtotal).toFixed(2)} {t('menu.currency')}
+
+                                    </span>
                                 </div>
-                                {appliedDiscount && (
-                                    <div className="flex justify-between text-sm text-primary">
-                                        <span>{t('joinNow.payment.discount')} ({appliedDiscount.code})</span>
-                                        <span>-${discountAmount.toFixed(2)}</span>
-                                    </div>
-                                )}
-                                {useReward && canUseReward && (
-                                    <div className="flex justify-between text-sm text-primary">
-                                        <div className="flex items-center space-x-1">
-                                            <Gift className="w-3 h-3" />
-                                            <span>{t('joinNow.payment.freeMealReward')}</span>
-                                        </div>
-                                        <span>-${rewardValue.toFixed(2)}</span>
-                                    </div>
-                                )}
-                            </div>
-
-                            <Separator />
-
-                            <div className="flex justify-between text-lg font-bold">
-                                <span>{t('joinNow.payment.total')}</span>
-                                <span>${total.toFixed(2)}</span>
                             </div>
                         </CardContent>
                     </Card>
 
                     {/* Discount Code */}
-                    <Card>
-                        <CardHeader>
-                            <CardTitle className="flex items-center space-x-2 text-base">
-                                <Tag className="w-4 h-4 text-primary" />
-                                <span>{t('joinNow.payment.discountCode')}</span>
-                            </CardTitle>
-                        </CardHeader>
-                        <CardContent className="space-y-4">
-                            {!appliedDiscount ? (
-                                <div className="flex space-x-2">
-                                    <Input
-                                        placeholder={t('joinNow.payment.enterDiscountCode')}
-                                        value={discountCode}
-                                        onChange={(e) => setDiscountCode(e.target.value.toUpperCase())}
-                                        className="flex-1"
-                                    />
-                                    <Button
-                                        onClick={applyDiscount}
-                                        disabled={!discountCode}
-                                        size="sm"
-                                    >
-                                        {t('joinNow.payment.apply')}
-                                    </Button>
-                                </div>
-                            ) : (
-                                <div className="flex items-center justify-between p-3 bg-primary/10 rounded-lg border border-primary/20">
-                                    <div className="flex items-center space-x-2">
-                                        <Check className="w-4 h-4 text-primary" />
-                                        <span className="font-medium text-primary">{appliedDiscount.code}</span>
-                                        <span className="text-sm text-muted-foreground">
-                                            {appliedDiscount.amount}% {t('joinNow.payment.off')}
-                                        </span>
-                                    </div>
-                                    <Button variant="ghost" size="sm" onClick={removeDiscount}>
-                                        <Trash2 className="w-4 h-4" />
-                                    </Button>
-                                </div>
-                            )}
-                        </CardContent>
-                    </Card>
+
 
                     {/* Payment Method */}
                     <Card>
@@ -600,7 +603,10 @@ export function Payment() {
                                         ? 'border-primary bg-primary/5'
                                         : 'border-border hover:border-primary/50'
                                         }`}
-                                    onClick={() => setPaymentMethod('ONLINE')}
+                                    onClick={() => {
+                                        setPaymentMethod('ONLINE')
+                                        dispatch(updatePlanData({ paymentMethod: 'ONLINE' }))
+                                    }}
                                 >
                                     <div className="flex items-center space-x-3">
                                         <div className={`w-4 h-4 rounded-full border-2 ${paymentMethod === 'ONLINE'
@@ -619,7 +625,10 @@ export function Payment() {
                                         ? 'border-primary bg-primary/5'
                                         : 'border-border hover:border-primary/50'
                                         }`}
-                                    onClick={() => setPaymentMethod('COD')}
+                                    onClick={() => {
+                                        setPaymentMethod('COD')
+                                        dispatch(updatePlanData({ paymentMethod: 'COD' }))
+                                    }}
                                 >
                                     <div className="flex items-center space-x-3">
                                         <div className={`w-4 h-4 rounded-full border-2 ${paymentMethod === 'COD'
@@ -639,19 +648,24 @@ export function Payment() {
                     {/* Place Order Button */}
                     <Button
                         className="w-full h-12 text-lg font-semibold bg-gradient-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary"
-                        onClick={() => {
-                            // Handle order submission
-                            console.log('Order placed:', {
-                                paymentMethod,
-                                deliveryType,
-                                total,
-                                pointsEarned,
-                                rewardUsed: useReward && canUseReward,
-                                items: { selectedMeals, selectedBreakfasts, selectedDrinks }
-                            })
-                        }}
+                        onClick={handlePlaceOrder}
+                        disabled={isPlacingOrder}
+                        aria-busy={isPlacingOrder}
                     >
-                        {paymentMethod === 'COD' ? t('joinNow.payment.placeOrderCOD') : t('joinNow.payment.payAmount', { amount: total.toFixed(2) })}
+                        {isPlacingOrder ? (
+                            <>
+                                {/* simple inline spinner */}
+                                <svg className="animate-spin -ml-1 mr-2 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
+                                </svg>
+                                Processing...
+                            </>
+                        ) : (
+                            (paymentMethod === 'COD'
+                                ? t('joinNow.payment.placeOrderCOD')
+                                : t('joinNow.payment.payAmount', { amount: total.toFixed(2) }))
+                        )}
                     </Button>
                 </div>
             </div>

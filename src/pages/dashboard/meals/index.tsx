@@ -8,16 +8,30 @@ import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import { webRoutes } from "@/routes/web";
 
+export const MealTypesEnum = [
+  { id: 0, name: "Menu" },
+  { id: 1, name: "Breakfast" },
+  { id: 2, name: "Drink" },
+];
+
 export default function index() {
   const navigate = useNavigate();
   const [data, setData] = useState<Meal[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
+  const [categories, setCategories] = useState<any[]>([]);
+  const [types] = useState(MealTypesEnum);
 
   useEffect(() => {
+    // Fetch meals
     http.get(apiRoutes.meals).then((res) => {
       console.log(res.data.data);
       setData(res.data.data);
       setLoading(false);
+    });
+
+    // Fetch categories
+    http.get(apiRoutes.categories).then((res) => {
+      setCategories(res.data.data || []);
     });
   }, []);
 
@@ -34,7 +48,13 @@ export default function index() {
         </Button>
       </div>
 
-      <DataTable columns={columns} data={data} loading={loading} />
+      <DataTable
+        columns={columns}
+        data={data}
+        loading={loading}
+        categories={categories}
+        types={types}
+      />
     </>
 
   )

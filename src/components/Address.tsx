@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -46,11 +46,14 @@ export function Address() {
         firstName: planData?.firstName || '',
         lastName: planData?.lastName || '',
         phoneNumber: planData?.phoneNumber || '',
-        country: planData?.country || 'UK',
+        country: planData?.country || '',
         address: planData?.address || '',
         hearAboutUs: planData?.hearAboutUs || ''
     })
     const [isManualAddress, setIsManualAddress] = useState(false)
+    const [addressSuggestions, setAddressSuggestions] = useState<string[]>([])
+    const [isLoadingSuggestions, setIsLoadingSuggestions] = useState(false)
+    const searchTimeoutRef = useRef<NodeJS.Timeout | null>(null)
 
     // Update local state when Redux state changes
     useEffect(() => {
@@ -70,6 +73,29 @@ export function Address() {
         const updatedData = { ...addressData, [field]: value }
         setAddressData(updatedData)
         dispatch(updatePlanData({ [field]: value }))
+    }
+
+    // Address search handler using Nominatim API
+    const handleAddressSearch = (query: string) => {
+        setAddressData(prev => ({ ...prev, address: query }))
+        if (searchTimeoutRef.current) clearTimeout(searchTimeoutRef.current)
+        if (!query || query.length < 3) {
+            setAddressSuggestions([])
+            return
+        }
+        setIsLoadingSuggestions(true)
+        searchTimeoutRef.current = setTimeout(() => {
+            fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&addressdetails=1&limit=5`)
+                .then(res => res.json())
+                .then(data => {
+                    setAddressSuggestions(data.map((item: any) => item.display_name))
+                    setIsLoadingSuggestions(false)
+                })
+                .catch(() => {
+                    setAddressSuggestions([])
+                    setIsLoadingSuggestions(false)
+                })
+        }, 400)
     }
 
     const isFormValid = () => {
@@ -133,31 +159,7 @@ export function Address() {
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div className="space-y-2">
-                            <Label htmlFor="country" className="text-foreground font-medium">
-                                {t('joinNow.address.country')}
-                            </Label>
-                            <Select
-                                value={addressData.country}
-                                onValueChange={(value) => handleInputChange('country', value)}
-                            >
-                                <SelectTrigger className="border-border focus:border-primary">
-                                    <SelectValue>
-                                        <div className="flex items-center space-x-2">
-                                            <Globe className="w-4 h-4 text-muted-foreground" />
-                                            <span>{countries.find(c => c.value === addressData.country)?.label}</span>
-                                        </div>
-                                    </SelectValue>
-                                </SelectTrigger>
-                                <SelectContent>
-                                    {countries.map((country) => (
-                                        <SelectItem key={country.value} value={country.value}>
-                                            {country.label}
-                                        </SelectItem>
-                                    ))}
-                                </SelectContent>
-                            </Select>
-                        </div>
+
 
                         <div className="space-y-2">
                             <Label htmlFor="phoneNumber" className="text-foreground font-medium">
@@ -197,10 +199,33 @@ export function Address() {
                                     <Input
                                         type="text"
                                         value={addressData.address}
-                                        onChange={(e) => handleInputChange('address', e.target.value)}
-                                        placeholder={t('joinNow.address.addressSearch', 'start typing your address...')}
+                                        onChange={(e) => handleAddressSearch(e.target.value)}
+                                        placeholder={t('joinNow.address.addressSearch', 'Start typing your address...')}
                                         className="pl-10 border-border focus:border-primary"
+                                        autoComplete="off"
                                     />
+                                    {isLoadingSuggestions && (
+                                        <div className="absolute left-0 right-0 top-full bg-white border border-border z-10 p-2 text-sm">
+                                            {t('joinNow.address.loading', 'Searching...')}
+                                        </div>
+                                    )}
+                                    {addressSuggestions.length > 0 && (
+                                        <ul className="absolute left-0 right-0 top-full bg-white border border-border z-10 mt-1 rounded shadow">
+                                            {addressSuggestions.map((suggestion, idx) => (
+                                                <li
+                                                    key={idx}
+                                                    className="px-3 py-2 cursor-pointer hover:bg-primary/10"
+                                                    onClick={() => {
+                                                        setAddressData(prev => ({ ...prev, address: suggestion }))
+                                                        setAddressSuggestions([])
+                                                        dispatch(updatePlanData({ address: suggestion }))
+                                                    }}
+                                                >
+                                                    {suggestion}
+                                                </li>
+                                            ))}
+                                        </ul>
+                                    )}
                                 </div>
                                 <Button
                                     variant="ghost"

@@ -29,7 +29,6 @@ export function Meals() {
     const planData = useSelector((state: RootState) => state.joinProcess.planData)
 
     const [selectedMeals, setSelectedMeals] = useState<{ [key: number]: number }>(planData?.selectedMeals || {})
-    const [selectedBreakfasts, setSelectedBreakfasts] = useState<{ [key: number]: number }>(planData?.selectedBreakfasts || {})
     const [selectedDrinks, setSelectedDrinks] = useState<{ [key: number]: number }>(planData?.selectedDrinks || {})
     const [showBreakfast, setShowBreakfast] = useState(false)
     const [showDrinks, setShowDrinks] = useState(false)
@@ -45,11 +44,11 @@ export function Meals() {
     };
 
     // Fetch weekly menu from API for current week
-    const { isLoading: isLoadingMenu, data: weeklyMenuResponse } = useQuery<{data: any[]}>({
+    const { isLoading: isLoadingMenu, data: weeklyMenuResponse } = useQuery<{ data: any[] }>({
         queryKey: ["weeklyMenus", "current-week"],
         queryFn: () =>
             http
-                .get(`${apiRoutes.weeklyMenus}?is_active=1&is_published=1&week_start_date=${getCurrentWeekStart()}`)
+                .get(`${apiRoutes.weeklyMenus}?is_active=1&is_published=1&week_start_date=${getCurrentWeekStart()}&type_id=1`)
                 .then((res) => {
                     return res.data;
                 })
@@ -58,9 +57,9 @@ export function Meals() {
                     throw e;
                 }),
     });
-
+    console.log('weeklyMenuResponse', weeklyMenuResponse)
     // Fetch all meals from API (for breakfasts and drinks)
-    const { isLoading: isLoadingMeals, data: mealsResponse } = useQuery<{data: Meal[]}>({
+    const { isLoading: isLoadingMeals, data: mealsResponse } = useQuery<{ data: Meal[] }>({
         queryKey: ["meals"],
         queryFn: () =>
             http
@@ -74,72 +73,83 @@ export function Meals() {
                 }),
     });
 
+    // Fetch drinks from API with type_id=2 filter
+    const { isLoading: isLoadingDrinks, data: drinksResponse } = useQuery<{ data: Meal[] }>({
+        queryKey: ["meals", "drinks"],
+        queryFn: () =>
+            http
+                .get(`${apiRoutes.meals}?type_id=2`)
+                .then((res) => {
+                    return res.data;
+                })
+                .catch((e) => {
+                    handleErrorResponse(e);
+                    throw e;
+                }),
+    });
     const weeklyMenu = weeklyMenuResponse?.data?.[0] || null;
     const allMeals = mealsResponse?.data || [];
-    
+
     // Get main meals from weekly menu - meals are directly in the array
     const mainMeals = weeklyMenu?.meals || [];
-    
+
     // Filter breakfasts and drinks from all meals
-    const breakfasts = allMeals.filter(meal => 
+    const breakfasts = allMeals.filter(meal =>
         meal.type === 'breakfast' || meal.category?.name?.toLowerCase().includes('breakfast')
     );
-    
-    const drinks = allMeals.filter(meal => 
-        meal.type === 'drink' || meal.category?.name?.toLowerCase().includes('drink')
-    );
+
+    const drinks = drinksResponse?.data || [];
 
     // Update local state when Redux state changes
     useEffect(() => {
         if (planData) {
             setSelectedMeals(planData.selectedMeals || {})
-            setSelectedBreakfasts(planData.selectedBreakfasts || {})
             setSelectedDrinks(planData.selectedDrinks || {})
         }
     }, [planData])
 
-    const totalSelectedMeals = Object.values(selectedMeals).reduce((sum, qty) => sum + qty, 0)
+    // Calculate total selected meals using new structure
+    const totalSelectedMeals = Object.values(selectedMeals).reduce((sum, meal) => sum + (meal.quantity || 0), 0)
     const remainingMeals = (planData?.mealsPerWeek || 10) - totalSelectedMeals
 
+    // Update selectedMeals to store full meal object with quantity
     const handleMealQuantityChange = (mealId: number, change: number) => {
+        const mealObj = mainMeals.find(m => m.id === mealId)
+        if (!mealObj) return
+
         setSelectedMeals(prev => {
-            const currentQty = prev[mealId] || 0
-            const newQty = Math.max(0, Math.min(currentQty + change, remainingMeals + currentQty))
+            const currentQty = prev[mealId]?.quantity || 0
+            // Recalculate remainingMeals based on new structure
+            const totalSelected = Object.values(prev).reduce((sum, meal) => sum + (meal.quantity || 0), 0)
+            const remaining = (planData?.mealsPerWeek || 10) - totalSelected
+            const newQty = Math.max(0, Math.min(currentQty + change, remaining + currentQty))
 
             let newSelectedMeals
             if (newQty === 0) {
                 const { [mealId]: removed, ...rest } = prev
                 newSelectedMeals = rest
             } else {
-                newSelectedMeals = { ...prev, [mealId]: newQty }
+                newSelectedMeals = {
+                    ...prev,
+                    [mealId]: {
+                        ...mealObj,
+                        quantity: newQty
+                    }
+                }
             }
 
             dispatch(updatePlanData({ selectedMeals: newSelectedMeals }))
             return newSelectedMeals
         })
     }
-    console.log('planData.portion', planData)
-    const handleBreakfastQuantityChange = (itemId: number, change: number) => {
-        setSelectedBreakfasts(prev => {
-            const currentQty = prev[itemId] || 0
-            const newQty = Math.max(0, currentQty + change)
 
-            let newSelectedBreakfasts
-            if (newQty === 0) {
-                const { [itemId]: removed, ...rest } = prev
-                newSelectedBreakfasts = rest
-            } else {
-                newSelectedBreakfasts = { ...prev, [itemId]: newQty }
-            }
-
-            dispatch(updatePlanData({ selectedBreakfasts: newSelectedBreakfasts }))
-            return newSelectedBreakfasts
-        })
-    }
-
+    // Update selectedDrinks to store full drink object with quantity
     const handleDrinkQuantityChange = (itemId: number, change: number) => {
+        const drinkObj = drinks.find(d => d.id === itemId)
+        if (!drinkObj) return
+
         setSelectedDrinks(prev => {
-            const currentQty = prev[itemId] || 0
+            const currentQty = prev[itemId]?.quantity || 0
             const newQty = Math.max(0, currentQty + change)
 
             let newSelectedDrinks
@@ -147,13 +157,25 @@ export function Meals() {
                 const { [itemId]: removed, ...rest } = prev
                 newSelectedDrinks = rest
             } else {
-                newSelectedDrinks = { ...prev, [itemId]: newQty }
+                newSelectedDrinks = {
+                    ...prev,
+                    [itemId]: {
+                        ...drinkObj,
+                        quantity: newQty
+                    }
+                }
             }
 
             dispatch(updatePlanData({ selectedDrinks: newSelectedDrinks }))
             return newSelectedDrinks
         })
     }
+
+    // Helper: get selected meal objects with quantity
+    const selectedMealObjects = Object.values(selectedMeals || {})
+
+    // Helper: get selected drink objects with quantity
+    const selectedDrinkObjects = Object.values(selectedDrinks || {})
 
     return (
         <div className="space-y-8">
@@ -169,11 +191,11 @@ export function Meals() {
                     <div className="mt-3">
                         <Badge variant="outline" className="text-sm px-4 py-1">
                             <Calendar className="w-4 h-4 mr-2 inline" />
-                            {new Date(weeklyMenu.week_start_date).toLocaleDateString('en-GB', { 
-                                day: 'numeric', 
-                                month: 'short' 
-                            })} - {new Date(weeklyMenu.week_end_date).toLocaleDateString('en-GB', { 
-                                day: 'numeric', 
+                            {new Date(weeklyMenu.week_start_date).toLocaleDateString('en-GB', {
+                                day: 'numeric',
+                                month: 'short'
+                            })} - {new Date(weeklyMenu.week_end_date).toLocaleDateString('en-GB', {
+                                day: 'numeric',
                                 month: 'short',
                                 year: 'numeric'
                             })}
@@ -224,14 +246,14 @@ export function Meals() {
                             <div>
                                 <p className="text-sm text-muted-foreground">Delivery Date</p>
                                 <p className="font-semibold text-foreground">
-                                    {weeklyMenu ? 
-                                        `${new Date(weeklyMenu.week_start_date).toLocaleDateString('en-GB', { 
-                                            day: 'numeric', 
-                                            month: 'short' 
-                                        })} - ${new Date(weeklyMenu.week_end_date).toLocaleDateString('en-GB', { 
-                                            day: 'numeric', 
-                                            month: 'short' 
-                                        })}` 
+                                    {weeklyMenu ?
+                                        `${new Date(weeklyMenu.week_start_date).toLocaleDateString('en-GB', {
+                                            day: 'numeric',
+                                            month: 'short'
+                                        })} - ${new Date(weeklyMenu.week_end_date).toLocaleDateString('en-GB', {
+                                            day: 'numeric',
+                                            month: 'short'
+                                        })}`
                                         : t('joinNow.meals.deliveryWeek', 'During the week')
                                     }
                                 </p>
@@ -292,7 +314,7 @@ export function Meals() {
                                     </Button>
 
                                     <span className="min-w-[2rem] text-center font-semibold">
-                                        {selectedMeals[meal.id] || 0}
+                                        {selectedMeals[meal.id]?.quantity || 0}
                                     </span>
 
                                     <Button
@@ -312,7 +334,7 @@ export function Meals() {
             </div>
 
             {/* Breakfast Section */}
-            <Card className="border-2 border-dashed border-muted-foreground/30">
+            {/* <Card className="border-2 border-dashed border-muted-foreground/30">
                 <CardHeader className="flex flex-row items-center justify-between">
                     <div className="flex items-center space-x-3">
                         <Coffee className="w-6 h-6 text-primary" />
@@ -423,7 +445,7 @@ export function Meals() {
                         )}
                     </CardContent>
                 )}
-            </Card>
+            </Card> */}
 
             {/* Drinks Section */}
             <Card className="border-2 border-dashed border-muted-foreground/30">
@@ -459,7 +481,7 @@ export function Meals() {
 
                 {showDrinks && (
                     <CardContent>
-                        {isLoadingMeals ? (
+                        {isLoadingDrinks ? (
                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                                 {Array.from({ length: 3 }).map((_, index) => (
                                     <Card key={index} className="border-2 border-gray-200">
@@ -517,7 +539,7 @@ export function Meals() {
                                                     </Button>
 
                                                     <span className="min-w-[1.5rem] text-center text-sm font-semibold">
-                                                        {selectedDrinks[drink.id] || 0}
+                                                        {selectedDrinks[drink.id]?.quantity || 0}
                                                     </span>
 
                                                     <Button
@@ -537,6 +559,71 @@ export function Meals() {
                         )}
                     </CardContent>
                 )}
+            </Card>
+
+            {/* Selected Meals Summary */}
+            <Card className="mt-8">
+                <CardHeader>
+                    <CardTitle className="text-lg">Selected Meals & Drinks Summary</CardTitle>
+                </CardHeader>
+                <CardContent>
+                    <div>
+                        <h4 className="font-semibold mb-2">Meals</h4>
+                        {selectedMealObjects.length === 0 ? (
+                            <div className="text-muted-foreground">No meals selected.</div>
+                        ) : (
+                            <ul className="space-y-2">
+                                {selectedMealObjects.map(meal => (
+                                    <li key={meal.id} className="flex items-center gap-4">
+                                        <img
+                                            src={meal.image_url || meal.image_path || "/api/placeholder/60/60"}
+                                            alt={meal.name}
+                                            className="w-12 h-12 object-cover rounded"
+                                        />
+                                        <div className="flex-1">
+                                            <span className="font-semibold">{meal.name}</span>
+                                            <span className="ml-2 text-sm text-muted-foreground">x {meal.quantity}</span>
+                                            <div className="text-xs text-muted-foreground">
+                                                Protein: {meal.protein}g | Calories: {meal.calories}
+                                            </div>
+                                            {/* Remove direct object rendering */}
+                                            {/* For debug only: */}
+                                            {/* <pre className="bg-muted/10 rounded p-1">{JSON.stringify(meal, null, 2)}</pre> */}
+                                        </div>
+                                    </li>
+                                ))}
+                            </ul>
+                        )}
+                    </div>
+                    <div className="mt-6">
+                        <h4 className="font-semibold mb-2">Drinks</h4>
+                        {selectedDrinkObjects.length === 0 ? (
+                            <div className="text-muted-foreground">No drinks selected.</div>
+                        ) : (
+                            <ul className="space-y-2">
+                                {selectedDrinkObjects.map(drink => (
+                                    <li key={drink.id} className="flex items-center gap-4">
+                                        <img
+                                            src={drink.image_url || drink.image_path || "/api/placeholder/60/60"}
+                                            alt={drink.name}
+                                            className="w-12 h-12 object-cover rounded"
+                                        />
+                                        <div className="flex-1">
+                                            <span className="font-semibold">{drink.name}</span>
+                                            <span className="ml-2 text-sm text-muted-foreground">x {drink.quantity}</span>
+                                            <div className="text-xs text-muted-foreground">
+                                                Protein: {drink.protein}g | Calories: {drink.calories}
+                                            </div>
+                                            {/* Remove direct object rendering */}
+                                            {/* For debug only: */}
+                                            {/* <pre className="bg-muted/10 rounded p-1">{JSON.stringify(drink, null, 2)}</pre> */}
+                                        </div>
+                                    </li>
+                                ))}
+                            </ul>
+                        )}
+                    </div>
+                </CardContent>
             </Card>
         </div>
     )

@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { Badge } from "@/components/ui/badge"
 import { useNavigate } from "react-router-dom"
+import { webRoutes } from "@/routes/web"
 
 const statusVariant = {
     pending: "bg-yellow-500",
@@ -22,39 +23,37 @@ const statusVariant = {
 
 export const columns: ColumnDef<Order>[] = [
     {
-        accessorKey: "id",
-        header: ({ column }) => {
-            return (
-                <Button
-                    variant="ghost"
-                    onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-                >
-                    ID
-                    <ArrowUpDown className="ml-2 h-4 w-4" />
-                </Button>
-            )
-        },
+        accessorKey: "num_order",
+        header: "Numéro de commande",
     },
     {
-        accessorKey: "user.name",
+        accessorKey: "first_name",
         header: "Client",
-    },
-    {
-        accessorKey: "total_price",
-        header: "Prix Total",
         cell: ({ row }) => {
-            const price = parseFloat(row.getValue("total_price") as string)
-            return new Intl.NumberFormat("fr-FR", {
-                style: "currency",
-                currency: "MAD"
-            }).format(price)
+            return `${row.original.first_name} ${row.original.last_name}`
         }
     },
     {
-        accessorKey: "status",
+        accessorKey: "phone",
+        header: "Téléphone",
+    },
+    {
+        accessorKey: "adresse_livrsion",
+        header: "Adresse de livraison",
+    },
+    {
+        accessorKey: "method_payement",
+        header: "Méthode de paiement",
+    },
+    {
+        accessorKey: "reward_point",
+        header: "Points de fidélité",
+    },
+    {
+        accessorKey: "statue",
         header: "Statut",
         cell: ({ row }) => {
-            const status = row.getValue("status") as string;
+            const status = row.getValue("statue") as string;
             return (
                 <Badge className={`capitalize ${statusVariant[status] || "bg-gray-500"}`}>
                     {status}
@@ -63,19 +62,11 @@ export const columns: ColumnDef<Order>[] = [
         },
     },
     {
-        accessorKey: "order_date",
+        accessorKey: "date_order",
         header: "Date de commande",
         cell: ({ row }) => {
-            const date = row.getValue("order_date") as string;
+            const date = row.getValue("date_order") as string;
             return new Date(date).toLocaleDateString('fr-FR');
-        }
-    },
-    {
-        accessorKey: "delivery_date",
-        header: "Date de livraison",
-        cell: ({ row }) => {
-            const date = row.getValue("delivery_date") as string;
-            return date ? new Date(date).toLocaleDateString('fr-FR') : "-";
         }
     },
     {
@@ -94,10 +85,10 @@ export const columns: ColumnDef<Order>[] = [
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
                         <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                        <DropdownMenuItem onClick={() => navigate(`/dashboard/orders/details/${order.id}`)}>
+                        <DropdownMenuItem onClick={() => navigate(webRoutes.dashboard_orders_view.replace(":id", order.id?.toString() ?? ""))}>
                             Voir les détails
                         </DropdownMenuItem>
-                        <DropdownMenuItem onClick={() => navigate(`/dashboard/orders/edit/${order.id}`)}>
+                        <DropdownMenuItem onClick={() => navigate(webRoutes.dashboard_orders_edit.replace(":id", order.id?.toString() ?? ""))}>
                             Modifier
                         </DropdownMenuItem>
                         <DropdownMenuItem className="text-red-600">

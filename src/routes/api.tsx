@@ -10,8 +10,9 @@ export const apiRoutes = {
   meals: `${API_URL}/meals`,
   menus: `${API_URL}/menus`,
   orders: `${API_URL}/orders`,
-  plans: `${API_URL}/plans`,  
-  categories: `${API_URL}/categories`,
+  plans: `${API_URL}/plans`,
+  totalPointsEarned: `${API_URL}/total-points-earned`,
+
   weeklyMenus: `${API_URL}/weekly-menus`,
   menuMeals: `${API_URL}/menu-meals`,
   mealPreparations: `${API_URL}/meal-preparations`,

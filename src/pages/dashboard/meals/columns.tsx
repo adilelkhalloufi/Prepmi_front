@@ -1,22 +1,19 @@
-import { meal } from "@/interfaces/admin"
+import { Meal } from "@/interfaces/admin"
 import { ColumnDef } from "@tanstack/react-table"
 import { ArrowUpDown, MoreHorizontal } from "lucide-react"
-import i18next from "i18next"
 import { Button } from "@/components/ui/button"
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 
-import { Checkbox } from "@/components/ui/checkbox"
 import { Badge } from "@/components/ui/badge"
 import { useNavigate } from "react-router-dom"
 
-export const columns: ColumnDef<meal>[] = [
+export const columns: ColumnDef<Meal>[] = [
   {
     accessorKey: "image_path",
     header: "Image",
@@ -47,13 +44,34 @@ export const columns: ColumnDef<meal>[] = [
     },
   },
   {
-    accessorKey: "category_id",
+    accessorKey: "category.name",
     header: "Catégorie",
+    enableColumnFilter: true,
+    filterFn: (row, columnId, filterValue) => {
+      if (!filterValue) return true;
+      // Use row.getValue for TanStack Table compatibility
+      const categoryName = row.getValue(columnId) as string ?? "";
+      return categoryName === filterValue;
+    },
     cell: ({ row }) => {
       const meal = row.original
-      return meal.category_id ? (
-        <Badge variant="outline">
-          {meal.category_id}
+      return meal.category?.name ? (
+        <Badge variant="outline" >
+          {meal.category.name}
+        </Badge>
+      ) : (
+        <span className="text-gray-400">-</span>
+      )
+    }
+  },
+  {
+    accessorKey: "type",
+    header: "Type",
+    cell: ({ row }) => {
+      const type = row.getValue("type") as string
+      return type ? (
+        <Badge variant="secondary" className="text-white">
+          {type}
         </Badge>
       ) : (
         <span className="text-gray-400">-</span>
@@ -115,7 +133,7 @@ export const columns: ColumnDef<meal>[] = [
       return (
         <div className="flex gap-1 flex-wrap">
           {badges.slice(0, 2).map((badge, index) => (
-            <Badge key={index} variant="secondary" className="text-xs">
+            <Badge key={index} variant="secondary" className="text-xs text-white">
               {badge}
             </Badge>
           ))}

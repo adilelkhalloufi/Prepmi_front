@@ -7,7 +7,6 @@ import { handleErrorResponse } from "@/utils";
 import { useNavigate, useParams } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import { webRoutes } from "@/routes/web";
-import { Order } from "@/interfaces/admin";
 import { Badge } from "@/components/ui/badge";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 
@@ -22,7 +21,7 @@ const statusVariant = {
 export default function OrderDetails() {
     const navigate = useNavigate();
     const { id } = useParams();
-    const [order, setOrder] = useState<Order | null>(null);
+    const [order, setOrder] = useState<any | null>(null); // Use 'any' for flexibility
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
@@ -51,7 +50,7 @@ export default function OrderDetails() {
                     <ArrowLeft className="w-4 h-4 mr-2" />
                     Retour
                 </Button>
-                <h1 className="text-3xl font-bold">Détails de la commande #{order.id}</h1>
+                <h1 className="text-3xl font-bold">Détails de la commande #{order.num_order}</h1>
             </div>
 
             <div className="space-y-6">
@@ -61,30 +60,38 @@ export default function OrderDetails() {
                     </CardHeader>
                     <CardContent className="grid grid-cols-2 gap-4">
                         <div>
-                            <p className="font-semibold">Client</p>
-                            <p>{order.user.name}</p>
+                            <p className="font-semibold">Nom du client</p>
+                            <p>{order.first_name} {order.last_name}</p>
                         </div>
                         <div>
-                            <p className="font-semibold">Email du client</p>
-                            <p>{order.user.email}</p>
+                            <p className="font-semibold">Téléphone</p>
+                            <p>{order.phone}</p>
+                        </div>
+                        <div>
+                            <p className="font-semibold">Adresse de livraison</p>
+                            <p>{order.adresse_livrsion}</p>
+                        </div>
+                        <div>
+                            <p className="font-semibold">Méthode de paiement</p>
+                            <p>{order.method_payement}</p>
+                        </div>
+                        <div>
+                            <p className="font-semibold">Points de fidélité</p>
+                            <p>{order.reward_point}</p>
                         </div>
                         <div>
                             <p className="font-semibold">Date de commande</p>
-                            <p>{new Date(order.order_date).toLocaleDateString('fr-FR')}</p>
-                        </div>
-                        <div>
-                            <p className="font-semibold">Date de livraison</p>
-                            <p>{order.delivery_date ? new Date(order.delivery_date).toLocaleDateString('fr-FR') : '-'}</p>
+                            <p>{order.date_order ? new Date(order.date_order).toLocaleDateString('fr-FR') : '-'}</p>
                         </div>
                         <div>
                             <p className="font-semibold">Statut</p>
-                            <Badge className={`capitalize ${statusVariant[order.status] || "bg-gray-500"}`}>
-                                {order.status}
+                            <Badge className={`capitalize ${statusVariant[order.statue] || "bg-gray-500"}`}>
+                                {order.statue}
                             </Badge>
                         </div>
                         <div>
                             <p className="font-semibold">Prix Total</p>
-                            <p className="font-bold text-lg">{new Intl.NumberFormat("fr-FR", { style: "currency", currency: "MAD" }).format(order.total_price)}</p>
+                            <p className="font-bold text-lg">{order.total_amount} MAD</p>
                         </div>
                     </CardContent>
                 </Card>
@@ -104,12 +111,15 @@ export default function OrderDetails() {
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
-                                {order.order_meals.map((item) => (
+                                {order.order_meals && order.order_meals.map((item: any) => (
                                     <TableRow key={item.id}>
-                                        <TableCell>{item.meal.name}</TableCell>
+                                        <TableCell>{item.meal?.name}</TableCell>
                                         <TableCell>{item.quantity}</TableCell>
-                                        <TableCell>{new Intl.NumberFormat("fr-FR", { style: "currency", currency: "MAD" }).format(item.price)}</TableCell>
-                                        <TableCell className="text-right">{new Intl.NumberFormat("fr-FR", { style: "currency", currency: "MAD" }).format(item.quantity * item.price)}</TableCell>
+                                        <TableCell>
+                                            {new Intl.NumberFormat("fr-FR", { style: "currency", currency: "MAD" })
+                                                .format(Number(item.meal?.price))}
+                                        </TableCell>
+
                                     </TableRow>
                                 ))}
                             </TableBody>

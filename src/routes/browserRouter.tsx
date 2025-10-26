@@ -121,7 +121,9 @@ const SingleMeal = loadable(() => import("../pages/SingleMeal"), {
   fallback: fallbackElement,
 });
 
-
+const ThankYouPage = loadable(() => import("../pages/thank-you"), {
+  fallback: fallbackElement,
+});
 const Landing = loadable(() => import("../pages/landing"), {
   fallback: fallbackElement,
 });
@@ -163,6 +165,10 @@ export const browserRouter = createBrowserRouter([
         path: webRoutes.cookie_settings,
         element: <CookieSettings />,
       },
+      {
+        path: webRoutes.thank_you,
+        element: <ThankYouPage />,
+      }
 
 
     ],

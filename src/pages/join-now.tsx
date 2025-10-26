@@ -40,7 +40,29 @@ const JoinNow = () => {
                 return
             }
         }
-        
+        // Validate Meals step (step 2)
+        if (currentStep === 2) {
+            const selectedMealsCount = planData.selectedMeals
+                ? Object.values(planData.selectedMeals).reduce((sum, qty) => sum + qty, 0)
+                : 0
+            if (!planData.mealsPerWeek || selectedMealsCount < planData.mealsPerWeek) {
+                toast.error(t('joinNow.validation.selectAllMeals', 'Please select all your meals before continuing.'))
+                return
+            }
+        }
+        // Validate Address step (step 3)
+        if (currentStep === 3) {
+            if (
+                !planData.firstName ||
+                !planData.lastName ||
+                !planData.phoneNumber ||
+                !planData.address
+            ) {
+                toast.error(t('joinNow.validation.fillAllFields', 'Please fill in all required fields.'))
+                return
+            }
+        }
+
         dispatch(nextStep())
     }
 

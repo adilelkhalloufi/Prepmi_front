@@ -25,23 +25,30 @@ import { Button } from "@/components/ui/button"
 import { useState } from "react"
 import { Input } from "@/components/ui/input"
 import {
-    DropdownMenu,
-    DropdownMenuCheckboxItem,
-    DropdownMenuContent,
-    DropdownMenuTrigger,
-  } from "@/components/ui/dropdown-menu"
- import TableLoading from "@/components/skeleton/TableLoading"
+  DropdownMenu,
+  DropdownMenuCheckboxItem,
+  DropdownMenuContent,
+  DropdownMenuTrigger,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+} from "@/components/ui/dropdown-menu"
+import TableLoading from "@/components/skeleton/TableLoading"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
   data: TData[]
-  loading ?: boolean
+  loading?: boolean
+  categories?: any[]
+  types?: any[]
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
-  loading
+  loading,
+  categories = [],
+  types = []
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([])
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>(
@@ -54,7 +61,7 @@ export function DataTable<TData, TValue>({
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel:getPaginationRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
     getSortedRowModel: getSortedRowModel(),
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
@@ -63,53 +70,94 @@ export function DataTable<TData, TValue>({
     onRowSelectionChange: setRowSelection,
 
     state: {
-        sorting,
-        columnFilters,
-        columnVisibility,
-        rowSelection
+      sorting,
+      columnFilters,
+      columnVisibility,
+      rowSelection
     },
   })
 
   return (
     <div className="rounded-md border">
-    
-      <div className="flex items-center p-4">
-            <Input
-            placeholder="Filtrer les ...."
-            value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
-            onChange={(event) =>
-                table.getColumn("name")?.setFilterValue(event.target.value)
-            }
-            className="max-w-sm"
-            />
-            <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                        <Button variant="outline" className="ml-auto">
-                        Colonnes
-                        </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                        {table
-                        .getAllColumns()
-                        .filter(
-                            (column) => column.getCanHide()
-                        )
-                        .map((column) => {
-                            return (
-                            <DropdownMenuCheckboxItem
-                                key={column.id}
-                                className="capitalize"
-                                checked={column.getIsVisible()}
-                                onCheckedChange={(value) =>
-                                column.toggleVisibility(!!value)
-                                }
-                            >
-                                {column.id}
-                            </DropdownMenuCheckboxItem>
-                            )
-                        })}
-                    </DropdownMenuContent>
-            </DropdownMenu>
+
+      <div className="flex items-center gap-4 p-4">
+        <Input
+          placeholder="Filtrer par nom..."
+          value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
+          onChange={(event) =>
+            table.getColumn("name")?.setFilterValue(event.target.value)
+          }
+          className="max-w-sm"
+        />
+
+        {/* Category Filter */}
+        <Select
+          value={(table.getColumn("category.name")?.getFilterValue() as string) ?? "all"}
+          onValueChange={(value) =>
+            table.getColumn("category.name")?.setFilterValue(value === "all" ? "" : value)
+          }
+        >
+          <SelectTrigger className="w-[200px]">
+            <SelectValue placeholder="Catégorie" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">Toutes les catégories</SelectItem>
+            {categories.map((category) => (
+              <SelectItem key={category.id} value={category.name}>
+                {category.name}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+
+        {/* Type Filter */}
+        <Select
+          value={(table.getColumn("type")?.getFilterValue() as string) ?? "all"}
+          onValueChange={(value) =>
+            table.getColumn("type")?.setFilterValue(value === "all" ? "" : value)
+          }
+        >
+          <SelectTrigger className="w-[200px]">
+            <SelectValue placeholder="Type" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">Tous les types</SelectItem>
+            {types.map((type) => (
+              <SelectItem key={type.id} value={type.name}>
+                {type.name}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="outline" className="ml-auto">
+              Colonnes
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            {table
+              .getAllColumns()
+              .filter(
+                (column) => column.getCanHide()
+              )
+              .map((column) => {
+                return (
+                  <DropdownMenuCheckboxItem
+                    key={column.id}
+                    className="capitalize"
+                    checked={column.getIsVisible()}
+                    onCheckedChange={(value) =>
+                      column.toggleVisibility(!!value)
+                    }
+                  >
+                    {column.id}
+                  </DropdownMenuCheckboxItem>
+                )
+              })}
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
       <Table>
         <TableHeader>
@@ -121,9 +169,9 @@ export function DataTable<TData, TValue>({
                     {header.isPlaceholder
                       ? null
                       : flexRender(
-                          header.column.columnDef.header,
-                          header.getContext()
-                        )}
+                        header.column.columnDef.header,
+                        header.getContext()
+                      )}
                   </TableHead>
                 )
               })}
@@ -133,42 +181,42 @@ export function DataTable<TData, TValue>({
         <TableBody>
           {loading == false ? (<>
             {table.getRowModel().rows?.length ? (
-            table.getRowModel().rows.map((row) => (
-              <TableRow
-                key={row.id}
-                data-state={row.getIsSelected() && "selected"}
-              >
-                {row.getVisibleCells().map((cell) => (
-                  <TableCell key={cell.id}>
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                  </TableCell>
-                ))}
-              </TableRow>
-            ))
-          ) : (
-            <TableRow>
-              <TableCell colSpan={columns.length} className="h-24 text-center">
-                <EmptyStateComponent 
+              table.getRowModel().rows.map((row) => (
+                <TableRow
+                  key={row.id}
+                  data-state={row.getIsSelected() && "selected"}
+                >
+                  {row.getVisibleCells().map((cell) => (
+                    <TableCell key={cell.id}>
+                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                    </TableCell>
+                  ))}
+                </TableRow>
+              ))
+            ) : (
+              <TableRow>
+                <TableCell colSpan={columns.length} className="h-24 text-center">
+                  <EmptyStateComponent
                     title="No data found"
                     description="No data available in the table"
                     icon={<IconDatabase size={48} />}
-                />
-              </TableCell>
-            </TableRow>
-          )}
-          
+                  />
+                </TableCell>
+              </TableRow>
+            )}
+
           </>) : (<>
-            <TableLoading/>
+            <TableLoading />
           </>)}
 
         </TableBody>
       </Table>
       <div className="flex justify-between items-center p-4">
-      <div className="flex-1 text-sm text-muted-foreground">
-            {table.getFilteredSelectedRowModel().rows.length} de{" "}
-            {table.getFilteredRowModel().rows.length} ligne(s) sélectionnée(s)
+        <div className="flex-1 text-sm text-muted-foreground">
+          {table.getFilteredSelectedRowModel().rows.length} de{" "}
+          {table.getFilteredRowModel().rows.length} ligne(s) sélectionnée(s)
         </div>
-          <div className="flex items-center justify-end space-x-2 ">
+        <div className="flex items-center justify-end space-x-2 ">
           <Button
             variant="outline"
             size="sm"
@@ -187,7 +235,7 @@ export function DataTable<TData, TValue>({
           </Button>
         </div>
       </div>
-      
+
     </div>
   )
 }

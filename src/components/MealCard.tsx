@@ -154,8 +154,8 @@ export function MealCard({ meal }: MealCardProps) {
                             <Clock className="w-3 h-3 text-primary" />
                         </div>
                         <span className="font-medium">
-                            {(meal.preparation?.prep_time_minutes || meal.prep_time_minutes || 0) + 
-                             (meal.preparation?.cooking_time_minutes || meal.cooking_time_minutes || 0)} {t('menu.mins')}
+                            {(meal.preparation?.prep_time_minutes || meal.prep_time_minutes || 0) +
+                                (meal.preparation?.cooking_time_minutes || meal.cooking_time_minutes || 0)} {t('menu.mins')}
                         </span>
                     </div>
                     <div className="flex items-center space-x-2 text-muted-foreground">
@@ -165,17 +165,17 @@ export function MealCard({ meal }: MealCardProps) {
                 </div>
 
                 {/* Action Button */}
-                <div className="mt-4 pt-4 border-t border-border/50">
-                    <button
-                        className="w-full bg-gradient-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary text-primary-foreground font-medium py-2 px-4 rounded-lg transition-all duration-300 hover:shadow-lg hover:shadow-primary/25 hover:-translate-y-0.5"
-                        onClick={(e) => {
-                            e.stopPropagation();
-                            // Handle add to plan action here
-                        }}
-                    >
-                        {t('menu.add_to_plan')}
-                    </button>
-                </div>
+                    {/* <div className="mt-4 pt-4 border-t border-border/50">
+                        <button
+                            className="w-full bg-gradient-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary text-primary-foreground font-medium py-2 px-4 rounded-lg transition-all duration-300 hover:shadow-lg hover:shadow-primary/25 hover:-translate-y-0.5"
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                // Handle add to plan action here
+                            }}
+                        >
+                            {t('menu.add_to_plan')}
+                        </button>
+                    </div> */}
             </CardContent>
         </Card>
     );
