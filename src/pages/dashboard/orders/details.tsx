@@ -29,6 +29,7 @@ export default function OrderDetails() {
             http.get(`${apiRoutes.orders}/${id}`)
                 .then((res) => {
                     setOrder(res.data.data);
+                    console.log(res.data);
                 })
                 .catch(handleErrorResponse)
                 .finally(() => setLoading(false));
@@ -126,6 +127,42 @@ export default function OrderDetails() {
                         </Table>
                     </CardContent>
                 </Card>
+
+                {order.status_histories && order.status_histories.length > 0 && (
+                    <Card>
+                        <CardHeader>
+                            <CardTitle>Historique des statuts</CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                            <Table>
+                                <TableHeader>
+                                    <TableRow>
+                                        <TableHead>Ancien statut</TableHead>
+                                        <TableHead>Nouveau statut</TableHead>
+                                        <TableHead>Modifié par</TableHead>
+                                    </TableRow>
+                                </TableHeader>
+                                <TableBody>
+                                    {order.status_histories.map((history: any, idx: number) => (
+                                        <TableRow key={idx}>
+                                            <TableCell>
+                                                <Badge className={`capitalize ${statusVariant[history.old_status] || "bg-gray-500"}`}>
+                                                    {history.old_status}
+                                                </Badge>
+                                            </TableCell>
+                                            <TableCell>
+                                                <Badge className={`capitalize ${statusVariant[history.new_status] || "bg-gray-500"}`}>
+                                                    {history.new_status}
+                                                </Badge>
+                                            </TableCell>
+                                            <TableCell>{history.user.first_name} {history.user.last_name}</TableCell>
+                                        </TableRow>
+                                    ))}
+                                </TableBody>
+                            </Table>
+                        </CardContent>
+                    </Card>
+                )}
             </div>
         </div>
     );

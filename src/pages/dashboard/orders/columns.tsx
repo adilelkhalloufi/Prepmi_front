@@ -50,6 +50,14 @@ export const columns: ColumnDef<Order>[] = [
         header: "Points de fidélité",
     },
     {
+        accessorKey: "total_amount",
+        header: "Montant total",
+        cell: ({ row }) => {
+            const amount = row.getValue("total_amount");
+            return amount ? `${amount} MAD` : "-";
+        }
+    },
+    {
         accessorKey: "statue",
         header: "Statut",
         cell: ({ row }) => {

@@ -41,12 +41,9 @@ export function Payment() {
     const navigate = useNavigate()
     const planData = useSelector((state: RootState) => state.joinProcess.planData)
     const admin = useSelector((state: RootState) => state.admin.user)
-    console.log("admin :", admin)
-    console.log("plan :", planData)
+
 
     const [paymentMethod, setPaymentMethod] = useState<'COD' | 'ONLINE'>(planData?.paymentMethod || 'COD')
-    const [deliveryType, setDeliveryType] = useState<'STANDARD' | 'EXPRESS'>('STANDARD')
-    const [appliedDiscount, setAppliedDiscount] = useState<{ code: string, amount: number } | null>(null)
     const [isEditingMeals, setIsEditingMeals] = useState(false)
     const [editModalOpen, setEditModalOpen] = useState(false)
     const [editData, setEditData] = useState({
@@ -186,27 +183,13 @@ export function Payment() {
         // selectedBreakfasts.reduce((sum, item) => sum + (item.quantity || 0), 0) +
         selectedDrinks.reduce((sum, item) => sum + (item.quantity || 0), 0)
 
-    // Calculate delivery fee based on type
-    const getDeliveryFee = () => {
-        if (subtotal > 50) return 0
-        return deliveryType === 'EXPRESS' ? 9.99 : 4.99
-    }
 
-    const deliveryFee = getDeliveryFee()
 
-    // Calculate points earned based on total meals
-    const calculatePointsEarned = () => {
-        if (totalItems >= 10) return 5
-        if (totalItems >= 8) return 4
-        if (totalItems >= 6) return 3
-        if (totalItems >= 4) return 2
-        return 0
-    }
+
+
 
     const pointsEarned = planData?.plan?.points_value ?? 0
-    const rewardDiscount = useReward && canUseReward ? rewardValue : 0
-    const discountAmount = appliedDiscount ? (subtotal * appliedDiscount.amount / 100) : 0
-    const total = subtotal + deliveryFee - discountAmount - rewardDiscount
+    const total = subtotal
 
     // Replace mockSelectedMeals with Redux selectedMeals
     const mealList = selectedMeals
@@ -218,13 +201,13 @@ export function Payment() {
 
     // make handlePlaceOrder async and set loading state
     const handlePlaceOrder = async () => {
-        setIsPlacingOrder(true)
+
         const payload = {
             paymentMethod: paymentMethod,
             plan: planData?.plan || null,
             meals: selectedMeals, // array of meal objects
             drinks: selectedDrinks, // array of drink objects
-            totalAmount: totalItems,
+            totalAmount: Number(planData.plan.price_per_week) + drinksSubtotal,
             infos: {
                 firstName: planData?.firstName,
                 lastName: planData?.lastName,
@@ -234,6 +217,7 @@ export function Payment() {
             },
             user_id: admin?.id || null
         }
+        // setIsPlacingOrder(true)
 
         defaultHttp.post(apiRoutes.orders, payload).then((response) => {
             // Optionally redirect to order confirmation page

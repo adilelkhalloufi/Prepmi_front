@@ -31,7 +31,7 @@ export function Hero() {
                 size="lg"
                 className="bg-white text-primary hover:bg-white/90 font-semibold px-8 py-4 text-lg"
                 onClick={() => {
-                  navigator(webRoutes.register || "/register")
+                  navigator(webRoutes.join_now)
                 }}
               >
                 {t('hero_get_started')}

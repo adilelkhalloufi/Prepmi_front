@@ -68,7 +68,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
   }, []);
 
   useEffect(() => {
-    if (admin) {
+    if (admin?.token) {
       navigate(from, { replace: true });
     }
   }, [admin]);

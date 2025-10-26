@@ -16,5 +16,7 @@ export const apiRoutes = {
   weeklyMenus: `${API_URL}/weekly-menus`,
   menuMeals: `${API_URL}/menu-meals`,
   mealPreparations: `${API_URL}/meal-preparations`,
+  updateMealPreparationStatus: (id: number) => `${API_URL}/meal-preparations/${id}/status`,
 
 };
+ 

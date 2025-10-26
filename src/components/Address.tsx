@@ -50,7 +50,7 @@ export function Address() {
         address: planData?.address || '',
         hearAboutUs: planData?.hearAboutUs || ''
     })
-    const [isManualAddress, setIsManualAddress] = useState(false)
+    const [isManualAddress, setIsManualAddress] = useState(true)
     const [addressSuggestions, setAddressSuggestions] = useState<string[]>([])
     const [isLoadingSuggestions, setIsLoadingSuggestions] = useState(false)
     const searchTimeoutRef = useRef<NodeJS.Timeout | null>(null)

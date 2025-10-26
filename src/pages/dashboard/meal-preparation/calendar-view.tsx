@@ -13,7 +13,6 @@ import {
     SelectValue,
 } from "@/components/ui/select"
 import { ScrollArea } from "@/components/ui/scroll-area"
-import { Separator } from "@/components/ui/separator"
 
 interface CalendarViewProps {
     data: MealPreparation[]
@@ -22,51 +21,101 @@ interface CalendarViewProps {
 }
 
 const statusConfig = {
-    pending: {
+    Pending: {
         label: "En attente",
         variant: "bg-yellow-500 hover:bg-yellow-600",
     },
-    preparing: {
-        label: "En préparation",
+    Confirmed: {
+        label: "Confirmé",
         variant: "bg-blue-500 hover:bg-blue-600",
     },
-    ready_for_delivery: {
-        label: "Prêt pour livraison",
+    Preparing: {
+        label: "En préparation",
+        variant: "bg-cyan-500 hover:bg-cyan-600",
+    },
+    Shipped: {
+        label: "Expédié",
+        variant: "bg-indigo-500 hover:bg-indigo-600",
+    },
+    Delivered: {
+        label: "Livré",
         variant: "bg-green-500 hover:bg-green-600",
     },
-    delivered: {
-        label: "Livré",
-        variant: "bg-gray-500 hover:bg-gray-600",
-    },
-    cancelled: {
+    Cancelled: {
         label: "Annulé",
         variant: "bg-red-500 hover:bg-red-600",
     },
+    Refunded: {
+        label: "Remboursé",
+        variant: "bg-gray-500 hover:bg-gray-600",
+    },
 };
+
+interface GroupedOrder {
+    order_num: string;
+    meals: { name: string; quantity: number; image_path?: string }[];
+    customer?: any;
+    notes?: string;
+    order_status?: string;
+    order_id?: number; // Add order_id here
+    total_amount?: number;
+}
+
+function groupByOrder(items: MealPreparation[]) {
+    const grouped: Record<string, GroupedOrder> = {};
+    items.forEach(item => {
+        const orderNum = item.order_num;
+        if (!grouped[orderNum]) {
+            grouped[orderNum] = {
+                order_num: orderNum,
+                meals: [],
+                customer: item.customer,
+                notes: item.notes,
+                order_status: item.order_status,
+                order_id: item.order_id, // Assign order_id
+                total_amount: item.total_amount,
+            };
+        }
+        grouped[orderNum].meals.push({
+            name: item.meal?.name,
+            quantity: item.quantity,
+            image_path: item.meal?.image_path,
+        });
+    });
+    return Object.values(grouped);
+}
 
 export function CalendarView({ data, loading, onStatusUpdate }: CalendarViewProps) {
     const [selectedDate, setSelectedDate] = useState<Date | undefined>(new Date())
 
-    // Get meals for selected date
-    const mealsForSelectedDate = data.filter(meal => 
-        selectedDate && isSameDay(parseISO(meal.preparation_date), selectedDate)
+    // Get orders for selected date (not meals)
+    const ordersForSelectedDate = data.filter(order =>
+        selectedDate && isSameDay(parseISO(order.created_at), selectedDate)
     )
 
-    // Get dates that have meals
-    const datesWithMeals = data.map(meal => parseISO(meal.preparation_date))
+    // Get dates that have orders
+    const datesWithOrders = data.map(order => parseISO(order.created_at))
 
-    // Group meals by status for summary
-    const mealsByStatus = mealsForSelectedDate.reduce((acc, meal) => {
-        const status = meal.preparation_status;
+    // Group orders by order_status for summary
+    const ordersByStatus = ordersForSelectedDate.reduce((acc, order) => {
+        const status = order.order_status;
         if (!acc[status]) {
             acc[status] = [];
         }
-        acc[status].push(meal);
+        acc[status].push(order);
         return acc;
     }, {} as Record<string, MealPreparation[]>);
 
     // Calculate total quantities
-    const totalQuantity = mealsForSelectedDate.reduce((sum, meal) => sum + meal.quantity, 0);
+    const totalQuantity = ordersForSelectedDate.reduce((sum, order) => sum + order.quantity, 0);
+
+    // Filter orders for selected date
+    const filteredOrders = data.filter(order =>
+        selectedDate && isSameDay(parseISO(order.created_at), selectedDate)
+    );
+
+    // Group by order_num
+    const groupedOrders = groupByOrder(filteredOrders);
 
     if (loading) {
         return (
@@ -91,10 +140,10 @@ export function CalendarView({ data, loading, onStatusUpdate }: CalendarViewProp
                         locale={fr}
                         className="rounded-md border"
                         modifiers={{
-                            hasMeals: datesWithMeals
+                            hasOrders: datesWithOrders
                         }}
                         modifiersStyles={{
-                            hasMeals: {
+                            hasOrders: {
                                 backgroundColor: 'hsl(var(--primary))',
                                 color: 'white',
                                 fontWeight: 'bold'
@@ -104,7 +153,7 @@ export function CalendarView({ data, loading, onStatusUpdate }: CalendarViewProp
                 </CardContent>
             </Card>
 
-            {/* Meals List Section */}
+            {/* Orders List Section */}
             <Card className="lg:col-span-2">
                 <CardHeader>
                     <div className="flex justify-between items-center">
@@ -117,109 +166,90 @@ export function CalendarView({ data, loading, onStatusUpdate }: CalendarViewProp
                     </div>
                 </CardHeader>
                 <CardContent>
-                    {mealsForSelectedDate.length === 0 ? (
+                    {groupedOrders.length === 0 ? (
                         <div className="text-center py-12 text-muted-foreground">
-                            <p className="text-lg">Aucun repas à préparer pour cette date</p>
+                            <p className="text-lg">Aucune commande à préparer pour cette date</p>
                         </div>
                     ) : (
-                        <>
-                            {/* Status Summary */}
-                            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-                                {Object.entries(statusConfig).map(([status, config]) => {
-                                    const count = mealsByStatus[status]?.length || 0;
-                                    const quantity = mealsByStatus[status]?.reduce((sum, m) => sum + m.quantity, 0) || 0;
-                                    return (
-                                        <Card key={status} className={count > 0 ? 'border-2' : ''}>
-                                            <CardContent className="pt-6">
-                                                <div className="text-center">
-                                                    <div className={`inline-block px-3 py-1 rounded-full text-white text-xs mb-2 ${config.variant}`}>
-                                                        {config.label}
+                        <ScrollArea className="h-[500px] pr-4">
+                            <div className="space-y-4">
+                                {groupedOrders.map((order, idx) => (
+                                    <Card key={order.order_num + idx} className="overflow-hidden">
+                                        <CardContent className="p-4">
+                                            <div className="flex flex-col gap-2">
+                                                <div className="flex justify-between items-center">
+                                                    <div>
+                                                        <h3 className="font-semibold text-lg">
+                                                            N° Commande: {order.order_num}
+                                                        </h3>
+                                                        <p className="text-sm text-muted-foreground">
+                                                            Client: {order.customer ? `${order.customer.first_name} ${order.customer.last_name}` : "N/A"}
+                                                        </p>
                                                     </div>
-                                                    <div className="text-2xl font-bold">{quantity}</div>
-                                                    <div className="text-xs text-muted-foreground">{count} commande(s)</div>
+                                                    <Badge variant="outline" className="text-xl font-bold px-4 py-2">
+                                                        {order.meals.reduce((sum, m) => sum + m.quantity, 0)} repas
+                                                    </Badge>
                                                 </div>
-                                            </CardContent>
-                                        </Card>
-                                    )
-                                })}
+                                                {/* Meals List */}
+                                                <div className="flex flex-col gap-2 mt-2">
+                                                    {order.meals.map((meal, mIdx) => (
+                                                        <div key={mIdx} className="flex items-center gap-3">
+                                                            {meal.image_path && (
+                                                                <img
+                                                                    src={meal.image_path}
+                                                                    alt={meal.name}
+                                                                    className="w-12 h-12 rounded-md object-cover"
+                                                                />
+                                                            )}
+                                                            <span className="font-medium">{meal.name}</span>
+                                                            <span className="text-xs text-muted-foreground">x{meal.quantity}</span>
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                                {/* Notes */}
+                                                {order.notes && (
+                                                    <p className="text-sm bg-muted p-2 rounded">
+                                                        📝 {order.notes}
+                                                    </p>
+                                                )}
+                                                {/* Status */}
+                                                <div className="flex items-center gap-2 mt-2">
+                                                    <span className="text-sm font-medium">Statut commande:</span>
+                                                    <Badge className={`capitalize ${statusConfig[order.order_status as keyof typeof statusConfig]?.variant || ''}`}>
+                                                        {statusConfig[order.order_status as keyof typeof statusConfig]?.label || order.order_status}
+                                                    </Badge>
+                                                    <Select
+                                                        value={order.order_status}
+                                                        onValueChange={async (newStatus) => {
+                                                            // Use order_id instead of meal ids
+                                                            await onStatusUpdate(order.order_id, newStatus);
+                                                        }}
+                                                    >
+                                                        <SelectTrigger className={`w-[120px] ${statusConfig[order.order_status as keyof typeof statusConfig]?.variant || ''} text-white border-none`}>
+                                                            <SelectValue />
+                                                        </SelectTrigger>
+                                                        <SelectContent>
+                                                            {Object.entries(statusConfig).map(([key, value]) => (
+                                                                <SelectItem key={key} value={key}>
+                                                                    <div className="flex items-center gap-2">
+                                                                        <div className={`w-3 h-3 rounded-full ${value.variant}`}></div>
+                                                                        {value.label}
+                                                                    </div>
+                                                                </SelectItem>
+                                                            ))}
+                                                        </SelectContent>
+                                                    </Select>
+                                                </div>
+                                                {/* Total Amount */}
+                                                <p className="text-xs text-muted-foreground mt-2">
+                                                    Montant total: {order.total_amount} €
+                                                </p>
+                                            </div>
+                                        </CardContent>
+                                    </Card>
+                                ))}
                             </div>
-
-                            <Separator className="my-4" />
-
-                            {/* Meals List */}
-                            <ScrollArea className="h-[500px] pr-4">
-                                <div className="space-y-4">
-                                    {mealsForSelectedDate.map((mealPrep) => (
-                                        <Card key={mealPrep.id} className="overflow-hidden">
-                                            <CardContent className="p-4">
-                                                <div className="flex flex-col md:flex-row gap-4">
-                                                    {/* Meal Image */}
-                                                    {mealPrep.meal?.image_path && (
-                                                        <img
-                                                            src={mealPrep.meal.image_path}
-                                                            alt={mealPrep.meal.name}
-                                                            className="w-full md:w-24 h-24 rounded-md object-cover"
-                                                        />
-                                                    )}
-
-                                                    {/* Meal Info */}
-                                                    <div className="flex-1 space-y-2">
-                                                        <div className="flex justify-between items-start">
-                                                            <div>
-                                                                <h3 className="font-semibold text-lg">
-                                                                    {mealPrep.meal?.name || "N/A"}
-                                                                </h3>
-                                                                <p className="text-sm text-muted-foreground">
-                                                                    Client: {mealPrep.order?.user?.name || mealPrep.customer_name || "N/A"}
-                                                                </p>
-                                                            </div>
-                                                            <Badge variant="outline" className="text-xl font-bold px-4 py-2">
-                                                                x{mealPrep.quantity}
-                                                            </Badge>
-                                                        </div>
-
-                                                        {mealPrep.notes && (
-                                                            <p className="text-sm bg-muted p-2 rounded">
-                                                                📝 {mealPrep.notes}
-                                                            </p>
-                                                        )}
-
-                                                        {/* Status Selector */}
-                                                        <div className="flex items-center gap-2">
-                                                            <span className="text-sm font-medium">Statut:</span>
-                                                            <Select
-                                                                value={mealPrep.preparation_status}
-                                                                onValueChange={(newStatus) => onStatusUpdate(mealPrep.id, newStatus)}
-                                                            >
-                                                                <SelectTrigger className={`w-[160px] ${statusConfig[mealPrep.preparation_status as keyof typeof statusConfig]?.variant || ''} text-white border-none`}>
-                                                                    <SelectValue />
-                                                                </SelectTrigger>
-                                                                <SelectContent>
-                                                                    {Object.entries(statusConfig).map(([key, value]) => (
-                                                                        <SelectItem key={key} value={key}>
-                                                                            <div className="flex items-center gap-2">
-                                                                                <div className={`w-3 h-3 rounded-full ${value.variant}`}></div>
-                                                                                {value.label}
-                                                                            </div>
-                                                                        </SelectItem>
-                                                                    ))}
-                                                                </SelectContent>
-                                                            </Select>
-                                                        </div>
-
-                                                        {mealPrep.delivery_date && (
-                                                            <p className="text-xs text-muted-foreground">
-                                                                🚚 Livraison prévue: {format(parseISO(mealPrep.delivery_date), "d MMMM yyyy", { locale: fr })}
-                                                            </p>
-                                                        )}
-                                                    </div>
-                                                </div>
-                                            </CardContent>
-                                        </Card>
-                                    ))}
-                                </div>
-                            </ScrollArea>
-                        </>
+                        </ScrollArea>
                     )}
                 </CardContent>
             </Card>

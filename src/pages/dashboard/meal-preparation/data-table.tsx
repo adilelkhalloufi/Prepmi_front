@@ -103,18 +103,20 @@ export function DataTable<TData, TValue>({
                     }
                     className="max-w-sm"
                 />
-                
+
                 <Select value={statusFilter} onValueChange={handleStatusFilterChange}>
                     <SelectTrigger className="w-[200px]">
                         <SelectValue placeholder="Filtrer par statut" />
                     </SelectTrigger>
                     <SelectContent>
                         <SelectItem value="all">Tous les statuts</SelectItem>
-                        <SelectItem value="pending">En attente</SelectItem>
-                        <SelectItem value="preparing">En préparation</SelectItem>
-                        <SelectItem value="ready_for_delivery">Prêt pour livraison</SelectItem>
-                        <SelectItem value="delivered">Livré</SelectItem>
-                        <SelectItem value="cancelled">Annulé</SelectItem>
+                        <SelectItem value="Pending">En attente</SelectItem>
+                        <SelectItem value="Confirmed">Confirmé</SelectItem>
+                        <SelectItem value="Preparing">En préparation</SelectItem>
+                        <SelectItem value="Shipped">Expédié</SelectItem>
+                        <SelectItem value="Delivered">Livré</SelectItem>
+                        <SelectItem value="Cancelled">Annulé</SelectItem>
+                        <SelectItem value="Refunded">Remboursé</SelectItem>
                     </SelectContent>
                 </Select>
 
