@@ -29,7 +29,7 @@ export default function OrderDetails() {
             http.get(`${apiRoutes.orders}/${id}`)
                 .then((res) => {
                     setOrder(res.data.data);
-                    console.log(res.data);
+                    console.log(res.data.data);
                 })
                 .catch(handleErrorResponse)
                 .finally(() => setLoading(false));
@@ -62,32 +62,32 @@ export default function OrderDetails() {
                     <CardContent className="grid grid-cols-2 gap-4">
                         <div>
                             <p className="font-semibold">Nom du client</p>
-                            <p>{order.first_name} {order.last_name}</p>
+                            <p>{order?.first_name} {order?.last_name}</p>
                         </div>
                         <div>
                             <p className="font-semibold">Téléphone</p>
-                            <p>{order.phone}</p>
+                            <p>{order?.phone}</p>
                         </div>
                         <div>
                             <p className="font-semibold">Adresse de livraison</p>
-                            <p>{order.adresse_livrsion}</p>
+                            <p>{order?.adresse_livraison}</p>
                         </div>
                         <div>
                             <p className="font-semibold">Méthode de paiement</p>
-                            <p>{order.method_payement}</p>
+                            <p>{order?.method_payement}</p>
                         </div>
                         <div>
                             <p className="font-semibold">Points de fidélité</p>
-                            <p>{order.reward_point}</p>
+                            <p>{order?.reward_point}</p>
                         </div>
                         <div>
                             <p className="font-semibold">Date de commande</p>
-                            <p>{order.date_order ? new Date(order.date_order).toLocaleDateString('fr-FR') : '-'}</p>
+                            <p>{order?.date_order ? new Date(order?.date_order).toLocaleDateString('fr-FR') : '-'}</p>
                         </div>
                         <div>
                             <p className="font-semibold">Statut</p>
-                            <Badge className={`capitalize ${statusVariant[order.statue] || "bg-gray-500"}`}>
-                                {order.statue}
+                            <Badge className={`capitalize ${statusVariant[order?.statue] || "bg-gray-500"}`}>
+                                {order?.statue}
                             </Badge>
                         </div>
                         <div>
@@ -143,7 +143,7 @@ export default function OrderDetails() {
                                     </TableRow>
                                 </TableHeader>
                                 <TableBody>
-                                    {order.status_histories.map((history: any, idx: number) => (
+                                    {order?.status_histories.map((history: any, idx: number) => (
                                         <TableRow key={idx}>
                                             <TableCell>
                                                 <Badge className={`capitalize ${statusVariant[history.old_status] || "bg-gray-500"}`}>

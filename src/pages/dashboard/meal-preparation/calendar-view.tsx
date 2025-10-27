@@ -61,29 +61,44 @@ interface GroupedOrder {
     total_amount?: number;
 }
 
-function groupByOrder(items: MealPreparation[]) {
-    const grouped: Record<string, GroupedOrder> = {};
-    items.forEach(item => {
-        const orderNum = item.order_num;
-        if (!grouped[orderNum]) {
-            grouped[orderNum] = {
-                order_num: orderNum,
-                meals: [],
-                customer: item.customer,
-                notes: item.notes,
-                order_status: item.order_status,
-                order_id: item.order_id, // Assign order_id
-                total_amount: item.total_amount,
-            };
+    const groupByOrder = (items: any[]) => {
+        // If items are flat meal preparations (old format)
+        if (items.length && items[0]?.order_num) {
+            const grouped: Record<string, any> = {};
+            items.forEach(item => {
+                const orderNum = item.order_num;
+                if (!grouped[orderNum]) {
+                    grouped[orderNum] = {
+                        order_num: orderNum,
+                        meals: [],
+                        order_status: item.order_status,
+                        order_id: item.order_id,
+                    };
+                }
+                grouped[orderNum].meals.push({
+                    name: item.meal?.name,
+                    quantity: item.quantity,
+                    order_meal_id: item.order_meal_id,
+                });
+            });
+            return Object.values(grouped);
         }
-        grouped[orderNum].meals.push({
-            name: item.meal?.name,
-            quantity: item.quantity,
-            image_path: item.meal?.image_path,
-        });
-    });
-    return Object.values(grouped);
-}
+        // If items are nested order objects (new format)
+        if (items.length && items[0]?.order_meals) {
+            return items.map(order => ({
+                order_num: order.num_order || order.order_num,
+                order_status: order.statue || order.order_status,
+                order_id: order.id || order.order_id,
+                meals: order.order_meals.map(mealItem => ({
+                    name: mealItem.meal?.name,
+                    quantity: mealItem.quantity,
+                    order_meal_id: mealItem.id || mealItem.order_meal_id,
+                }))
+            }));
+        }
+        // Fallback: return empty array
+        return [];
+    };
 
 export function CalendarView({ data, loading, onStatusUpdate }: CalendarViewProps) {
     const [selectedDate, setSelectedDate] = useState<Date | undefined>(new Date())
