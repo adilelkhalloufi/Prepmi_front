@@ -30,27 +30,44 @@ export default function MealPreparationIndex() {
         fetchMealPreparations();
     }, []);
 
-    const groupByOrder = (items: MealPreparation[]) => {
-        const grouped: Record<string, any> = {};
-        items.forEach(item => {
-            const orderNum = item.order_num;
-            if (!grouped[orderNum]) {
-                grouped[orderNum] = {
-                    order_num: orderNum,
-                    meals: [],
-                    order_status: item.order_status,
-                    order_id: item.order_id, // Add order_id here
-                };
-            }
-            grouped[orderNum].meals.push({
-                name: item.meal?.name,
-                quantity: item.quantity,
-                order_meal_id: item.order_meal_id,
-                // Add other meal details if needed
+    // Adapted to handle both flat and nested backend data
+    const groupByOrder = (items: any[]) => {
+        // If items are flat meal preparations (old format)
+        if (items.length && items[0]?.order_num) {
+            const grouped: Record<string, any> = {};
+            items.forEach(item => {
+                const orderNum = item.order_num;
+                if (!grouped[orderNum]) {
+                    grouped[orderNum] = {
+                        order_num: orderNum,
+                        meals: [],
+                        order_status: item.order_status,
+                        order_id: item.order_id,
+                    };
+                }
+                grouped[orderNum].meals.push({
+                    name: item.meal?.name,
+                    quantity: item.quantity,
+                    order_meal_id: item.order_meal_id,
+                });
             });
-            // Optionally, update order_status if you want to show a status if any meal differs
-        });
-        return Object.values(grouped);
+            return Object.values(grouped);
+        }
+        // If items are nested order objects (new format)
+        if (items.length && items[0]?.order_meals) {
+            return items.map(order => ({
+                order_num: order.num_order || order.order_num,
+                order_status: order.statue || order.order_status,
+                order_id: order.id || order.order_id,
+                meals: order.order_meals.map(mealItem => ({
+                    name: mealItem.meal?.name,
+                    quantity: mealItem.quantity,
+                    order_meal_id: mealItem.id || mealItem.order_meal_id,
+                }))
+            }));
+        }
+        // Fallback: return empty array
+        return [];
     };
 
     const allowedStatuses = [

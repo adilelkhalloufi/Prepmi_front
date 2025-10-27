@@ -1,4 +1,4 @@
-import { API_URL } from '../utils';
+ import { API_URL } from '../utils';
 
 export const apiRoutes = {
   // ... other routes ...
@@ -11,12 +11,15 @@ export const apiRoutes = {
   menus: `${API_URL}/menus`,
   orders: `${API_URL}/orders`,
   plans: `${API_URL}/plans`,
+  rewards: `${API_URL}/rewards`,
   totalPointsEarned: `${API_URL}/total-points-earned`,
 
   weeklyMenus: `${API_URL}/weekly-menus`,
   menuMeals: `${API_URL}/menu-meals`,
   mealPreparations: `${API_URL}/meal-preparations`,
   updateMealPreparationStatus: (id: number) => `${API_URL}/meal-preparations/${id}/status`,
+  nutritionSummary: `${API_URL}/nutrition-summary`,
+  dashboard: `${API_URL}/dashboard`,
 
 };
  

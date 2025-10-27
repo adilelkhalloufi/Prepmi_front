@@ -1,20 +1,8 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import type { Plan, Category } from '@/interfaces/admin'
 
-export type MealSelection = {
-  id: number
-  name: string
-  protein?: number
-  calories?: number
-  price?: number
-  image_url?: string
-  image_path?: string
-  quantity: number
-  // Add other fields as needed
-}
-
 export type JoinProcessState = {
-  currentStep?: number
+  currentStep?: number,
   planData?: {
     // Plan selection
     planId?: number
@@ -30,7 +18,7 @@ export type JoinProcessState = {
     isFreeShipping?: boolean
     pointsValue?: number
     plan?: Plan // Store the complete plan object
-
+    
     // Personal details
     firstName?: string
     lastName?: string
@@ -38,14 +26,14 @@ export type JoinProcessState = {
     country?: string
     address?: string
     hearAboutUs?: string
-
+    
     // Meal selections
-    selectedMeals?: Record<string, MealSelection>
-    selectedBreakfasts?: Record<string, MealSelection>
-    selectedDrinks?: Record<string, MealSelection>
-    paymentMethod?: 'COD' | 'ONLINE'
+    selectedMeals?: Record<string, any>
+    selectedBreakfasts?: Record<string, any>
+    selectedDrinks?: Record<string, any>
   }
 }
+
 
 const initialState: JoinProcessState = {
   currentStep: 1,
@@ -57,7 +45,7 @@ const initialState: JoinProcessState = {
     categoryName: '',
     category: undefined,
     portion: '',
-    mealsPerWeek: 10,
+    mealsPerWeek: undefined,
     pricePerWeek: 0,
     deliveryFee: 0,
     isFreeShipping: false,
@@ -66,13 +54,12 @@ const initialState: JoinProcessState = {
     firstName: '',
     lastName: '',
     phoneNumber: '',
-    country: '',
+    country: 'UK',
     address: '',
     hearAboutUs: '',
     selectedMeals: {},
     selectedBreakfasts: {},
-    selectedDrinks: {},
-    paymentMethod: 'COD'
+    selectedDrinks: {}
   }
 }
 
@@ -98,16 +85,11 @@ export const joinProcessSlice = createSlice({
     },
     resetJoinProcess: (state) => {
       return initialState
-    },
-    clearPlan: (state) => {
-      if (state.planData) {
-        state.planData.plan = undefined
-      }
     }
   }
 })
 
-export const { setCurrentStep, updatePlanData, nextStep, prevStep, resetJoinProcess, clearPlan } = joinProcessSlice.actions
+export const { setCurrentStep, updatePlanData, nextStep, prevStep, resetJoinProcess } = joinProcessSlice.actions
 export default joinProcessSlice.reducer
 
 

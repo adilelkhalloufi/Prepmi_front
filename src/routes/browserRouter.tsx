@@ -117,6 +117,10 @@ const DashboardCategoriesView = loadable(() => import('../pages/dashboard/catego
   fallback: fallbackElement,
 });
 
+const DashboardReward = loadable(() => import('../pages/dashboard/rewards'), {
+  fallback: fallbackElement,
+});
+
 const SingleMeal = loadable(() => import("../pages/SingleMeal"), {
   fallback: fallbackElement,
 });
@@ -283,7 +287,11 @@ export const browserRouter = createBrowserRouter([
       {
         path: webRoutes.dashboard_categories_view,
         element: <DashboardCategoriesView />,
-      }
+      },
+      {
+        path: webRoutes.dashboard_rewards,
+        element: <DashboardReward />,
+      },
 
     ],
   },

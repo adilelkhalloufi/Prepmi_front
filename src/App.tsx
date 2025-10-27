@@ -26,7 +26,7 @@ document.documentElement.setAttribute('dir', i18next.language === 'ar' ? 'rtl' :
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
-    <ThemeProvider defaultTheme="system" storageKey="app-theme">
+    <ThemeProvider defaultTheme="light" storageKey="app-theme">
       <Provider store={store}>
         <PersistGate persistor={persistor}>
 

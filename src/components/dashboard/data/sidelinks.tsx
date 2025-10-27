@@ -89,6 +89,13 @@ export const sidelinks: SideLink[] = [
     href: webRoutes.dashboard_categories,
     icon: <IconHeart size={18} />,
     role: [RoleEnum.ADMIN]
+  },
+    {
+    title: 'Rewards',
+    label: '',
+    href: webRoutes.dashboard_rewards,
+    icon: <IconSettings2 size={18} />,
+    role: [RoleEnum.ADMIN, RoleEnum.CLIENT]
   }
 
 

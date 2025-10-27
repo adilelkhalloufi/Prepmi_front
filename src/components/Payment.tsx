@@ -217,7 +217,7 @@ export function Payment() {
             },
             user_id: admin?.id || null
         }
-        // setIsPlacingOrder(true)
+        setIsPlacingOrder(true)
 
         defaultHttp.post(apiRoutes.orders, payload).then((response) => {
             // Optionally redirect to order confirmation page

@@ -4,8 +4,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { useTranslation } from "react-i18next"
-import { useDispatch, useSelector } from "react-redux"
+ import { useDispatch, useSelector } from "react-redux"
 import { RootState } from "@/store"
 import { updatePlanData } from "@/store/slices/joinProcessSlice"
 import {
@@ -18,15 +17,9 @@ import {
     Mail,
     Globe
 } from "lucide-react"
+import { useTranslation } from "react-i18next"
 
-const countries = [
-    { value: 'UK', label: 'United Kingdom' },
-    { value: 'US', label: 'United States' },
-    { value: 'CA', label: 'Canada' },
-    { value: 'AU', label: 'Australia' },
-    { value: 'DE', label: 'Germany' },
-    { value: 'FR', label: 'France' }
-]
+ 
 
 const hearAboutUsOptions = [
     { value: 'google', label: 'Google Search' },

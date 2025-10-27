@@ -13,6 +13,15 @@
   "hero_title": "HEALTHY MEALS DELIVERED",
   "hero_description": "Fresh, nutritious meals prepared by professional chefs and delivered straight to your door. Start your healthy lifestyle today!",
   "hero_get_started": "GET STARTED",
+  "login": {
+    "title": "Login",
+    "email": "Email",
+    "password": "Password",
+    "description": "Enter your details below to sign in to your account",
+    "condition": "By clicking Sign In, you agree to our  Terms of Service and Privacy Policy."
+  },
+
+ 
   "how_it_works": {
     "simple_process": "Simple Process",
     "title": "How It Works",
