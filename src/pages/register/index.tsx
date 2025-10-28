@@ -22,26 +22,12 @@ const Register = () => {
 
     const { t } = useTranslation();
     const form = useSelector((state: RootState) => state.register)
-    const [specialitie, setSpecialitie] = useState<Specialitie[]>([]);
-    const [categories, setCategories] = useState<Categorie[]>([]);
-    const [Stepper, setStepper] = useState(1);
+     const [Stepper, setStepper] = useState(1);
     const navigator = useNavigate();
     const dispatch = useDispatch();
     const [loading, setLoading] = useState(false);
 
-    useEffect(() => {
-        defaultHttp.get(apiRoutes.specialities)
-            .then((response) => {
-                setSpecialitie(response.data);
-            })
-            .catch(handleErrorResponse);
-        defaultHttp.get(apiRoutes.categories)
-            .then((response) => {
-                setCategories(response.data);
-            })
-            .catch(handleErrorResponse);
-
-    }, []);
+ 
 
     useEffect(() => {
         window.scrollTo(0, 0);

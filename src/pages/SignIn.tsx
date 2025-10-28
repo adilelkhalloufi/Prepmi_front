@@ -2,6 +2,7 @@ import { UserAuthForm } from '@/components/login/UserAuthForm'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
 import logo from '../assets/Prepme.svg'
+import { Button } from '@/components/ui/button'
 
 export default function SignIn() {
   const { t } = useTranslation()
@@ -38,14 +39,11 @@ export default function SignIn() {
               </p>
             </div>
             <UserAuthForm />
+            <Button asChild className="w-full bg-primary hover:bg-primary/80">
+              <Link to="/register">{t('register.create')}</Link>
+            </Button>
             <p className='px-8 text-center text-sm text-muted-foreground'>
               {t('login.condition')}
-            </p>
-            <p className='px-8 text-center text-sm text-muted-foreground'>
-              {t('register.message')}
-              <Link to='/register' className='text-primary'>
-                {t('register.create')}
-              </Link>
             </p>
           </div>
         </div>

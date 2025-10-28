@@ -280,7 +280,59 @@
     },
     "validation": {
       "selectProtein": "Please select your protein preference before continuing",
-      "selectPlan": "Please select a meal plan before continuing"
+      "selectPlan": "Please select a meal plan before continuing",
+      "fillAllFields": "Please fill in all required fields.",
+      "fillAccountFields": "Please fill in email and password.",
+      "passwordMismatch": "Passwords do not match."
+    },
+    "address": {
+      "title": "Delivery Information",
+      "subtitle": "Please provide your delivery details",
+      "personalInformation": "Personal Information",
+      "firstName": "First Name",
+      "firstNamePlaceholder": "Enter your first name",
+      "lastName": "Last Name",
+      "lastNamePlaceholder": "Enter your last name",
+      "phoneNumber": "Phone Number",
+      "phoneNumberPlaceholder": "Enter your phone number",
+      "deliveryAddress": "Delivery Address",
+      "fullAddress": "Enter your full address",
+      "searchAddress": "Search for address",
+      "freshness": "Freshness Guarantee",
+      "updates": "Order Updates",
+      "delivery": "Delivery Information",
+      "hearAbout": "How did you hear about us?",
+      "selectSource": "Select a source",
+      "requiredFields": "Please fill in all required fields",
+      "accountInformation": "Account Information",
+      "email": "Email",
+      "emailPlaceholder": "Enter your email",
+      "password": "Password",
+      "passwordPlaceholder": "Enter your password",
+      "repeatPassword": "Repeat Password",
+      "repeatPasswordPlaceholder": "Repeat your password"
+    },
+    "payment": {
+      "title": "ORDER SUMMARY & PAYMENT",
+      "subtitle": "Review your order and complete your purchase",
+      "customerDetails": "Customer Details",
+      "deliveryAddress": "Delivery Address",
+      "editDetails": "Edit",
+      "save": "Save",
+      "yourOrder": "Your Order",
+      "edit": "Edit",
+      "mainMeals": "Main Meals",
+      "qty": "Qty",
+      "loyaltyPoints": "Loyalty Points",
+      "connectToSeePoints": "Connect your account to view and use loyalty points.",
+      "orderSummary": "Order Summary",
+      "total": "Total",
+      "paymentMethod": "Payment Method",
+      "onlinePayment": "Online Payment",
+      "paySecurely": "Pay securely with card",
+      "cashOnDelivery": "Cash on Delivery",
+      "payWhenReceive": "Pay when you receive",
+      "placeOrderCOD": "Place Order (COD)"
     },
     "joinNow": {
       "steps": {
@@ -444,13 +496,6 @@
       "selected": "Selected",
       "meal": "meal"
     }
-  },
-  "login": {
-    "title": "Login",
-    "email": "Email",
-    "password": "Password",
-    "description": "Enter your details below to sign in to your account",
-    "condition": "By clicking Sign In, you agree to our  Terms of Service and Privacy Policy."
   },
   "validation": {
     "emailRequired": "Email is required",

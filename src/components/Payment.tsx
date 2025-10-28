@@ -2,8 +2,7 @@ import { useState, useEffect } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { useTranslation } from "react-i18next"
-import {
+ import {
     CreditCard,
 
 
@@ -31,6 +30,7 @@ import { toast } from "sonner"
 import { handleErrorResponse } from "@/utils"
 import { useNavigate } from "react-router-dom"
 import { webRoutes } from "@/routes/web"
+import { useTranslation } from "react-i18next"
 
 
 
@@ -40,7 +40,7 @@ export function Payment() {
     const dispatch = useDispatch()
     const navigate = useNavigate()
     const planData = useSelector((state: RootState) => state.joinProcess.planData)
-    const admin = useSelector((state: RootState) => state.admin.user)
+    const admin = useSelector((state: RootState) => state.admin?.user)
 
 
     const [paymentMethod, setPaymentMethod] = useState<'COD' | 'ONLINE'>(planData?.paymentMethod || 'COD')

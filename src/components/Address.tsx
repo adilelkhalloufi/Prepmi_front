@@ -15,7 +15,8 @@ import {
     Clock,
     Shield,
     Mail,
-    Globe
+    Globe,
+    Lock
 } from "lucide-react"
 import { useTranslation } from "react-i18next"
 
@@ -34,6 +35,9 @@ export function Address() {
     const { t } = useTranslation()
     const dispatch = useDispatch()
     const planData = useSelector((state: RootState) => state.joinProcess.planData)
+    const admin = useSelector((state: RootState) => state.admin?.user?.id) // Uncomment if auth slice exists
+
+   
 
     const [addressData, setAddressData] = useState({
         firstName: planData?.firstName || '',
@@ -41,7 +45,10 @@ export function Address() {
         phoneNumber: planData?.phoneNumber || '',
         country: planData?.country || '',
         address: planData?.address || '',
-        hearAboutUs: planData?.hearAboutUs || ''
+        hearAboutUs: planData?.hearAboutUs || '',
+        email: planData?.email || '',
+        password: '',
+        repeatPassword: ''
     })
     const [isManualAddress, setIsManualAddress] = useState(true)
     const [addressSuggestions, setAddressSuggestions] = useState<string[]>([])
@@ -51,14 +58,16 @@ export function Address() {
     // Update local state when Redux state changes
     useEffect(() => {
         if (planData) {
-            setAddressData({
+            setAddressData(prev => ({
+                ...prev,
                 firstName: planData.firstName || '',
                 lastName: planData.lastName || '',
                 phoneNumber: planData.phoneNumber || '',
                 country: planData.country || 'UK',
                 address: planData.address || '',
-                hearAboutUs: planData.hearAboutUs || ''
-            })
+                hearAboutUs: planData.hearAboutUs || '',
+                email: planData.email || ''
+            }))
         }
     }, [planData])
 
@@ -92,10 +101,15 @@ export function Address() {
     }
 
     const isFormValid = () => {
-        return addressData.firstName &&
+        const basicValid = addressData.firstName &&
             addressData.lastName &&
             addressData.phoneNumber &&
-            addressData.address
+            addressData.address;
+        if (!admin) {
+
+            return basicValid && addressData.email && addressData.password && addressData.password === addressData.repeatPassword;
+        }
+        return basicValid;
     }
 
     return (
@@ -174,6 +188,77 @@ export function Address() {
                     </div>
                 </CardContent>
             </Card>
+
+            {/* Account Information - shown if not connected */}
+            {!admin && (
+                <Card>
+                    <CardHeader>
+                        <CardTitle className="flex items-center space-x-2">
+                            <Mail className="w-5 h-5 text-primary" />
+                            <span>{t('joinNow.address.accountInformation')}</span>
+                        </CardTitle>
+                    </CardHeader>
+                    <CardContent className="space-y-6">
+                        <div className="space-y-2">
+                            <Label htmlFor="email" className="text-foreground font-medium">
+                                {t('joinNow.address.email')} *
+                            </Label>
+                            <div className="relative">
+                                <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                                <Input
+                                    id="email"
+                                    type="email"
+                                    value={addressData.email}
+                                    onChange={(e) => handleInputChange('email', e.target.value)}
+                                    placeholder={t('joinNow.address.emailPlaceholder', 'Enter your email')}
+                                    className="pl-10 border-border focus:border-primary"
+                                    required
+                                />
+                            </div>
+                        </div>
+
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div className="space-y-2">
+                                <Label htmlFor="password" className="text-foreground font-medium">
+                                    {t('joinNow.address.password')} *
+                                </Label>
+                                <div className="relative">
+                                    <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                                    <Input
+                                        id="password"
+                                        type="password"
+                                        value={addressData.password}
+                                        onChange={(e) => setAddressData(prev => ({ ...prev, password: e.target.value }))}
+                                        onBlur={() => dispatch(updatePlanData({ password: addressData.password }))}
+                                        placeholder={t('joinNow.address.passwordPlaceholder', 'Enter your password')}
+                                        className="pl-10 border-border focus:border-primary"
+                                        required
+                                    />
+                                </div>
+                            </div>
+
+                            <div className="space-y-2">
+                                <Label htmlFor="repeatPassword" className="text-foreground font-medium">
+                                    {t('joinNow.address.repeatPassword')} *
+                                </Label>
+                                <div className="relative">
+                                    <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                                    <Input
+                                        id="repeatPassword"
+                                        type="password"
+                                        value={addressData.repeatPassword}
+                                        onChange={(e) => setAddressData(prev => ({ ...prev, repeatPassword: e.target.value }))}
+                                        onBlur={() => dispatch(updatePlanData({ repeatPassword: addressData.repeatPassword }))}
+                                        placeholder={t('joinNow.address.repeatPasswordPlaceholder', 'Repeat your password')}
+                                        className="pl-10 border-border focus:border-primary"
+                                        required
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                    </CardContent>
+                </Card>
+            )}
 
             {/* Delivery Address */}
             <Card>

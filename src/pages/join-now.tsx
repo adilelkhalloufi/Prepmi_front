@@ -15,6 +15,7 @@ const JoinNow = () => {
     const { t } = useTranslation()
     const dispatch = useDispatch()
     const { currentStep, planData } = useSelector((state: RootState) => state.joinProcess)
+    const admin = useSelector((state: RootState) => state.admin?.user) // Uncomment if auth slice exists
 
     const steps = [
         { id: 1, title: t('joinNow.steps.plan'), component: Plan },
@@ -52,7 +53,7 @@ const JoinNow = () => {
         }
         // Validate Address step (step 3)
         if (currentStep === 3) {
-            if (
+             if (
                 !planData.firstName ||
                 !planData.lastName ||
                 !planData.phoneNumber ||
@@ -60,6 +61,21 @@ const JoinNow = () => {
             ) {
                 toast.error(t('joinNow.validation.fillAllFields', 'Please fill in all required fields.'))
                 return
+            }
+            console.log('planData.password', planData.password);
+            console.log('planData.email', planData.email);
+
+            if (!admin?.id) {
+                console.log('ha  admin', admin);
+
+                if (!planData.email || !planData.password) {
+                    toast.error(t('joinNow.validation.fillAccountFields', 'Please fill in email and password.'))
+                    return
+                }
+                if (planData.password !== planData.repeatPassword) {
+                    toast.error(t('joinNow.validation.passwordMismatch', 'Passwords do not match.'))
+                    return
+                }
             }
         }
 

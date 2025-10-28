@@ -21,6 +21,9 @@ export type JoinProcessState = {
     
     // Personal details
     firstName?: string
+    email?: string
+    password?: string
+    repeatPassword?: string
     lastName?: string
     phoneNumber?: string
     country?: string
@@ -56,6 +59,9 @@ const initialState: JoinProcessState = {
     phoneNumber: '',
     country: 'UK',
     address: '',
+    email: '',
+    password: '',
+    repeatPassword: '',
     hearAboutUs: '',
     selectedMeals: {},
     selectedBreakfasts: {},
