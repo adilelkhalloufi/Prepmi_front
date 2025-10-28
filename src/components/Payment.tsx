@@ -213,10 +213,13 @@ export function Payment() {
                 lastName: planData?.lastName,
                 phoneNumber: planData?.phoneNumber,
                 country: planData?.country,
-                address: planData?.address
+                address: planData?.address,
+                email: planData?.email,
+                password: planData?.password,
             },
             user_id: admin?.id || null
         }
+        console.log('Placing order with payload:', payload);
         setIsPlacingOrder(true)
 
         defaultHttp.post(apiRoutes.orders, payload).then((response) => {
