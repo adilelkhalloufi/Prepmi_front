@@ -49,9 +49,9 @@ export default function ClientDashboard() {
                         <IconClipboardList />
                     </CardHeader>
                     <CardContent>
-                        <div className='text-2xl font-bold'>{data.orders_this_month}</div>
+                        <div className='text-2xl font-bold'>{data.orders_this_month ?? 0}</div>
                         <p className='text-xs text-muted-foreground'>
-                            {`${data.orders_difference >= 0 ? `+${data.orders_difference}` : data.orders_difference} par rapport au mois dernier`}
+                            {`${(data.orders_difference ?? 0) >= 0 ? `+${data.orders_difference ?? 0}` : data.orders_difference ?? 0} par rapport au mois dernier`}
                         </p>
                     </CardContent>
                 </Card>
@@ -61,7 +61,7 @@ export default function ClientDashboard() {
                         <IconApple />
                     </CardHeader>
                     <CardContent>
-                        <div className='text-2xl font-bold'>{data.nutrition_summary.calories}</div>
+                        <div className='text-2xl font-bold'>{data.nutrition_summary?.calories ?? 0}</div>
                         <p className='text-xs text-muted-foreground'>Total</p>
                     </CardContent>
                 </Card>
@@ -71,7 +71,7 @@ export default function ClientDashboard() {
                         <IconMeat />
                     </CardHeader>
                     <CardContent>
-                        <div className='text-2xl font-bold'>{data.nutrition_summary.protein}g</div>
+                        <div className='text-2xl font-bold'>{data.nutrition_summary?.protein ?? 0}g</div>
                         <p className='text-xs text-muted-foreground'>Total</p>
                     </CardContent>
                 </Card>
@@ -81,7 +81,7 @@ export default function ClientDashboard() {
                         <IconBread />
                     </CardHeader>
                     <CardContent>
-                        <div className='text-2xl font-bold'>{data.nutrition_summary.carbs}g</div>
+                        <div className='text-2xl font-bold'>{data.nutrition_summary?.carbs ?? 0}g</div>
                         <p className='text-xs text-muted-foreground'>Total</p>
                     </CardContent>
                 </Card>
@@ -91,23 +91,23 @@ export default function ClientDashboard() {
                         <IconApple />
                     </CardHeader>
                     <CardContent>
-                        <div className='text-2xl font-bold'>{data.nutrition_summary.fat}g</div>
+                        <div className='text-2xl font-bold'>{data.nutrition_summary?.fat ?? 0}g</div>
                         <p className='text-xs text-muted-foreground'>Total</p>
                     </CardContent>
                 </Card>
             </div>
             <div className='mt-8'>
                 <h2 className='text-xl font-bold mb-4'>Historique des repas</h2>
-                {data.meals_history.length === 0 ? (
+                {(data.meals_history ?? []).length === 0 ? (
                     <div className='text-muted-foreground'>Aucun repas trouvé.</div>
                 ) : (
                     <ul className='space-y-2'>
-                        {data.meals_history.map((item, idx) => (
+                        {(data.meals_history ?? []).map((item, idx) => (
                             <li key={idx} className='border rounded p-2 flex justify-between items-center'>
                                 <span>{new Date(item.order_date).toLocaleDateString()}</span>
                                 <span>{item.meal_name}</span>
-                                <span>x{item.quantity}</span>
-                                <span>{item.price} MAD</span>
+                                <span>x{item.quantity ?? 0}</span>
+                                <span>{item.price ?? '0'} MAD</span>
                             </li>
                         ))}
                     </ul>

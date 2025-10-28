@@ -71,41 +71,7 @@ export default function Dashboard() {
                     {userRole === 'delivery' && <DeliveryDashboard />}
                     {userRole === 'cuisine' && <CuisineDashboard />}
 
-
-                    <div className='grid grid-cols-1 gap-4 lg:grid-cols-7'>
-                        <Card className='col-span-1 lg:col-span-4'>
-                            <CardHeader>
-                                <CardTitle>
-                                    {userRole === 'client' && 'Évolution nutritionnelle'}
-                                    {userRole === 'admin' && 'Évolution du chiffre d\'affaires'}
-                                    {userRole === 'delivery' && 'Itinéraires du jour'}
-                                    {userRole === 'cuisine' && 'Planning de production'}
-                                </CardTitle>
-                            </CardHeader>
-                            <CardContent className='pl-2'>
-                                {/* Graphiques spécifiques selon le rôle */}
-                            </CardContent>
-                        </Card>
-                        <Card className='col-span-1 lg:col-span-3'>
-                            <CardHeader>
-                                <CardTitle>
-                                    {userRole === 'client' && 'Commandes récentes'}
-                                    {userRole === 'admin' && 'Ventes récentes'}
-                                    {userRole === 'delivery' && 'Prochaines livraisons'}
-                                    {userRole === 'cuisine' && 'Commandes prioritaires'}
-                                </CardTitle>
-                                <CardDescription>
-                                    {userRole === 'client' && 'Vos dernières commandes'}
-                                    {userRole === 'admin' && 'Vous avez fait 265 ventes ce mois'}
-                                    {userRole === 'delivery' && 'Livraisons programmées'}
-                                    {userRole === 'cuisine' && 'À préparer en priorité'}
-                                </CardDescription>
-                            </CardHeader>
-                            <CardContent>
-                                {/* Contenu spécifique selon le rôle */}
-                            </CardContent>
-                        </Card>
-                    </div>
+ 
                 </TabsContent>
             </Tabs>
         </>
