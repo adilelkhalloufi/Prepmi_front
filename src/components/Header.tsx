@@ -71,7 +71,7 @@ export function Header() {
           {/* <ThemeSwitcher /> */}
           <LangToggle />
 
-          <Button
+          {/* <Button
             variant="ghost"
             size="icon"
             className="relative"
@@ -86,7 +86,7 @@ export function Header() {
             </Badge>)}
 
 
-          </Button>
+          </Button> */}
 
 
           {/* Connection & Admin Panel */}

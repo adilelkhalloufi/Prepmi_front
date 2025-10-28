@@ -18,7 +18,8 @@ import { Input } from "@/components/ui/input"
     Utensils,
 
     Gift,
-    Star
+    Star,
+    ImageIcon
 } from "lucide-react"
 import { useDispatch, useSelector } from "react-redux"
 import { RootState } from "@/store"
@@ -347,11 +348,17 @@ export function Payment() {
                                     <div className="space-y-3">
                                         {mealList.map((meal) => (
                                             <div key={meal.id} className="flex items-center space-x-4 p-3 bg-muted/30 rounded-lg">
-                                                <img
-                                                    src={meal?.image}
-                                                    alt={meal.name}
-                                                    className="w-16 h-16 object-cover rounded-md"
-                                                />
+                                                {meal?.image ? (
+                                                    <img
+                                                        src={meal.image}
+                                                        alt={meal.name}
+                                                        className="w-16 h-16 object-cover rounded-md"
+                                                    />
+                                                ) : (
+                                                    <div className="w-16 h-16 bg-gray-200 flex items-center justify-center rounded-md">
+                                                        <ImageIcon className="w-8 h-8 text-gray-400" />
+                                                    </div>
+                                                )}
                                                 <div className="flex-1">
                                                     <h5 className="font-medium text-foreground">{meal.name}</h5>
                                                     <p className="text-sm text-muted-foreground">
@@ -385,11 +392,17 @@ export function Payment() {
                                     <div className="space-y-3">
                                         {selectedDrinks.map((item) => (
                                             <div key={item.id} className="flex items-center space-x-4 p-3 bg-accent/10 rounded-lg">
-                                                <img
-                                                    src={item.image}
-                                                    alt={item.name}
-                                                    className="w-16 h-16 object-cover rounded-md"
-                                                />
+                                                {item.image ? (
+                                                    <img
+                                                        src={item.image}
+                                                        alt={item.name}
+                                                        className="w-16 h-16 object-cover rounded-md"
+                                                    />
+                                                ) : (
+                                                    <div className="w-16 h-16 bg-gray-200 flex items-center justify-center rounded-md">
+                                                        <ImageIcon className="w-8 h-8 text-gray-400" />
+                                                    </div>
+                                                )}
                                                 <div className="flex-1">
                                                     <h5 className="font-medium text-foreground">{item.name}</h5>
                                                     <p className="text-sm text-muted-foreground">{item.price} {t('menu.currency')} {t('joinNow.payment.each')}</p>

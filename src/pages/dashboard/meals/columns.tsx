@@ -1,6 +1,6 @@
 import { Meal } from "@/interfaces/admin"
 import { ColumnDef } from "@tanstack/react-table"
-import { ArrowUpDown, MoreHorizontal } from "lucide-react"
+import { ArrowUpDown, MoreHorizontal, ImageIcon } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import {
   DropdownMenu,
@@ -20,12 +20,16 @@ export const columns: ColumnDef<Meal>[] = [
     cell: ({ row }) => {
       const meal = row.original
 
-      return (
+      return meal.image_url ? (
         <img
           src={meal.image_url}
           alt={meal.name}
           className="w-10 h-10 rounded-md object-cover"
         />
+      ) : (
+        <div className="w-10 h-10 rounded-md bg-gray-200 flex items-center justify-center">
+          <ImageIcon className="w-6 h-6 text-gray-400" />
+        </div>
       )
     }
   },

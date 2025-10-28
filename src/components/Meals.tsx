@@ -20,7 +20,8 @@ import {
     Plus,
     Minus,
     Check,
-    X
+    X,
+    ImageIcon
 } from "lucide-react"
 
 export function Meals() {
@@ -504,11 +505,17 @@ export function Meals() {
                                 {drinks.map((drink) => (
                                     <Card key={drink.id} className="relative hover:shadow-lg transition-shadow">
                                         <div className="relative h-32 overflow-hidden rounded-t-lg">
-                                            <img
-                                                src={drink.image_url || drink.image_path || "/api/placeholder/300/200"}
-                                                alt={drink.name}
-                                                className="w-full h-full object-cover"
-                                            />
+                                            {drink.image_url || drink.image_path ? (
+                                                <img
+                                                    src={drink.image_url || drink.image_path}
+                                                    alt={drink.name}
+                                                    className="w-full h-full object-cover"
+                                                />
+                                            ) : (
+                                                <div className="w-full h-full bg-gray-200 flex items-center justify-center">
+                                                    <ImageIcon className="w-8 h-8 text-gray-400" />
+                                                </div>
+                                            )}
                                             <div className="absolute top-2 right-2">
                                                 <Badge className="bg-secondary text-secondary-foreground">
                                                     £{Number(drink.price).toFixed(2)}
@@ -575,11 +582,17 @@ export function Meals() {
                             <ul className="space-y-2">
                                 {selectedMealObjects.map(meal => (
                                     <li key={meal.id} className="flex items-center gap-4">
-                                        <img
-                                            src={meal.image_url || meal.image_path || "/api/placeholder/60/60"}
-                                            alt={meal.name}
-                                            className="w-12 h-12 object-cover rounded"
-                                        />
+                                        {meal.image_url || meal.image_path ? (
+                                            <img
+                                                src={meal.image_url || meal.image_path}
+                                                alt={meal.name}
+                                                className="w-12 h-12 object-cover rounded"
+                                            />
+                                        ) : (
+                                            <div className="w-12 h-12 bg-gray-200 flex items-center justify-center rounded">
+                                                <ImageIcon className="w-6 h-6 text-gray-400" />
+                                            </div>
+                                        )}
                                         <div className="flex-1">
                                             <span className="font-semibold">{meal.name}</span>
                                             <span className="ml-2 text-sm text-muted-foreground">x {meal.quantity}</span>
@@ -603,11 +616,17 @@ export function Meals() {
                             <ul className="space-y-2">
                                 {selectedDrinkObjects.map(drink => (
                                     <li key={drink.id} className="flex items-center gap-4">
-                                        <img
-                                            src={drink.image_url || drink.image_path || "/api/placeholder/60/60"}
-                                            alt={drink.name}
-                                            className="w-12 h-12 object-cover rounded"
-                                        />
+                                        {drink.image_url || drink.image_path ? (
+                                            <img
+                                                src={drink.image_url || drink.image_path}
+                                                alt={drink.name}
+                                                className="w-12 h-12 object-cover rounded"
+                                            />
+                                        ) : (
+                                            <div className="w-12 h-12 bg-gray-200 flex items-center justify-center rounded">
+                                                <ImageIcon className="w-6 h-6 text-gray-400" />
+                                            </div>
+                                        )}
                                         <div className="flex-1">
                                             <span className="font-semibold">{drink.name}</span>
                                             <span className="ml-2 text-sm text-muted-foreground">x {drink.quantity}</span>
