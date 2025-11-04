@@ -72,12 +72,11 @@ export default function MealPreparationIndex() {
 
     const allowedStatuses = [
         "Pending",
-        "Confirmed",
         "Preparing",
         "Shipped",
         "Delivered",
         "Cancelled",
-        "Refunded"
+    
     ];
 
     const handleStatusUpdate = async (order_id: number, newStatus: string) => {

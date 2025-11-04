@@ -65,7 +65,7 @@ export const sidelinks: SideLink[] = [
     label: '',
     href: webRoutes.dashboard_orders,
     icon: <IconShoppingCart size={18} />,
-    role: [RoleEnum.ADMIN]
+    role: [RoleEnum.ADMIN,RoleEnum.CLIENT]
 
   },
   {

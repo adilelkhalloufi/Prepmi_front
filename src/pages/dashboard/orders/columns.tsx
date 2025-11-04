@@ -12,6 +12,10 @@ import {
 import { Badge } from "@/components/ui/badge"
 import { useNavigate } from "react-router-dom"
 import { webRoutes } from "@/routes/web"
+import { useSelector } from "react-redux"
+import { RootState } from "@/store"
+import { stat } from "fs"
+import { RoleEnum } from "@/enum/RoleEnum"
 
 const statusVariant = {
     pending: "bg-yellow-500",
@@ -21,7 +25,9 @@ const statusVariant = {
     cancelled: "bg-red-500",
 };
 
-export const columns: ColumnDef<Order>[] = [
+export const columns = (
+    onAnnuleCommande?: (orderId: number) => Promise<void>
+): ColumnDef<Order>[] => [
     {
         accessorKey: "num_order",
         header: "Numéro de commande",
@@ -82,6 +88,10 @@ export const columns: ColumnDef<Order>[] = [
         cell: ({ row }) => {
             const order = row.original
             const navigate = useNavigate()
+            const userRole = useSelector((state: RootState) => state.admin?.user?.role)
+            console.log("User role:", userRole);
+            const isClient = userRole === RoleEnum.CLIENT
+            const isCancelled = (order as any)?.statue === "Cancelled"
 
             return (
                 <DropdownMenu>
@@ -96,15 +106,19 @@ export const columns: ColumnDef<Order>[] = [
                         <DropdownMenuItem onClick={() => navigate(webRoutes.dashboard_orders_view.replace(":id", order.id?.toString() ?? ""))}>
                             Voir les détails
                         </DropdownMenuItem>
-                        <DropdownMenuItem onClick={() => navigate(webRoutes.dashboard_orders_edit.replace(":id", order.id?.toString() ?? ""))}>
-                            Modifier
-                        </DropdownMenuItem>
-                        <DropdownMenuItem className="text-red-600">
-                            Supprimer
-                        </DropdownMenuItem>
+                    
+                        {isClient && !isCancelled && (
+                            <DropdownMenuItem 
+                                className="text-orange-600"
+                                onClick={() => onAnnuleCommande?.(order.id || 0)}
+                            >
+                                Annuler commande
+                            </DropdownMenuItem>
+                        )}
+                     
                     </DropdownMenuContent>
                 </DropdownMenu>
             )
         },
     },
-]
+];

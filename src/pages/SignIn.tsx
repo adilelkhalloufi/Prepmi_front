@@ -39,9 +39,9 @@ export default function SignIn() {
               </p>
             </div>
             <UserAuthForm />
-            <Button asChild className="w-full bg-primary hover:bg-primary/80">
+            {/* <Button asChild className="w-full bg-primary hover:bg-primary/80">
               <Link to="/register">{t('register.create')}</Link>
-            </Button>
+            </Button> */}
             <p className='px-8 text-center text-sm text-muted-foreground'>
               {t('login.condition')}
             </p>

@@ -115,41 +115,61 @@ export default function EditMeal() {
             http.get(`${apiRoutes.meals}/${id}`)
                 .then((res) => {
                     const meal = res.data.data;
+                    
+                    // Extract nutrition data from nested object
+                    const nutrition = meal.nutrition || {};
+                    
+                    // Extract dietary info from nested object
+                    const dietaryInfo = meal.dietary_info || {};
+                    
+                    // Extract preparation data from nested object
+                    const preparation = meal.preparation || {};
+                    
+                    // Convert ingredients array to string if needed
+                    const ingredientsStr = Array.isArray(meal.ingredients) 
+                        ? meal.ingredients.join(', ') 
+                        : meal.ingredients || "";
+                    
+                    // Convert allergens array to string if needed
+                    const allergensStr = Array.isArray(meal.allergens) 
+                        ? meal.allergens.join(', ') 
+                        : meal.allergens || "";
+                    
                     setFormData({
                         name: meal.name || "",
                         description: meal.description || "",
                         short_description: meal.short_description || "",
                         image_path: meal.image_url || "",
-                        gallery_images: meal.gallery_images || [],
+                        gallery_images: meal.gallery_urls || [],
                         category_id: meal.category_id || 1,
                         type_id: meal.type_id || 1,
-                        calories: meal.calories || 0,
-                        protein: meal.protein || 0,
-                        carbohydrates: meal.carbohydrates || 0,
-                        fats: meal.fats || 0,
-                        fiber: meal.fiber || 0,
-                        sodium: meal.sodium || 0,
-                        sugar: meal.sugar || 0,
-                        ingredients: meal.ingredients || "",
-                        allergens: meal.allergens || "",
-                        preparation_instructions: meal.preparation_instructions || "",
-                        storage_instructions: meal.storage_instructions || "",
-                        is_vegetarian: meal.is_vegetarian || false,
-                        is_vegan: meal.is_vegan || false,
-                        is_gluten_free: meal.is_gluten_free || false,
-                        is_dairy_free: meal.is_dairy_free || false,
-                        is_nut_free: meal.is_nut_free || false,
-                        is_keto: meal.is_keto || false,
-                        is_paleo: meal.is_paleo || false,
-                        is_low_carb: meal.is_low_carb || false,
-                        is_high_protein: meal.is_high_protein || false,
+                        calories: parseFloat(nutrition.calories) || 0,
+                        protein: parseFloat(nutrition.protein) || 0,
+                        carbohydrates: parseFloat(nutrition.carbohydrates) || 0,
+                        fats: parseFloat(nutrition.fats) || 0,
+                        fiber: parseFloat(nutrition.fiber) || 0,
+                        sodium: parseFloat(nutrition.sodium) || 0,
+                        sugar: parseFloat(nutrition.sugar) || 0,
+                        ingredients: ingredientsStr,
+                        allergens: allergensStr,
+                        preparation_instructions: preparation.instructions || "",
+                        storage_instructions: preparation.storage_instructions || "",
+                        is_vegetarian: dietaryInfo.is_vegetarian || false,
+                        is_vegan: dietaryInfo.is_vegan || false,
+                        is_gluten_free: dietaryInfo.is_gluten_free || false,
+                        is_dairy_free: dietaryInfo.is_dairy_free || false,
+                        is_nut_free: dietaryInfo.is_nut_free || false,
+                        is_keto: dietaryInfo.is_keto || false,
+                        is_paleo: dietaryInfo.is_paleo || false,
+                        is_low_carb: dietaryInfo.is_low_carb || false,
+                        is_high_protein: dietaryInfo.is_high_protein || false,
                         is_spicy: meal.is_spicy || false,
                         spice_level: meal.spice_level || 1,
-                        difficulty_level: meal.difficulty_level || 1,
-                        prep_time_minutes: meal.prep_time_minutes || 0,
-                        cooking_time_minutes: meal.cooking_time_minutes || 0,
-                        price: meal.price || 0,
-                        cost_per_serving: meal.cost_per_serving || 0,
+                        difficulty_level: preparation.difficulty_level || 1,
+                        prep_time_minutes: preparation.prep_time_minutes || 0,
+                        cooking_time_minutes: preparation.cooking_time_minutes || 0,
+                        price: parseFloat(meal.price) || 0,
+                        cost_per_serving: parseFloat(meal.cost_per_serving) || 0,
                         weight_grams: meal.weight_grams || 0,
                         serving_size: meal.serving_size || "",
                         chef_notes: meal.chef_notes || "",
@@ -159,13 +179,13 @@ export default function EditMeal() {
                     });
                     
                     // Set image preview if exists
-                    if (meal.image_path && typeof meal.image_path === 'string') {
+                    if (meal.image_url) {
                         setImagePreview(meal.image_url);
                     }
                     
                     // Set gallery previews if exists
                     if (meal.gallery_urls && Array.isArray(meal.gallery_urls)) {
-                        console.log("meal.gallery_images", meal.gallery_urls);
+                        console.log("meal.gallery_urls", meal.gallery_urls);
                         setGalleryPreviews(meal.gallery_urls);
                     }
                 })

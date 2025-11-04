@@ -3,6 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { IconClipboardList, IconMeat, IconBread, IconApple } from '@tabler/icons-react';
 import http from '@/utils/http';
 import { apiRoutes } from '@/routes/api';
+import { Gift } from "lucide-react";
 
 interface NutritionSummary {
     calories: number;
@@ -23,6 +24,7 @@ interface ClientDashboardData {
     orders_this_month: number;
     orders_difference: number;
     meals_history: MealsHistoryItem[];
+    total_points_earned: number;
 }
 
 export default function ClientDashboard() {
@@ -93,6 +95,17 @@ export default function ClientDashboard() {
                     <CardContent>
                         <div className='text-2xl font-bold'>{data.nutrition_summary?.fat ?? 0}g</div>
                         <p className='text-xs text-muted-foreground'>Total</p>
+                    </CardContent>
+                </Card>
+                <Card>
+                    <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
+                        <CardTitle className='text-sm font-medium'>Points fidélité</CardTitle>
+                        {/* You can use a suitable icon here, e.g., <Star /> or <Gift /> */}
+                        <Gift/>
+                    </CardHeader>
+                    <CardContent>
+                        <div className='text-2xl font-bold'>{data.total_points_earned ?? 0}</div>
+                        <p className='text-xs text-muted-foreground'>Total points cumulés</p>
                     </CardContent>
                 </Card>
             </div>

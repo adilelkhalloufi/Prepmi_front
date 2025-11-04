@@ -25,10 +25,7 @@ const statusConfig = {
         label: "En attente",
         variant: "bg-yellow-500 hover:bg-yellow-600",
     },
-    Confirmed: {
-        label: "Confirmé",
-        variant: "bg-blue-500 hover:bg-blue-600",
-    },
+ 
     Preparing: {
         label: "En préparation",
         variant: "bg-cyan-500 hover:bg-cyan-600",
@@ -45,10 +42,7 @@ const statusConfig = {
         label: "Annulé",
         variant: "bg-red-500 hover:bg-red-600",
     },
-    Refunded: {
-        label: "Remboursé",
-        variant: "bg-gray-500 hover:bg-gray-600",
-    },
+  
 };
 
 interface GroupedOrder {
@@ -176,7 +170,7 @@ export function CalendarView({ data, loading, onStatusUpdate }: CalendarViewProp
                             {selectedDate ? format(selectedDate, "EEEE d MMMM yyyy", { locale: fr }) : "Sélectionnez une date"}
                         </CardTitle>
                         <Badge variant="outline" className="text-lg px-4 py-1">
-                            {totalQuantity} repas
+                            {data.length} commandes 
                         </Badge>
                     </div>
                 </CardHeader>
@@ -240,7 +234,7 @@ export function CalendarView({ data, loading, onStatusUpdate }: CalendarViewProp
                                                             await onStatusUpdate(order.order_id, newStatus);
                                                         }}
                                                     >
-                                                        <SelectTrigger className={`w-[120px] ${statusConfig[order.order_status as keyof typeof statusConfig]?.variant || ''} text-white border-none`}>
+                                                        <SelectTrigger className={`w-[120px] ${statusConfig[order.order_status as keyof typeof statusConfig]?.variant || ''} text-white `}>
                                                             <SelectValue />
                                                         </SelectTrigger>
                                                         <SelectContent>

@@ -22,7 +22,7 @@ import {
 import EmptyStateComponent from "@/components/dashboard/custom/emptyState"
 import { IconChefHat } from "@tabler/icons-react"
 import { Button } from "@/components/ui/button"
-import { useState } from "react"
+import { useState, useMemo } from "react"
 import { Input } from "@/components/ui/input"
 import {
     DropdownMenu,
@@ -57,6 +57,7 @@ export function DataTable<TData, TValue>({
     const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
     const [rowSelection, setRowSelection] = useState({})
     const [statusFilter, setStatusFilter] = useState<string>("all")
+    const [mealSearch, setMealSearch] = useState<string>("")
 
     const table = useReactTable({
         data,
@@ -86,20 +87,40 @@ export function DataTable<TData, TValue>({
     const handleStatusFilterChange = (value: string) => {
         setStatusFilter(value);
         if (value === "all") {
-            table.getColumn("preparation_status")?.setFilterValue(undefined);
+            table.getColumn("order_status")?.setFilterValue(undefined);
         } else {
-            table.getColumn("preparation_status")?.setFilterValue(value);
+            table.getColumn("order_status")?.setFilterValue(value);
         }
     };
+
+    // Apply meal search filter
+    const handleMealSearch = (value: string) => {
+        setMealSearch(value);
+        table.getColumn("meals")?.setFilterValue(value);
+    };
+
+    // Custom filter function for meal names
+    useMemo(() => {
+        const mealsColumn = table.getColumn("meals");
+        if (mealsColumn) {
+            mealsColumn.columnDef.filterFn = (row, columnId, filterValue) => {
+                if (!filterValue) return true;
+                const meals = row.getValue(columnId) as any[];
+                return meals?.some((meal: any) =>
+                    meal.name?.toLowerCase().includes(filterValue.toLowerCase())
+                ) ?? false;
+            };
+        }
+    }, [table]);
 
     return (
         <div className="rounded-md border bg-card">
             <div className="flex flex-col md:flex-row gap-4 items-start md:items-center p-4">
                 <Input
                     placeholder="Rechercher un repas..."
-                    value={(table.getColumn("meal_name")?.getFilterValue() as string) ?? ""}
+                    value={mealSearch}
                     onChange={(event) =>
-                        table.getColumn("meal_name")?.setFilterValue(event.target.value)
+                        handleMealSearch(event.target.value)
                     }
                     className="max-w-sm"
                 />
@@ -111,13 +132,11 @@ export function DataTable<TData, TValue>({
                     <SelectContent>
                         <SelectItem value="all">Tous les statuts</SelectItem>
                         <SelectItem value="Pending">En attente</SelectItem>
-                        <SelectItem value="Confirmed">Confirmé</SelectItem>
-                        <SelectItem value="Preparing">En préparation</SelectItem>
+                         <SelectItem value="Preparing">En préparation</SelectItem>
                         <SelectItem value="Shipped">Expédié</SelectItem>
                         <SelectItem value="Delivered">Livré</SelectItem>
                         <SelectItem value="Cancelled">Annulé</SelectItem>
-                        <SelectItem value="Refunded">Remboursé</SelectItem>
-                    </SelectContent>
+                     </SelectContent>
                 </Select>
 
                 <DropdownMenu>

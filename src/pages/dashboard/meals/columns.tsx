@@ -12,6 +12,7 @@ import {
 
 import { Badge } from "@/components/ui/badge"
 import { useNavigate } from "react-router-dom"
+import { webRoutes } from "@/routes/web"
 
 export const columns: ColumnDef<Meal>[] = [
   {
@@ -48,13 +49,13 @@ export const columns: ColumnDef<Meal>[] = [
     },
   },
   {
-    accessorKey: "category.name",
+    id: "category",
+    accessorFn: (row) => row.category?.name || "",
     header: "Catégorie",
     enableColumnFilter: true,
     filterFn: (row, columnId, filterValue) => {
       if (!filterValue) return true;
-      // Use row.getValue for TanStack Table compatibility
-      const categoryName = row.getValue(columnId) as string ?? "";
+      const categoryName = row.original.category?.name || "";
       return categoryName === filterValue;
     },
     cell: ({ row }) => {
@@ -206,7 +207,10 @@ export const columns: ColumnDef<Meal>[] = [
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem onClick={() => navigate(`/dashboard/meals/details/${meal.id}`)}>
+            <DropdownMenuItem onClick={() => (
+                      navigate(webRoutes.meal_single.replace(':id', meal.id?.toString() || ''))
+            
+            )}>
               Voir les détails
             </DropdownMenuItem>
             <DropdownMenuItem onClick={() => navigate(`/dashboard/meals/edit/${meal.id}`)}>

@@ -92,9 +92,9 @@ export function DataTable<TData, TValue>({
 
         {/* Category Filter */}
         <Select
-          value={(table.getColumn("category.name")?.getFilterValue() as string) ?? "all"}
+          value={(table.getColumn("category")?.getFilterValue() as string) ?? "all"}
           onValueChange={(value) =>
-            table.getColumn("category.name")?.setFilterValue(value === "all" ? "" : value)
+            table.getColumn("category")?.setFilterValue(value === "all" ? "" : value)
           }
         >
           <SelectTrigger className="w-[200px]">
