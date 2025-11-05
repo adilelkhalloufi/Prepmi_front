@@ -7,7 +7,7 @@ import { useDispatch, useSelector } from "react-redux"
 import { RootState } from "@/store"
 import { updatePlanData } from "@/store/slices/joinProcessSlice"
 import { MealCard } from "@/components/MealCard"
-import { Meal } from "@/interfaces/admin"
+import { Meal, Reward } from "@/interfaces/admin"
 import { useQuery } from "@tanstack/react-query"
 import http from "@/utils/http"
 import { apiRoutes } from "@/routes/api"
@@ -28,6 +28,13 @@ export function Meals() {
     const { t } = useTranslation()
     const dispatch = useDispatch()
     const planData = useSelector((state: RootState) => state.joinProcess.planData)
+    const admin = useSelector((state: RootState) => state.admin?.user)
+    
+    useEffect(() => {
+            if (admin?.id) {
+                FetchRewards()
+            }
+    }, [admin?.id])
 
     const [selectedMeals, setSelectedMeals] = useState<{ [key: number]: number }>(planData?.selectedMeals || {})
     const [selectedDrinks, setSelectedDrinks] = useState<{ [key: number]: number }>(planData?.selectedDrinks || {})
@@ -88,6 +95,18 @@ export function Meals() {
                     throw e;
                 }),
     });
+
+    const FetchRewards = () => {
+        http.get(apiRoutes.rewards)
+            .then((res) => {
+                return res.data.data;
+            })
+            .catch((error) => {
+                handleErrorResponse(error);
+                return [];
+            });
+    };
+
     const weeklyMenu = weeklyMenuResponse?.data?.[0] || null;
     const allMeals = mealsResponse?.data || [];
 

@@ -66,7 +66,23 @@ export interface Plan {
     created_at?: string
     updated_at?: string
 }
+ 
+export interface Reward {
+    id?: number
+    user_id?: number
+    type?: string
+    value?: number
+    title?: string
+    description?: string
+    is_used?: boolean
+    earned_at?: string
+    expires_at?: string
+    used_at?: string
+    used_order_id?: number
+    discount_applied?: number
+    conditions?: string
 
+ }
 export interface joinProcess {
     currentStep: number,
     planData: {
