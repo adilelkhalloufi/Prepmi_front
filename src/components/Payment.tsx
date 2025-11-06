@@ -421,7 +421,7 @@ export function Payment() {
                             {selectedDrinks.length > 0 && (
                                 <div>
                                     <div className="flex items-center space-x-2 mb-4">
-                                        <Coffee className="w-4 h-4 text-accent" />
+                                        <Coffee className="w-4 h-4 " />
                                         <h4 className="font-semibold text-foreground">{t('joinNow.payment.drinks')}</h4>
                                     </div>
                                     <div className="space-y-3">
