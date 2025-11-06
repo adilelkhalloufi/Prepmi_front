@@ -230,6 +230,7 @@ export function Payment() {
             dispatch(resetJoinProcess())
             navigate(webRoutes.thank_you)
 
+
         }).catch((error) => {
             handleErrorResponse(error);
 
