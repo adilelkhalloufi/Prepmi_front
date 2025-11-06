@@ -18,7 +18,7 @@ export type JoinProcessState = {
     isFreeShipping?: boolean
     pointsValue?: number
     plan?: Plan // Store the complete plan object
-    
+
     // Personal details
     firstName?: string
     email?: string
@@ -29,11 +29,12 @@ export type JoinProcessState = {
     country?: string
     address?: string
     hearAboutUs?: string
-    
+
     // Meal selections
     selectedMeals?: Record<string, any>
     selectedBreakfasts?: Record<string, any>
     selectedDrinks?: Record<string, any>
+    selectedRewardsMeals?: Record<string, any>
   }
 }
 
@@ -65,7 +66,8 @@ const initialState: JoinProcessState = {
     hearAboutUs: '',
     selectedMeals: {},
     selectedBreakfasts: {},
-    selectedDrinks: {}
+    selectedDrinks: {},
+    selectedRewardsMeals: {}
   }
 }
 

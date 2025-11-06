@@ -2,7 +2,7 @@ import { useState, useEffect } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
- import {
+import {
     CreditCard,
 
 
@@ -43,6 +43,10 @@ export function Payment() {
     const planData = useSelector((state: RootState) => state.joinProcess.planData)
     const admin = useSelector((state: RootState) => state.admin?.user)
 
+    // Get selected meals and drinks as arrays of objects
+    const selectedMeals = Object.values(planData.selectedMeals || {})
+    const selectedDrinks = Object.values(planData.selectedDrinks || {})
+    const selectedRewardsMeals = planData.selectedRewardsMeals
 
     const [paymentMethod, setPaymentMethod] = useState<'COD' | 'ONLINE'>(planData?.paymentMethod || 'COD')
     const [isEditingMeals, setIsEditingMeals] = useState(false)
@@ -79,10 +83,6 @@ export function Payment() {
 
     // add loading state
     const [isPlacingOrder, setIsPlacingOrder] = useState(false)
-
-    // Get selected meals and drinks as arrays of objects
-    const selectedMeals = Object.values(planData.selectedMeals || {})
-    const selectedDrinks = Object.values(planData.selectedDrinks || {})
 
     // Update local state when Redux state changes
     useEffect(() => {
@@ -208,6 +208,7 @@ export function Payment() {
             plan: planData?.plan || null,
             meals: selectedMeals, // array of meal objects
             drinks: selectedDrinks, // array of drink objects
+            rewardMeal: selectedRewardsMeals,
             totalAmount: Number(planData.plan.price_per_week) + drinksSubtotal,
             infos: {
                 firstName: planData?.firstName,
@@ -381,6 +382,40 @@ export function Payment() {
                                 </div>
                             )}
 
+                            {/* Applied Reward Meal */}
+                            {selectedRewardsMeals && (
+                                <div>
+                                    <div className="flex items-center space-x-2 mb-4">
+                                        <Gift className="w-4 h-4 text-secondary" />
+                                        <h4 className="font-semibold text-foreground">{t('joinNow.payment.appliedReward', 'Applied Reward')}</h4>
+                                    </div>
+                                    <div className="p-3 bg-secondary/10 rounded-lg border border-secondary/30">
+                                        <div className="flex items-center space-x-4">
+                                            {selectedRewardsMeals.mealImage ? (
+                                                <img
+                                                    src={selectedRewardsMeals.mealImage}
+                                                    alt={selectedRewardsMeals.mealName}
+                                                    className="w-16 h-16 object-cover rounded-md"
+                                                />
+                                            ) : (
+                                                <div className="w-16 h-16 bg-gray-200 flex items-center justify-center rounded-md">
+                                                    <ImageIcon className="w-8 h-8 text-gray-400" />
+                                                </div>
+                                            )}
+                                            <div className="flex-1">
+                                                <h5 className="font-medium text-foreground">{selectedRewardsMeals.mealName}</h5>
+                                                <p className="text-sm text-muted-foreground">
+                                                    {selectedRewardsMeals.mealCalories || 0} kcal • {selectedRewardsMeals.mealProtein || 0}g protein
+                                                </p>
+                                                <p className="text-xs text-secondary font-semibold mt-1">FREE (Reward Applied)</p>
+                                            </div>
+                                            <div className="text-right">
+                                                <p className="text-sm font-semibold text-secondary">-{selectedRewardsMeals.mealPrice || 0} {t('menu.currency')}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
 
                             {/* Drinks */}
                             {selectedDrinks.length > 0 && (
