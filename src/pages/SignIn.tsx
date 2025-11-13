@@ -9,8 +9,55 @@ export default function SignIn() {
   return (
     <>
       <div className='container relative grid h-svh flex-col items-center justify-center lg:max-w-none lg:grid-cols-2 lg:px-0'>
-        <div className='relative hidden h-full flex-col bg-muted p-10 text-white dark:border-r lg:flex'>
+        {/* First Section */}
+        <div className='relative hidden h-full flex-col bg-muted p-10 text-white dark:border-r lg:flex overflow-hidden'>
           <div className='absolute inset-0 bg-primary' />
+          
+          {/* Watermark Background - Overflowing */}
+          <div className='absolute inset-0 opacity-20 pointer-events-none' style={{
+            overflow: 'visible',
+          }}>
+            <div style={{
+              transform: 'rotate(-45deg) translate(-20%, -20%)',
+              display: 'grid',
+              gridTemplateColumns: 'repeat(5, 1fr)',
+              columnGap: '0rem',
+              width: '250%',
+              height: '250%',
+              position: 'absolute',
+              top: '-75%',
+              left: '-75%',
+              fontSize: '8rem',
+              lineHeight: '1',
+            }}>
+              <span>🍽️</span>
+              <span>🍲</span>
+              <span>🍱</span>
+              <span>🥘</span>
+              <span>🍛</span>
+              <span>🍜</span>
+              <span>🍝</span>
+              <span>🍳</span>
+              <span>🥗</span>
+              <span>🍽️</span>
+              <span>🍲</span>
+              <span>🍱</span>
+              <span>🥘</span>
+              <span>🍛</span>
+              <span>🍜</span>
+              <span>🍝</span>
+              <span>🍳</span>
+              <span>🥗</span>
+              <span>🍽️</span>
+              <span>🍲</span>
+              <span>🍱</span>
+              <span>🥘</span>
+              <span>🍛</span>
+              <span>🍜</span>
+              <span>🍝</span>
+            </div>
+          </div>
+
           <div className='relative z-20 flex items-center text-lg font-medium'>
 
           </div>
@@ -31,6 +78,7 @@ export default function SignIn() {
             </blockquote>
           </div>
         </div>
+
         <div className='lg:p-8'>
           <div className='mx-auto flex w-full flex-col justify-center space-y-2 sm:w-[350px]'>
             <div className='flex flex-col space-y-2 text-left'>

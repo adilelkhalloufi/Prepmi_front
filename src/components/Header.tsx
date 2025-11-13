@@ -51,7 +51,7 @@ export function Header() {
               href="/"
               className="ml-2 font-bold text-xl flex text-center"
             >
-              <img src={logo} alt="Prepme" className="h-8 w-auto" />
+              <img src={logo} alt="Prepme" className="h-16 w-auto" />
             </a>
           </span>
           <nav className="hidden md:flex ">
