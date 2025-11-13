@@ -1,8 +1,11 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Card, CardContent } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
 import { useTranslation } from "react-i18next"
 import { MealCard } from "./MealCard"
+import { useQuery } from "@tanstack/react-query"
+import http from "@/utils/http"
+import { apiRoutes } from "@/routes/api"
+import { handleErrorResponse } from "@/utils"
 import {
     Calendar,
     ChefHat,
@@ -10,144 +13,168 @@ import {
     Utensils,
     Wine,
     Sparkles,
-    Filter,
     Clock,
     TrendingUp
 } from "lucide-react"
 import { Meal } from "@/interfaces/admin"
 
-
-
-const mockMeals: Meal[] = [
-    // Weekly meals with dates
-    {
-        name: "Mediterranean Grilled Chicken",
-        slug: "mediterranean-grilled-chicken",
-        description: "Juicy grilled chicken with Mediterranean herbs and vegetables",
-        short_description: "Herb-crusted chicken with roasted vegetables",
-        image_path: "https://images.unsplash.com/photo-1598103442097-8b74394b95c6?w=400",
-        calories: 450,
-        protein: 35,
-        carbohydrates: 25,
-        fats: 18,
-        fiber: 6,
-        is_vegetarian: false,
-        is_vegan: false,
-        is_gluten_free: true,
-        is_dairy_free: false,
-        is_nut_free: true,
-        is_keto: false,
-        is_paleo: true,
-        is_low_carb: true,
-        is_high_protein: true,
-        is_spicy: false,
-        spice_level: 0,
-        prep_time_minutes: 20,
-        cooking_time_minutes: 25,
-        difficulty_level: 'Medium',
-        price: 18.99,
-        category: 'weekly',
-        available_date: '2024-10-06'
-    },
-    // Breakfast items
-    {
-        name: "Avocado Toast Supreme",
-        slug: "avocado-toast-supreme",
-        description: "Artisanal sourdough topped with smashed avocado, poached egg, and microgreens",
-        short_description: "Fresh avocado on sourdough with poached egg",
-        image_path: "https://images.unsplash.com/photo-1541519227354-08fa5d50c44d?w=400",
-        calories: 320,
-        protein: 14,
-        carbohydrates: 28,
-        fats: 18,
-        fiber: 8,
-        is_vegetarian: true,
-        is_vegan: false,
-        is_gluten_free: false,
-        is_dairy_free: true,
-        is_nut_free: true,
-        is_keto: false,
-        is_paleo: false,
-        is_low_carb: false,
-        is_high_protein: false,
-        is_spicy: false,
-        spice_level: 0,
-        prep_time_minutes: 10,
-        cooking_time_minutes: 5,
-        difficulty_level: 'Easy',
-        price: 12.99,
-        category: 'breakfast'
-    },
-    // Drinks
-    {
-        name: "Green Goddess Smoothie",
-        slug: "green-goddess-smoothie",
-        description: "Energizing blend of spinach, mango, pineapple, and coconut water",
-        short_description: "Refreshing green smoothie with tropical fruits",
-        image_path: "https://images.unsplash.com/photo-1610970881699-44a5587cabec?w=400",
-        calories: 180,
-        protein: 4,
-        carbohydrates: 38,
-        fats: 2,
-        fiber: 6,
-        is_vegetarian: true,
-        is_vegan: true,
-        is_gluten_free: true,
-        is_dairy_free: true,
-        is_nut_free: true,
-        is_keto: false,
-        is_paleo: true,
-        is_low_carb: false,
-        is_high_protein: false,
-        is_spicy: false,
-        spice_level: 0,
-        prep_time_minutes: 5,
-        cooking_time_minutes: 0,
-        difficulty_level: 'Easy',
-        price: 8.99,
-        category: 'drinks'
-    }
-];
-
-const weeklyDates = [
-    { date: '2024-10-06', day: 'Sunday' },
-    { date: '2024-10-07', day: 'Monday' },
-    { date: '2024-10-08', day: 'Tuesday' },
-    { date: '2024-10-09', day: 'Wednesday' },
-    { date: '2024-10-10', day: 'Thursday' },
-];
+// Get current week's start date (Monday)
+const getCurrentWeekStart = () => {
+    const today = new Date();
+    const day = today.getDay();
+    const diff = today.getDate() - day + (day === 0 ? -6 : 1);
+    const monday = new Date(today.setDate(diff));
+    monday.setHours(0, 0, 0, 0);
+    return monday.toISOString().split('T')[0];
+};
 
 export function MenuPage() {
     const { t } = useTranslation();
-    const [activeCategory, setActiveCategory] = useState<'weekly' | 'breakfast' | 'drinks'>('weekly');
-    const [selectedDate, setSelectedDate] = useState<string>('2024-10-06');
+    const [activeCategory, setActiveCategory] = useState<string>('weekly');
+    const [selectedDate, setSelectedDate] = useState<string>(getCurrentWeekStart());
     const [isAnimating, setIsAnimating] = useState(false);
 
-    const categories = [
+    // Fetch weekly menu for current week
+    const { isLoading: isLoadingWeeklyMenu, data: weeklyMenuResponse } = useQuery<{ data: any[] }>({
+        queryKey: ["weeklyMenus", "current-week"],
+        queryFn: () =>
+            http
+                .get(`${apiRoutes.weeklyMenus}?is_active=1&is_published=1&week_start_date=${getCurrentWeekStart()}&type_id=1`)
+                .then((res) => res.data)
+                .catch((e) => {
+                    handleErrorResponse(e);
+                    throw e;
+                }),
+    });
+
+    // Fetch all meals (for breakfasts)
+    const { isLoading: isLoadingMeals, data: mealsResponse } = useQuery<{ data: Meal[] }>({
+        queryKey: ["meals"],
+        queryFn: () =>
+            http
+                .get(apiRoutes.meals)
+                .then((res) => res.data)
+                .catch((e) => {
+                    handleErrorResponse(e);
+                    throw e;
+                }),
+    });
+
+    // Fetch drinks (type_id=2)
+    const { isLoading: isLoadingDrinks, data: drinksResponse } = useQuery<{ data: Meal[] }>({
+        queryKey: ["meals", "drinks"],
+        queryFn: () =>
+            http
+                .get(`${apiRoutes.meals}?type_id=2`)
+                .then((res) => res.data)
+                .catch((e) => {
+                    handleErrorResponse(e);
+                    throw e;
+                }),
+    });
+
+    // Fetch categories
+    const { isLoading: isLoadingCategories, data: categoriesResponse } = useQuery<{ data: any[] }>({
+        queryKey: ["categories"],
+        queryFn: () =>
+            http
+                .get(apiRoutes.categories)
+                .then((res) => res.data)
+                .catch((e) => {
+                    handleErrorResponse(e);
+                    throw e;
+                }),
+    });
+
+    const weeklyMenu = weeklyMenuResponse?.data?.[0] || null;
+    const allMeals = mealsResponse?.data || [];
+    const mainMeals = weeklyMenu?.meals || [];
+    const breakfasts = allMeals.filter(meal =>
+        meal.type === 'breakfast' || meal.category?.name?.toLowerCase().includes('breakfast')
+    );
+    const drinks = drinksResponse?.data || [];
+
+    // Generate week dates based on menu
+    const generateWeekDates = () => {
+        if (!weeklyMenu) return [];
+        const startDate = new Date(weeklyMenu.week_start_date);
+        const dates = [];
+        const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+        
+        for (let i = 0; i < 7; i++) {
+            const date = new Date(startDate);
+            date.setDate(date.getDate() + i);
+            dates.push({
+                date: date.toISOString().split('T')[0],
+                day: dayNames[date.getDay()]
+            });
+        }
+        return dates;
+    };
+
+    const weeklyDates = generateWeekDates();
+    const isLoading = isLoadingWeeklyMenu || isLoadingMeals || isLoadingDrinks || isLoadingCategories;
+
+    // Calculate stats from meals data
+    const totalRecipes = allMeals.length || 0;
+    const avgPrepTime = allMeals.length > 0 
+        ? Math.round(allMeals.reduce((sum, meal) => sum + ((meal.prep_time_minutes || 0) + (meal.cooking_time_minutes || 0)), 0) / allMeals.length)
+        : 15;
+    const satisfactionRate = 98; // Default satisfaction rate
+    
+    const statsItems = [
         {
-            id: 'weekly' as const,
-            name: t('menu.weekly_menu') || 'Weekly Menu',
-            icon: <Calendar className="w-5 h-5" />,
-            color: 'from-primary/20 to-primary/10',
-            accent: 'border-primary/30 text-primary'
+            icon: <ChefHat className="w-8 h-8 text-primary" />,
+            bgColor: 'from-primary/20 to-primary/10',
+            value: `${totalRecipes}+`,
+            label: t('menu.recipes') || 'Recipes'
         },
         {
-            id: 'breakfast' as const,
-            name: t('menu.breakfasts_snacks') || 'Breakfasts & Snacks',
-            icon: <Coffee className="w-5 h-5" />,
-            color: 'from-secondary/20 to-secondary/10',
-            accent: 'border-secondary/30 text-secondary'
+            icon: <Clock className="w-8 h-8 text-secondary" />,
+            bgColor: 'from-secondary/20 to-secondary/10',
+            value: `${avgPrepTime}m`,
+            label: t('menu.avg_prep_time') || 'Avg Prep Time'
         },
         {
-            id: 'drinks' as const,
-            name: t('menu.drinks') || 'Drinks',
-            icon: <Wine className="w-5 h-5" />,
-            color: 'from-accent/20 to-accent/10',
-            accent: 'border-accent/30 text-accent'
+            icon: <TrendingUp className="w-8 h-8 text-secondary" />,
+            bgColor: 'from-accent/20 to-accent/10',
+            value: `${satisfactionRate}%`,
+            label: t('menu.satisfaction') || 'Satisfaction'
+        },
+        {
+            icon: <Utensils className="w-8 h-8 text-primary" />,
+            bgColor: 'from-primary/20 to-secondary/10',
+            value: 'Daily',
+            label: t('menu.fresh_made') || 'Fresh Made'
         }
     ];
 
-    const handleCategoryChange = (category: 'weekly' | 'breakfast' | 'drinks') => {
+    // Map API categories to display format
+    const apiCategories = categoriesResponse?.data || [];
+    const categories = apiCategories.map((cat: any) => ({
+        id: cat.slug || cat.id.toString(),
+        name: cat.name,
+        icon: cat.slug === 'weekly' ? <Calendar className="w-5 h-5" /> :
+              cat.slug === 'breakfast' ? <Coffee className="w-5 h-5" /> :
+              cat.slug === 'drinks' ? <Wine className="w-5 h-5" /> :
+              <Utensils className="w-5 h-5" />,
+        color: cat.slug === 'weekly' ? 'from-primary/20 to-primary/10' :
+               cat.slug === 'breakfast' ? 'from-secondary/20 to-secondary/10' :
+               cat.slug === 'drinks' ? 'from-accent/20 to-accent/10' :
+               'from-muted/20 to-muted/10',
+        accent: cat.slug === 'weekly' ? 'border-primary/30 text-primary' :
+                cat.slug === 'breakfast' ? 'border-secondary/30 text-secondary' :
+                cat.slug === 'drinks' ? 'border-accent/30 text-accent' :
+                'border-muted/30 text-muted-foreground'
+    })) as Array<{
+        id: string;
+        name: string;
+        icon: React.ReactNode;
+        color: string;
+        accent: string;
+    }>;
+
+    const handleCategoryChange = (category: string) => {
         setIsAnimating(true);
         setTimeout(() => {
             setActiveCategory(category);
@@ -155,12 +182,23 @@ export function MenuPage() {
         }, 150);
     };
 
-    const filteredMeals = mockMeals.filter(meal => {
+    // Filter meals based on category
+    const filteredMeals = (() => {
         if (activeCategory === 'weekly') {
-            return meal.category === 'weekly' && meal.available_date === selectedDate;
+            return mainMeals;
+        } else if (activeCategory === 'breakfast') {
+            return breakfasts;
+        } else if (activeCategory === 'drinks') {
+            return drinks;
+        } else {
+            // For any other category from API, filter by type or slug
+            return allMeals.filter(meal => 
+                meal.type === activeCategory || 
+                meal.category?.slug === activeCategory ||
+                meal.category?.name?.toLowerCase().includes(activeCategory.toLowerCase())
+            );
         }
-        return meal.category === activeCategory;
-    });
+    })();
 
     const formatDate = (dateString: string) => {
         const date = new Date(dateString);
@@ -220,14 +258,14 @@ export function MenuPage() {
                 </div>
 
                 {/* Date Selection for Weekly Menu */}
-                {activeCategory === 'weekly' && (
+                {activeCategory === 'weekly' && weeklyMenu && (
                     <div className="mb-12">
                         <div className="text-center mb-8">
                             <h2 className="text-2xl font-bold text-foreground mb-2">
-                                {t('menu.week_of') || 'Week of'} October 6-10, 2024
+                                {weeklyMenu.title || (t('menu.week_of') || 'Week of')} {formatDate(weeklyMenu.week_start_date)} - {formatDate(weeklyMenu.week_end_date)}
                             </h2>
                             <p className="text-muted-foreground">
-                                {t('menu.select_date') || 'Select a date to view available meals'}
+                                {weeklyMenu.description || (t('menu.select_date') || 'Select a date to view available meals')}
                             </p>
                         </div>
                         <div className="flex flex-wrap justify-center gap-3">
@@ -261,45 +299,41 @@ export function MenuPage() {
                 <Card className="mb-12 bg-gradient-to-r from-card/90 to-card/70 border-border/50 shadow-xl backdrop-blur-sm">
                     <CardContent className="p-8">
                         <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-                            <div className="text-center">
-                                <div className="w-16 h-16 bg-gradient-to-r from-primary/20 to-primary/10 rounded-full flex items-center justify-center mx-auto mb-3">
-                                    <ChefHat className="w-8 h-8 text-primary" />
+                            {statsItems.map((stat, index) => (
+                                <div key={index} className="text-center">
+                                    <div className={`w-16 h-16 bg-gradient-to-r ${stat.bgColor} rounded-full flex items-center justify-center mx-auto mb-3`}>
+                                        {stat.icon}
+                                    </div>
+                                    <div className="text-2xl font-bold text-foreground mb-1">{stat.value}</div>
+                                    <div className="text-sm text-muted-foreground">{stat.label}</div>
                                 </div>
-                                <div className="text-2xl font-bold text-foreground mb-1">50+</div>
-                                <div className="text-sm text-muted-foreground">{t('menu.recipes') || 'Recipes'}</div>
-                            </div>
-                            <div className="text-center">
-                                <div className="w-16 h-16 bg-gradient-to-r from-secondary/20 to-secondary/10 rounded-full flex items-center justify-center mx-auto mb-3">
-                                    <Clock className="w-8 h-8 text-secondary" />
-                                </div>
-                                <div className="text-2xl font-bold text-foreground mb-1">15</div>
-                                <div className="text-sm text-muted-foreground">{t('menu.avg_prep_time') || 'Avg Prep Time'}</div>
-                            </div>
-                            <div className="text-center">
-                                <div className="w-16 h-16 bg-gradient-to-r from-accent/20 to-accent/10 rounded-full flex items-center justify-center mx-auto mb-3">
-                                    <TrendingUp className="w-8 h-8 text-accent" />
-                                </div>
-                                <div className="text-2xl font-bold text-foreground mb-1">98%</div>
-                                <div className="text-sm text-muted-foreground">{t('menu.satisfaction') || 'Satisfaction'}</div>
-                            </div>
-                            <div className="text-center">
-                                <div className="w-16 h-16 bg-gradient-to-r from-primary/20 to-secondary/10 rounded-full flex items-center justify-center mx-auto mb-3">
-                                    <Utensils className="w-8 h-8 text-primary" />
-                                </div>
-                                <div className="text-2xl font-bold text-foreground mb-1">Daily</div>
-                                <div className="text-sm text-muted-foreground">{t('menu.fresh_made') || 'Fresh Made'}</div>
-                            </div>
+                            ))}
                         </div>
                     </CardContent>
                 </Card>
 
                 {/* Meals Grid */}
                 <div className={`transition-all duration-300 ${isAnimating ? 'opacity-50 scale-95' : 'opacity-100 scale-100'}`}>
-                    {filteredMeals.length > 0 ? (
+                    {isLoading ? (
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                            {Array.from({ length: 6 }).map((_, index) => (
+                                <Card key={index} className="border-2 border-gray-200">
+                                    <CardContent className="p-6">
+                                        <div className="animate-pulse">
+                                            <div className="h-48 bg-gray-200 rounded mb-4"></div>
+                                            <div className="h-6 bg-gray-200 rounded mb-3 w-3/4"></div>
+                                            <div className="h-4 bg-gray-200 rounded mb-2 w-full"></div>
+                                            <div className="h-4 bg-gray-200 rounded w-2/3"></div>
+                                        </div>
+                                    </CardContent>
+                                </Card>
+                            ))}
+                        </div>
+                    ) : filteredMeals.length > 0 ? (
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                             {filteredMeals.map((meal, index) => (
                                 <div
-                                    key={meal.slug}
+                                    key={meal.id || meal.slug}
                                     className="animate-fade-in-up"
                                     style={{ animationDelay: `${index * 100}ms` }}
                                 >
@@ -326,7 +360,7 @@ export function MenuPage() {
                 </div>
             </div>
 
-            <style jsx>{`
+            <style>{`
                 .bg-grid-pattern {
                     background-image: radial-gradient(circle, rgba(0,0,0,0.1) 1px, transparent 1px);
                     background-size: 20px 20px;

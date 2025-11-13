@@ -34,6 +34,8 @@ export default function SignIn() {
         <div className='lg:p-8'>
           <div className='mx-auto flex w-full flex-col justify-center space-y-2 sm:w-[350px]'>
             <div className='flex flex-col space-y-2 text-left'>
+                    <img src={logo} />
+
               <h1 className='text-2xl font-semibold tracking-tight'>{t('login.title')}</h1>
               < p className='text-sm text-muted-foreground' dangerouslySetInnerHTML={{ __html: t('login.description') }} >
               </p>

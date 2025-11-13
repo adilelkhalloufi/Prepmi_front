@@ -7,14 +7,14 @@ export function Hero() {
   const { t } = useTranslation();
   const navigator = useNavigate();
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-background">
+    <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-primary">
       {/* Background with gradient overlay */}
-      <div className="absolute inset-0 bg-grid-black/[0.02] dark:bg-grid-white/[0.02]" />
-      <div className="absolute inset-0 hero-gradient-overlay" />
+      {/* <div className="absolute inset-0 bg-grid-black/[0.02] dark:bg-grid-white/[0.02]" />
+      <div className="absolute inset-0 hero-gradient-overlay" /> */}
 
       {/* Animated background elements */}
-      <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary/10 dark:bg-primary/5 rounded-full blur-3xl animate-float" />
-      <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-secondary/10 dark:bg-secondary/5 rounded-full blur-3xl animate-float-delay" />
+      {/* <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary/10 dark:bg-primary/5 rounded-full blur-3xl animate-float" />
+      <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-secondary/10 dark:bg-secondary/5 rounded-full blur-3xl animate-float-delay" /> */}
 
       <div className="container px-4 py-16 md:py-24">
         <div className="grid lg:grid-cols-2 gap-12 items-center">
@@ -24,7 +24,7 @@ export function Hero() {
               {t('hero_title')}
             </h1>
             <p className="text-lg md:text-xl text-white/90 max-w-[600px] mx-auto lg:mx-0">
-              {t('hero_subtitle')}
+              {t('hero_description')}
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
               <Button
