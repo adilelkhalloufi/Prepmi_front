@@ -255,6 +255,19 @@
       "title": "Select Meals Per Week",
       "subtitle": "This number doesn't include breakfasts or snacks, you can add those later."
     },
+    "purchaseType": {
+      "title": "Choose Type",
+      "subtitle": "Select how you'd like to purchase your meals",
+      "oneTime": {
+        "title": "One-time Purchase",
+        "description": "Purchase once without commitment"
+      },
+      "subscription": {
+        "title": "Subscription",
+        "description": "Save with recurring weekly deliveries",
+        "badge": "Recommended"
+      }
+    },
     "summary": {
       "title": "Order Summary",
       "pricePerMeal": "Price Per Meal:",
@@ -391,6 +404,7 @@
         "payWhenReceive": "Pay when you receive",
         "placeOrderCOD": "Place Order (COD)",
         "payAmount": "Pay ${{amount}}",
+        "subscriptionActive": "You are subscribed! Your order will be automatically renewed weekly.",
         "loyaltyPoints": "Loyalty Points",
         "pointsCollected": "points collected",
         "rewardAvailable": "You've earned a free PrepMe meal! Use it on your next order.",

@@ -59,6 +59,7 @@ export interface Plan {
     name: string
     meals_per_week: number
     price_per_week: number
+    price_subscription_per_week?: number
     is_active: boolean
     points_value?: number
     delivery_fee: number

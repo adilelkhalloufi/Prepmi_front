@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
+import { Label } from "@/components/ui/label"
 import { useTranslation } from "react-i18next"
 import { useDispatch, useSelector } from "react-redux"
 import { RootState } from "@/store"
@@ -19,6 +21,7 @@ export const Plan = () => {
     const [selectedProtein, setSelectedProtein] = useState(planData?.protein || '')
     const [selectedPortion, setSelectedPortion] = useState(planData?.portion || '')
     const [selectedMeals, setSelectedMeals] = useState(planData?.mealsPerWeek ?? '')
+    const [purchaseType, setPurchaseType] = useState(planData?.purchaseType || '')
 
     // Update local state when Redux state changes
     useEffect(() => {
@@ -26,6 +29,7 @@ export const Plan = () => {
             setSelectedProtein(planData.protein || '')
             setSelectedPortion(planData.portion || '')
             setSelectedMeals(planData.mealsPerWeek ?? '')
+            setPurchaseType(planData.purchaseType || '')
         }
     }, [planData])
 
@@ -88,34 +92,69 @@ export const Plan = () => {
 
   
 
+    const handlePurchaseTypeChange = (value: 'one-time' | 'subscription') => {
+        setPurchaseType(value)
+        dispatch(updatePlanData({ purchaseType: value }))
+    }
+
     const handleMealSelect = (meals: number) => {
         const selectedPlan = mealOptions.find(plan => plan.meals_per_week === meals)
         
         if (selectedPlan) {
             setSelectedMeals(meals)
-            dispatch(updatePlanData({ 
-                planId: selectedPlan.id,
-                planName: selectedPlan.name,
-                mealsPerWeek: selectedPlan.meals_per_week,
-                pricePerWeek: Number(selectedPlan.price_per_week),
-                deliveryFee: Number(selectedPlan.delivery_fee || 0),
-                isFreeShipping: selectedPlan.is_free_shipping,
-                pointsValue: selectedPlan.points_value,
-                plan: selectedPlan // Store the complete plan object
-            }))
+            
+            // Reset purchase type to 'one-time' if selecting a plan with less than 8 meals
+            if (meals < 8) {
+                setPurchaseType('one-time')
+                dispatch(updatePlanData({ 
+                    planId: selectedPlan.id,
+                    planName: selectedPlan.name,
+                    mealsPerWeek: selectedPlan.meals_per_week,
+                    pricePerWeek: Number(selectedPlan.price_per_week),
+                    deliveryFee: Number(selectedPlan.delivery_fee || 0),
+                    isFreeShipping: selectedPlan.is_free_shipping,
+                    pointsValue: selectedPlan.points_value,
+                    plan: selectedPlan,
+                    purchaseType: 'one-time'
+                }))
+            } else {
+                dispatch(updatePlanData({ 
+                    planId: selectedPlan.id,
+                    planName: selectedPlan.name,
+                    mealsPerWeek: selectedPlan.meals_per_week,
+                    pricePerWeek: Number(selectedPlan.price_per_week),
+                    deliveryFee: Number(selectedPlan.delivery_fee || 0),
+                    isFreeShipping: selectedPlan.is_free_shipping,
+                    pointsValue: selectedPlan.points_value,
+                    plan: selectedPlan,
+                    purchaseType: 'subscription' // Default to subscription for 8+ meals
+
+                }))
+            }
         }
     }
 
     const calculateTotal = () => {
     const mealsNum = typeof selectedMeals === 'number' ? selectedMeals : Number(selectedMeals) || 0;
     const selectedPlan = mealOptions.find(plan => plan.meals_per_week === mealsNum);
+    
+    if (!selectedPlan) {
+        return { subtotal: 0, discount: 0, delivery: 0, total: 0, pricePerWeek: 0 };
+    }
+    
     const portionExtra = selectedPortion && selectedPortion !== 'standard' ? 1.99 * mealsNum : 0;
-    const pricePerWeek = Number(selectedPlan?.price_per_week || 0);
+    
+    // Use subscription price if subscription is selected and available
+    let pricePerWeek = Number(selectedPlan.price_per_week || 0);
+    if (purchaseType === 'subscription' && selectedPlan.price_subscription_per_week) {
+        pricePerWeek = Number(selectedPlan.price_subscription_per_week);
+    }
+    
     const subtotal = pricePerWeek + portionExtra;
     const discount = 0; // Calculate discount if you have original price field
-    const delivery = selectedPlan?.is_free_shipping ? 0 : Number(selectedPlan?.delivery_fee || 0);
+    const delivery = selectedPlan.is_free_shipping ? 0 : Number(selectedPlan.delivery_fee || 0);
 
-    return { subtotal, discount, delivery, total: subtotal + delivery };
+    return { subtotal, discount, delivery, total: subtotal + delivery, pricePerWeek };
     }
 
     const totals = calculateTotal()
@@ -211,6 +250,7 @@ export const Plan = () => {
                                                 <div className="h-8 bg-gray-200 rounded mb-2 mx-auto w-1/2"></div>
                                                 <div className="h-4 bg-gray-200 rounded mb-1 mx-auto w-3/4"></div>
                                                 <div className="h-5 bg-gray-200 rounded mx-auto w-2/3"></div>
+                                                <div className="h-5 bg-gray-200 rounded mx-auto w-2/3"></div>
                                             </div>
                                         </CardContent>
                                     </Card>
@@ -233,6 +273,7 @@ export const Plan = () => {
                                             <div className="text-lg font-bold text-primary">
                                                 {t('menu.currency')} {Number(plan.price_per_week).toFixed(2)}/{t('common.week')}
                                             </div>
+                                        
                                             {plan.is_free_shipping && (
                                                 <Badge className="mt-2 bg-green-500 text-white text-xs">{t('plan.summary.free')} {t('plan.summary.delivery')}</Badge>
                                             )}
@@ -247,6 +288,76 @@ export const Plan = () => {
                             )}
                         </div>
 
+                        {/* Purchase Type - Only show if more than 8 meals selected */}
+                        {selectedMeals && Number(selectedMeals) >= 8 && (
+                            <div className="space-y-6 mt-12">
+                                <div className="text-center">
+                                    <div className="inline-flex items-center justify-center w-12 h-12 bg-primary text-primary-foreground rounded-full font-bold text-xl mb-4">
+                                        3
+                                    </div>
+                                    <h2 className="text-3xl font-bold text-gray-900 mb-4">
+                                        {t('plan.purchaseType.title')}
+                                    </h2>
+                                    <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+                                        {t('plan.purchaseType.subtitle')}
+                                    </p>
+                                </div>
+
+                                <Card className="max-w-2xl mx-auto border-2 border-gray-200">
+                                    <CardContent className="p-8">
+                                        <RadioGroup value={purchaseType} onValueChange={handlePurchaseTypeChange}>
+                                            <div className="space-y-4">
+                                                <div className="flex items-center space-x-3 p-4 border-2 rounded-lg cursor-pointer hover:bg-gray-50 transition-colors" 
+                                                     onClick={() => handlePurchaseTypeChange('one-time')}
+                                                     style={{ borderColor: purchaseType === 'one-time' ? 'hsl(var(--primary))' : 'rgb(229, 231, 235)' }}>
+                                                    <RadioGroupItem value="one-time" id="one-time" />
+                                                    <Label htmlFor="one-time" className="flex-1 cursor-pointer">
+                                                        <div className="flex justify-between items-start">
+                                                            <div>
+                                                                <div className="font-semibold text-lg">{t('plan.purchaseType.oneTime.title')}</div>
+                                                                <div className="text-sm text-gray-600">{t('plan.purchaseType.oneTime.description')}</div>
+                                                            </div>
+                                                            <div className="text-lg font-bold text-primary ml-4">
+                                                                {t('menu.currency')}{Number(mealOptions.find(o => o.meals_per_week === selectedMeals)?.price_per_week || 0).toFixed(2)}
+                                                            </div>
+                                                        </div>
+                                                    </Label>
+                                                </div>
+                                                
+                                                <div className="flex items-center space-x-3 p-4 border-2 rounded-lg cursor-pointer hover:bg-gray-50 transition-colors"
+                                                     onClick={() => handlePurchaseTypeChange('subscription')}
+                                                     style={{ borderColor: purchaseType === 'subscription' ? 'hsl(var(--primary))' : 'rgb(229, 231, 235)' }}>
+                                                    <RadioGroupItem value="subscription" id="subscription" />
+                                                    <Label htmlFor="subscription" className="flex-1 cursor-pointer">
+                                                        <div className="flex justify-between items-start">
+                                                            <div>
+                                                                <div className="font-semibold text-lg">{t('plan.purchaseType.subscription.title')}</div>
+                                                                <div className="text-sm text-gray-600">{t('plan.purchaseType.subscription.description')}</div>
+                                                            </div>
+                                                            <div className="ml-4">
+                                                                {mealOptions.find(o => o.meals_per_week === selectedMeals)?.price_subscription_per_week ? (
+                                                                    <div className="text-lg font-bold text-green-600">
+                                                                        {t('menu.currency')}{Number(mealOptions.find(o => o.meals_per_week === selectedMeals)?.price_subscription_per_week).toFixed(2)}
+                                                                    </div>
+                                                                ) : (
+                                                                    <div className="text-lg font-bold text-primary">
+                                                                        {t('menu.currency')}{Number(mealOptions.find(o => o.meals_per_week === selectedMeals)?.price_per_week || 0).toFixed(2)}
+                                                                    </div>
+                                                                )}
+                                                            </div>
+                                                        </div>
+                                                    </Label>
+                                                    {mealOptions.find(o => o.meals_per_week === selectedMeals)?.price_subscription_per_week && (
+                                                        <Badge className="bg-green-500 text-white">{t('plan.purchaseType.subscription.badge')}</Badge>
+                                                    )}
+                                                </div>
+                                            </div>
+                                        </RadioGroup>
+                                    </CardContent>
+                                </Card>
+                            </div>
+                        )}
+
                         {/* Order Summary */}
                         <Card className="bg-white border-2 border-gray-100 shadow-xl max-w-2xl mx-auto">
                             <CardHeader className="bg-gradient-to-r from-primary to-secondary text-primary-foreground">
@@ -260,8 +371,7 @@ export const Plan = () => {
                                             <span className="font-bold text-xl text-primary">
                                                 {(() => {
                                                     const mealsNum = typeof selectedMeals === 'number' ? selectedMeals : Number(selectedMeals) || 0;
-                                                    const pricePerWeek = Number(mealOptions.find(o => o.meals_per_week === mealsNum)?.price_per_week || 0);
-                                                    return mealsNum > 0 ? (pricePerWeek / mealsNum).toFixed(2) : '0.00';
+                                                    return mealsNum > 0 ? (totals.pricePerWeek / mealsNum).toFixed(2) : '0.00';
                                                 })()}
                                                 {t('menu.currency')}
                                             </span>

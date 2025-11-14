@@ -209,6 +209,19 @@
     "nextStep": "الخطوة التالية"
   },
   "plan": {
+    "purchaseType": {
+      "title": "اختر النوع",
+      "subtitle": "اختر كيف تريد شراء وجباتك",
+      "oneTime": {
+        "title": "شراء لمرة واحدة",
+        "description": "اشتري مرة واحدة بدون التزام"
+      },
+      "subscription": {
+        "title": "اشتراك",
+        "description": "وفر مع التوصيل الأسبوعي المتكرر",
+        "badge": "موصى به"
+      }
+    },
     "title": "اصنع خطة",
     "titleHighlight": "وجباتك المثالية",
     "subtitle": "خصص توصيل وجباتك الأسبوعي ليتناسب مع نمط حياتك وتفضيلاتك الغذائية",
@@ -325,7 +338,8 @@
       "cashOnDelivery": "الدفع عند التسليم",
       "payWhenReceive": "ادفع عند الاستلام",
       "placeOrderCOD": "تأكيد الطلب (الدفع عند التسليم)",
-      "payAmount": "ادفع ${{amount}}"
+      "payAmount": "ادفع ${{amount}}",
+      "subscriptionActive": "أنت مشترك! سيتم تجديد طلبك تلقائياً كل أسبوع."
     },
     "address": {
       "title": "تفاصيل التوصيل",

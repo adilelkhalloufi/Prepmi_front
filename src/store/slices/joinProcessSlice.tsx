@@ -18,6 +18,7 @@ export type JoinProcessState = {
     isFreeShipping?: boolean
     pointsValue?: number
     plan?: Plan // Store the complete plan object
+    purchaseType?: 'one-time' | 'subscription' // Purchase type for plans with >8 meals
 
     // Personal details
     firstName?: string
@@ -55,6 +56,7 @@ const initialState: JoinProcessState = {
     isFreeShipping: false,
     pointsValue: 0,
     plan: undefined,
+    purchaseType: undefined,
     firstName: '',
     lastName: '',
     phoneNumber: '',

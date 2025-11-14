@@ -121,6 +121,10 @@ const DashboardReward = loadable(() => import('../pages/dashboard/rewards'), {
   fallback: fallbackElement,
 });
 
+const DashboardSubscription = loadable(() => import('../pages/dashboard/subscriptions'), {
+  fallback: fallbackElement,
+});
+
 const SingleMeal = loadable(() => import("../pages/SingleMeal"), {
   fallback: fallbackElement,
 });

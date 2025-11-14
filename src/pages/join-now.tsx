@@ -40,6 +40,11 @@ const JoinNow = () => {
                 toast.error(t('joinNow.validation.selectPlan'))
                 return
             }
+            // Validate purchase type for plans with more than 8 meals
+            if (planData.mealsPerWeek >= 8 && !planData.purchaseType) {
+                toast.error(t('joinNow.validation.selectPurchaseType', 'Please select a purchase type'))
+                return
+            }
         }
         // Validate Meals step (step 2)
         if (currentStep === 2) {

@@ -2,6 +2,7 @@ import { useState, useEffect } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
+import { Alert, AlertDescription } from "@/components/ui/alert"
 import {
     CreditCard,
 
@@ -42,7 +43,7 @@ export function Payment() {
     const navigate = useNavigate()
     const planData = useSelector((state: RootState) => state.joinProcess.planData)
     const admin = useSelector((state: RootState) => state.admin?.user)
-
+    console.log('Plan Data in Payment Component:', planData);
     // Get selected meals and drinks as arrays of objects
     const selectedMeals = Object.values(planData.selectedMeals || {})
     const selectedDrinks = Object.values(planData.selectedDrinks || {})
@@ -209,7 +210,10 @@ export function Payment() {
             meals: selectedMeals, // array of meal objects
             drinks: selectedDrinks, // array of drink objects
             rewardMeal: selectedRewardsMeals,
-            totalAmount: Number(planData.plan.price_per_week) + drinksSubtotal,
+            purchaseType: planData?.purchaseType || '',
+            totalAmount: (planData?.purchaseType === 'subscription' && planData.plan.price_subscription_per_week 
+                ? Number(planData.plan.price_subscription_per_week) + drinksSubtotal
+                : Number(planData.plan.price_per_week)) + drinksSubtotal,
             infos: {
                 firstName: planData?.firstName,
                 lastName: planData?.lastName,
@@ -594,12 +598,24 @@ export function Payment() {
                             </CardTitle>
                         </CardHeader>
                         <CardContent className="space-y-4">
+                            {/* Subscription Alert */}
+                            {planData?.purchaseType === 'subscription' && (
+                                <Alert className="bg-green-50 border-green-200">
+                                    <AlertDescription className="text-green-800 font-medium">
+                                        🔄 {t('joinNow.payment.subscriptionActive')}
+                                    </AlertDescription>
+                                </Alert>
+                            )}
                             <div className="space-y-2">
                                 {/* Show plan total */}
                                 {planData.pricePerWeek && (
                                     <div className="flex justify-between text-base font-semibold">
                                         <span>{t('joinNow.payment.total')}</span>
-                                        <span>{Number(planData.plan.price_per_week).toFixed(2)} {t('menu.currency')}</span>
+                                        <span>
+                                            {(planData?.purchaseType === 'subscription' && planData.plan.price_subscription_per_week 
+                                                ? Number(planData.plan.price_subscription_per_week) 
+                                                : Number(planData.plan.price_per_week)).toFixed(2)} {t('menu.currency')}
+                                        </span>
                                     </div>
                                 )}
                                 {/* Show drinks total if any drinks selected */}
@@ -613,7 +629,9 @@ export function Payment() {
                                 <div className="flex justify-between text-lg font-bold mt-2">
                                     <span>{t('joinNow.payment.total')}</span>
                                     <span>
-                                        {(Number(planData.plan.price_per_week) + drinksSubtotal).toFixed(2)} {t('menu.currency')}
+                                        {((planData?.purchaseType === 'subscription' && planData.plan.price_subscription_per_week 
+                                            ? Number(planData.plan.price_subscription_per_week) 
+                                            : Number(planData.plan.price_per_week)) + drinksSubtotal).toFixed(2)} {t('menu.currency')}
 
                                     </span>
                                 </div>
@@ -634,43 +652,25 @@ export function Payment() {
                         </CardHeader>
                         <CardContent className="space-y-4">
                             <div className="space-y-3">
+                                {/* Online Payment - Disabled */}
                                 <div
-                                    className={`p-4 rounded-lg border cursor-pointer transition-all ${paymentMethod === 'ONLINE'
-                                        ? 'border-primary bg-primary/5'
-                                        : 'border-border hover:border-primary/50'
-                                        }`}
-                                    onClick={() => {
-                                        setPaymentMethod('ONLINE')
-                                        dispatch(updatePlanData({ paymentMethod: 'ONLINE' }))
-                                    }}
+                                    className="p-4 rounded-lg border border-gray-200 bg-gray-50 opacity-60 cursor-not-allowed"
                                 >
                                     <div className="flex items-center space-x-3">
-                                        <div className={`w-4 h-4 rounded-full border-2 ${paymentMethod === 'ONLINE'
-                                            ? 'border-primary bg-primary'
-                                            : 'border-border'
-                                            }`} />
-                                        <div>
-                                            <p className="font-medium">{t('joinNow.payment.onlinePayment')}</p>
-                                            <p className="text-sm text-muted-foreground">{t('joinNow.payment.paySecurely')}</p>
+                                        <div className="w-4 h-4 rounded-full border-2 border-gray-300" />
+                                        <div className="flex-1">
+                                            <p className="font-medium text-gray-500">{t('joinNow.payment.onlinePayment')}</p>
+                                            <p className="text-sm text-gray-400">{t('joinNow.payment.comingSoon', 'Coming soon')}</p>
                                         </div>
                                     </div>
                                 </div>
 
+                                {/* COD - Active and Selected by Default */}
                                 <div
-                                    className={`p-4 rounded-lg border cursor-pointer transition-all ${paymentMethod === 'COD'
-                                        ? 'border-primary bg-primary/5'
-                                        : 'border-border hover:border-primary/50'
-                                        }`}
-                                    onClick={() => {
-                                        setPaymentMethod('COD')
-                                        dispatch(updatePlanData({ paymentMethod: 'COD' }))
-                                    }}
+                                    className="p-4 rounded-lg border-2 border-primary bg-primary/5"
                                 >
                                     <div className="flex items-center space-x-3">
-                                        <div className={`w-4 h-4 rounded-full border-2 ${paymentMethod === 'COD'
-                                            ? 'border-primary bg-primary'
-                                            : 'border-border'
-                                            }`} />
+                                        <div className="w-4 h-4 rounded-full border-2 border-primary bg-primary" />
                                         <div>
                                             <p className="font-medium">{t('joinNow.payment.cashOnDelivery')}</p>
                                             <p className="text-sm text-muted-foreground">{t('joinNow.payment.payWhenReceive')}</p>

@@ -208,6 +208,19 @@
     "nextStep": "Étape Suivante"
   },
   "plan": {
+    "purchaseType": {
+      "title": "Choisir le Type",
+      "subtitle": "Sélectionnez comment vous souhaitez acheter vos repas",
+      "oneTime": {
+        "title": "Achat Unique",
+        "description": "Achetez une fois sans engagement"
+      },
+      "subscription": {
+        "title": "Abonnement",
+        "description": "Économisez avec des livraisons hebdomadaires récurrentes",
+        "badge": "Recommandé"
+      }
+    },
     "title": "Créez Votre Plan de",
     "titleHighlight": "Repas Parfait",
     "subtitle": "Personnalisez votre livraison de repas hebdomadaire selon votre style de vie et préférences alimentaires",
@@ -325,6 +338,7 @@
       "payWhenReceive": "Payer à la réception",
       "placeOrderCOD": "Passer Commande (COD)",
       "payAmount": "Payer ${{amount}}",
+      "subscriptionActive": "Vous êtes abonné ! Votre commande sera automatiquement renouvelée chaque semaine.",
       "loyaltyPoints": "Points de Fidélité",
       "pointsCollected": "points collectés",
       "rewardAvailable": "Vous avez gagné un repas PrepMe gratuit ! Utilisez-le lors de votre prochaine commande.",
