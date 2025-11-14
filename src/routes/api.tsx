@@ -12,6 +12,9 @@ export const apiRoutes = {
   orders: `${API_URL}/orders`,
   plans: `${API_URL}/plans`,
   rewards: `${API_URL}/rewards`,
+  subscriptions: `${API_URL}/subscriptions`,
+  cancelSubscription: (id: number) => `${API_URL}/subscriptions/${id}/cancel`,
+  pauseSubscription: (id: number) => `${API_URL}/subscriptions/${id}/pause`,
   totalPointsEarned: `${API_URL}/total-points-earned`,
 
   weeklyMenus: `${API_URL}/weekly-menus`,

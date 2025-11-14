@@ -34,7 +34,10 @@ export const webRoutes = {
   dashboard_categories_view: '/dashboard/categories/view/:id',
   dashboard_meal_preparation: '/dashboard/meal-preparation',
   dashboard_rewards: '/dashboard/rewards',
-  dashboard_subscription: '/dashboard/subscriptions',
+  dashboard_subscriptions: '/dashboard/subscriptions',
+  dashboard_subscriptions_add: '/dashboard/subscriptions/add',
+  dashboard_subscriptions_edit: '/dashboard/subscriptions/edit/:id',
+  dashboard_subscriptions_details: '/dashboard/subscriptions/details/:id',
 
   menu: '/menu',
   meal_single: '/meal/:id',

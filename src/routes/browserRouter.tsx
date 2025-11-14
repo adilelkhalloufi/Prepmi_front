@@ -121,7 +121,19 @@ const DashboardReward = loadable(() => import('../pages/dashboard/rewards'), {
   fallback: fallbackElement,
 });
 
-const DashboardSubscription = loadable(() => import('../pages/dashboard/subscriptions'), {
+const DashboardSubscriptions = loadable(() => import('../pages/dashboard/subscriptions'), {
+  fallback: fallbackElement,
+});
+
+const DashboardSubscriptionsAdd = loadable(() => import('../pages/dashboard/subscriptions/add'), {
+  fallback: fallbackElement,
+});
+
+const DashboardSubscriptionsEdit = loadable(() => import('../pages/dashboard/subscriptions/edit'), {
+  fallback: fallbackElement,
+});
+
+const DashboardSubscriptionsDetails = loadable(() => import('../pages/dashboard/subscriptions/details'), {
   fallback: fallbackElement,
 });
 
@@ -295,6 +307,22 @@ export const browserRouter = createBrowserRouter([
       {
         path: webRoutes.dashboard_rewards,
         element: <DashboardReward />,
+      },
+      {
+        path: webRoutes.dashboard_subscriptions,
+        element: <DashboardSubscriptions />,
+      },
+      {
+        path: webRoutes.dashboard_subscriptions_add,
+        element: <DashboardSubscriptionsAdd />,
+      },
+      {
+        path: webRoutes.dashboard_subscriptions_edit,
+        element: <DashboardSubscriptionsEdit />,
+      },
+      {
+        path: webRoutes.dashboard_subscriptions_details,
+        element: <DashboardSubscriptionsDetails />,
       },
 
     ],
