@@ -7,7 +7,7 @@ export function Hero() {
   const { t } = useTranslation();
   const navigator = useNavigate();
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-primary">
+    <section className="relative min-h-fit flex items-center justify-center overflow-hidden bg-primary">
       {/* Background with gradient overlay */}
       {/* <div className="absolute inset-0 bg-grid-black/[0.02] dark:bg-grid-white/[0.02]" />
       <div className="absolute inset-0 hero-gradient-overlay" /> */}

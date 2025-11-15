@@ -211,7 +211,7 @@ export function Payment() {
             drinks: selectedDrinks, // array of drink objects
             rewardMeal: selectedRewardsMeals,
             purchaseType: planData?.purchaseType || '',
-            totalAmount: (planData?.purchaseType === 'subscription' && planData.plan.price_subscription_per_week 
+            totalAmount: (planData?.purchaseType === 'subscription' && planData.plan.price_subscription_per_week
                 ? Number(planData.plan.price_subscription_per_week) + drinksSubtotal
                 : Number(planData.plan.price_per_week)) + drinksSubtotal,
             infos: {
@@ -388,7 +388,7 @@ export function Payment() {
                             )}
 
                             {/* Applied Reward Meal */}
-                            {selectedRewardsMeals && (
+                            {selectedRewardsMeals.mealName && (
                                 <div>
                                     <div className="flex items-center space-x-2 mb-4">
                                         <Gift className="w-4 h-4 text-secondary" />
@@ -590,7 +590,7 @@ export function Payment() {
                     )}
 
                     {/* Order Total */}
-                    <Card className="sticky top-4">
+                    <Card className="sticky top-4 z-10">
                         <CardHeader>
                             <CardTitle className="flex items-center space-x-2">
                                 <Receipt className="w-5 h-5 text-primary" />
@@ -612,8 +612,8 @@ export function Payment() {
                                     <div className="flex justify-between text-base font-semibold">
                                         <span>{t('joinNow.payment.total')}</span>
                                         <span>
-                                            {(planData?.purchaseType === 'subscription' && planData.plan.price_subscription_per_week 
-                                                ? Number(planData.plan.price_subscription_per_week) 
+                                            {(planData?.purchaseType === 'subscription' && planData.plan.price_subscription_per_week
+                                                ? Number(planData.plan.price_subscription_per_week)
                                                 : Number(planData.plan.price_per_week)).toFixed(2)} {t('menu.currency')}
                                         </span>
                                     </div>
@@ -629,8 +629,8 @@ export function Payment() {
                                 <div className="flex justify-between text-lg font-bold mt-2">
                                     <span>{t('joinNow.payment.total')}</span>
                                     <span>
-                                        {((planData?.purchaseType === 'subscription' && planData.plan.price_subscription_per_week 
-                                            ? Number(planData.plan.price_subscription_per_week) 
+                                        {((planData?.purchaseType === 'subscription' && planData.plan.price_subscription_per_week
+                                            ? Number(planData.plan.price_subscription_per_week)
                                             : Number(planData.plan.price_per_week)) + drinksSubtotal).toFixed(2)} {t('menu.currency')}
 
                                     </span>
@@ -643,7 +643,7 @@ export function Payment() {
 
 
                     {/* Payment Method */}
-                    <Card>
+                    <Card className="z-0">
                         <CardHeader>
                             <CardTitle className="flex items-center space-x-2 text-base">
                                 <CreditCard className="w-4 h-4 text-primary" />
@@ -654,7 +654,7 @@ export function Payment() {
                             <div className="space-y-3">
                                 {/* Online Payment - Disabled */}
                                 <div
-                                    className="p-4 rounded-lg border border-gray-200 bg-gray-50 opacity-60 cursor-not-allowed"
+                                    className="p-4 rounded-lg border border-gray-200 bg-gray-50 opacity-60  cursor-not-allowed"
                                 >
                                     <div className="flex items-center space-x-3">
                                         <div className="w-4 h-4 rounded-full border-2 border-gray-300" />

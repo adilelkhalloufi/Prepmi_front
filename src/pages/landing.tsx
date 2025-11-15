@@ -7,6 +7,7 @@ import { MenuPage } from "@/components/MenuPage"
 import { MoroccanReviews } from "@/components/MoroccanReviews"
 import { Newsletter } from "@/components/Newsletter"
 import { Cta } from "@/components/Cta"
+import { HeroVariant3 } from "@/components/hero-variants/HeroVariant3"
 
 
 const Index = () => {
@@ -14,7 +15,8 @@ const Index = () => {
 
 
     <main>
-      <Hero />
+      {/* <Hero /> */}
+      <HeroVariant3 />
       <HowItWorks />
       <FreshMeals />
       <MenuSlider />

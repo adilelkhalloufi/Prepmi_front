@@ -34,7 +34,7 @@ export const Plan = () => {
     }, [planData])
 
     // Fetch categories from API
-    const { isLoading: isLoadingCategories, data: categoriesResponse } = useQuery<{data: any[]}>({
+    const { isLoading: isLoadingCategories, data: categoriesResponse } = useQuery<{ data: any[] }>({
         queryKey: ["categories"],
         queryFn: () =>
             http
@@ -49,7 +49,7 @@ export const Plan = () => {
     });
 
     // Fetch plans from API
-    const { isLoading: isLoadingPlans, data: plansResponse } = useQuery<{data: any[]}>({
+    const { isLoading: isLoadingPlans, data: plansResponse } = useQuery<{ data: any[] }>({
         queryKey: ["plans"],
         queryFn: () =>
             http
@@ -68,21 +68,21 @@ export const Plan = () => {
 
     // Map categories to protein options format
     const proteinOptions = categories.map((category: any) => ({
-            id: category.id?.toString() || category.slug,
-            label: category.name,
-            description: category.description || ''
-        }));
+        id: category.id?.toString() || category.slug,
+        label: category.name,
+        description: category.description || ''
+    }));
 
-  
+
 
     // Map plans to meal options format
     const mealOptions: PlanType[] = plans;
 
     const handleProteinSelect = (proteinId: string) => {
         const selectedCategory = categories.find(cat => cat.id?.toString() === proteinId)
-        
+
         setSelectedProtein(proteinId)
-        dispatch(updatePlanData({ 
+        dispatch(updatePlanData({
             protein: proteinId,
             categoryId: selectedCategory?.id,
             categoryName: selectedCategory?.name,
@@ -90,7 +90,7 @@ export const Plan = () => {
         }))
     }
 
-  
+
 
     const handlePurchaseTypeChange = (value: 'one-time' | 'subscription') => {
         setPurchaseType(value)
@@ -99,14 +99,14 @@ export const Plan = () => {
 
     const handleMealSelect = (meals: number) => {
         const selectedPlan = mealOptions.find(plan => plan.meals_per_week === meals)
-        
+
         if (selectedPlan) {
             setSelectedMeals(meals)
-            
+
             // Reset purchase type to 'one-time' if selecting a plan with less than 8 meals
             if (meals < 8) {
                 setPurchaseType('one-time')
-                dispatch(updatePlanData({ 
+                dispatch(updatePlanData({
                     planId: selectedPlan.id,
                     planName: selectedPlan.name,
                     mealsPerWeek: selectedPlan.meals_per_week,
@@ -118,7 +118,7 @@ export const Plan = () => {
                     purchaseType: 'one-time'
                 }))
             } else {
-                dispatch(updatePlanData({ 
+                dispatch(updatePlanData({
                     planId: selectedPlan.id,
                     planName: selectedPlan.name,
                     mealsPerWeek: selectedPlan.meals_per_week,
@@ -135,26 +135,26 @@ export const Plan = () => {
     }
 
     const calculateTotal = () => {
-    const mealsNum = typeof selectedMeals === 'number' ? selectedMeals : Number(selectedMeals) || 0;
-    const selectedPlan = mealOptions.find(plan => plan.meals_per_week === mealsNum);
-    
-    if (!selectedPlan) {
-        return { subtotal: 0, discount: 0, delivery: 0, total: 0, pricePerWeek: 0 };
-    }
-    
-    const portionExtra = selectedPortion && selectedPortion !== 'standard' ? 1.99 * mealsNum : 0;
-    
-    // Use subscription price if subscription is selected and available
-    let pricePerWeek = Number(selectedPlan.price_per_week || 0);
-    if (purchaseType === 'subscription' && selectedPlan.price_subscription_per_week) {
-        pricePerWeek = Number(selectedPlan.price_subscription_per_week);
-    }
-    
-    const subtotal = pricePerWeek + portionExtra;
-    const discount = 0; // Calculate discount if you have original price field
-    const delivery = selectedPlan.is_free_shipping ? 0 : Number(selectedPlan.delivery_fee || 0);
+        const mealsNum = typeof selectedMeals === 'number' ? selectedMeals : Number(selectedMeals) || 0;
+        const selectedPlan = mealOptions.find(plan => plan.meals_per_week === mealsNum);
 
-    return { subtotal, discount, delivery, total: subtotal + delivery, pricePerWeek };
+        if (!selectedPlan) {
+            return { subtotal: 0, discount: 0, delivery: 0, total: 0, pricePerWeek: 0 };
+        }
+
+        const portionExtra = selectedPortion && selectedPortion !== 'standard' ? 1.99 * mealsNum : 0;
+
+        // Use subscription price if subscription is selected and available
+        let pricePerWeek = Number(selectedPlan.price_per_week || 0);
+        if (purchaseType === 'subscription' && selectedPlan.price_subscription_per_week) {
+            pricePerWeek = Number(selectedPlan.price_subscription_per_week);
+        }
+
+        const subtotal = pricePerWeek + portionExtra;
+        const discount = 0; // Calculate discount if you have original price field
+        const delivery = selectedPlan.is_free_shipping ? 0 : Number(selectedPlan.delivery_fee || 0);
+
+        return { subtotal, discount, delivery, total: subtotal + delivery, pricePerWeek };
     }
 
     const totals = calculateTotal()
@@ -225,7 +225,7 @@ export const Plan = () => {
                         </div>
                     </div>
 
-                   
+
                     {/* Meals Per Week */}
                     <div className="space-y-8">
                         <div className="text-center">
@@ -241,7 +241,7 @@ export const Plan = () => {
                         </div>
 
                         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-12">
-                             {isLoadingPlans ? (
+                            {isLoadingPlans ? (
                                 // Loading skeleton
                                 Array.from({ length: 6 }).map((_, index) => (
                                     <Card key={index} className="border-2 border-gray-200">
@@ -273,7 +273,7 @@ export const Plan = () => {
                                             <div className="text-lg font-bold text-primary">
                                                 {t('menu.currency')} {Number(plan.price_per_week).toFixed(2)}/{t('common.week')}
                                             </div>
-                                        
+
                                             {plan.is_free_shipping && (
                                                 <Badge className="mt-2 bg-green-500 text-white text-xs">{t('plan.summary.free')} {t('plan.summary.delivery')}</Badge>
                                             )}
@@ -307,9 +307,9 @@ export const Plan = () => {
                                     <CardContent className="p-8">
                                         <RadioGroup value={purchaseType} onValueChange={handlePurchaseTypeChange}>
                                             <div className="space-y-4">
-                                                <div className="flex items-center space-x-3 p-4 border-2 rounded-lg cursor-pointer hover:bg-gray-50 transition-colors" 
-                                                     onClick={() => handlePurchaseTypeChange('one-time')}
-                                                     style={{ borderColor: purchaseType === 'one-time' ? 'hsl(var(--primary))' : 'rgb(229, 231, 235)' }}>
+                                                <div className="flex items-center space-x-3 p-4 border-2 rounded-lg cursor-pointer hover:bg-gray-50 transition-colors"
+                                                    onClick={() => handlePurchaseTypeChange('one-time')}
+                                                    style={{ borderColor: purchaseType === 'one-time' ? 'hsl(var(--primary))' : 'rgb(229, 231, 235)' }}>
                                                     <RadioGroupItem value="one-time" id="one-time" />
                                                     <Label htmlFor="one-time" className="flex-1 cursor-pointer">
                                                         <div className="flex justify-between items-start">
@@ -318,15 +318,15 @@ export const Plan = () => {
                                                                 <div className="text-sm text-gray-600">{t('plan.purchaseType.oneTime.description')}</div>
                                                             </div>
                                                             <div className="text-lg font-bold text-primary ml-4">
-                                                                {t('menu.currency')}{Number(mealOptions.find(o => o.meals_per_week === selectedMeals)?.price_per_week || 0).toFixed(2)}
+                                                                {Number(mealOptions.find(o => o.meals_per_week === selectedMeals)?.price_per_week || 0).toFixed(2)} {t('menu.currency')}
                                                             </div>
                                                         </div>
                                                     </Label>
                                                 </div>
-                                                
+
                                                 <div className="flex items-center space-x-3 p-4 border-2 rounded-lg cursor-pointer hover:bg-gray-50 transition-colors"
-                                                     onClick={() => handlePurchaseTypeChange('subscription')}
-                                                     style={{ borderColor: purchaseType === 'subscription' ? 'hsl(var(--primary))' : 'rgb(229, 231, 235)' }}>
+                                                    onClick={() => handlePurchaseTypeChange('subscription')}
+                                                    style={{ borderColor: purchaseType === 'subscription' ? 'hsl(var(--primary))' : 'rgb(229, 231, 235)' }}>
                                                     <RadioGroupItem value="subscription" id="subscription" />
                                                     <Label htmlFor="subscription" className="flex-1 cursor-pointer">
                                                         <div className="flex justify-between items-start">
@@ -334,21 +334,21 @@ export const Plan = () => {
                                                                 <div className="font-semibold text-lg">{t('plan.purchaseType.subscription.title')}</div>
                                                                 <div className="text-sm text-gray-600">{t('plan.purchaseType.subscription.description')}</div>
                                                             </div>
-                                                            <div className="ml-4">
-                                                                {mealOptions.find(o => o.meals_per_week === selectedMeals)?.price_subscription_per_week ? (
-                                                                    <div className="text-lg font-bold text-green-600">
-                                                                        {t('menu.currency')}{Number(mealOptions.find(o => o.meals_per_week === selectedMeals)?.price_subscription_per_week).toFixed(2)}
-                                                                    </div>
-                                                                ) : (
-                                                                    <div className="text-lg font-bold text-primary">
-                                                                        {t('menu.currency')}{Number(mealOptions.find(o => o.meals_per_week === selectedMeals)?.price_per_week || 0).toFixed(2)}
-                                                                    </div>
-                                                                )}
-                                                            </div>
+
                                                         </div>
                                                     </Label>
                                                     {mealOptions.find(o => o.meals_per_week === selectedMeals)?.price_subscription_per_week && (
-                                                        <Badge className="bg-green-500 text-white">{t('plan.purchaseType.subscription.badge')}</Badge>
+                                                        <Badge className="bg-green-500 text-white">
+                                                            {mealOptions.find(o => o.meals_per_week === selectedMeals)?.price_subscription_per_week ? (
+                                                                <div className="text-lg font-bold text-white">
+                                                                    {Number(mealOptions.find(o => o.meals_per_week === selectedMeals)?.price_subscription_per_week).toFixed(2)}  {t('menu.currency')}
+                                                                </div>
+                                                            ) : (
+                                                                <div className="text-lg font-bold text-white">
+                                                                    {Number(mealOptions.find(o => o.meals_per_week === selectedMeals)?.price_per_week || 0).toFixed(2)}  {t('menu.currency')}
+                                                                </div>
+                                                            )}
+                                                        </Badge>
                                                     )}
                                                 </div>
                                             </div>
@@ -392,10 +392,10 @@ export const Plan = () => {
                                         <div className="flex justify-between items-center py-3 border-b border-gray-100">
                                             <span className="text-green-600 font-medium">{t('plan.summary.discount')}</span>
                                             <span className="font-semibold text-green-600">
-                                                -{totals.discount.toFixed(2)} 
+                                                -{totals.discount.toFixed(2)}
                                                 {t('menu.currency')}
                                                 {t('plan.summary.off')}
-                                                </span>
+                                            </span>
                                         </div>
                                     )}
 
