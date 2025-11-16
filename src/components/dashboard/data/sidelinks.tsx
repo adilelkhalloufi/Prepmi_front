@@ -65,7 +65,7 @@ export const sidelinks: SideLink[] = [
     label: '',
     href: webRoutes.dashboard_orders,
     icon: <IconShoppingCart size={18} />,
-    role: [RoleEnum.ADMIN,RoleEnum.CLIENT]
+    role: [RoleEnum.ADMIN, RoleEnum.CLIENT]
 
   },
   {
@@ -90,17 +90,17 @@ export const sidelinks: SideLink[] = [
     icon: <IconHeart size={18} />,
     role: [RoleEnum.ADMIN]
   },
-    {
+  {
     title: 'Rewards',
     label: '',
     href: webRoutes.dashboard_rewards,
     icon: <IconSettings2 size={18} />,
     role: [RoleEnum.ADMIN, RoleEnum.CLIENT]
   },
-      {
+  {
     title: 'Subscriptions',
     label: '',
-    href: webRoutes.dashboard_subscription,
+    href: webRoutes.dashboard_subscriptions,
     icon: <IconSettings2 size={18} />,
     role: [RoleEnum.ADMIN, RoleEnum.CLIENT]
   }

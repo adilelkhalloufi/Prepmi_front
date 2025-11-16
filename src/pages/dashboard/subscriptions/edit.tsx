@@ -47,7 +47,7 @@ export default function EditSubscription() {
     // Fetch subscription details
     const { isLoading, data: subscriptionResponse } = useQuery({
         queryKey: ['subscription', id],
-        queryFn: () => http.get(`${apiRoutes.subscriptions}/${id}`).then((res) => res.data),
+        queryFn: () => http.get(apiRoutes.subscriptionDetail(Number(id))).then((res) => res.data),
         enabled: !!id,
     })
 
@@ -93,7 +93,7 @@ export default function EditSubscription() {
     }, [subscription])
 
     const mutation = useMutation({
-        mutationFn: (data: any) => http.put(`${apiRoutes.subscriptions}/${id}`, data),
+        mutationFn: (data: any) => http.put(apiRoutes.updateSubscription(Number(id)), data),
         onSuccess: () => {
             toast.success('Subscription updated successfully')
             navigate(webRoutes.dashboard_subscriptions)
@@ -156,7 +156,7 @@ export default function EditSubscription() {
                                     <SelectContent>
                                         {users.map((user: any) => (
                                             <SelectItem key={user.id} value={user.id.toString()}>
-                                                {user.name} ({user.email})
+                                                {user.first_name} {user.last_name} ({user.email})
                                             </SelectItem>
                                         ))}
                                     </SelectContent>

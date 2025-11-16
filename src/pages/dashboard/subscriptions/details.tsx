@@ -31,7 +31,7 @@ export default function SubscriptionDetails() {
         queryKey: ['subscription', id],
         queryFn: () =>
             http
-                .get(`${apiRoutes.subscriptions}/${id}`)
+                .get(apiRoutes.subscriptionDetail(Number(id)))
                 .then((res) => res.data)
                 .catch((e) => {
                     handleErrorResponse(e)
@@ -114,7 +114,11 @@ export default function SubscriptionDetails() {
                             <div className="grid grid-cols-2 gap-4">
                                 <div>
                                     <p className="text-sm text-muted-foreground">Customer</p>
-                                    <p className="font-medium">{subscription.user?.name || 'N/A'}</p>
+                                    <p className="font-medium">
+                                        {subscription.user
+                                            ? `${subscription.user.first_name} ${subscription.user.last_name}`
+                                            : 'N/A'}
+                                    </p>
                                     <p className="text-sm text-muted-foreground">
                                         {subscription.user?.email || ''}
                                     </p>
@@ -124,6 +128,9 @@ export default function SubscriptionDetails() {
                                     <p className="font-medium">{subscription.plan?.name || 'N/A'}</p>
                                     <p className="text-sm text-muted-foreground">
                                         {subscription.plan?.meals_per_week} meals per week
+                                    </p>
+                                    <p className="text-sm text-muted-foreground">
+                                        {subscription.plan?.price_subscription_per_week} MAD/week
                                     </p>
                                 </div>
                             </div>
@@ -239,6 +246,18 @@ export default function SubscriptionDetails() {
                                 <p className="text-sm text-muted-foreground">Delivery Address</p>
                                 <p className="font-medium">{subscription.delivery_address || 'N/A'}</p>
                             </div>
+                            {subscription.preferred_delivery_days && subscription.preferred_delivery_days.length > 0 && (
+                                <div>
+                                    <p className="text-sm text-muted-foreground">Preferred Delivery Days</p>
+                                    <div className="flex flex-wrap gap-2 mt-1">
+                                        {subscription.preferred_delivery_days.map((day: string) => (
+                                            <Badge key={day} variant="outline">
+                                                {day.charAt(0).toUpperCase() + day.slice(1)}
+                                            </Badge>
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
                             {subscription.delivery_notes && (
                                 <div>
                                     <p className="text-sm text-muted-foreground">Delivery Notes</p>
@@ -302,7 +321,9 @@ export default function SubscriptionDetails() {
                             <div>
                                 <p className="text-sm text-muted-foreground">Total Amount Paid</p>
                                 <p className="text-2xl font-bold">
-                                    ${subscription.total_amount_paid?.toFixed(2) || '0.00'}
+                                    {typeof subscription.total_amount_paid === 'string'
+                                        ? parseFloat(subscription.total_amount_paid).toFixed(2)
+                                        : subscription.total_amount_paid?.toFixed(2) || '0.00'} MAD
                                 </p>
                             </div>
                         </CardContent>

@@ -1,4 +1,4 @@
- import { API_URL } from '../utils';
+import { API_URL } from '../utils';
 
 export const apiRoutes = {
   // ... other routes ...
@@ -13,8 +13,14 @@ export const apiRoutes = {
   plans: `${API_URL}/plans`,
   rewards: `${API_URL}/rewards`,
   subscriptions: `${API_URL}/subscriptions`,
+  subscriptionsStats: `${API_URL}/subscriptions/stats`,
+  subscriptionDetail: (id: number) => `${API_URL}/subscriptions/${id}`,
+  updateSubscription: (id: number) => `${API_URL}/subscriptions/${id}`,
   cancelSubscription: (id: number) => `${API_URL}/subscriptions/${id}/cancel`,
   pauseSubscription: (id: number) => `${API_URL}/subscriptions/${id}/pause`,
+  resumeSubscription: (id: number) => `${API_URL}/subscriptions/${id}/resume`,
+  reactivateSubscription: (id: number) => `${API_URL}/subscriptions/${id}/reactivate`,
+  toggleAutoRenew: (id: number) => `${API_URL}/subscriptions/${id}/toggle-auto-renew`,
   totalPointsEarned: `${API_URL}/total-points-earned`,
 
   weeklyMenus: `${API_URL}/weekly-menus`,
@@ -25,4 +31,3 @@ export const apiRoutes = {
   dashboard: `${API_URL}/dashboard`,
 
 };
- 

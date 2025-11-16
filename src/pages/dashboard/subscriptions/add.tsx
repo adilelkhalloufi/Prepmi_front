@@ -110,7 +110,7 @@ export default function AddSubscription() {
                                     <SelectContent>
                                         {users.map((user: any) => (
                                             <SelectItem key={user.id} value={user.id.toString()}>
-                                                {user.name} ({user.email})
+                                                {user.first_name} {user.last_name} ({user.email})
                                             </SelectItem>
                                         ))}
                                     </SelectContent>
