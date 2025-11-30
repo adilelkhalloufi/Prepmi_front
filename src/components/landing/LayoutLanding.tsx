@@ -11,7 +11,7 @@ export default function LayoutLanding() {
 
   return (
     <>
-      <Header />
+      {/* <Header /> */}
       <div className="mt-16">
         <Outlet />
       </div>

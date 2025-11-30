@@ -6,80 +6,109 @@ import { useNavigate } from "react-router-dom";
 export function Hero() {
   const { t } = useTranslation();
   const navigator = useNavigate();
+
+  const featuredMeals = [
+    {
+      name: "BBQ Chicken",
+      calories: "500 Calories",
+      protein: "40g Protein",
+      image: "/meals/bbq-chicken.jpg"
+    },
+    {
+      name: "Salmon With Greens",
+      calories: "450 Calories",
+      protein: "35g Protein",
+      image: "/meals/salmon-greens.jpg"
+    },
+    {
+      name: "Pork Stir-Fry",
+      calories: "550 Calories",
+      protein: "45g Protein",
+      image: "/meals/pork-stir-fry.jpg"
+    }
+  ];
+
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-primary">
-      {/* Background with gradient overlay */}
-      {/* <div className="absolute inset-0 bg-grid-black/[0.02] dark:bg-grid-white/[0.02]" />
-      <div className="absolute inset-0 hero-gradient-overlay" /> */}
+    <section className="relative min-h-screen overflow-hidden">
+      {/* Wooden Background with Overlay */}
+      <div
+        className="absolute inset-0 bg-cover bg-center"
+        style={{
+          backgroundImage: "url('/wooden-background.jpg')",
+        }}
+      >
+        <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/50 to-black/70" />
+      </div>
 
-      {/* Animated background elements */}
-      {/* <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary/10 dark:bg-primary/5 rounded-full blur-3xl animate-float" />
-      <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-secondary/10 dark:bg-secondary/5 rounded-full blur-3xl animate-float-delay" /> */}
+      {/* Main Content */}
+      <div className="relative z-10 container mx-auto px-4 py-20 md:py-32">
+        {/* Hero Text */}
+        <div className="text-center mb-12 md:mb-16">
+          <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold text-white mb-4 tracking-tight">
+            YOU WORK, WE FUEL
+          </h1>
+          <p className="text-xl md:text-2xl lg:text-3xl text-white font-semibold tracking-wide">
+            MACRO-BALANCED MEAL PREP
+          </p>
+        </div>
 
-      <div className="container px-4 py-16 md:py-24">
-        <div className="grid lg:grid-cols-2 gap-12 items-center">
-          {/* Content Section */}
-          <div className="text-center lg:text-left space-y-8 z-10">
-            <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold leading-tight tracking-tighter text-white">
-              {t('hero_title')}
-            </h1>
-            <p className="text-lg md:text-xl text-white/90 max-w-[600px] mx-auto lg:mx-0">
-              {t('hero_description')}
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
-              <Button
-                size="lg"
-                className="bg-white text-primary hover:bg-white/90 font-semibold px-8 py-4 text-lg"
-                onClick={() => {
-                  navigator(webRoutes.join_now)
-                }}
-              >
-                {t('hero_get_started')}
-              </Button>
-              {/* <Button
-                size="lg"
-                variant="outline"
-                className="border-white text-white hover:bg-white hover:text-primary font-semibold px-8 py-4 text-lg"
-                onClick={() => {
-                  navigator("#meals")
-                }}
-              >
-                {t('menu_meals')}
-              </Button> */}
-            </div>
-          </div>
+        {/* CTA Button */}
+        <div className="flex justify-center mb-20 md:mb-28">
+          <Button
+            size="lg"
+            className="bg-red-700 hover:bg-red-800 text-white font-bold text-lg md:text-xl px-12 py-6 md:px-16 md:py-8 rounded-full shadow-2xl transform transition-all hover:scale-105"
+            onClick={() => {
+              navigator(webRoutes.join_now)
+            }}
+          >
+            BUILD MY BOX
+          </Button>
+        </div>
 
-          {/* Image Section */}
-          <div className="relative flex justify-center lg:justify-end">
-            <div className="relative">
-              {/* Main meal image with floating animation */}
-              <div className="animate-float">
+        {/* Featured Meals Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 max-w-7xl mx-auto">
+          {featuredMeals.map((meal, index) => (
+            <div
+              key={index}
+              className="group relative bg-gradient-to-br from-amber-900/40 to-stone-800/40 backdrop-blur-sm rounded-3xl p-6 border border-amber-700/30 hover:border-amber-600/50 transition-all duration-300 hover:transform hover:scale-105 shadow-2xl"
+            >
+              {/* Meal Image */}
+              <div className="relative mb-6 rounded-2xl overflow-hidden aspect-square bg-black/30">
+                <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/60" />
                 <img
-                  src="/healthy-meal-bowl.png"
-                  alt="Healthy Meal Bowl"
-                  className="w-80 h-80 md:w-96 md:h-96 lg:w-[500px] lg:h-[500px] object-cover rounded-full shadow-2xl border-8 border-white/20"
+                  src={meal.image}
+                  alt={meal.name}
+                  className="w-full h-full object-cover"
+                  onError={(e) => {
+                    // Fallback to a placeholder if image doesn't exist
+                    e.currentTarget.src = 'https://via.placeholder.com/400x400/8B4513/FFFFFF?text=' + meal.name.replace(' ', '+');
+                  }}
                 />
               </div>
 
-              {/* Floating food elements */}
-              <div className="absolute -top-8 -right-8 w-16 h-16 bg-white/20 rounded-full animate-bounce-slow backdrop-blur-sm"></div>
-              <div className="absolute -bottom-4 -left-8 w-12 h-12 bg-white/20 rounded-full animate-float-delay backdrop-blur-sm"></div>
-              <div className="absolute top-1/4 -left-12 w-8 h-8 bg-white/20 rounded-full animate-pulse-slow backdrop-blur-sm"></div>
-              <div className="absolute bottom-1/3 -right-12 w-10 h-10 bg-white/20 rounded-full animate-float backdrop-blur-sm"></div>
+              {/* Meal Info */}
+              <div className="text-center">
+                <h3 className="text-2xl md:text-3xl font-bold text-white mb-3">
+                  {meal.name}
+                </h3>
+                <div className="flex justify-center items-center gap-3 text-white/90">
+                  <span className="text-sm md:text-base font-medium">{meal.calories}</span>
+                  <span className="text-white/50">·</span>
+                  <span className="text-sm md:text-base font-medium">{meal.protein}</span>
+                </div>
+              </div>
 
-              {/* Glow effect */}
-              <div className="absolute inset-0 rounded-full bg-gradient-to-r from-white/10 to-transparent animate-pulse-slow bg-mainbackground"></div>
+              {/* Hover Glow Effect */}
+              <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-amber-600/0 via-amber-600/10 to-amber-600/0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
             </div>
-          </div>
+          ))}
         </div>
       </div>
 
-      {/* Bottom wave decoration */}
-      <div className="absolute bottom-0 left-0 right-0">
-        <svg viewBox="0 0 1200 120" preserveAspectRatio="none" className="w-full h-16 md:h-24">
-          <path d="M0,120 C150,40 350,40 600,80 C850,120 1050,120 1200,80 L1200,120 Z" fill="hsl(var(--background))"></path>
-        </svg>
-      </div>
+      {/* Decorative Elements - Food Icons */}
+      <div className="absolute top-20 left-10 w-16 h-16 bg-white/5 rounded-full backdrop-blur-sm animate-float" />
+      <div className="absolute top-40 right-20 w-12 h-12 bg-white/5 rounded-full backdrop-blur-sm animate-float-delay" />
+      <div className="absolute bottom-40 left-20 w-20 h-20 bg-white/5 rounded-full backdrop-blur-sm animate-float" />
     </section>
   )
 }
