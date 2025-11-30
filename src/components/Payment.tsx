@@ -47,6 +47,7 @@ export function Payment() {
     const selectedMeals = Object.values(planData.selectedMeals || {})
     const selectedDrinks = Object.values(planData.selectedDrinks || {})
     const selectedRewardsMeals = planData.selectedRewardsMeals
+    console.log('Selected Rewards Meal:', selectedRewardsMeals);
 
     const [paymentMethod, setPaymentMethod] = useState<'COD' | 'ONLINE'>(planData?.paymentMethod || 'COD')
     const [isEditingMeals, setIsEditingMeals] = useState(false)
@@ -384,7 +385,7 @@ export function Payment() {
                             )}
 
                             {/* Applied Reward Meal */}
-                            {selectedRewardsMeals && (
+                            {selectedRewardsMeals && selectedRewardsMeals.mealId && (
                                 <div>
                                     <div className="flex items-center space-x-2 mb-4">
                                         <Gift className="w-4 h-4 text-secondary" />
@@ -635,23 +636,13 @@ export function Payment() {
                         <CardContent className="space-y-4">
                             <div className="space-y-3">
                                 <div
-                                    className={`p-4 rounded-lg border cursor-pointer transition-all ${paymentMethod === 'ONLINE'
-                                        ? 'border-primary bg-primary/5'
-                                        : 'border-border hover:border-primary/50'
-                                        }`}
-                                    onClick={() => {
-                                        setPaymentMethod('ONLINE')
-                                        dispatch(updatePlanData({ paymentMethod: 'ONLINE' }))
-                                    }}
+                                    className={`p-4 rounded-lg border cursor-not-allowed transition-all opacity-50 border-border`}
                                 >
                                     <div className="flex items-center space-x-3">
-                                        <div className={`w-4 h-4 rounded-full border-2 ${paymentMethod === 'ONLINE'
-                                            ? 'border-primary bg-primary'
-                                            : 'border-border'
-                                            }`} />
+                                        <div className={`w-4 h-4 rounded-full border-2 border-border`} />
                                         <div>
                                             <p className="font-medium">{t('joinNow.payment.onlinePayment')}</p>
-                                            <p className="text-sm text-muted-foreground">{t('joinNow.payment.paySecurely')}</p>
+                                            <p className="text-sm text-muted-foreground">{t('joinNow.payment.paySecurely')} (Coming Soon)</p>
                                         </div>
                                     </div>
                                 </div>
