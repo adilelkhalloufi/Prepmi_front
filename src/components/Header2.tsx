@@ -15,7 +15,7 @@ interface RouteProps {
   label: string;
 }
 
-export function Header() {
+export function Header2() {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const routeList: RouteProps[] = [
@@ -42,7 +42,7 @@ export function Header() {
   const admin = useSelector((state: RootState) => state.admin?.user);
   console.log("admin in Header:", admin);
   return (
-    <header className="fixed z-50 top-0 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+    <header className="fixed mx-auto z-50 mt-7 rounded-lg top-0 w-3/4   bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-16 items-center justify-between">
         <div className="flex items-center space-x-4">
           <span className="text-xl font-bold flex items-center">
@@ -70,7 +70,10 @@ export function Header() {
           </nav>
         <div className="flex items-center space-x-4">
           {/* <ThemeSwitcher /> */}
+          <div className="hidden md:flex">
+
           <LangToggle />
+          </div>
 
           {/* <Button
             variant="ghost"
@@ -119,6 +122,7 @@ export function Header() {
             onClick={() => {
               navigate(webRoutes.join_now);
             }}
+            className="hidden md:flex"
           >
             {t("menu_get_started")}
           </Button>

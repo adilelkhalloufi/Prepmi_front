@@ -65,7 +65,7 @@ export default {
         sm: "calc(var(--radius) - 4px)",
       },
       backgroundImage: {
-        'mainbackground': "url('/healthy-meal-bowl.png')",
+        'mainbackground': "url('/bg.png')",
       },
       keyframes: {
         "accordion-down": {

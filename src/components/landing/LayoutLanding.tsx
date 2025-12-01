@@ -1,6 +1,7 @@
 import { Outlet, useNavigation } from "react-router-dom";
 import { ScrollToTop } from "../ScrollToTop";
 import { Header } from "../Header";
+import { Header2 } from "../Header2";
 import Footer from "../Footer";
 
 export default function LayoutLanding() {
@@ -11,11 +12,10 @@ export default function LayoutLanding() {
 
   return (
     <>
-      {/* <Header /> */}
-      <div className="mt-16">
-        <Outlet />
-      </div>
-      <Footer />
+ 
+         <Outlet />
+    
+      {/* <Footer /> */}
       <ScrollToTop />
     </>
   );

@@ -21,7 +21,6 @@ export function Hero() {
           {/* Content Section */}
           <div className="text-center lg:text-left space-y-8 z-10">
             <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold leading-tight tracking-tighter text-white">
-              {t('hero_title')}
             </h1>
             <p className="text-lg md:text-xl text-white/90 max-w-[600px] mx-auto lg:mx-0">
               {t('hero_description')}
