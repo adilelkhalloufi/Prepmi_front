@@ -89,32 +89,34 @@ const JoinNow = () => {
     const CurrentStepComponent = steps.find(step => step.id === currentStep)?.component
 
     return (
-        <main className="min-h-screen bg-gradient-to-br from-primary/10 via-white to-primary/5">
+        <main className="min-h-screen bg-gradient-to-br from-primary/10 via-white to-primary/5 pt-20">
             <div className="container mx-auto px-4 py-8">
                 {/* Progress Bar */}
                 <div className="mb-8">
-                    <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between max-w-4xl mx-auto gap-4 sm:gap-0">
+                    <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between max-w-4xl mx-auto gap-0 sm:gap-0">
                         {steps.map((step, index) => (
-                            <div key={step.id} className="flex items-center w-full sm:w-auto">
-                                <div className={`w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center font-semibold text-sm sm:text-base flex-shrink-0 ${currentStep >= step.id
-                                    ? 'bg-primary text-primary-foreground'
-                                    : 'bg-gray-200 text-gray-500'
-                                    }`}>
-                                    {step.id}
+                            <div key={step.id} className="flex flex-col sm:flex-row items-start sm:items-center w-full sm:w-auto">
+                                <div className="flex items-center w-full">
+                                    <div className={`w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center font-semibold text-sm sm:text-base flex-shrink-0 ${currentStep >= step.id
+                                        ? 'bg-primary text-primary-foreground'
+                                        : 'bg-gray-200 text-gray-500'
+                                        }`}>
+                                        {step.id}
+                                    </div>
+                                    <span className={`ml-2 font-medium text-sm sm:text-base ${currentStep >= step.id ? 'text-primary' : 'text-gray-500'
+                                        }`}>
+                                        {step.title}
+                                    </span>
+                                    {/* Desktop: Horizontal connector */}
+                                    {index < steps.length - 1 && (
+                                        <div className={`hidden sm:block w-16 h-1 mx-4 flex-shrink-0 ${currentStep > step.id ? 'bg-primary' : 'bg-gray-200'
+                                            }`} />
+                                    )}
                                 </div>
-                                <span className={`ml-2 font-medium text-sm sm:text-base ${currentStep >= step.id ? 'text-primary' : 'text-gray-500'
-                                    }`}>
-                                    {step.title}
-                                </span>
+                                {/* Mobile: Vertical connector */}
                                 {index < steps.length - 1 && (
-                                    <>
-                                        {/* Mobile: Vertical connector */}
-                                        <div className={`sm:hidden w-1 h-8 ml-4 ${currentStep > step.id ? 'bg-primary' : 'bg-gray-200'
-                                            }`} />
-                                        {/* Desktop: Horizontal connector */}
-                                        <div className={`hidden sm:block w-16 h-1 mx-4 ${currentStep > step.id ? 'bg-primary' : 'bg-gray-200'
-                                            }`} />
-                                    </>
+                                    <div className={`sm:hidden w-1 h-6 ml-4 my-2 ${currentStep > step.id ? 'bg-primary' : 'bg-gray-200'
+                                        }`} />
                                 )}
                             </div>
                         ))}

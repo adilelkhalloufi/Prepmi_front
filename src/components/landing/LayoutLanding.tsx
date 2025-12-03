@@ -12,8 +12,12 @@ export default function LayoutLanding() {
 
   return (
     <>
- 
-         <Outlet />
+    <div className="w-full">
+
+          <Header2 />
+    </div>
+
+          <Outlet />
     
       {/* <Footer /> */}
       <ScrollToTop />

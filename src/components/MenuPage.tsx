@@ -206,9 +206,9 @@ export function MenuPage() {
     };
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-background via-background/95 to-primary/5">
+        <div className="min-h-screen bg-gradient-to-br from-background via-background/95 to-primary/5 ">
             {/* Hero Section */}
-            <div className="relative overflow-hidden bg-gradient-to-r from-primary/10 via-primary/5 to-secondary/10 border-b border-border/50">
+            <div className="relative overflow-hidden bg-gradient-to-r from-primary/10 via-primary/5 to-secondary/10 border-b border-border/50 pt-20">
                 <div className="absolute inset-0 bg-grid-pattern opacity-5" />
                 <div className="container mx-auto px-4 py-16 relative">
                     <div className="text-center max-w-4xl mx-auto">

@@ -73,7 +73,7 @@ export const SingleMeal = () => {
     isLoading ? (
       <ListProductSkeleton />
     ) : (
-      <div className="grid md:grid-cols-2 gap-6 lg:gap-12 items-start max-w-6xl px-4 mx-auto py-6">
+      <div className="grid md:grid-cols-2 gap-6 lg:gap-12 items-start max-w-6xl px-4 mx-auto py-6 pt-28">
         <div className="grid gap-3 items-start">
           <div className="grid gap-4">
             <img

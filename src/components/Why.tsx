@@ -7,97 +7,7 @@ export function Why({meals}) {
 
   return (
     <section id="how-it-works" className="relative py-20 bg-gradient-to-b from-[#e8e4e1] to-[#dbd7d6] overflow-hidden">
-       {/* Decorative basil leaves - top left */}
-       <div className="absolute top-0 left-0 w-64 md:w-80 h-64 md:h-80 opacity-60 pointer-events-none z-0">
-         <svg viewBox="0 0 200 200" className="w-full h-full">
-           {/* Basil leaf cluster */}
-           <path d="M30,60 Q20,40 35,25 Q50,10 65,20 Q75,5 90,15 Q100,25 95,40 Q110,35 115,50 Q120,65 105,75 Q95,85 80,80 Q75,95 60,90 Q45,85 40,70 Q25,75 30,60 Z" 
-                 fill="url(#greenGradient1)" opacity="0.9"/>
-           <path d="M40,80 Q30,65 40,50 Q50,40 60,45 Q70,35 80,42 Q88,50 85,62 Q95,58 98,68 Q100,78 90,85 Q82,92 72,88 Q70,100 58,96 Q48,92 45,82 Q35,85 40,80 Z" 
-                 fill="url(#greenGradient2)" opacity="0.85"/>
-           <path d="M60,100 Q52,88 58,75 Q65,65 75,68 Q82,60 90,65 Q96,72 94,82 Q102,79 104,87 Q106,95 98,100 Q92,106 84,103 Q82,112 72,109 Q64,105 62,98 Q55,100 60,100 Z" 
-                 fill="url(#greenGradient3)" opacity="0.8"/>
-           <defs>
-             <linearGradient id="greenGradient1" x1="0%" y1="0%" x2="100%" y2="100%">
-               <stop offset="0%" stopColor="#16a34a" />
-               <stop offset="100%" stopColor="#15803d" />
-             </linearGradient>
-             <linearGradient id="greenGradient2" x1="0%" y1="0%" x2="100%" y2="100%">
-               <stop offset="0%" stopColor="#22c55e" />
-               <stop offset="100%" stopColor="#16a34a" />
-             </linearGradient>
-             <linearGradient id="greenGradient3" x1="0%" y1="0%" x2="100%" y2="100%">
-               <stop offset="0%" stopColor="#4ade80" />
-               <stop offset="100%" stopColor="#22c55e" />
-             </linearGradient>
-           </defs>
-         </svg>
-       </div>
-
-       {/* Decorative basil leaves - top right */}
-       <div className="absolute top-0 right-0 w-64 md:w-80 h-64 md:h-80 opacity-60 pointer-events-none z-0 transform scale-x-[-1]">
-         <svg viewBox="0 0 200 200" className="w-full h-full">
-           <path d="M30,60 Q20,40 35,25 Q50,10 65,20 Q75,5 90,15 Q100,25 95,40 Q110,35 115,50 Q120,65 105,75 Q95,85 80,80 Q75,95 60,90 Q45,85 40,70 Q25,75 30,60 Z" 
-                 fill="url(#greenGradient4)" opacity="0.9"/>
-           <path d="M40,80 Q30,65 40,50 Q50,40 60,45 Q70,35 80,42 Q88,50 85,62 Q95,58 98,68 Q100,78 90,85 Q82,92 72,88 Q70,100 58,96 Q48,92 45,82 Q35,85 40,80 Z" 
-                 fill="url(#greenGradient5)" opacity="0.85"/>
-           <defs>
-             <linearGradient id="greenGradient4" x1="0%" y1="0%" x2="100%" y2="100%">
-               <stop offset="0%" stopColor="#059669" />
-               <stop offset="100%" stopColor="#047857" />
-             </linearGradient>
-             <linearGradient id="greenGradient5" x1="0%" y1="0%" x2="100%" y2="100%">
-               <stop offset="0%" stopColor="#10b981" />
-               <stop offset="100%" stopColor="#059669" />
-             </linearGradient>
-           </defs>
-         </svg>
-       </div>
-
-       {/* Tomato decoration - bottom left */}
-       <div className="absolute bottom-10 left-10 w-32 h-32 md:w-40 md:h-40 opacity-70 pointer-events-none z-0 animate-float">
-         <svg viewBox="0 0 100 100" className="w-full h-full">
-           <circle cx="50" cy="55" r="35" fill="url(#tomatoGradient)"/>
-           <ellipse cx="50" cy="55" rx="32" ry="35" fill="url(#tomatoHighlight)" opacity="0.3"/>
-           <path d="M35,20 Q40,15 45,18 Q50,10 55,18 Q60,15 65,20 Q60,25 50,30 Q40,25 35,20 Z" fill="#22c55e"/>
-           <defs>
-             <radialGradient id="tomatoGradient">
-               <stop offset="0%" stopColor="#ef4444" />
-               <stop offset="100%" stopColor="#dc2626" />
-             </radialGradient>
-             <radialGradient id="tomatoHighlight">
-               <stop offset="0%" stopColor="#ffffff" />
-               <stop offset="100%" stopColor="transparent" />
-             </radialGradient>
-           </defs>
-         </svg>
-       </div>
-
-       {/* Lemon slice - bottom right */}
-       <div className="absolute bottom-10 right-10 w-28 h-28 md:w-36 md:h-36 opacity-70 pointer-events-none z-0 animate-bounce-slow">
-         <svg viewBox="0 0 100 100" className="w-full h-full">
-           <circle cx="50" cy="50" r="40" fill="url(#lemonGradient)"/>
-           <circle cx="50" cy="50" r="35" fill="none" stroke="#fde047" strokeWidth="2"/>
-           {[...Array(8)].map((_, i) => (
-             <line 
-               key={i}
-               x1="50" y1="50" 
-               x2={50 + Math.cos(i * Math.PI / 4) * 35} 
-               y2={50 + Math.sin(i * Math.PI / 4) * 35}
-               stroke="#fde047" 
-               strokeWidth="1" 
-               opacity="0.4"
-             />
-           ))}
-           <circle cx="50" cy="50" r="12" fill="#fef3c7" opacity="0.6"/>
-           <defs>
-             <radialGradient id="lemonGradient">
-               <stop offset="0%" stopColor="#fef08a" />
-               <stop offset="100%" stopColor="#facc15" />
-             </radialGradient>
-           </defs>
-         </svg>
-       </div>
+ 
 
        {/* Additional scattered basil leaves */}
        <div className="absolute top-1/3 left-1/4 w-16 h-16 opacity-40 pointer-events-none z-0 animate-float" style={{animationDelay: '1s'}}>
@@ -146,8 +56,9 @@ export function Why({meals}) {
                 <img
                   src='./example3.png'
                   alt={meal.name}
-                  className="w-full h-full object-cover rounded-lg "
+                  className="w-full h-full object-cover rounded-lg"
                 />
+                <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-3/4 h-4 bg-black/20 blur-md rounded-full"></div>
               </div>
               <h3 className="text-gray-900 text-center mt-4 font-semibold text-lg min-h-[3.5rem] flex items-center justify-center">
                 {meal.name}

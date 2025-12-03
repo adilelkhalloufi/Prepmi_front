@@ -42,7 +42,7 @@ export function Header2() {
   const admin = useSelector((state: RootState) => state.admin?.user);
   console.log("admin in Header:", admin);
   return (
-    <header className="fixed mx-auto z-50 mt-7 rounded-lg top-0 w-3/4   bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+    <header className="fixed left-1/2 -translate-x-1/2 z-50 mt-7 rounded-lg top-0 w-3/4 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-16 items-center justify-between">
         <div className="flex items-center space-x-4">
           <span className="text-xl font-bold flex items-center">

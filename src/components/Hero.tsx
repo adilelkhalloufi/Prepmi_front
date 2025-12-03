@@ -13,9 +13,10 @@ export function Hero({ meals }) {
   // Fetch meals using React Query
  
   return (
-    <section className="relative min-h-screen overflow-hidden bg-mainbackground bg-center bg-cover flex items-center justify-center">
-      <Header2 />
-      <div className="container  ">
+    <section className="relative overflow-hidden bg-mainbackground bg-center bg-cover bg-fixed flex items-center justify-center">
+      {/* Dark overlay */}
+      <div className="absolute inset-0 bg-black/50 z-0"></div>
+      <div className="container relative z-10">
         <div className=" items-center mt-32">
           {/* Content Section */}
           <div className="text-center lg:text-left space-y-8 z-10">
@@ -37,7 +38,7 @@ export function Hero({ meals }) {
             </div>
           </div>
         </div>
-        <div className="container   pt-10 flex gap-4  flex-col md:flex-row  justify-center pb-4 md:pb-0">
+        <div className="container   pt-10 flex gap-4  flex-col md:flex-row  justify-center pb-4">
           {meals?.map((meal: any) => (
             <div 
               key={meal.id}

@@ -37,6 +37,7 @@ const Index = () => {
       <Newsletter /> */}
       <Hero meals={meals} />
       <Why meals={meals} />
+      <Footer2 />
  
     </main>
   );
