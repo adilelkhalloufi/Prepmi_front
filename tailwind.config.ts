@@ -65,7 +65,7 @@ export default {
         sm: "calc(var(--radius) - 4px)",
       },
       backgroundImage: {
-        'mainbackground': "url('/bg.png')",
+        'mainbackground': "url('/bg.jpg')",
       },
       keyframes: {
         "accordion-down": {
