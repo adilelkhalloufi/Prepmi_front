@@ -21,5 +21,10 @@ export const apiRoutes = {
   nutritionSummary: `${API_URL}/nutrition-summary`,
   dashboard: `${API_URL}/dashboard`,
 
+  // Membership routes
+  membershipPlans: `${API_URL}/membership-plans`,
+  memberships: `${API_URL}/memberships`,
+  membershipTransactions: `${API_URL}/membership-transactions`,
+
 };
  

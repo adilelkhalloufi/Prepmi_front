@@ -66,6 +66,37 @@ export interface Plan {
     created_at?: string
     updated_at?: string
 }
+
+export interface MembershipPlan {
+    id?: number
+    name: string
+    description?: string
+    monthly_fee: number
+    discount_percentage?: number
+    delivery_slots?: number
+    includes_free_desserts?: boolean
+    free_desserts_quantity?: number
+    perks?: string[]
+    is_active: boolean
+    billing_day_of_month?: number
+    created_at?: string
+    updated_at?: string
+}
+
+export interface Membership {
+    id?: number
+    user_id: number
+    membership_plan_id: number
+    status: 'active' | 'pending' | 'frozen' | 'cancelled'
+    started_at?: string
+    frozen_at?: string
+    cancelled_at?: string
+    next_billing_date?: string
+    user?: User
+    membership_plan?: MembershipPlan
+    created_at?: string
+    updated_at?: string
+}
  
 export interface Reward {
     id?: number
