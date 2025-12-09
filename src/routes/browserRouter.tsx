@@ -120,6 +120,28 @@ const DashboardReward = loadable(() => import('../pages/dashboard/rewards'), {
   fallback: fallbackElement,
 });
 
+const DashboardMembershipPlans = loadable(() => import('../pages/dashboard/membership-plans'), {
+  fallback: fallbackElement,
+});
+
+const DashboardMembershipPlanAdd = loadable(() => import('../pages/dashboard/membership-plans/add'), {
+  fallback: fallbackElement,
+});
+const DashboardMembershipPlanEdit = loadable(() => import('../pages/dashboard/membership-plans/edit'), {
+  fallback: fallbackElement,
+});
+const DashboardMembershipPlanView = loadable(() => import('../pages/dashboard/membership-plans/view'), {
+  fallback: fallbackElement,
+});
+
+const DashboardMemberships = loadable(() => import('../pages/dashboard/memberships'), {
+  fallback: fallbackElement,
+});
+
+const DashboardMembershipDetails = loadable(() => import('../pages/dashboard/memberships/details'), {
+  fallback: fallbackElement,
+});
+
 const SingleMeal = loadable(() => import("../pages/SingleMeal"), {
   fallback: fallbackElement,
 });
@@ -128,6 +150,14 @@ const ThankYouPage = loadable(() => import("../pages/thank-you"), {
   fallback: fallbackElement,
 });
 const Landing = loadable(() => import("../pages/landing"), {
+  fallback: fallbackElement,
+});
+
+const MembershipPlans = loadable(() => import("../pages/membership-plans"), {
+  fallback: fallbackElement,
+});
+
+const MembershipCheckout = loadable(() => import("../pages/membership-checkout"), {
   fallback: fallbackElement,
 });
 
@@ -151,6 +181,10 @@ export const browserRouter = createBrowserRouter([
       {
         path: webRoutes.join_now,
         element: <JoinNow />,
+      },
+      {
+        path: webRoutes.membership_plans,
+        element: <MembershipPlans />,
       },
       {
         path: webRoutes.register,
@@ -291,6 +325,30 @@ export const browserRouter = createBrowserRouter([
         path: webRoutes.dashboard_rewards,
         element: <DashboardReward />,
       },
+      {
+        path: webRoutes.dashboard_membership_plans,
+        element: <DashboardMembershipPlans />,
+      },
+      {
+        path: webRoutes.dashboard_membership_plans_add,
+        element: <DashboardMembershipPlanAdd />,
+      },
+      {
+        path: webRoutes.dashboard_membership_plans_edit,
+        element: <DashboardMembershipPlanEdit />,
+      },
+      {
+        path: webRoutes.dashboard_membership_plans_view,
+        element: <DashboardMembershipPlanView />,
+      },
+      {
+        path: webRoutes.dashboard_memberships,
+        element: <DashboardMemberships />,
+      },
+      {
+        path: webRoutes.dashboard_memberships_view,
+        element: <DashboardMembershipDetails />,
+      }
 
     ],
   },
@@ -305,7 +363,10 @@ export const browserRouter = createBrowserRouter([
         path: webRoutes.checkout,
         element: <Checkout />,
       },
-
+      {
+        path: webRoutes.membership_checkout,
+        element: <MembershipCheckout />,
+      },
     ],
   },
   {

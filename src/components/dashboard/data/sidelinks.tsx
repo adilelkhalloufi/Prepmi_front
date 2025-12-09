@@ -10,7 +10,9 @@ import {
   IconShoppingCart,
   IconUser,
   IconCalendarMonth,
-  IconChefHat
+  IconChefHat,
+  IconCreditCard,
+  IconUsers
 
 } from '@tabler/icons-react'
 
@@ -95,6 +97,20 @@ export const sidelinks: SideLink[] = [
     label: '',
     href: webRoutes.dashboard_rewards,
     icon: <IconSettings2 size={18} />,
+    role: [RoleEnum.ADMIN, RoleEnum.CLIENT]
+  },
+  {
+    title: 'Membership Plans',
+    label: '',
+    href: webRoutes.dashboard_membership_plans,
+    icon: <IconCreditCard size={18} />,
+    role: [RoleEnum.ADMIN]  
+  },
+  {
+    title: 'Memberships',
+    label: '',
+    href: webRoutes.dashboard_memberships,
+    icon: <IconUsers size={18} />,
     role: [RoleEnum.ADMIN, RoleEnum.CLIENT]
   }
 

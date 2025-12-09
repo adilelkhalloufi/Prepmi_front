@@ -29,8 +29,8 @@ export function Header() {
       label: t("menu_how_it_works"),
     },
     {
-      href: "#pricing",
-      label: t("menu_pricing"),
+      href: webRoutes.membership_plans,
+      label: t("menu_plans"),
     },
     {
       href: "#about",

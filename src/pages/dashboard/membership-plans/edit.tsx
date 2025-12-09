@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, ChangeEvent } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
@@ -19,14 +19,18 @@ export default function EditMembershipPlan() {
     const [formData, setFormData] = useState({
         name: "",
         description: "",
-        monthly_fee: 0,
-        discount_percentage: 0,
+        // Keep fees as strings to preserve decimals/formatting from API
+        monthly_fee: "",
+        discount_percentage: "",
         delivery_slots: 0,
         includes_free_desserts: false,
         free_desserts_quantity: 0,
         is_active: true,
         billing_day_of_month: 1,
+        perks: [] as string[],
     });
+
+    const [planMeta, setPlanMeta] = useState({ created_at: "", updated_at: "" });
 
     const [error, setError] = useState(false);
     const [success, setSuccess] = useState(false);
@@ -38,17 +42,28 @@ export default function EditMembershipPlan() {
             setLoadingPlan(true);
             http.get(`${apiRoutes.membershipPlans}/${id}`)
                 .then((res) => {
-                    const plan = res.data.data;
+                    const plan = res && res.data ? (res.data.data ?? res.data) : null;
+                    if (!plan) {
+                        // If API response doesn't contain expected data, mark error
+                        setError(true);
+                        return;
+                    }
+
                     setFormData({
                         name: plan.name || "",
                         description: plan.description || "",
-                        monthly_fee: plan.monthly_fee || 0,
-                        discount_percentage: plan.discount_percentage || 0,
-                        delivery_slots: plan.delivery_slots || 0,
+                        monthly_fee: plan.monthly_fee ?? "",
+                        discount_percentage: plan.discount_percentage ?? "",
+                        delivery_slots: plan.delivery_slots ? Number(plan.delivery_slots) : 0,
                         includes_free_desserts: plan.includes_free_desserts || false,
-                        free_desserts_quantity: plan.free_desserts_quantity || 0,
+                        free_desserts_quantity: plan.free_desserts_quantity ? Number(plan.free_desserts_quantity) : 0,
                         is_active: plan.is_active !== undefined ? plan.is_active : true,
-                        billing_day_of_month: plan.billing_day_of_month || 1,
+                        billing_day_of_month: plan.billing_day_of_month ? Number(plan.billing_day_of_month) : 1,
+                        perks: Array.isArray(plan.perks) ? plan.perks : [],
+                    });
+                    setPlanMeta({
+                        created_at: plan.created_at || "",
+                        updated_at: plan.updated_at || "",
                     });
                 })
                 .catch((e) => {
@@ -61,12 +76,24 @@ export default function EditMembershipPlan() {
         }
     }, [id]);
 
-    const handleChange = (e) => {
-        const { name, value, type, checked } = e.target;
-        setFormData((prev) => ({
-            ...prev,
-            [name]: type === "checkbox" ? checked : value,
-        }));
+    const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+        const { name, value, type } = e.target as HTMLInputElement;
+
+        // Special handling for perks textarea
+        if (name === "perks") {
+            const items = String(value).split(/\r?\n/).map((s) => s.trim()).filter(Boolean);
+            setFormData((prev) => ({ ...prev, perks: items }));
+            return;
+        }
+
+        // Keep monetary fields as strings to preserve formatting
+        if (type === "number" && (name !== "monthly_fee" && name !== "discount_percentage")) {
+            const num = value === "" ? 0 : Number(value);
+            setFormData((prev) => ({ ...prev, [name]: num }));
+            return;
+        }
+
+        setFormData((prev) => ({ ...prev, [name]: value }));
     };
 
     const handleSwitchChange = (name: string, checked: boolean) => {
@@ -84,6 +111,9 @@ export default function EditMembershipPlan() {
                 const value = formData[key as keyof typeof formData];
                 if (typeof value === 'boolean') {
                     submitData.append(key, value ? '1' : '0');
+                } else if (Array.isArray(value)) {
+                    // serialize arrays as JSON string (adjust if API expects other format)
+                    submitData.append(key, JSON.stringify(value));
                 } else if (value !== null && value !== undefined) {
                     submitData.append(key, String(value));
                 }
@@ -166,6 +196,10 @@ export default function EditMembershipPlan() {
             <Card>
                 <CardHeader>
                     <CardTitle>Détails du plan d'adhésion</CardTitle>
+                    <div className="text-sm text-muted-foreground mt-2">
+                        <div>Créé: {planMeta.created_at ? new Date(planMeta.created_at).toLocaleString() : '-'}</div>
+                        <div>Mise à jour: {planMeta.updated_at ? new Date(planMeta.updated_at).toLocaleString() : '-'}</div>
+                    </div>
                 </CardHeader>
                 <CardContent className="space-y-4">
                     <div className="grid grid-cols-2 gap-4">
@@ -180,6 +214,15 @@ export default function EditMembershipPlan() {
                                 value={formData.description} 
                                 onChange={handleChange}
                                 rows={3}
+                            />
+                        </div>
+                        <div className="col-span-2">
+                            <Label>Perks (un par ligne)</Label>
+                            <Textarea
+                                name="perks"
+                                value={formData.perks.join('\n')}
+                                onChange={handleChange}
+                                rows={4}
                             />
                         </div>
                         <div>

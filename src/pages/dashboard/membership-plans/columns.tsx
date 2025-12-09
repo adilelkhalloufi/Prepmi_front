@@ -60,7 +60,7 @@ export const columns: ColumnDef<MembershipPlan>[] = [
             const hasDesserts = row.getValue("includes_free_desserts")
             const plan = row.original
             if (hasDesserts) {
-                return <Badge variant="secondary">{plan.free_desserts_quantity || 0} gratuit(s)</Badge>
+                return <Badge variant="secondary" className="text-white">{plan.free_desserts_quantity || 0} gratuit(s)</Badge>
             }
             return "-"
         }
@@ -71,7 +71,7 @@ export const columns: ColumnDef<MembershipPlan>[] = [
         cell: ({ row }) => {
             const isActive = row.getValue("is_active")
             return (
-                <Badge className={isActive ? "bg-green-500" : "bg-red-500"}>
+                <Badge className={isActive ? "bg-primary" : "bg-secondary"}>
                     {isActive ? "Actif" : "Inactif"}
                 </Badge>
             )
@@ -93,9 +93,9 @@ export const columns: ColumnDef<MembershipPlan>[] = [
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
                         <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                        <DropdownMenuItem onClick={() => navigate(webRoutes.dashboard_membership_plans_view.replace(':id', String(plan.id)))}>
+                        {/* <DropdownMenuItem onClick={() => navigate(webRoutes.dashboard_membership_plans_view.replace(':id', String(plan.id)))}>
                             Voir les détails
-                        </DropdownMenuItem>
+                        </DropdownMenuItem> */}
                         <DropdownMenuItem onClick={() => navigate(webRoutes.dashboard_membership_plans_edit.replace(':id', String(plan.id)))}>
                             Modifier
                         </DropdownMenuItem>

@@ -1,0 +1,161 @@
+import { columns } from "./columns"
+import { DataTable } from "./data-table"
+import { useEffect, useState } from "react"
+import http from "@/utils/http"
+import { apiRoutes } from "@/routes/api"
+import { Button } from "@/components/ui/button"
+import { useNavigate } from "react-router-dom"
+import { webRoutes } from "@/routes/web"
+import { toast } from "sonner"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+
+interface Membership {
+    id: number
+    user_id: number
+    membership_plan_id: number
+    status: string
+    started_at: string
+    next_billing_date: string
+    cancelled_at?: string
+    user?: any
+    membership_plan?: any
+}
+
+interface MembershipStats {
+    total: number
+    active: number
+    frozen: number
+    cancelled: number
+    pending: number
+}
+
+export default function MembershipIndex() {
+    const navigate = useNavigate()
+    const [data, setData] = useState<Membership[]>([])
+    const [stats, setStats] = useState<MembershipStats | null>(null)
+    const [loading, setLoading] = useState<boolean>(true)
+
+    const fetchMemberships = () => {
+        setLoading(true)
+      
+             http.get(apiRoutes.memberships).then((response) => {
+                const memberships = response.data.data ?? response.data
+                
+                setData(Array.isArray(memberships) ? memberships : [])
+             })
+            .catch((error) => {
+                console.error("Error fetching memberships:", error)
+                toast.error("Erreur lors du chargement des adhésions")
+            })
+            .finally(() => setLoading(false))
+    }
+
+    useEffect(() => {
+        fetchMemberships()
+    }, [])
+
+    const handleActivate = async (membershipId: number) => {
+        try {
+            await http.post(`${apiRoutes.memberships}/${membershipId}/activate`)
+            toast.success("Adhésion activée avec succès")
+            fetchMemberships()
+        } catch (error) {
+            toast.error("Erreur lors de l'activation de l'adhésion")
+        }
+    }
+
+    const handleFreeze = async (membershipId: number) => {
+        try {
+            await http.post(`${apiRoutes.memberships}/${membershipId}/freeze`)
+            toast.success("Adhésion gelée avec succès")
+            fetchMemberships()
+        } catch (error) {
+            toast.error("Erreur lors du gel de l'adhésion")
+        }
+    }
+
+    const handleUnfreeze = async (membershipId: number) => {
+        try {
+            await http.post(`${apiRoutes.memberships}/${membershipId}/unfreeze`)
+            toast.success("Adhésion réactivée avec succès")
+            fetchMemberships()
+        } catch (error) {
+            toast.error("Erreur lors de la réactivation de l'adhésion")
+        }
+    }
+
+    const handleCancel = async (membershipId: number) => {
+        try {
+            await http.post(`${apiRoutes.memberships}/${membershipId}/cancel`)
+            toast.success("Adhésion annulée avec succès")
+            fetchMemberships()
+        } catch (error) {
+            toast.error("Erreur lors de l'annulation de l'adhésion")
+        }
+    }
+
+    return (
+        <>
+            <div className="flex justify-between items-center w-full mb-4">
+                <h1 className="text-3xl font-bold m-2">Adhésions</h1>
+            </div>
+
+            {/* Statistics Cards */}
+            {stats && (
+                <div className="grid gap-4 md:grid-cols-5 mb-6">
+                    <Card>
+                        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                            <CardTitle className="text-sm font-medium">Total</CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                            <div className="text-2xl font-bold">{stats.total}</div>
+                        </CardContent>
+                    </Card>
+                    <Card>
+                        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                            <CardTitle className="text-sm font-medium">Actives</CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                            <div className="text-2xl font-bold text-green-600">{stats.active}</div>
+                        </CardContent>
+                    </Card>
+                    <Card>
+                        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                            <CardTitle className="text-sm font-medium">En attente</CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                            <div className="text-2xl font-bold text-yellow-600">{stats.pending}</div>
+                        </CardContent>
+                    </Card>
+                    <Card>
+                        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                            <CardTitle className="text-sm font-medium">Gelées</CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                            <div className="text-2xl font-bold text-blue-600">{stats.frozen}</div>
+                        </CardContent>
+                    </Card>
+                    <Card>
+                        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                            <CardTitle className="text-sm font-medium">Annulées</CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                            <div className="text-2xl font-bold text-red-600">{stats.cancelled}</div>
+                        </CardContent>
+                    </Card>
+                </div>
+            )}
+
+            <DataTable
+                columns={columns({
+                    onActivate: handleActivate,
+                    onFreeze: handleFreeze,
+                    onUnfreeze: handleUnfreeze,
+                    onCancel: handleCancel,
+                })}
+                data={data}
+                loading={loading}
+            />
+        </>
+    )
+}
