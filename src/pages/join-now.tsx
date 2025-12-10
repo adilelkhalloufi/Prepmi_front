@@ -93,7 +93,7 @@ const JoinNow = () => {
             <div className="container mx-auto px-4 py-8">
                 {/* Progress Bar */}
                 <div className="mb-8">
-                    <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between max-w-4xl mx-auto gap-0 sm:gap-0">
+                    <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between   mx-auto gap-0 sm:gap-0">
                         {steps.map((step, index) => (
                             <div key={step.id} className="flex flex-col sm:flex-row items-start sm:items-center w-full sm:w-auto">
                                 <div className="flex items-center w-full">
@@ -124,14 +124,14 @@ const JoinNow = () => {
                 </div>
 
                 {/* Step Content */}
-                <div className="max-w-4xl mx-auto">
+                <div className=" mx-auto">
                     {CurrentStepComponent && (
                         <CurrentStepComponent />
                     )}
                 </div>
 
                 {/* Navigation */}
-                <div className="flex flex-col sm:flex-row justify-between items-center max-w-4xl mx-auto mt-8 gap-4 sm:gap-0">
+                <div className="flex flex-col sm:flex-row justify-between items-center  mx-auto mt-8 gap-4 sm:gap-0">
                     <Button
                         variant="outline"
                         onClick={handlePrev}

@@ -82,7 +82,7 @@ export function Why({ meals }) {
         </div>
 
         <div className="container mx-auto px-4 flex gap-4 items-stretch justify-center flex-wrap">
-          {meals?.map((meal: any, index) => (
+          {Array.isArray(meals) && meals.map((meal: any, index) => (
             <div
               key={meal.id}
               className="rounded-lg   flex flex-col p-4 items-center w-72 max-w-72"

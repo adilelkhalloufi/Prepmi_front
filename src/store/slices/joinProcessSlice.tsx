@@ -94,11 +94,20 @@ export const joinProcessSlice = createSlice({
     },
     resetJoinProcess: (state) => {
       return initialState
+    },
+    // clear just meal selections
+    clearMealSelections: (state) => {
+      if (state.planData) {
+        state.planData.selectedMeals = {}
+        state.planData.selectedBreakfasts = {}
+        state.planData.selectedDrinks = {}
+        state.planData.selectedRewardsMeals = {}
+      }
     }
   }
 })
 
-export const { setCurrentStep, updatePlanData, nextStep, prevStep, resetJoinProcess } = joinProcessSlice.actions
+export const { setCurrentStep, updatePlanData, nextStep, prevStep, resetJoinProcess,clearMealSelections } = joinProcessSlice.actions
 export default joinProcessSlice.reducer
 
 

@@ -127,7 +127,11 @@ export function Meals() {
 
     const weeklyMenu = weeklyMenuResponse?.data?.[0] || null;
     const allMeals = mealsResponse?.data || [];
+    console.log('All Meals:', allMeals);
+
     const mainMeals = weeklyMenu?.meals || [];
+        console.log('weekly Meals:', mainMeals);
+
     const breakfasts = allMeals.filter(meal =>
         meal.type === 'breakfast' || meal.category?.name?.toLowerCase().includes('breakfast')
     );

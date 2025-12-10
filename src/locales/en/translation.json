@@ -20,8 +20,6 @@
     "description": "Enter your details below to sign in to your account",
     "condition": "By clicking Sign In, you agree to our  Terms of Service and Privacy Policy."
   },
-
- 
   "how_it_works": {
     "simple_process": "Simple Process",
     "title": "How It Works",
@@ -58,6 +56,7 @@
     "protein": "protein",
     "mins": "mins",
     "chef_crafted": "Chef Crafted",
+    "membership": "Membership",
     "vegan": "Vegan",
     "vegetarian": "Vegetarian",
     "gluten_free": "Gluten Free",
@@ -553,5 +552,6 @@
     "message": "Don't have an account? ",
     "create": "Create account"
   },
-  "menu.currency": "MAD"
+  "menu.currency": "MAD",
+  "menu_plans": "Adhésion"
 }

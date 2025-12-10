@@ -233,7 +233,7 @@ export default function MembershipCheckout() {
                             <CardContent className="space-y-2">
                                 <div className="flex justify-between text-sm">
                                     <span className="text-gray-600">{t('membershipCheckout.name', 'Name')}:</span>
-                                    <span className="font-medium">{admin.name || admin.email}</span>
+                                    <span className="font-medium">{admin.first_name || admin.last_name}</span>
                                 </div>
                                 <div className="flex justify-between text-sm">
                                     <span className="text-gray-600">{t('membershipCheckout.email', 'Email')}:</span>

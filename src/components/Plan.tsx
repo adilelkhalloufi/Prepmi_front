@@ -4,7 +4,7 @@ import { Badge } from "@/components/ui/badge"
 import { useTranslation } from "react-i18next"
 import { useDispatch, useSelector } from "react-redux"
 import { RootState } from "@/store"
-import { updatePlanData } from "@/store/slices/joinProcessSlice"
+import { clearMealSelections, updatePlanData } from "@/store/slices/joinProcessSlice"
 import { useQuery } from "@tanstack/react-query"
 import http from "@/utils/http"
 import { apiRoutes } from "@/routes/api"
@@ -94,7 +94,6 @@ export const Plan = () => {
 
     const handleProteinSelect = (proteinId: string) => {
         const selectedCategory = categories.find(cat => cat.id?.toString() === proteinId)
-        
         setSelectedProtein(proteinId)
         dispatch(updatePlanData({ 
             protein: proteinId,
@@ -107,6 +106,8 @@ export const Plan = () => {
   
 
     const handleMealSelect = (meals: number) => {
+                dispatch(clearMealSelections())
+
         const selectedPlan = mealOptions.find(plan => plan.meals_per_week === meals)
         
         if (selectedPlan) {

@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useState, useRef, useEffect } from "react"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
@@ -11,20 +11,8 @@ import { handleErrorResponse } from "@/utils"
 import { useNavigate } from "react-router-dom"
 import { useSelector } from "react-redux"
 import { RootState } from "@/store"
+import { MembershipPlan } from "@/interfaces/admin"
 
-interface MembershipPlan {
-    id: number
-    name: string
-    description: string
-    monthly_fee: string
-    discount_percentage: string
-    delivery_slots: number
-    includes_free_desserts: boolean
-    free_desserts_quantity: number
-    perks: string[]
-    is_active: boolean
-    billing_day_of_month: number
-}
 
 const planIcons = {
     basic: Star,
@@ -45,6 +33,17 @@ export default function MembershipPlansPage() {
     const navigate = useNavigate()
     const admin = useSelector((state: RootState) => state.admin?.user)
     const [selectedPlanId, setSelectedPlanId] = useState<number | null>(null)
+    const continueButtonRef = useRef<HTMLDivElement>(null)
+
+    // Auto-scroll to continue button when a plan is selected
+    useEffect(() => {
+        if (selectedPlanId && continueButtonRef.current) {
+            continueButtonRef.current.scrollIntoView({ 
+                behavior: 'smooth', 
+                block: 'center' 
+            })
+        }
+    }, [selectedPlanId])
 
     // Check if user is authenticated when trying to select a plan
     const checkAuthAndNavigate = (planId: number) => {
@@ -266,17 +265,19 @@ export default function MembershipPlansPage() {
 
                 {/* Continue Button */}
                 {selectedPlanId && (
-                    <div className="text-center">
-                        <Button
-                            size="lg"
-                            onClick={handleProceedToCheckout}
-                            className="px-8 py-6 text-lg font-semibold"
-                        >
-                            {t('membershipPlans.continue', 'Continue to Checkout')}
-                        </Button>
-                        <p className="text-sm text-gray-500 mt-4">
-                            {t('membershipPlans.cancelAnytime', 'Cancel anytime. No commitments.')}
-                        </p>
+                    <div ref={continueButtonRef} className="text-center sticky bottom-6 z-10">
+                        <div className="inline-block bg-white rounded-xl shadow-2xl p-6 border-2 border-primary/20">
+                            <Button
+                                size="lg"
+                                onClick={handleProceedToCheckout}
+                                className="px-8 py-6 text-lg font-semibold animate-pulse"
+                            >
+                                {t('membershipPlans.continue', 'Continue to Checkout')}
+                            </Button>
+                            <p className="text-sm text-gray-500 mt-4">
+                                {t('membershipPlans.cancelAnytime', 'Cancel anytime. No commitments.')}
+                            </p>
+                        </div>
                     </div>
                 )}
             </div>

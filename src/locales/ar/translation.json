@@ -57,6 +57,7 @@
     "protein": "بروتين",
     "mins": "دقيقة",
     "chef_crafted": "مصنوع بواسطة الطاهي",
+    "membership": "العضوية",
     "vegan": "نباتي",
     "vegetarian": "نباتي",
     "gluten_free": "خالي من الغلوتين",
@@ -408,5 +409,6 @@
     "passwordRequired": "كلمة المرور مطلوبة",
     "passwordMinLength": "كلمة المرور يجب أن تكون على الأقل 4 أحرف"
   },
-  "menu.currency": "درهم"
+  "menu.currency": "درهم",
+  "menu_plans": "عضوية"
 }

@@ -67,6 +67,9 @@ export interface Plan {
     updated_at?: string
 }
 
+ 
+
+
 export interface MembershipPlan {
     id?: number
     name: string
@@ -346,6 +349,9 @@ export interface Meal {
     show_company?: boolean
     favaris?: boolean
     relatedProducts?: Meal[]
+
+    // memebership meal
+    show_for_membership?: boolean
 }
 
 export interface FormModalProps {
