@@ -12,6 +12,9 @@ import {
 import { Badge } from "@/components/ui/badge"
 import { useNavigate } from "react-router-dom"
 import { webRoutes } from "@/routes/web"
+import { useSelector } from "react-redux"
+import { RootState } from "@/store"
+import { RoleEnum } from "@/enum/RoleEnum"
 
 interface Membership {
     id: number
@@ -56,7 +59,7 @@ export const columns = (actions?: ColumnActions): ColumnDef<Membership>[] => [
     },
     {
         accessorKey: "user",
-        header: "Membre",
+        header: "Member",
         cell: ({ row }) => {
             const user = row.original.user
             return user ? (
@@ -87,10 +90,10 @@ export const columns = (actions?: ColumnActions): ColumnDef<Membership>[] => [
             const status = row.getValue("status") as string
             return (
                 <Badge className={`capitalize ${statusVariant[status] || "bg-gray-500"}`}>
-                    {status === "active" ? "Active" :
-                     status === "pending" ? "En attente" :
-                     status === "frozen" ? "Gelée" :
-                     status === "cancelled" ? "Annulée" : status}
+                    {status === "active" ? "active" :
+                     status === "pending" ? "pending" :
+                     status === "frozen" ? "frozen" :
+                     status === "cancelled" ? "cancelled" : status}
                 </Badge>
             )
         },
@@ -103,7 +106,7 @@ export const columns = (actions?: ColumnActions): ColumnDef<Membership>[] => [
                     variant="ghost"
                     onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
                 >
-                    Date de début
+                    Start Date
                     <ArrowUpDown className="ml-2 h-4 w-4" />
                 </Button>
             )
@@ -115,7 +118,7 @@ export const columns = (actions?: ColumnActions): ColumnDef<Membership>[] => [
     },
     {
         accessorKey: "next_billing_date",
-        header: "Prochaine facturation",
+        header: "Next Billing",
         cell: ({ row }) => {
             const date = row.getValue("next_billing_date") as string
             return date ? new Date(date).toLocaleDateString("fr-FR") : "-"
@@ -127,12 +130,14 @@ export const columns = (actions?: ColumnActions): ColumnDef<Membership>[] => [
             const membership = row.original
             const navigate = useNavigate()
             const status = membership.status
+            const admin = useSelector((state: RootState) => state.admin?.user)
+            const isAdmin = Number(admin?.role) === RoleEnum.ADMIN
 
             return (
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                         <Button variant="ghost" className="h-8 w-8 p-0">
-                            <span className="sr-only">Ouvrir le menu</span>
+                            <span className="sr-only">Open menu</span>
                             <MoreHorizontal className="h-4 w-4" />
                         </Button>
                     </DropdownMenuTrigger>
@@ -141,25 +146,25 @@ export const columns = (actions?: ColumnActions): ColumnDef<Membership>[] => [
                         <DropdownMenuItem
                             onClick={() => navigate(`${webRoutes.dashboard_memberships}/view/${membership.id}`)}
                         >
-                            Voir les détails
+                            View details
                         </DropdownMenuItem>
                         <DropdownMenuSeparator />
                         
-                        {status === "pending" && actions?.onActivate && (
+                        {status === "pending" && actions?.onActivate && isAdmin && (
                             <DropdownMenuItem onClick={() => actions.onActivate!(membership.id)}>
-                                Activer l'adhésion
+                                Activate membership
                             </DropdownMenuItem>
                         )}
                         
                         {status === "active" && actions?.onFreeze && (
                             <DropdownMenuItem onClick={() => actions.onFreeze!(membership.id)}>
-                                Geler l'adhésion
+                                freeze memebership
                             </DropdownMenuItem>
                         )}
                         
                         {status === "frozen" && actions?.onUnfreeze && (
                             <DropdownMenuItem onClick={() => actions.onUnfreeze!(membership.id)}>
-                                Réactiver l'adhésion
+                                Reactivate memebership
                             </DropdownMenuItem>
                         )}
                         
@@ -170,7 +175,7 @@ export const columns = (actions?: ColumnActions): ColumnDef<Membership>[] => [
                                     onClick={() => actions.onCancel!(membership.id)}
                                     className="text-red-600"
                                 >
-                                    Annuler l'adhésion
+                                    Cancel membership
                                 </DropdownMenuItem>
                             </>
                         )}

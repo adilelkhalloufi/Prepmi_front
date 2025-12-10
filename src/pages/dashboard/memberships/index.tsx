@@ -8,6 +8,7 @@ import { useNavigate } from "react-router-dom"
 import { webRoutes } from "@/routes/web"
 import { toast } from "sonner"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { handleErrorResponse } from "@/utils"
 
 interface Membership {
     id: number
@@ -45,7 +46,7 @@ export default function MembershipIndex() {
              })
             .catch((error) => {
                 console.error("Error fetching memberships:", error)
-                toast.error("Erreur lors du chargement des adhésions")
+                toast.error("Error loading memberships")
             })
             .finally(() => setLoading(false))
     }
@@ -57,47 +58,47 @@ export default function MembershipIndex() {
     const handleActivate = async (membershipId: number) => {
         try {
             await http.post(`${apiRoutes.memberships}/${membershipId}/activate`)
-            toast.success("Adhésion activée avec succès")
+            toast.success("Membership activated successfully")
             fetchMemberships()
         } catch (error) {
-            toast.error("Erreur lors de l'activation de l'adhésion")
+            handleErrorResponse(error)
         }
     }
 
     const handleFreeze = async (membershipId: number) => {
         try {
             await http.post(`${apiRoutes.memberships}/${membershipId}/freeze`)
-            toast.success("Adhésion gelée avec succès")
+            toast.success("Membership frozen successfully")
             fetchMemberships()
         } catch (error) {
-            toast.error("Erreur lors du gel de l'adhésion")
+            handleErrorResponse(error)
         }
     }
 
     const handleUnfreeze = async (membershipId: number) => {
         try {
             await http.post(`${apiRoutes.memberships}/${membershipId}/unfreeze`)
-            toast.success("Adhésion réactivée avec succès")
+            toast.success("Membership reactivated successfully")
             fetchMemberships()
         } catch (error) {
-            toast.error("Erreur lors de la réactivation de l'adhésion")
+            handleErrorResponse(error)
         }
     }
 
     const handleCancel = async (membershipId: number) => {
         try {
             await http.post(`${apiRoutes.memberships}/${membershipId}/cancel`)
-            toast.success("Adhésion annulée avec succès")
+            toast.success("Membership cancelled successfully")
             fetchMemberships()
         } catch (error) {
-            toast.error("Erreur lors de l'annulation de l'adhésion")
+            handleErrorResponse(error)
         }
     }
 
     return (
         <>
             <div className="flex justify-between items-center w-full mb-4">
-                <h1 className="text-3xl font-bold m-2">Adhésions</h1>
+                <h1 className="text-3xl font-bold m-2">Memberships</h1>
             </div>
 
             {/* Statistics Cards */}
@@ -113,7 +114,7 @@ export default function MembershipIndex() {
                     </Card>
                     <Card>
                         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                            <CardTitle className="text-sm font-medium">Actives</CardTitle>
+                            <CardTitle className="text-sm font-medium">Active</CardTitle>
                         </CardHeader>
                         <CardContent>
                             <div className="text-2xl font-bold text-green-600">{stats.active}</div>
@@ -121,7 +122,7 @@ export default function MembershipIndex() {
                     </Card>
                     <Card>
                         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                            <CardTitle className="text-sm font-medium">En attente</CardTitle>
+                            <CardTitle className="text-sm font-medium">Pending</CardTitle>
                         </CardHeader>
                         <CardContent>
                             <div className="text-2xl font-bold text-yellow-600">{stats.pending}</div>
@@ -129,7 +130,7 @@ export default function MembershipIndex() {
                     </Card>
                     <Card>
                         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                            <CardTitle className="text-sm font-medium">Gelées</CardTitle>
+                            <CardTitle className="text-sm font-medium">Frozen</CardTitle>
                         </CardHeader>
                         <CardContent>
                             <div className="text-2xl font-bold text-blue-600">{stats.frozen}</div>
@@ -137,7 +138,7 @@ export default function MembershipIndex() {
                     </Card>
                     <Card>
                         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                            <CardTitle className="text-sm font-medium">Annulées</CardTitle>
+                            <CardTitle className="text-sm font-medium">Cancelled</CardTitle>
                         </CardHeader>
                         <CardContent>
                             <div className="text-2xl font-bold text-red-600">{stats.cancelled}</div>

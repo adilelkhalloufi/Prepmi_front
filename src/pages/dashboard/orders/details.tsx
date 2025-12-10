@@ -107,19 +107,14 @@ export default function OrderDetails() {
                                 <TableRow>
                                     <TableHead>Repas</TableHead>
                                     <TableHead>Quantité</TableHead>
-                                    <TableHead>Prix unitaire</TableHead>
-                                    <TableHead className="text-right">Sous-total</TableHead>
-                                </TableRow>
+                                 </TableRow>
                             </TableHeader>
                             <TableBody>
                                 {order.order_meals && order.order_meals.map((item: any) => (
                                     <TableRow key={item.id}>
                                         <TableCell>{item.meal?.name}</TableCell>
                                         <TableCell>{item.quantity}</TableCell>
-                                        <TableCell>
-                                            {new Intl.NumberFormat("fr-FR", { style: "currency", currency: "MAD" })
-                                                .format(Number(item.meal?.price))}
-                                        </TableCell>
+                                       
 
                                     </TableRow>
                                 ))}

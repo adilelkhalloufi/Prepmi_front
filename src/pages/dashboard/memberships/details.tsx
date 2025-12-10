@@ -11,6 +11,9 @@ import { Badge } from "@/components/ui/badge"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Separator } from "@/components/ui/separator"
 import { toast } from "sonner"
+import { useSelector } from "react-redux"
+import { RootState } from "@/store"
+import { RoleEnum } from "@/enum/RoleEnum"
 
 const statusVariant: Record<string, string> = {
     active: "bg-green-500",
@@ -32,6 +35,8 @@ export default function MembershipDetails() {
     const [membership, setMembership] = useState<any | null>(null)
     const [transactions, setTransactions] = useState<any[]>([])
     const [loading, setLoading] = useState(true)
+    const admin = useSelector((state: RootState) => state.admin?.user)
+    const isAdmin = Number(admin?.role) === RoleEnum.ADMIN
 
     const fetchMembershipDetails = () => {
         if (id) {
@@ -58,51 +63,51 @@ export default function MembershipDetails() {
     const handleActivate = async () => {
         try {
             await http.post(`${apiRoutes.memberships}/${id}/activate`)
-            toast.success("Adhésion activée avec succès")
+            toast.success("Membership activated successfully")
             fetchMembershipDetails()
         } catch (error) {
-            toast.error("Erreur lors de l'activation")
+            toast.error("Error activating membership")
         }
     }
 
     const handleFreeze = async () => {
         try {
             await http.post(`${apiRoutes.memberships}/${id}/freeze`)
-            toast.success("Adhésion gelée avec succès")
+            toast.success("Membership frozen successfully")
             fetchMembershipDetails()
         } catch (error) {
-            toast.error("Erreur lors du gel")
+            toast.error("Error freezing membership")
         }
     }
 
     const handleUnfreeze = async () => {
         try {
             await http.post(`${apiRoutes.memberships}/${id}/unfreeze`)
-            toast.success("Adhésion réactivée avec succès")
+            toast.success("Membership reactivated successfully")
             fetchMembershipDetails()
         } catch (error) {
-            toast.error("Erreur lors de la réactivation")
+            toast.error("Error reactivating membership")
         }
     }
 
     const handleCancel = async () => {
-        if (window.confirm("Êtes-vous sûr de vouloir annuler cette adhésion ?")) {
+        if (window.confirm("Are you sure you want to cancel this membership?")) {
             try {
                 await http.post(`${apiRoutes.memberships}/${id}/cancel`)
-                toast.success("Adhésion annulée avec succès")
+                toast.success("Membership cancelled successfully")
                 fetchMembershipDetails()
             } catch (error) {
-                toast.error("Erreur lors de l'annulation")
+                toast.error("Error cancelling membership")
             }
         }
     }
 
     if (loading) {
-        return <div className="flex items-center justify-center h-96">Chargement des détails de l'adhésion...</div>
+        return <div className="flex items-center justify-center h-96">Loading membership details...</div>
     }
 
     if (!membership) {
-        return <div>Adhésion non trouvée.</div>
+        return <div>Membership not found.</div>
     }
 
     const plan = membership.membership_plan || {}
@@ -115,29 +120,29 @@ export default function MembershipDetails() {
                 <div className="flex items-center gap-4">
                     <Button variant="ghost" size="sm" onClick={() => navigate(webRoutes.dashboard_memberships)}>
                         <ArrowLeft className="w-4 h-4 mr-2" />
-                        Retour
+                        Back
                     </Button>
-                    <h1 className="text-3xl font-bold">Détails de l'adhésion #{membership.id}</h1>
+                    <h1 className="text-3xl font-bold">Membership Details #{membership.id}</h1>
                 </div>
                 <div className="flex gap-2">
-                    {status === "pending" && (
+                    {status === "pending" && isAdmin && (
                         <Button onClick={handleActivate} variant="default">
-                            Activer
+                            Activate
                         </Button>
                     )}
                     {status === "active" && (
                         <Button onClick={handleFreeze} variant="secondary">
-                            Geler
+                            Freeze
                         </Button>
                     )}
                     {status === "frozen" && (
                         <Button onClick={handleUnfreeze} variant="default">
-                            Réactiver
+                            Reactivate
                         </Button>
                     )}
                     {(status === "active" || status === "frozen") && (
                         <Button onClick={handleCancel} variant="destructive">
-                            Annuler l'adhésion
+                            Cancel Membership
                         </Button>
                     )}
                 </div>
@@ -147,11 +152,11 @@ export default function MembershipDetails() {
                 {/* Member Information */}
                 <Card>
                     <CardHeader>
-                        <CardTitle>Informations du membre</CardTitle>
+                        <CardTitle>Member Information</CardTitle>
                     </CardHeader>
                     <CardContent className="space-y-3">
                         <div>
-                            <p className="font-semibold text-sm text-gray-600">Nom</p>
+                            <p className="font-semibold text-sm text-gray-600">Name</p>
                             <p className="text-lg">{user.name || "-"}</p>
                         </div>
                         <div>
@@ -159,16 +164,16 @@ export default function MembershipDetails() {
                             <p className="text-lg">{user.email || "-"}</p>
                         </div>
                         <div>
-                            <p className="font-semibold text-sm text-gray-600">Téléphone</p>
+                            <p className="font-semibold text-sm text-gray-600">Phone</p>
                             <p className="text-lg">{user.phone || "-"}</p>
                         </div>
                         <div>
-                            <p className="font-semibold text-sm text-gray-600">Statut</p>
+                            <p className="font-semibold text-sm text-gray-600">Status</p>
                             <Badge className={`capitalize ${statusVariant[status] || "bg-gray-500"}`}>
                                 {status === "active" ? "Active" :
-                                 status === "pending" ? "En attente" :
-                                 status === "frozen" ? "Gelée" :
-                                 status === "cancelled" ? "Annulée" : status}
+                                 status === "pending" ? "Pending" :
+                                 status === "frozen" ? "Frozen" :
+                                 status === "cancelled" ? "Cancelled" : status}
                             </Badge>
                         </div>
                     </CardContent>
@@ -177,7 +182,7 @@ export default function MembershipDetails() {
                 {/* Membership Plan */}
                 <Card>
                     <CardHeader>
-                        <CardTitle>Plan d'adhésion</CardTitle>
+                        <CardTitle>Membership Plan</CardTitle>
                     </CardHeader>
                     <CardContent className="space-y-3">
                         <div>
@@ -186,23 +191,23 @@ export default function MembershipDetails() {
                         </div>
                         <Separator />
                         <div className="flex justify-between">
-                            <span className="text-sm text-gray-600">Frais mensuels</span>
+                            <span className="text-sm text-gray-600">Monthly Fee</span>
                             <span className="font-bold">{plan.monthly_fee} MAD</span>
                         </div>
                         {parseFloat(plan.discount_percentage || 0) > 0 && (
                             <div className="flex justify-between">
-                                <span className="text-sm text-gray-600">Réduction</span>
+                                <span className="text-sm text-gray-600">Discount</span>
                                 <span className="font-semibold text-green-600">{plan.discount_percentage}%</span>
                             </div>
                         )}
                         <div className="flex justify-between">
-                            <span className="text-sm text-gray-600">Créneaux de livraison</span>
-                            <span className="font-semibold">{plan.delivery_slots} par semaine</span>
+                            <span className="text-sm text-gray-600">Delivery Slots</span>
+                            <span className="font-semibold">{plan.delivery_slots} per week</span>
                         </div>
                         {plan.includes_free_desserts && (
                             <div className="flex justify-between">
-                                <span className="text-sm text-gray-600">Desserts gratuits</span>
-                                <span className="font-semibold">{plan.free_desserts_quantity} par semaine</span>
+                                <span className="text-sm text-gray-600">Free Desserts</span>
+                                <span className="font-semibold">{plan.free_desserts_quantity} per week</span>
                             </div>
                         )}
                     </CardContent>
@@ -211,33 +216,33 @@ export default function MembershipDetails() {
                 {/* Membership Details */}
                 <Card className="md:col-span-2">
                     <CardHeader>
-                        <CardTitle>Détails de l'adhésion</CardTitle>
+                        <CardTitle>Membership Details</CardTitle>
                     </CardHeader>
                     <CardContent className="grid md:grid-cols-3 gap-4">
                         <div>
-                            <p className="font-semibold text-sm text-gray-600">Date de début</p>
+                            <p className="font-semibold text-sm text-gray-600">Start Date</p>
                             <p className="text-lg">
-                                {membership.started_at ? new Date(membership.started_at).toLocaleDateString("fr-FR") : "-"}
+                                {membership.started_at ? new Date(membership.started_at).toLocaleDateString("en-US") : "-"}
                             </p>
                         </div>
                         <div>
-                            <p className="font-semibold text-sm text-gray-600">Prochaine facturation</p>
+                            <p className="font-semibold text-sm text-gray-600">Next Billing</p>
                             <p className="text-lg">
-                                {membership.next_billing_date ? new Date(membership.next_billing_date).toLocaleDateString("fr-FR") : "-"}
+                                {membership.next_billing_date ? new Date(membership.next_billing_date).toLocaleDateString("en-US") : "-"}
                             </p>
                         </div>
                         {membership.cancelled_at && (
                             <div>
-                                <p className="font-semibold text-sm text-gray-600">Date d'annulation</p>
+                                <p className="font-semibold text-sm text-gray-600">Cancellation Date</p>
                                 <p className="text-lg">
-                                    {new Date(membership.cancelled_at).toLocaleDateString("fr-FR")}
+                                    {new Date(membership.cancelled_at).toLocaleDateString("en-US")}
                                 </p>
                             </div>
                         )}
                         <div>
-                            <p className="font-semibold text-sm text-gray-600">Renouvellement automatique</p>
+                            <p className="font-semibold text-sm text-gray-600">Auto Renewal</p>
                             <p className="text-lg">
-                                {status === "cancelled" ? "Non" : "Oui"}
+                                {status === "cancelled" ? "No" : "Yes"}
                             </p>
                         </div>
                     </CardContent>
@@ -247,7 +252,7 @@ export default function MembershipDetails() {
                 {plan.perks && plan.perks.length > 0 && (
                     <Card className="md:col-span-2">
                         <CardHeader>
-                            <CardTitle>Avantages inclus</CardTitle>
+                            <CardTitle>Included Benefits</CardTitle>
                         </CardHeader>
                         <CardContent>
                             <ul className="grid md:grid-cols-2 gap-2">
@@ -265,7 +270,7 @@ export default function MembershipDetails() {
                 {/* Transactions History */}
                 <Card className="md:col-span-2">
                     <CardHeader>
-                        <CardTitle>Historique des transactions</CardTitle>
+                        <CardTitle>Transaction History</CardTitle>
                     </CardHeader>
                     <CardContent>
                         {transactions.length > 0 ? (
@@ -274,17 +279,17 @@ export default function MembershipDetails() {
                                     <TableRow>
                                         <TableHead>Date</TableHead>
                                         <TableHead>Type</TableHead>
-                                        <TableHead>Montant</TableHead>
-                                        <TableHead>Statut</TableHead>
-                                        <TableHead>Méthode</TableHead>
-                                        <TableHead>Référence</TableHead>
+                                        <TableHead>Amount</TableHead>
+                                        <TableHead>Status</TableHead>
+                                        <TableHead>Method</TableHead>
+                                        <TableHead>Reference</TableHead>
                                     </TableRow>
                                 </TableHeader>
                                 <TableBody>
                                     {transactions.map((transaction: any) => (
                                         <TableRow key={transaction.id}>
                                             <TableCell>
-                                                {new Date(transaction.created_at).toLocaleDateString("fr-FR")}
+                                                {new Date(transaction.created_at).toLocaleDateString("en-US")}
                                             </TableCell>
                                             <TableCell className="capitalize">
                                                 {transaction.transaction_type?.replace("_", " ")}
@@ -294,10 +299,10 @@ export default function MembershipDetails() {
                                             </TableCell>
                                             <TableCell>
                                                 <Badge className={`capitalize ${transactionStatusVariant[transaction.payment_status] || "bg-gray-500"}`}>
-                                                    {transaction.payment_status === "completed" ? "Complété" :
-                                                     transaction.payment_status === "pending" ? "En attente" :
-                                                     transaction.payment_status === "failed" ? "Échoué" :
-                                                     transaction.payment_status === "refunded" ? "Remboursé" :
+                                                    {transaction.payment_status === "completed" ? "Completed" :
+                                                     transaction.payment_status === "pending" ? "Pending" :
+                                                     transaction.payment_status === "failed" ? "Failed" :
+                                                     transaction.payment_status === "refunded" ? "Refunded" :
                                                      transaction.payment_status}
                                                 </Badge>
                                             </TableCell>
@@ -312,7 +317,7 @@ export default function MembershipDetails() {
                                 </TableBody>
                             </Table>
                         ) : (
-                            <p className="text-center text-gray-500 py-8">Aucune transaction trouvée</p>
+                            <p className="text-center text-gray-500 py-8">No transactions found</p>
                         )}
                     </CardContent>
                 </Card>

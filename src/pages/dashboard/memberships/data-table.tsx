@@ -71,7 +71,7 @@ export function DataTable<TData, TValue>({
         <div className="rounded-md border">
             <div className="flex items-center p-4">
                 <Input
-                    placeholder="Filtrer par membre..."
+                    placeholder="Filter by member..."
                     value={(table.getColumn("user")?.getFilterValue() as string) ?? ""}
                     onChange={(event) =>
                         table.getColumn("user")?.setFilterValue(event.target.value)
@@ -81,7 +81,7 @@ export function DataTable<TData, TValue>({
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                         <Button variant="outline" className="ml-auto">
-                            Colonnes
+                            Columns
                         </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
@@ -144,8 +144,8 @@ export function DataTable<TData, TValue>({
                                 <TableRow>
                                     <TableCell colSpan={columns.length} className="h-24 text-center">
                                         <EmptyStateComponent
-                                            title="Aucune donnée trouvée"
-                                            description="Aucune adhésion disponible dans le tableau"
+                                            title="No data found"
+                                            description="No memberships available in the table"
                                             icon={<IconDatabase size={48} />}
                                         />
                                     </TableCell>
@@ -159,8 +159,8 @@ export function DataTable<TData, TValue>({
             </Table>
             <div className="flex justify-between items-center p-4">
                 <div className="flex-1 text-sm text-muted-foreground">
-                    {table.getFilteredSelectedRowModel().rows.length} de{" "}
-                    {table.getFilteredRowModel().rows.length} ligne(s) sélectionnée(s)
+                    {table.getFilteredSelectedRowModel().rows.length} of{" "}
+                    {table.getFilteredRowModel().rows.length} row(s) selected
                 </div>
                 <div className="flex items-center justify-end space-x-2">
                     <Button
@@ -169,7 +169,7 @@ export function DataTable<TData, TValue>({
                         onClick={() => table.previousPage()}
                         disabled={!table.getCanPreviousPage()}
                     >
-                        Précédente
+                        Previous
                     </Button>
                     <Button
                         variant="outline"
@@ -177,7 +177,7 @@ export function DataTable<TData, TValue>({
                         onClick={() => table.nextPage()}
                         disabled={!table.getCanNextPage()}
                     >
-                        Suivante
+                        Next
                     </Button>
                 </div>
             </div>

@@ -10,11 +10,13 @@ import http from "@/utils/http"
 import { apiRoutes } from "@/routes/api"
 import { handleErrorResponse } from "@/utils"
 import type { Plan as PlanType } from "@/interfaces/admin"
+import { Check } from "lucide-react"
 
 export const Plan = () => {
     const { t } = useTranslation()
     const dispatch = useDispatch()
     const planData = useSelector((state: RootState) => state.joinProcess.planData)
+    const admin = useSelector((state: RootState) => state.admin?.user)
 
     const [selectedProtein, setSelectedProtein] = useState(planData?.protein || '')
     const [selectedPortion, setSelectedPortion] = useState(planData?.portion || '')
@@ -59,8 +61,24 @@ export const Plan = () => {
                 }),
     });
 
+    // Fetch user's active membership if logged in
+    const { data: membershipResponse } = useQuery({
+        queryKey: ["user-membership", admin?.id],
+        queryFn: () =>
+            http
+                .get(`${apiRoutes.memberships}?user_id=${admin?.id}&status=active`)
+                .then((res) => {
+                    const memberships = res.data.data ?? res.data
+                    return Array.isArray(memberships) ? memberships[0] : null
+                })
+                .catch(() => null),
+        enabled: !!admin?.id,
+    });
+
     const categories = categoriesResponse?.data || [];
     const plans = plansResponse?.data || [];
+    const userMembership = membershipResponse || null;
+    const membershipPlan = userMembership?.membership_plan || null;
 
     // Map categories to protein options format
     const proteinOptions = categories.map((category: any) => ({
@@ -107,15 +125,37 @@ export const Plan = () => {
     }
 
     const calculateTotal = () => {
-    const mealsNum = typeof selectedMeals === 'number' ? selectedMeals : Number(selectedMeals) || 0;
-    const selectedPlan = mealOptions.find(plan => plan.meals_per_week === mealsNum);
-    const portionExtra = selectedPortion && selectedPortion !== 'standard' ? 1.99 * mealsNum : 0;
-    const pricePerWeek = Number(selectedPlan?.price_per_week || 0);
-    const subtotal = pricePerWeek + portionExtra;
-    const discount = 0; // Calculate discount if you have original price field
-    const delivery = selectedPlan?.is_free_shipping ? 0 : Number(selectedPlan?.delivery_fee || 0);
+        const mealsNum = typeof selectedMeals === 'number' ? selectedMeals : Number(selectedMeals) || 0;
+        const selectedPlan = mealOptions.find(plan => plan.meals_per_week === mealsNum);
+        const portionExtra = selectedPortion && selectedPortion !== 'standard' ? 1.99 * mealsNum : 0;
+        const pricePerWeek = Number(selectedPlan?.price_per_week || 0);
+        const subtotal = pricePerWeek + portionExtra;
+        
+        // Calculate membership discount
+        const membershipDiscountPercent = membershipPlan ? Number(membershipPlan.discount_percentage || 0) : 0;
+        const membershipDiscount = membershipDiscountPercent > 0 ? (subtotal * membershipDiscountPercent) / 100 : 0;
+        
+        // Apply membership benefits for delivery
+        const hasFreeDesserts = membershipPlan?.includes_free_desserts || false;
+        const freeDessertsQuantity = Number(membershipPlan?.free_desserts_quantity || 0);
+        
+        // Check if membership provides free delivery or if plan has free shipping
+        const isFreeDelivery = selectedPlan?.is_free_shipping || (membershipPlan && membershipDiscountPercent >= 10);
+        const delivery = isFreeDelivery ? 0 : Number(selectedPlan?.delivery_fee || 0);
+        
+        const finalSubtotal = subtotal - membershipDiscount;
+        const total = finalSubtotal + delivery;
 
-    return { subtotal, discount, delivery, total: subtotal + delivery };
+        return { 
+            subtotal, 
+            membershipDiscount, 
+            membershipDiscountPercent,
+            delivery, 
+            total,
+            hasFreeDesserts,
+            freeDessertsQuantity,
+            isFreeDelivery
+        };
     }
 
     const totals = calculateTotal()
@@ -253,6 +293,42 @@ export const Plan = () => {
                                 <CardTitle className="text-2xl font-bold text-center">{t('plan.summary.title')}</CardTitle>
                             </CardHeader>
                             <CardContent className="p-8">
+                                {/* Membership Benefits Section */}
+                                {userMembership && membershipPlan && (
+                                    <div className="mb-6 p-4 bg-gradient-to-r from-green-50 to-blue-50 border border-green-200 rounded-lg">
+                                        <h3 className="font-bold text-lg text-green-800 mb-3 flex items-center">
+                                            <Check className="w-5 h-5 mr-2" />
+                                            {membershipPlan.name} Benefits
+                                        </h3>
+                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-sm">
+                                            {totals.membershipDiscountPercent > 0 && (
+                                                <div className="flex items-center text-green-700">
+                                                    <Check className="w-4 h-4 mr-1" />
+                                                    {totals.membershipDiscountPercent}% discount on meals
+                                                </div>
+                                            )}
+                                            {totals.hasFreeDesserts && (
+                                                <div className="flex items-center text-green-700">
+                                                    <Check className="w-4 h-4 mr-1" />
+                                                    {totals.freeDessertsQuantity} free desserts/month
+                                                </div>
+                                            )}
+                                            {totals.isFreeDelivery && (
+                                                <div className="flex items-center text-green-700">
+                                                    <Check className="w-4 h-4 mr-1" />
+                                                    Free delivery
+                                                </div>
+                                            )}
+                                            {membershipPlan.perks && membershipPlan.perks.slice(0, 2).map((perk: string, index: number) => (
+                                                <div key={index} className="flex items-center text-green-700">
+                                                    <Check className="w-4 h-4 mr-1" />
+                                                    {perk}
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </div>
+                                )}
+                                
                                 <div className="space-y-6">
                                     <div className="flex justify-between items-center py-3 border-b border-gray-100">
                                         <span className="font-semibold text-gray-700">{t('plan.summary.pricePerMeal')}</span>
@@ -278,14 +354,15 @@ export const Plan = () => {
                                         </div>
                                     </div>
 
-                                    {totals.discount > 0 && (
+                                    {totals.membershipDiscount > 0 && (
                                         <div className="flex justify-between items-center py-3 border-b border-gray-100">
-                                            <span className="text-green-600 font-medium">{t('plan.summary.discount')}</span>
+                                            <span className="text-green-600 font-medium">
+                                                Membership Discount ({totals.membershipDiscountPercent}%)
+                                            </span>
                                             <span className="font-semibold text-green-600">
-                                                -{totals.discount.toFixed(2)} 
+                                                -{totals.membershipDiscount.toFixed(2)} 
                                                 {t('menu.currency')}
-                                                {t('plan.summary.off')}
-                                                </span>
+                                            </span>
                                         </div>
                                     )}
 
@@ -295,7 +372,10 @@ export const Plan = () => {
                                             {totals.delivery > 0 ? (
                                                 <span className="font-semibold">{t('menu.currency')}{totals.delivery.toFixed(2)}</span>
                                             ) : (
-                                                <span className="font-semibold text-green-600">{t('plan.summary.free')}</span>
+                                                <span className="font-semibold text-green-600">
+                                                    {t('plan.summary.free')}
+                                                    {totals.isFreeDelivery && membershipPlan && ' (Membership)'}
+                                                </span>
                                             )}
                                         </div>
                                     </div>

@@ -109,7 +109,7 @@ export default function ClientDashboard() {
                     </CardContent>
                 </Card>
             </div>
-            <div className='mt-8'>
+            {/* <div className='mt-8'>
                 <h2 className='text-xl font-bold mb-4'>Historique des repas</h2>
                 {(data.meals_history ?? []).length === 0 ? (
                     <div className='text-muted-foreground'>Aucun repas trouvé.</div>
@@ -125,7 +125,7 @@ export default function ClientDashboard() {
                         ))}
                     </ul>
                 )}
-            </div>
+            </div> */}
         </div>
     );
 }

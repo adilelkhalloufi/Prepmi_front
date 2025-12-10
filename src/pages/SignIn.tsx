@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
 import logo from '../assets/Prepme.svg'
 import { Button } from '@/components/ui/button'
+import { webRoutes } from '@/routes/web'
 
 export default function SignIn() {
   const { t } = useTranslation()
@@ -89,9 +90,9 @@ export default function SignIn() {
               </p>
             </div>
             <UserAuthForm />
-            {/* <Button asChild className="w-full bg-primary hover:bg-primary/80">
-              <Link to="/register">{t('register.create')}</Link>
-            </Button> */}
+            <Button asChild className="w-full bg-primary hover:bg-primary/80">
+              <Link to={webRoutes.register}>{t('register.create')}</Link>
+            </Button>
             <p className='px-8 text-center text-sm text-muted-foreground'>
               {t('login.condition')}
             </p>

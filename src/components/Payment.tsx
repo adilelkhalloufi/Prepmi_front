@@ -19,7 +19,9 @@ import {
 
     Gift,
     Star,
-    ImageIcon
+    ImageIcon,
+    Check,
+    Crown
 } from "lucide-react"
 import { useDispatch, useSelector } from "react-redux"
 import { RootState } from "@/store"
@@ -32,6 +34,9 @@ import { handleErrorResponse } from "@/utils"
 import { useNavigate } from "react-router-dom"
 import { webRoutes } from "@/routes/web"
 import { useTranslation } from "react-i18next"
+import { useQuery } from "@tanstack/react-query"
+import { Badge } from "@/components/ui/badge"
+import { Separator } from "@/components/ui/separator"
 
 
 
@@ -46,10 +51,12 @@ export function Payment() {
     // Get selected meals and drinks as arrays of objects
     const selectedMeals = Object.values(planData.selectedMeals || {})
     const selectedDrinks = Object.values(planData.selectedDrinks || {})
+    const selectedFreeDrinks = Object.values(planData.selectedFreeDrinks || {})
     const selectedRewardsMeals = planData.selectedRewardsMeals
     console.log('Selected Rewards Meal:', selectedRewardsMeals);
+    console.log('Selected Free Drinks:', selectedFreeDrinks);
 
-    const [paymentMethod, setPaymentMethod] = useState<'COD' | 'ONLINE'>(planData?.paymentMethod || 'COD')
+    const [paymentMethod, setPaymentMethod] = useState<'COD' | 'ONLINE'>((planData as any)?.paymentMethod || 'COD')
     const [isEditingMeals, setIsEditingMeals] = useState(false)
     const [editModalOpen, setEditModalOpen] = useState(false)
     const [editData, setEditData] = useState({
@@ -82,6 +89,23 @@ export function Payment() {
         }
     }, [admin?.id])
 
+    // Fetch user's active membership
+    const { data: membershipResponse } = useQuery({
+        queryKey: ["user-membership", admin?.id],
+        queryFn: () =>
+            http
+                .get(`${apiRoutes.memberships}?user_id=${admin?.id}&status=active`)
+                .then((res) => {
+                    const memberships = res.data.data ?? res.data
+                    return Array.isArray(memberships) ? memberships[0] : null
+                })
+                .catch(() => null),
+        enabled: !!admin?.id,
+    });
+
+    const userMembership = membershipResponse || null;
+    const membershipPlan = userMembership?.membership_plan || null;
+
     // add loading state
     const [isPlacingOrder, setIsPlacingOrder] = useState(false)
 
@@ -102,10 +126,10 @@ export function Payment() {
 
     // Sync paymentMethod with Redux store
     useEffect(() => {
-        if (planData?.paymentMethod && planData.paymentMethod !== paymentMethod) {
-            setPaymentMethod(planData.paymentMethod)
+        if ((planData as any)?.paymentMethod && (planData as any).paymentMethod !== paymentMethod) {
+            setPaymentMethod((planData as any).paymentMethod)
         }
-    }, [planData?.paymentMethod])
+    }, [(planData as any)?.paymentMethod])
 
     const updateQuantity = (type: 'meal' | 'breakfast' | 'drink', id: number, change: number) => {
         if (type === 'meal') {
@@ -173,17 +197,24 @@ export function Payment() {
         setEditModalOpen(false)
     }
 
-    // Calculate totals
+    // Calculate totals with membership discount
     const mealsSubtotal = selectedMeals.reduce((sum, meal) => sum + ((meal.price || 0) * (meal.quantity || 0)), 0)
     // const breakfastSubtotal = selectedBreakfasts.reduce((sum, item) => sum + ((item.price || 0) * (item.quantity || 0)), 0)
     const drinksSubtotal = selectedDrinks.reduce((sum, item) => sum + ((item.price || 0) * (item.quantity || 0)), 0)
-    const subtotal = mealsSubtotal + drinksSubtotal
+    const planSubtotal = Number(planData.plan?.price_per_week || 0)
+    const subtotalBeforeDiscount = planSubtotal + drinksSubtotal
+    
+    // Apply membership discount
+    const membershipDiscountPercent = membershipPlan ? Number(membershipPlan.discount_percentage || 0) : 0
+    const membershipDiscount = membershipDiscountPercent > 0 ? (subtotalBeforeDiscount * membershipDiscountPercent) / 100 : 0
+    const subtotal = subtotalBeforeDiscount - membershipDiscount
 
     // Always use arrays for totalItems calculation
     const totalItems =
         selectedMeals.reduce((sum, meal) => sum + (meal.quantity || 0), 0) +
         // selectedBreakfasts.reduce((sum, item) => sum + (item.quantity || 0), 0) +
-        selectedDrinks.reduce((sum, item) => sum + (item.quantity || 0), 0)
+        selectedDrinks.reduce((sum, item) => sum + (item.quantity || 0), 0) +
+        selectedFreeDrinks.reduce((sum, item) => sum + (item.quantity || 0), 0)
 
 
 
@@ -209,8 +240,12 @@ export function Payment() {
             plan: planData?.plan || null,
             meals: selectedMeals, // array of meal objects
             drinks: selectedDrinks, // array of drink objects
+            freeDrinks: selectedFreeDrinks, // array of free drink objects
             rewardMeal: selectedRewardsMeals,
-            totalAmount: Number(planData.plan.price_per_week) + drinksSubtotal,
+            totalAmount: subtotal,
+            originalAmount: subtotalBeforeDiscount,
+            membershipDiscount: membershipDiscount,
+            membershipId: userMembership?.id || null,
             infos: {
                 firstName: planData?.firstName,
                 lastName: planData?.lastName,
@@ -483,6 +518,45 @@ export function Payment() {
                                     </div>
                                 </div>
                             )}
+                            
+                            {/* Free Drinks (Membership Benefits) */}
+                            {selectedFreeDrinks.length > 0 && (
+                                <div>
+                                    <div className="flex items-center space-x-2 mb-4">
+                                        <Gift className="w-4 h-4 text-green-600" />
+                                        <h4 className="font-semibold text-foreground">Free Drinks (Membership)</h4>
+                                    </div>
+                                    <div className="space-y-3">
+                                        {selectedFreeDrinks.map((item) => (
+                                            <div key={item.id} className="flex items-center space-x-4 p-3 bg-green-50 rounded-lg border border-green-200">
+                                                {item.image_url || item.image_path ? (
+                                                    <img
+                                                        src={item.image_url || item.image_path}
+                                                        alt={item.name}
+                                                        className="w-16 h-16 object-cover rounded-md"
+                                                    />
+                                                ) : (
+                                                    <div className="w-16 h-16 bg-gray-200 flex items-center justify-center rounded-md">
+                                                        <ImageIcon className="w-8 h-8 text-gray-400" />
+                                                    </div>
+                                                )}
+                                                <div className="flex-1">
+                                                    <h5 className="font-medium text-foreground">{item.name}</h5>
+                                                    <p className="text-sm text-green-600 font-medium">Free (Membership Benefit)</p>
+                                                    <p className="text-xs text-muted-foreground">
+                                                        {item.calories || 0} kcal • {item.protein || 0}g protein
+                                                    </p>
+                                                </div>
+                                                <div className="text-right">
+                                                    <Badge className="bg-green-600 text-white mb-2">FREE</Badge>
+                                                    <p className="text-sm text-muted-foreground">{t('joinNow.payment.qty')}: {item.quantity}</p>
+                                                    <p className="font-semibold text-green-600">0.00 {t('menu.currency')}</p>
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
                         </CardContent>
                     </Card>
                 </div>
@@ -598,24 +672,48 @@ export function Payment() {
                             <div className="space-y-2">
                                 {/* Show plan total */}
                                 {planData.pricePerWeek && (
-                                    <div className="flex justify-between text-base font-semibold">
-                                        <span>{t('joinNow.payment.total')}</span>
+                                    <div className="flex justify-between text-sm">
+                                        <span>Plan ({planData.plan?.name})</span>
                                         <span>{Number(planData.plan.price_per_week).toFixed(2)} {t('menu.currency')}</span>
                                     </div>
                                 )}
                                 {/* Show drinks total if any drinks selected */}
                                 {drinksSubtotal > 0 && (
-                                    <div className="flex justify-between text-base font-semibold">
+                                    <div className="flex justify-between text-sm">
                                         <span>{t('joinNow.payment.drinksSubtotal')}</span>
                                         <span>{drinksSubtotal.toFixed(2)} {t('menu.currency')}</span>
                                     </div>
                                 )}
+                                
+                                {/* Subtotal before discount */}
+                                {membershipDiscount > 0 && (
+                                    <div className="flex justify-between text-sm">
+                                        <span>Subtotal</span>
+                                        <span>{subtotalBeforeDiscount.toFixed(2)} {t('menu.currency')}</span>
+                                    </div>
+                                )}
+                                
+                                {/* Membership discount */}
+                                {membershipDiscount > 0 && (
+                                    <>
+                                        <div className="flex justify-between text-sm text-green-600">
+                                            <span>Discount ({membershipDiscountPercent}%)</span>
+                                            <span>-{membershipDiscount.toFixed(2)} {t('menu.currency')}</span>
+                                        </div>
+                                        <Separator />
+                                    </>
+                                )}
+                                
                                 {/* Show overall total */}
                                 <div className="flex justify-between text-lg font-bold mt-2">
                                     <span>{t('joinNow.payment.total')}</span>
                                     <span>
-                                        {(Number(planData.plan.price_per_week) + drinksSubtotal).toFixed(2)} {t('menu.currency')}
-
+                                        {subtotal.toFixed(2)} {t('menu.currency')}
+                                        {membershipDiscount > 0 && (
+                                            <span className="block text-xs font-normal text-green-600">
+                                                You saved {membershipDiscount.toFixed(2)} {t('menu.currency')}!
+                                            </span>
+                                        )}
                                     </span>
                                 </div>
                             </div>
