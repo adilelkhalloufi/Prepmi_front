@@ -5,14 +5,26 @@ import { useTranslation } from "react-i18next"
 import { useDispatch, useSelector } from "react-redux"
 import { RootState } from "@/store"
 import { clearMealSelections, updatePlanData } from "@/store/slices/joinProcessSlice"
-import { useQuery } from "@tanstack/react-query"
-import http from "@/utils/http"
-import { apiRoutes } from "@/routes/api"
-import { handleErrorResponse } from "@/utils"
 import type { Plan as PlanType } from "@/interfaces/admin"
 import { Check } from "lucide-react"
 
-export const Plan = () => {
+interface PlanProps {
+    categoriesData?: any[]
+    plansData?: any[]
+    membershipData?: any
+    isLoadingCategories?: boolean
+    isLoadingPlans?: boolean
+    isLoadingMembership?: boolean
+}
+
+export const Plan = ({
+    categoriesData = [],
+    plansData = [],
+    membershipData = null,
+    isLoadingCategories = false,
+    isLoadingPlans = false,
+    isLoadingMembership = false
+}: PlanProps) => {
     const { t } = useTranslation()
     const dispatch = useDispatch()
     const planData = useSelector((state: RootState) => state.joinProcess.planData)
@@ -31,63 +43,20 @@ export const Plan = () => {
         }
     }, [planData])
 
-    // Fetch categories from API
-    const { isLoading: isLoadingCategories, data: categoriesResponse } = useQuery<{data: any[]}>({
-        queryKey: ["categories"],
-        queryFn: () =>
-            http
-                .get(apiRoutes.categories)
-                .then((res) => {
-                    return res.data;
-                })
-                .catch((e) => {
-                    handleErrorResponse(e);
-                    throw e;
-                }),
-    });
-
-    // Fetch plans from API
-    const { isLoading: isLoadingPlans, data: plansResponse } = useQuery<{data: any[]}>({
-        queryKey: ["plans"],
-        queryFn: () =>
-            http
-                .get(apiRoutes.plans)
-                .then((res) => {
-                    return res.data;
-                })
-                .catch((e) => {
-                    handleErrorResponse(e);
-                    throw e;
-                }),
-    });
-
-    // Fetch user's active membership if logged in
-    const { data: membershipResponse } = useQuery({
-        queryKey: ["user-membership", admin?.id],
-        queryFn: () =>
-            http
-                .get(`${apiRoutes.memberships}?user_id=${admin?.id}&status=active`)
-                .then((res) => {
-                    const memberships = res.data.data ?? res.data
-                    return Array.isArray(memberships) ? memberships[0] : null
-                })
-                .catch(() => null),
-        enabled: !!admin?.id,
-    });
-
-    const categories = categoriesResponse?.data || [];
-    const plans = plansResponse?.data || [];
-    const userMembership = membershipResponse || null;
+    // Use props data instead of fetching
+    const categories = categoriesData;
+    const plans = plansData;
+    const userMembership = membershipData;
     const membershipPlan = userMembership?.membership_plan || null;
 
     // Map categories to protein options format
     const proteinOptions = categories.map((category: any) => ({
-            id: category.id?.toString() || category.slug,
-            label: category.name,
-            description: category.description || ''
-        }));
+        id: category.id?.toString() || category.slug,
+        label: category.name,
+        description: category.description || ''
+    }));
 
-  
+
 
     // Map plans to meal options format
     const mealOptions: PlanType[] = plans;
@@ -95,7 +64,7 @@ export const Plan = () => {
     const handleProteinSelect = (proteinId: string) => {
         const selectedCategory = categories.find(cat => cat.id?.toString() === proteinId)
         setSelectedProtein(proteinId)
-        dispatch(updatePlanData({ 
+        dispatch(updatePlanData({
             protein: proteinId,
             categoryId: selectedCategory?.id,
             categoryName: selectedCategory?.name,
@@ -103,16 +72,16 @@ export const Plan = () => {
         }))
     }
 
-  
+
 
     const handleMealSelect = (meals: number) => {
-                dispatch(clearMealSelections())
+        dispatch(clearMealSelections())
 
         const selectedPlan = mealOptions.find(plan => plan.meals_per_week === meals)
-        
+
         if (selectedPlan) {
             setSelectedMeals(meals)
-            dispatch(updatePlanData({ 
+            dispatch(updatePlanData({
                 planId: selectedPlan.id,
                 planName: selectedPlan.name,
                 mealsPerWeek: selectedPlan.meals_per_week,
@@ -131,27 +100,27 @@ export const Plan = () => {
         const portionExtra = selectedPortion && selectedPortion !== 'standard' ? 1.99 * mealsNum : 0;
         const pricePerWeek = Number(selectedPlan?.price_per_week || 0);
         const subtotal = pricePerWeek + portionExtra;
-        
+
         // Calculate membership discount
         const membershipDiscountPercent = membershipPlan ? Number(membershipPlan.discount_percentage || 0) : 0;
         const membershipDiscount = membershipDiscountPercent > 0 ? (subtotal * membershipDiscountPercent) / 100 : 0;
-        
+
         // Apply membership benefits for delivery
         const hasFreeDesserts = membershipPlan?.includes_free_desserts || false;
         const freeDessertsQuantity = Number(membershipPlan?.free_desserts_quantity || 0);
-        
+
         // Check if membership provides free delivery or if plan has free shipping
         const isFreeDelivery = selectedPlan?.is_free_shipping || (membershipPlan && membershipDiscountPercent >= 10);
         const delivery = isFreeDelivery ? 0 : Number(selectedPlan?.delivery_fee || 0);
-        
+
         const finalSubtotal = subtotal - membershipDiscount;
         const total = finalSubtotal + delivery;
 
-        return { 
-            subtotal, 
-            membershipDiscount, 
+        return {
+            subtotal,
+            membershipDiscount,
             membershipDiscountPercent,
-            delivery, 
+            delivery,
             total,
             hasFreeDesserts,
             freeDessertsQuantity,
@@ -227,7 +196,7 @@ export const Plan = () => {
                         </div>
                     </div>
 
-                   
+
                     {/* Meals Per Week */}
                     <div className="space-y-8">
                         <div className="text-center">
@@ -243,7 +212,7 @@ export const Plan = () => {
                         </div>
 
                         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-12">
-                             {isLoadingPlans ? (
+                            {isLoadingPlans ? (
                                 // Loading skeleton
                                 Array.from({ length: 6 }).map((_, index) => (
                                     <Card key={index} className="border-2 border-gray-200">
@@ -329,7 +298,7 @@ export const Plan = () => {
                                         </div>
                                     </div>
                                 )}
-                                
+
                                 <div className="space-y-6">
                                     <div className="flex justify-between items-center py-3 border-b border-gray-100">
                                         <span className="font-semibold text-gray-700">{t('plan.summary.pricePerMeal')}</span>
@@ -361,7 +330,7 @@ export const Plan = () => {
                                                 Membership Discount ({totals.membershipDiscountPercent}%)
                                             </span>
                                             <span className="font-semibold text-green-600">
-                                                -{totals.membershipDiscount.toFixed(2)} 
+                                                -{totals.membershipDiscount.toFixed(2)}
                                                 {t('menu.currency')}
                                             </span>
                                         </div>

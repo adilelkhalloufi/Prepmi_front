@@ -67,7 +67,7 @@ export interface Plan {
     updated_at?: string
 }
 
- 
+
 
 
 export interface MembershipPlan {
@@ -100,7 +100,7 @@ export interface Membership {
     created_at?: string
     updated_at?: string
 }
- 
+
 export interface Reward {
     id?: number
     user_id?: number
@@ -116,7 +116,7 @@ export interface Reward {
     discount_applied?: number
     conditions?: string
 
- }
+}
 export interface joinProcess {
     currentStep: number,
     planData: {
@@ -134,7 +134,7 @@ export interface joinProcess {
         isFreeShipping?: boolean
         pointsValue?: number
         plan?: Plan // Store the complete plan object
-        
+
         // Personal details
         firstName: string
         lastName: string
@@ -142,7 +142,7 @@ export interface joinProcess {
         country: string
         address: string
         hearAboutUs: string
-        
+
         // Meal selections
         selectedMeals: Record<string, any>
         selectedBreakfasts: Record<string, any>
@@ -266,13 +266,13 @@ export interface Meal {
     image_url?: string
     gallery_images?: string[]
     gallery_urls?: string[]
-    
+
     // Pricing & serving
     price: string | number
     cost_per_serving?: string | number
     weight_grams?: number
     serving_size?: string | null
-    
+
     // Nutritional info (flat structure for form compatibility)
     calories?: number
     protein?: number | string
@@ -281,13 +281,13 @@ export interface Meal {
     fiber?: number | string
     sodium?: number | string
     sugar?: number | string
-    
+
     // Ingredients & preparation
     ingredients?: string | string[] | null
     allergens?: string | null
     preparation_instructions?: string | null
     storage_instructions?: string | null
-    
+
     // Dietary restrictions (flat structure)
     is_vegetarian?: boolean
     is_vegan?: boolean
@@ -298,28 +298,28 @@ export interface Meal {
     is_paleo?: boolean
     is_low_carb?: boolean
     is_high_protein?: boolean
-    
+
     // Spice & difficulty
     is_spicy?: boolean
     spice_level?: number
     difficulty_level?: number
-    
+
     // Timing
     prep_time_minutes?: number
     cooking_time_minutes?: number
     total_time_minutes?: number
-    
+
     // Chef notes & availability
     chef_notes?: string | null
     available_from?: string | null
     available_to?: string | null
     is_active?: boolean
-    
+
     // Category & Type
     category_id?: number
     type_id?: number
     type?: string
-    
+
     // Timestamps
     created_at?: string
     updated_at?: string
@@ -351,7 +351,7 @@ export interface Meal {
     relatedProducts?: Meal[]
 
     // memebership meal
-    show_for_membership?: boolean
+    is_membership?: boolean
 }
 
 export interface FormModalProps {

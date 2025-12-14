@@ -86,7 +86,7 @@ export function MealCard({ meal }: MealCardProps) {
                         <ChefHat className="w-3 h-3 mr-1" />
                         {getDifficultyLevel(meal.difficulty_level)}
                     </Badge>
-               
+
                 </div>
 
                 {/* Spice level indicator */}
@@ -159,7 +159,7 @@ export function MealCard({ meal }: MealCardProps) {
                                 (meal.preparation?.cooking_time_minutes || meal.cooking_time_minutes || 0)} {t('menu.mins')}
                         </span>
                     </div>
-                       {meal.show_for_membership ? (
+                    {meal.is_membership ? (
                         <Badge className="bg-gradient-to-r from-amber-500 to-yellow-500 text-white font-semibold px-2 py-1 text-xs border-0 backdrop-blur-sm transition-all duration-300 shadow-md">
                             <Star className="w-3 h-3 mr-1 fill-white" />
                             {t('menu.membership')}
@@ -168,7 +168,7 @@ export function MealCard({ meal }: MealCardProps) {
                 </div>
 
                 {/* Action Button */}
-                    {/* <div className="mt-4 pt-4 border-t border-border/50">
+                {/* <div className="mt-4 pt-4 border-t border-border/50">
                         <button
                             className="w-full bg-gradient-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary text-primary-foreground font-medium py-2 px-4 rounded-lg transition-all duration-300 hover:shadow-lg hover:shadow-primary/25 hover:-translate-y-0.5"
                             onClick={(e) => {

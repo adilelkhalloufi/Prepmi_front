@@ -8,10 +8,6 @@ import { RootState } from "@/store"
 import { updatePlanData } from "@/store/slices/joinProcessSlice"
 import { MealCard } from "@/components/MealCard"
 import { Meal, Reward } from "@/interfaces/admin"
-import { useQuery } from "@tanstack/react-query"
-import http from "@/utils/http"
-import { apiRoutes } from "@/routes/api"
-import { handleErrorResponse } from "@/utils"
 import {
     Calendar,
     Users,
@@ -25,7 +21,39 @@ import {
     Gift
 } from "lucide-react"
 
-export function Meals() {
+interface MealsProps {
+    categoriesData?: any[]
+    plansData?: any[]
+    membershipData?: any
+    weeklyMenuData?: any
+    mealsData?: Meal[]
+    drinksData?: Meal[]
+    rewardsData?: any
+    isLoadingCategories?: boolean
+    isLoadingPlans?: boolean
+    isLoadingMembership?: boolean
+    isLoadingMenu?: boolean
+    isLoadingMeals?: boolean
+    isLoadingDrinks?: boolean
+    isLoadingRewards?: boolean
+}
+
+export function Meals({
+    categoriesData = [],
+    plansData = [],
+    membershipData = null,
+    weeklyMenuData = null,
+    mealsData = [],
+    drinksData = [],
+    rewardsData = null,
+    isLoadingCategories = false,
+    isLoadingPlans = false,
+    isLoadingMembership = false,
+    isLoadingMenu = false,
+    isLoadingMeals = false,
+    isLoadingDrinks = false,
+    isLoadingRewards = false
+}: MealsProps) {
     const { t } = useTranslation()
     const dispatch = useDispatch()
     const planData = useSelector((state: RootState) => state.joinProcess.planData)
@@ -40,105 +68,18 @@ export function Meals() {
     const [appliedReward, setAppliedReward] = useState<Reward | null>(null)
     const [appliedRewardMeal, setAppliedRewardMeal] = useState<Meal | null>(null)
 
-    // Get current week's start date (Monday)
-    const getCurrentWeekStart = () => {
-        const today = new Date();
-        const day = today.getDay();
-        const diff = today.getDate() - day + (day === 0 ? -6 : 1); // Adjust when day is Sunday
-        const monday = new Date(today.setDate(diff));
-        monday.setHours(0, 0, 0, 0);
-        return monday.toISOString().split('T')[0]; // Format: YYYY-MM-DD
-    };
-
-    // Fetch weekly menu from API for current week
-    const { isLoading: isLoadingMenu, data: weeklyMenuResponse } = useQuery<{ data: any[] }>({
-        queryKey: ["weeklyMenus", "current-week"],
-        queryFn: () =>
-            http
-                .get(`${apiRoutes.weeklyMenus}?is_active=1&is_published=1&week_start_date=${getCurrentWeekStart()}&type_id=1`)
-                .then((res) => {
-                    return res.data;
-                })
-                .catch((e) => {
-                    handleErrorResponse(e);
-                    throw e;
-                }),
-    });
-    // Fetch all meals from API (for breakfasts and drinks)
-    const { isLoading: isLoadingMeals, data: mealsResponse } = useQuery<{ data: Meal[] }>({
-        queryKey: ["meals"],
-        queryFn: () =>
-            http
-                .get(`${apiRoutes.meals}?active=1&type_id=1&is_membership=`)
-                .then((res) => {
-                    return res.data;
-                })
-                .catch((e) => {
-                    handleErrorResponse(e);
-                    throw e;
-                }),
-    });
-
-    // Fetch drinks from API with type_id=2 filter
-    const { isLoading: isLoadingDrinks, data: drinksResponse } = useQuery<{ data: Meal[] }>({
-        queryKey: ["meals", "drinks"],
-        queryFn: () =>
-            http
-                .get(`${apiRoutes.meals}?type_id=2`)
-                .then((res) => {
-                    return res.data;
-                })
-                .catch((e) => {
-                    handleErrorResponse(e);
-                    throw e;
-                }),
-    });
-
-    // Fetch rewards for current user
-    const { isLoading: isLoadingRewards, data: rewardsResponse } = useQuery<any>({
-        queryKey: ["rewards", admin?.id],
-        queryFn: () =>
-            http.get(apiRoutes.rewards)
-                .then((res) => {
-                    return res.data;
-                })
-                .catch((error) => {
-                    handleErrorResponse(error);
-                    throw error;
-                }),
-        enabled: !!admin?.id,
-    });
-
-    // Fetch user's active membership if logged in
-    const { data: membershipResponse } = useQuery({
-        queryKey: ["user-membership", admin?.id],
-        queryFn: () =>
-            http
-                .get(`${apiRoutes.memberships}?user_id=${admin?.id}&status=active`)
-                .then((res) => {
-                    const memberships = res.data.data ?? res.data
-                    return Array.isArray(memberships) ? memberships[0] : null
-                })
-                .catch(() => null),
-        enabled: !!admin?.id,
-    });
-
-
-
-    const weeklyMenu = weeklyMenuResponse?.data?.[0] || null;
-    const allMeals = mealsResponse?.data || [];
+    // Use props data instead of fetching
+    const weeklyMenu = weeklyMenuData;
+    const allMeals = mealsData;
     console.log('All Meals:', allMeals);
 
     const mainMeals = weeklyMenu?.meals || [];
-        console.log('weekly Meals:', mainMeals);
 
-    const breakfasts = allMeals.filter(meal =>
-        meal.type === 'breakfast' || meal.category?.name?.toLowerCase().includes('breakfast')
-    );
-    const drinks = drinksResponse?.data || [];
     
+    const drinks = drinksData;
+
     // Membership data
-    const userMembership = membershipResponse || null;
+    const userMembership = membershipData;
     const membershipPlan = userMembership?.membership_plan || null;
     const hasFreeDesserts = membershipPlan?.includes_free_desserts || false;
     const freeDessertsQuantity = Number(membershipPlan?.free_desserts_quantity || 0);
@@ -146,7 +87,7 @@ export function Meals() {
 
     // Get unused free_meal rewards - handle array of rewards
     const availableRewards = (() => {
-        const rewardData = rewardsResponse;
+        const rewardData = rewardsData;
 
         if (!rewardData) return [];
 
@@ -847,11 +788,10 @@ export function Meals() {
                                     {drinks.map((drink) => {
                                         const remainingFreeDrinks = freeDessertsQuantity - Object.values(selectedFreeDrinks).reduce((sum, d) => sum + (d.quantity || 0), 0)
                                         const canAddMore = remainingFreeDrinks > 0 || selectedFreeDrinks[drink.id]?.quantity > 0
-                                        
+
                                         return (
-                                            <Card key={drink.id} className={`relative transition-shadow ${
-                                                selectedFreeDrinks[drink.id]?.quantity > 0 ? 'ring-2 ring-green-400 bg-green-50' : 'hover:shadow-lg'
-                                            }`}>
+                                            <Card key={drink.id} className={`relative transition-shadow ${selectedFreeDrinks[drink.id]?.quantity > 0 ? 'ring-2 ring-green-400 bg-green-50' : 'hover:shadow-lg'
+                                                }`}>
                                                 <div className="relative h-32 overflow-hidden rounded-t-lg">
                                                     {drink.image_url || drink.image_path ? (
                                                         <img
@@ -1148,7 +1088,7 @@ export function Meals() {
                             </ul>
                         )}
                     </div>
-                    
+
                     {/* Free Drinks Summary */}
                     {hasFreeDesserts && Object.keys(selectedFreeDrinks).length > 0 && (
                         <div className="mt-6">

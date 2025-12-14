@@ -10,12 +10,144 @@ import { RootState } from "@/store"
 import { nextStep, prevStep } from "@/store/slices/joinProcessSlice"
 import { useEffect } from "react"
 import { toast } from "sonner"
+import { useQuery } from "@tanstack/react-query"
+import { apiRoutes } from "@/routes/api"
+import { handleErrorResponse } from "@/utils"
+import http from "@/utils/http"
 
 const JoinNow = () => {
     const { t } = useTranslation()
     const dispatch = useDispatch()
     const { currentStep, planData } = useSelector((state: RootState) => state.joinProcess)
     const admin = useSelector((state: RootState) => state.admin?.user) // Uncomment if auth slice exists
+
+    // Get current week's start date (Monday)
+    const getCurrentWeekStart = () => {
+        const today = new Date();
+        const day = today.getDay();
+        const diff = today.getDate() - day + (day === 0 ? -6 : 1);
+        const monday = new Date(today.setDate(diff));
+        monday.setHours(0, 0, 0, 0);
+        return monday.toISOString().split('T')[0];
+    };
+
+    // Fetch categories from API
+    const { isLoading: isLoadingCategories, data: categoriesResponse } = useQuery<{ data: any[] }>({
+        queryKey: ["categories"],
+        queryFn: () =>
+            http
+                .get(apiRoutes.categories)
+                .then((res) => res.data)
+                .catch((e) => {
+                    handleErrorResponse(e);
+                    throw e;
+                }),
+        staleTime: 0,
+        cacheTime: 0,
+    });
+
+    // Fetch plans from API
+    const { isLoading: isLoadingPlans, data: plansResponse } = useQuery<{ data: any[] }>({
+        queryKey: ["plans"],
+        queryFn: () =>
+            http
+                .get(apiRoutes.plans)
+                .then((res) => res.data)
+                .catch((e) => {
+                    handleErrorResponse(e);
+                    throw e;
+                }),
+        staleTime: 0,
+        cacheTime: 0,
+    });
+
+    // Fetch user's active membership if logged in
+    const { data: membershipResponse, isLoading: isLoadingMembership } = useQuery({
+        queryKey: ["user-membership", admin?.id],
+        queryFn: () =>
+            http
+                .get(`${apiRoutes.memberships}?user_id=${admin?.id}&status=active`)
+                .then((res) => {
+                    const memberships = res.data.data ?? res.data
+                    return Array.isArray(memberships) ? memberships[0] : null
+                })
+                .catch(() => null),
+        enabled: !!admin?.id,
+        staleTime: 0,
+        cacheTime: 0,
+    });
+
+    // Fetch weekly menu from API for current week
+    const { isLoading: isLoadingMenu, data: weeklyMenuResponse } = useQuery<{ data: any[] }>({
+        queryKey: ["weeklyMenus", "current-week"],
+        queryFn: () =>
+            http
+                .get(`${apiRoutes.weeklyMenus}?is_active=1&is_published=1&week_start_date=${getCurrentWeekStart()}&type_id=1`)
+                .then((res) => res.data)
+                .catch((e) => {
+                    handleErrorResponse(e);
+                    throw e;
+                }),
+        staleTime: 0,
+        cacheTime: 0,
+    });
+
+    // Fetch all meals from API (for breakfasts and drinks)
+    const { isLoading: isLoadingMeals, data: mealsResponse } = useQuery<{ data: any[] }>({
+        queryKey: ["meals", membershipResponse ? "with-membership" : "no-membership"],
+        queryFn: () =>
+            http
+                .get(`${apiRoutes.meals}?active=1&type_id=0&is_membership=${membershipResponse ? '1' : ''}`)
+                .then((res) => res.data)
+                .catch((e) => {
+                    handleErrorResponse(e);
+                    throw e;
+                }),
+        staleTime: 0,
+        cacheTime: 0,
+    });
+
+    // Fetch drinks from API with type_id=2 filter
+    const { isLoading: isLoadingDrinks, data: drinksResponse } = useQuery<{ data: any[] }>({
+        queryKey: ["meals", "drinks"],
+        queryFn: () =>
+            http
+                .get(`${apiRoutes.meals}?type_id=2`)
+                .then((res) => res.data)
+                .catch((e) => {
+                    handleErrorResponse(e);
+                    throw e;
+                }),
+        staleTime: 0,
+        cacheTime: 0,
+    });
+
+    // Fetch rewards for current user
+    const { isLoading: isLoadingRewards, data: rewardsResponse } = useQuery<any>({
+        queryKey: ["rewards", admin?.id],
+        queryFn: () =>
+            http.get(apiRoutes.rewards)
+                .then((res) => res.data)
+                .catch((error) => {
+                    handleErrorResponse(error);
+                    throw error;
+                }),
+        enabled: !!admin?.id,
+        staleTime: 0,
+        cacheTime: 0,
+    });
+
+    // Fetch total points earned
+    const { isLoading: isLoadingPoints, data: pointsResponse } = useQuery({
+        queryKey: ["total-points", admin?.id],
+        queryFn: () =>
+            http.get(apiRoutes.totalPointsEarned)
+                .then((res) => res.data)
+                .catch(() => ({ total_points_earned: 0 })),
+        enabled: !!admin?.id,
+        staleTime: 0,
+        cacheTime: 0,
+    });
 
     const steps = [
         { id: 1, title: t('joinNow.steps.plan'), component: Plan },
@@ -44,16 +176,32 @@ const JoinNow = () => {
         // Validate Meals step (step 2)
         if (currentStep === 2) {
             const selectedMealsCount = planData.selectedMeals
-                ? Object.values(planData.selectedMeals).reduce((sum, qty) => sum + qty, 0)
+                ? Object.values(planData.selectedMeals).reduce((sum, meal: any) => sum + (meal.quantity || 0), 0)
                 : 0
             if (!planData.mealsPerWeek || selectedMealsCount < planData.mealsPerWeek) {
                 toast.error(t('joinNow.validation.selectAllMeals', 'Please select all your meals before continuing.'))
                 return
             }
+
+            // Validate free drinks from membership
+            const membershipPlan = membershipResponse?.membership_plan || null
+            const hasFreeDesserts = membershipPlan?.includes_free_desserts || false
+            const freeDessertsQuantity = Number(membershipPlan?.free_desserts_quantity || 0)
+
+            if (hasFreeDesserts && freeDessertsQuantity > 0) {
+                const selectedFreeDrinksCount = planData.selectedFreeDrinks
+                    ? Object.values(planData.selectedFreeDrinks).reduce((sum, drink: any) => sum + (drink.quantity || 0), 0)
+                    : 0
+
+                if (selectedFreeDrinksCount < freeDessertsQuantity) {
+                    toast.error(t('joinNow.validation.selectFreeDrinks', `Please select all ${freeDessertsQuantity} free drinks from your membership before continuing.`))
+                    return
+                }
+            }
         }
         // Validate Address step (step 3)
         if (currentStep === 3) {
-             if (
+            if (
                 !planData.firstName ||
                 !planData.lastName ||
                 !planData.phoneNumber ||
@@ -87,6 +235,45 @@ const JoinNow = () => {
     }
 
     const CurrentStepComponent = steps.find(step => step.id === currentStep)?.component
+
+    // Prepare props for each component
+    const getComponentProps = () => {
+        const commonProps = {
+            categoriesData: categoriesResponse?.data || [],
+            plansData: plansResponse?.data || [],
+            membershipData: membershipResponse || null,
+            isLoadingCategories,
+            isLoadingPlans,
+            isLoadingMembership
+        }
+
+        switch (currentStep) {
+            case 1:
+                return commonProps
+            case 2:
+                return {
+                    ...commonProps,
+                    weeklyMenuData: weeklyMenuResponse?.data?.[0] || null,
+                    mealsData: mealsResponse?.data || [],
+                    drinksData: drinksResponse?.data || [],
+                    rewardsData: rewardsResponse,
+                    isLoadingMenu,
+                    isLoadingMeals,
+                    isLoadingDrinks,
+                    isLoadingRewards
+                }
+            case 3:
+                return {}
+            case 4:
+                return {
+                    membershipData: membershipResponse || null,
+                    pointsData: pointsResponse?.total_points_earned || 0,
+                    isLoadingPoints
+                }
+            default:
+                return {}
+        }
+    }
 
     return (
         <main className="min-h-screen bg-gradient-to-br from-primary/10 via-white to-primary/5 pt-20">
@@ -124,9 +311,9 @@ const JoinNow = () => {
                 </div>
 
                 {/* Step Content */}
-                <div className=" mx-auto">
+                <div className=" mx-auto max-w-6xl">
                     {CurrentStepComponent && (
-                        <CurrentStepComponent />
+                        <CurrentStepComponent {...getComponentProps()} />
                     )}
                 </div>
 

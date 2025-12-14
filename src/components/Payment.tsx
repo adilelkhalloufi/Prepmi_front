@@ -4,8 +4,6 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import {
     CreditCard,
-
-
     Edit,
     Trash2,
     Plus,
@@ -16,7 +14,6 @@ import {
     User,
     Coffee,
     Utensils,
-
     Gift,
     Star,
     ImageIcon,
@@ -27,21 +24,27 @@ import { useDispatch, useSelector } from "react-redux"
 import { RootState } from "@/store"
 import { resetJoinProcess, updatePlanData } from "@/store/slices/joinProcessSlice"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog"
-import http, { defaultHttp } from "@/utils/http"
+import { defaultHttp } from "@/utils/http"
 import { apiRoutes } from "@/routes/api"
 import { toast } from "sonner"
 import { handleErrorResponse } from "@/utils"
 import { useNavigate } from "react-router-dom"
 import { webRoutes } from "@/routes/web"
 import { useTranslation } from "react-i18next"
-import { useQuery } from "@tanstack/react-query"
 import { Badge } from "@/components/ui/badge"
 import { Separator } from "@/components/ui/separator"
 
+interface PaymentProps {
+    membershipData?: any
+    pointsData?: number
+    isLoadingPoints?: boolean
+}
 
-
-
-export function Payment() {
+export function Payment({
+    membershipData = null,
+    pointsData = 0,
+    isLoadingPoints = false
+}: PaymentProps) {
     const { t } = useTranslation()
     const dispatch = useDispatch()
     const navigate = useNavigate()
@@ -68,42 +71,20 @@ export function Payment() {
     })
 
     // Loyalty Points System
-    const [currentPoints, setCurrentPoints] = useState(0)
-    const [pointsLoading, setPointsLoading] = useState(false)
+    const [currentPoints, setCurrentPoints] = useState(pointsData)
+    const [pointsLoading, setPointsLoading] = useState(isLoadingPoints)
     const [useReward, setUseReward] = useState(false)
     const rewardThreshold = 12
     const rewardValue = 49 // MAD
     const canUseReward = currentPoints >= rewardThreshold
 
     useEffect(() => {
-        if (admin?.id) {
-            setPointsLoading(true)
-            http.get(apiRoutes.totalPointsEarned)
-                .then(res => {
-                    setCurrentPoints(res.data?.total_points_earned ?? 0)
-                })
-                .catch(() => {
-                    setCurrentPoints(0)
-                })
-                .finally(() => setPointsLoading(false))
-        }
-    }, [admin?.id])
+        setCurrentPoints(pointsData)
+        setPointsLoading(isLoadingPoints)
+    }, [pointsData, isLoadingPoints])
 
-    // Fetch user's active membership
-    const { data: membershipResponse } = useQuery({
-        queryKey: ["user-membership", admin?.id],
-        queryFn: () =>
-            http
-                .get(`${apiRoutes.memberships}?user_id=${admin?.id}&status=active`)
-                .then((res) => {
-                    const memberships = res.data.data ?? res.data
-                    return Array.isArray(memberships) ? memberships[0] : null
-                })
-                .catch(() => null),
-        enabled: !!admin?.id,
-    });
-
-    const userMembership = membershipResponse || null;
+    // Use props data instead of fetching
+    const userMembership = membershipData;
     const membershipPlan = userMembership?.membership_plan || null;
 
     // add loading state
@@ -203,7 +184,7 @@ export function Payment() {
     const drinksSubtotal = selectedDrinks.reduce((sum, item) => sum + ((item.price || 0) * (item.quantity || 0)), 0)
     const planSubtotal = Number(planData.plan?.price_per_week || 0)
     const subtotalBeforeDiscount = planSubtotal + drinksSubtotal
-    
+
     // Apply membership discount
     const membershipDiscountPercent = membershipPlan ? Number(membershipPlan.discount_percentage || 0) : 0
     const membershipDiscount = membershipDiscountPercent > 0 ? (subtotalBeforeDiscount * membershipDiscountPercent) / 100 : 0
@@ -518,7 +499,7 @@ export function Payment() {
                                     </div>
                                 </div>
                             )}
-                            
+
                             {/* Free Drinks (Membership Benefits) */}
                             {selectedFreeDrinks.length > 0 && (
                                 <div>
@@ -684,7 +665,7 @@ export function Payment() {
                                         <span>{drinksSubtotal.toFixed(2)} {t('menu.currency')}</span>
                                     </div>
                                 )}
-                                
+
                                 {/* Subtotal before discount */}
                                 {membershipDiscount > 0 && (
                                     <div className="flex justify-between text-sm">
@@ -692,7 +673,7 @@ export function Payment() {
                                         <span>{subtotalBeforeDiscount.toFixed(2)} {t('menu.currency')}</span>
                                     </div>
                                 )}
-                                
+
                                 {/* Membership discount */}
                                 {membershipDiscount > 0 && (
                                     <>
@@ -703,7 +684,7 @@ export function Payment() {
                                         <Separator />
                                     </>
                                 )}
-                                
+
                                 {/* Show overall total */}
                                 <div className="flex justify-between text-lg font-bold mt-2">
                                     <span>{t('joinNow.payment.total')}</span>
