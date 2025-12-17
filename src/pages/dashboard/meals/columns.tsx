@@ -192,6 +192,19 @@ export const columns: ColumnDef<Meal>[] = [
     },
   },
   {
+    id: "membership",
+    header: "Membres",
+    cell: ({ row }) => {
+      const meal = row.original
+
+      return meal.is_membership ? (
+        <Badge className="bg-blue-600 text-white">l'adhésion</Badge>
+      ) : (
+        <Badge variant="outline">Public</Badge>
+      )
+    },
+  },
+  {
     id: "actions",
     cell: ({ row }) => {
       const meal = row.original

@@ -75,6 +75,7 @@ export default function AddMeal() {
         available_from: "",
         available_to: "",
         is_active: true,
+        is_membership: false,
     });
 
     const [error, setError] = useState(false);
@@ -342,12 +343,21 @@ export default function AddMeal() {
                                         rows={4}
                                     />
                                 </div>
-                                <div className="col-span-2 flex items-center space-x-2">
-                                    <Switch
-                                        checked={formData.is_active}
-                                        onCheckedChange={(checked) => handleSwitchChange("is_active", checked)}
-                                    />
-                                    <Label>Actif</Label>
+                                <div className="col-span-2 flex items-center space-x-6">
+                                    <div className="flex items-center space-x-2">
+                                        <Switch
+                                            checked={formData.is_active}
+                                            onCheckedChange={(checked) => handleSwitchChange("is_active", checked)}
+                                        />
+                                        <Label>Actif</Label>
+                                    </div>
+                                    <div className="flex items-center space-x-2">
+                                        <Switch
+                                            checked={formData.is_membership}
+                                            onCheckedChange={(checked) => handleSwitchChange("is_membership", checked)}
+                                        />
+                                        <Label>Réservé aux membres</Label>
+                                    </div>
                                 </div>
                                 <div>
                                     <Label>Image principale</Label>

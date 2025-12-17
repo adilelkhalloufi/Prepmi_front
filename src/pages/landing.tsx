@@ -10,6 +10,9 @@ import http from "@/utils/http";
 import { apiRoutes } from "@/routes/api";
 import { useQuery } from "@tanstack/react-query";
  import Footer2 from "@/components/Footer2";
+import { Header } from "@/components/Header";
+import Footer from "@/components/Footer";
+import { HeroCopy } from "@/components/Hero copy";
 
 const Index = () => {
   const {
@@ -28,16 +31,19 @@ const Index = () => {
   });
   return (
     <main>
-      {/* <Hero />
+      <Header />
+      {/* <Hero  meals={meals} /> */}
+<HeroCopy/>
       <HowItWorks />
       <FreshMeals />
       <MenuSlider />
       <MoroccanReviews />
       <About />
-      <Newsletter /> */}
-      <Hero meals={meals} />
+      <Newsletter />
+      <Footer/>
+      {/* <Hero meals={meals} />
       <Why meals={meals} />
-      <Footer2 />
+      <Footer2 /> */}
  
     </main>
   );

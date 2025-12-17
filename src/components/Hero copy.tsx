@@ -3,7 +3,7 @@ import { webRoutes } from "@/routes/web";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
-export function Hero() {
+export function HeroCopy() {
   const { t } = useTranslation();
   const navigator = useNavigate();
   return (

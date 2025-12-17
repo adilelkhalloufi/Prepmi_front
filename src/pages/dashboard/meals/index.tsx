@@ -23,7 +23,7 @@ export default function index() {
 
   useEffect(() => {
     // Fetch meals
-    http.get(apiRoutes.meals).then((res) => {
+    http.get(apiRoutes.meals_dashboardff).then((res) => {
       console.log(res.data.data);
       setData(res.data.data);
       setLoading(false);

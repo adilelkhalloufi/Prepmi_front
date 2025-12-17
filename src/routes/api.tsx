@@ -8,6 +8,7 @@ export const apiRoutes = {
   categories: `${API_URL}/categories`,
   users: `${API_URL}/users`,
   meals: `${API_URL}/meals`,
+  meals_dashboard: `${API_URL}/meals_dashboard`,
   menus: `${API_URL}/menus`,
   orders: `${API_URL}/orders`,
   plans: `${API_URL}/plans`,
