@@ -58,6 +58,7 @@
     "mins": "دقيقة",
     "chef_crafted": "مصنوع بواسطة الطاهي",
     "membership": "العضوية",
+    "get_membership": "احصل على العضوية",
     "vegan": "نباتي",
     "vegetarian": "نباتي",
     "gluten_free": "خالي من الغلوتين",
@@ -202,6 +203,7 @@
     "perWeek": "في الأسبوع",
     "free": "مجاني",
     "off": "خصم",
+    "loginRequired": "تسجيل الدخول مطلوب",
     "loading": "جاري التحميل...",
     "backToHome": "العودة للرئيسية"
   },
@@ -220,7 +222,8 @@
     "perks": "مزايا إضافية",
     "billingInfo": "تدفع شهريًا في اليوم",
     "noPlans": "لا توجد خطط عضوية متاحة",
-    "noPlansDescription": "يرجى التحقق لاحقًا من خطط العضوية المتاحة."
+    "noPlansDescription": "يرجى التحقق لاحقًا من خطط العضوية المتاحة.",
+    "loginMessage": "يرجى تسجيل الدخول لاختيار خطة عضوية"
   },
   "membershipCheckout": {
     "title": "أكمل",

@@ -12,6 +12,7 @@ import { useNavigate } from "react-router-dom"
 import { useSelector } from "react-redux"
 import { RootState } from "@/store"
 import { MembershipPlan } from "@/interfaces/admin"
+import { useToast } from "@/hooks/use-toast"
 
 
 const planIcons = {
@@ -31,6 +32,7 @@ const planColors = {
 export default function MembershipPlansPage() {
     const { t } = useTranslation()
     const navigate = useNavigate()
+    const { toast } = useToast()
     const admin = useSelector((state: RootState) => state.admin?.user)
     const [selectedPlanId, setSelectedPlanId] = useState<number | null>(null)
     const continueButtonRef = useRef<HTMLDivElement>(null)
@@ -48,6 +50,11 @@ export default function MembershipPlansPage() {
     // Check if user is authenticated when trying to select a plan
     const checkAuthAndNavigate = (planId: number) => {
         if (!admin?.id) {
+            toast({
+                title: t('common.loginRequired', 'Login Required'),
+                description: t('membershipPlans.loginMessage', 'Please login to select a membership plan'),
+                variant: "default",
+            })
             navigate('/login', { state: { from: '/membership-plans', selectedPlanId: planId } })
             return false
         }

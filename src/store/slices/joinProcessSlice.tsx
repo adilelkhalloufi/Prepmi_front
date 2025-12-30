@@ -34,7 +34,7 @@ export type JoinProcessState = {
     selectedMeals?: Record<string, any>
     selectedBreakfasts?: Record<string, any>
     selectedDrinks?: Record<string, any>
-    selectedFreeDrinks?: Record<string, any>
+    selectedFreeDesserts?: Record<string, any>
     selectedRewardsMeals?: Record<string, any>
   }
 }

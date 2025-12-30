@@ -21,15 +21,7 @@ const JoinNow = () => {
     const { currentStep, planData } = useSelector((state: RootState) => state.joinProcess)
     const admin = useSelector((state: RootState) => state.admin?.user) // Uncomment if auth slice exists
 
-    // Get current week's start date (Monday)
-    const getCurrentWeekStart = () => {
-        const today = new Date();
-        const day = today.getDay();
-        const diff = today.getDate() - day + (day === 0 ? -6 : 1);
-        const monday = new Date(today.setDate(diff));
-        monday.setHours(0, 0, 0, 0);
-        return monday.toISOString().split('T')[0];
-    };
+ 
 
     // Fetch categories from API
     const { isLoading: isLoadingCategories, data: categoriesResponse } = useQuery<{ data: any[] }>({
@@ -78,19 +70,19 @@ const JoinNow = () => {
     });
 
     // Fetch weekly menu from API for current week
-    const { isLoading: isLoadingMenu, data: weeklyMenuResponse } = useQuery<{ data: any[] }>({
-        queryKey: ["weeklyMenus", "current-week"],
-        queryFn: () =>
-            http
-                .get(`${apiRoutes.weeklyMenus}?is_active=1&is_published=1&week_start_date=${getCurrentWeekStart()}&type_id=1`)
-                .then((res) => res.data)
-                .catch((e) => {
-                    handleErrorResponse(e);
-                    throw e;
-                }),
-        staleTime: 0,
-        cacheTime: 0,
-    });
+    // const { isLoading: isLoadingMenu, data: weeklyMenuResponse } = useQuery<{ data: any[] }>({
+    //     queryKey: ["weeklyMenus", "current-week"],
+    //     queryFn: () =>
+    //         http
+    //             .get(`${apiRoutes.weeklyMenus}?is_active=1&is_published=1&week_start_date=${getCurrentWeekStart()}&type_id=1`)
+    //             .then((res) => res.data)
+    //             .catch((e) => {
+    //                 handleErrorResponse(e);
+    //                 throw e;
+    //             }),
+    //     staleTime: 0,
+    //     cacheTime: 0,
+    // });
 
     // Fetch all meals from API (for breakfasts and drinks)
     const { isLoading: isLoadingMeals, data: mealsResponse } = useQuery<{ data: any[] }>({
@@ -253,11 +245,11 @@ const JoinNow = () => {
             case 2:
                 return {
                     ...commonProps,
-                    weeklyMenuData: weeklyMenuResponse?.data?.[0] || null,
+                    // weeklyMenuData: weeklyMenuResponse?.data?.[0] || null,
                     mealsData: mealsResponse?.data || [],
                     drinksData: drinksResponse?.data || [],
                     rewardsData: rewardsResponse,
-                    isLoadingMenu,
+                    // isLoadingMenu,
                     isLoadingMeals,
                     isLoadingDrinks,
                     isLoadingRewards

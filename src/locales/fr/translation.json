@@ -57,6 +57,7 @@
     "mins": "min",
     "chef_crafted": "Créé par Chef",
     "membership": "Adhésion",
+    "get_membership": "Obtenir l'Adhésion",
     "vegan": "Végane",
     "vegetarian": "Végétarien",
     "gluten_free": "Sans Gluten",
@@ -201,6 +202,7 @@
     "perWeek": "par semaine",
     "free": "GRATUIT",
     "off": "Réduit",
+    "loginRequired": "Connexion Requise",
     "loading": "Chargement...",
     "backToHome": "Retour à l'accueil"
   },
@@ -219,7 +221,8 @@
     "perks": "Avantages Supplémentaires",
     "billingInfo": "Facturé mensuellement le jour",
     "noPlans": "Aucun plan d'adhésion disponible",
-    "noPlansDescription": "Veuillez revenir plus tard pour les plans d'adhésion disponibles."
+    "noPlansDescription": "Veuillez revenir plus tard pour les plans d'adhésion disponibles.",
+    "loginMessage": "Veuillez vous connecter pour sélectionner un plan d'adhésion"
   },
   "membershipCheckout": {
     "title": "Complétez Votre",

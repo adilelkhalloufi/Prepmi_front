@@ -57,6 +57,7 @@
     "mins": "mins",
     "chef_crafted": "Chef Crafted",
     "membership": "Membership",
+    "get_membership": "Get Membership",
     "vegan": "Vegan",
     "vegetarian": "Vegetarian",
     "gluten_free": "Gluten Free",
@@ -200,7 +201,10 @@
     "week": "week",
     "perWeek": "per week",
     "free": "FREE",
-    "off": "Off"
+    "off": "Off",
+    "loginRequired": "Login Required",
+    "loading": "Loading...",
+    "backToHome": "Back to Home"
   },
   "navigation": {
     "previous": "Previous",
@@ -512,7 +516,8 @@
       "perks": "Additional Perks",
       "billingInfo": "Billed monthly on day",
       "noPlans": "No membership plans available",
-      "noPlansDescription": "Please check back later for available membership plans."
+      "noPlansDescription": "Please check back later for available membership plans.",
+      "loginMessage": "Please login to select a membership plan"
     },
     "membershipCheckout": {
       "title": "Complete Your",
