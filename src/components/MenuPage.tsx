@@ -34,20 +34,7 @@ export function MenuPage() {
     const [selectedDate, setSelectedDate] = useState<string>(getCurrentWeekStart());
     const [isAnimating, setIsAnimating] = useState(false);
 
-    // Fetch weekly menu for current week
-    const { isLoading: isLoadingWeeklyMenu, data: weeklyMenuResponse } = useQuery<{ data: any[] }>({
-        queryKey: ["weeklyMenus", "current-week"],
-        queryFn: () =>
-            http
-                .get(`${apiRoutes.weeklyMenus}?is_active=1&is_published=1&week_start_date=${getCurrentWeekStart()}&type_id=1`)
-                .then((res) => res.data)
-                .catch((e) => {
-                    handleErrorResponse(e);
-                    throw e;
-                }),
-    });
-
-    // Fetch all meals (for breakfasts)
+    // Fetch all meals
     const { isLoading: isLoadingMeals, data: mealsResponse } = useQuery<{ data: Meal[] }>({
         queryKey: ["meals"],
         queryFn: () =>
@@ -86,18 +73,20 @@ export function MenuPage() {
                 }),
     });
 
-    const weeklyMenu = weeklyMenuResponse?.data?.[0] || null;
     const allMeals = mealsResponse?.data || [];
-    const mainMeals = weeklyMenu?.meals || [];
+    const mainMeals = allMeals.filter(meal => 
+        meal.type === 'lunch' || meal.type === 'dinner' || 
+        meal.category?.slug === 'weekly' ||
+        (!meal.type?.includes('breakfast') && !meal.category?.name?.toLowerCase().includes('breakfast') && meal.category?.slug !== 'drinks')
+    );
     const breakfasts = allMeals.filter(meal =>
         meal.type === 'breakfast' || meal.category?.name?.toLowerCase().includes('breakfast')
     );
     const drinks = drinksResponse?.data || [];
 
-    // Generate week dates based on menu
+    // Generate week dates for current week
     const generateWeekDates = () => {
-        if (!weeklyMenu) return [];
-        const startDate = new Date(weeklyMenu.week_start_date);
+        const startDate = new Date(getCurrentWeekStart());
         const dates = [];
         const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
         
@@ -113,7 +102,7 @@ export function MenuPage() {
     };
 
     const weeklyDates = generateWeekDates();
-    const isLoading = isLoadingWeeklyMenu || isLoadingMeals || isLoadingDrinks || isLoadingCategories;
+    const isLoading = isLoadingMeals || isLoadingDrinks || isLoadingCategories;
 
     // Calculate stats from meals data
     const totalRecipes = allMeals.length || 0;
@@ -257,44 +246,7 @@ export function MenuPage() {
                     ))}
                 </div>
 
-                {/* Date Selection for Weekly Menu */}
-                {activeCategory === 'weekly' && weeklyMenu && (
-                    <div className="mb-12">
-                        <div className="text-center mb-8">
-                            <h2 className="text-2xl font-bold text-foreground mb-2">
-                                {weeklyMenu.title || (t('menu.week_of') || 'Week of')} {formatDate(weeklyMenu.week_start_date)} - {formatDate(weeklyMenu.week_end_date)}
-                            </h2>
-                            <p className="text-muted-foreground">
-                                {weeklyMenu.description || (t('menu.select_date') || 'Select a date to view available meals')}
-                            </p>
-                        </div>
-                        <div className="flex flex-wrap justify-center gap-3">
-                            {weeklyDates.map((dateObj) => (
-                                <button
-                                    key={dateObj.date}
-                                    onClick={() => setSelectedDate(dateObj.date)}
-                                    className={`group relative px-6 py-4 rounded-xl border-2 transition-all duration-300 transform hover:scale-105 ${selectedDate === dateObj.date
-                                        ? 'border-primary bg-gradient-to-r from-primary/10 to-primary/5 text-primary shadow-lg shadow-primary/10'
-                                        : 'border-border/50 hover:border-primary/30 bg-card/50 hover:bg-card text-muted-foreground hover:text-foreground'
-                                        }`}
-                                >
-                                    <div className="text-center">
-                                        <div className="text-sm font-medium mb-1">
-                                            {dateObj.day}
-                                        </div>
-                                        <div className="text-lg font-bold">
-                                            {formatDate(dateObj.date)}
-                                        </div>
-                                    </div>
-                                    {selectedDate === dateObj.date && (
-                                        <div className="absolute -top-1 -right-1 w-3 h-3 bg-primary rounded-full animate-pulse" />
-                                    )}
-                                </button>
-                            ))}
-                        </div>
-                    </div>
-                )}
-
+          
                 {/* Stats Card */}
                 <Card className="mb-12 bg-gradient-to-r from-card/90 to-card/70 border-border/50 shadow-xl backdrop-blur-sm">
                     <CardContent className="p-8">
