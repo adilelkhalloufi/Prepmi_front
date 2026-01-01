@@ -389,7 +389,8 @@
       "standardDelivery": "Livraison Standard",
       "standardDeliveryTime": "3-5 jours ouvrables",
       "expressDelivery": "Livraison Express",
-      "expressDeliveryTime": "1-2 jours ouvrables"
+      "expressDeliveryTime": "1-2 jours ouvrables",
+      "deliverySlots": "Créneaux de Livraison"
     },
     "address": {
       "title": "DÉTAILS DE LIVRAISON",
@@ -412,7 +413,24 @@
       "delivery": "Livraison gratuite sur toutes les commandes de plus de 50$",
       "hearAbout": "COMMENT AVEZ-VOUS ENTENDU PARLER DE PREPME?",
       "selectSource": "Sélectionnez comment vous avez entendu parler de nous",
-      "requiredFields": "Veuillez remplir tous les champs obligatoires pour continuer"
+      "requiredFields": "Veuillez remplir tous les champs obligatoires pour continuer",
+      "deliverySlots": "Sélectionner les Créneaux de Livraison",
+      "loadingSlots": "Chargement des créneaux de livraison...",
+      "noSlots": "Aucun créneau de livraison disponible",
+      "selectSlotsDescription": "Sélectionnez vos créneaux de livraison préférés",
+      "selectAtLeastOneSlot": "Veuillez sélectionner au moins un créneau de livraison",
+      "slotFull": "Complet",
+      "slotAlmostFull": "Presque complet",
+      "booked": "réservé",
+      "days": {
+        "0": "Dimanche",
+        "1": "Lundi",
+        "2": "Mardi",
+        "3": "Mercredi",
+        "4": "Jeudi",
+        "5": "Vendredi",
+        "6": "Samedi"
+      }
     },
     "meals": {
       "title": "CHOISISSEZ VOS REPAS",

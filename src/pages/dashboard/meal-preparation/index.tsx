@@ -59,6 +59,7 @@ export default function MealPreparationIndex() {
                 order_num: order.num_order || order.order_num,
                 order_status: order.statue || order.order_status,
                 order_id: order.id || order.order_id,
+                deliveries: order.deliveries || [],
                 meals: order.order_meals.map(mealItem => ({
                     name: mealItem.meal?.name,
                     quantity: mealItem.quantity,
@@ -76,7 +77,7 @@ export default function MealPreparationIndex() {
         "Shipped",
         "Delivered",
         "Cancelled",
-    
+
     ];
 
     const handleStatusUpdate = async (order_id: number, newStatus: string) => {

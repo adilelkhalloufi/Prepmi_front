@@ -105,7 +105,7 @@ export function Meals({
     if (!meal.is_membership) {
       return true;
     }
-    
+
     // If meal requires membership, check if user is logged in and has active membership
     return isUserMember();
   };
@@ -161,7 +161,7 @@ export function Meals({
 
   // Update selectedMeals to store full meal object with quantity
   const handleMealQuantityChange = (mealId: number, change: number) => {
-    const mealObj = mainMeals.find((m) => m.id === mealId);
+    const mealObj = allMeals.find((m) => m.id === mealId);
     if (!mealObj) return;
 
     setSelectedMeals((prev) => {
@@ -409,16 +409,16 @@ export function Meals({
                 <p className="font-semibold text-foreground">
                   {weeklyMenu
                     ? `${new Date(
-                        weeklyMenu.week_start_date
-                      ).toLocaleDateString("en-GB", {
-                        day: "numeric",
-                        month: "short",
-                      })} - ${new Date(
-                        weeklyMenu.week_end_date
-                      ).toLocaleDateString("en-GB", {
-                        day: "numeric",
-                        month: "short",
-                      })}`
+                      weeklyMenu.week_start_date
+                    ).toLocaleDateString("en-GB", {
+                      day: "numeric",
+                      month: "short",
+                    })} - ${new Date(
+                      weeklyMenu.week_end_date
+                    ).toLocaleDateString("en-GB", {
+                      day: "numeric",
+                      month: "short",
+                    })}`
                     : t("joinNow.meals.deliveryWeek", "During the week")}
                 </p>
               </div>
@@ -457,63 +457,6 @@ export function Meals({
         </div>
       )}
 
-      {/* Main Meals Grid - Weekly Menu (Commented Out) */}
-      {/* 
-            <div>
-                <h3 className="text-xl font-semibold mb-4 text-foreground">Weekly Menu</h3>
-                {isLoadingMenu ? (
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                        {Array.from({ length: 6 }).map((_, index) => (
-                            <Card key={index} className="border-2 border-gray-200">
-                                <CardContent className="p-6">
-                                    <div className="animate-pulse">
-                                        <div className="h-40 bg-gray-200 rounded mb-4"></div>
-                                        <div className="h-6 bg-gray-200 rounded mb-3 w-3/4"></div>
-                                        <div className="h-4 bg-gray-200 rounded mb-2 w-full"></div>
-                                        <div className="h-4 bg-gray-200 rounded w-2/3"></div>
-                                    </div>
-                                </CardContent>
-                            </Card>
-                        ))}
-                    </div>
-                ) : mainMeals.length === 0 ? (
-                    <div className="text-center py-12">
-                        <p className="text-muted-foreground">No meals available for this week. Please check back later.</p>
-                    </div>
-                ) : (
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                        {mainMeals.map((meal) => (
-                            <div key={meal.id} className="relative">
-                                <MealCard meal={meal} />
-                                <div className="absolute top-4 left-4 bg-white dark:bg-card rounded-lg shadow-lg border border-border p-2 flex items-center space-x-2">
-                                    <Button
-                                        size="sm"
-                                        variant="outline"
-                                        className="h-8 w-8 p-0"
-                                        onClick={() => handleMealQuantityChange(meal.id, -1)}
-                                        disabled={!selectedMeals[meal.id]}
-                                    >
-                                        <Minus className="h-4 w-4" />
-                                    </Button>
-                                    <span className="min-w-[2rem] text-center font-semibold">
-                                        {selectedMeals[meal.id]?.quantity || 0}
-                                    </span>
-                                    <Button
-                                        size="sm"
-                                        variant="outline"
-                                        className="h-8 w-8 p-0"
-                                        onClick={() => handleMealQuantityChange(meal.id, 1)}
-                                        disabled={remainingMeals === 0}
-                                    >
-                                        <Plus className="h-4 w-4" />
-                                    </Button>
-                                </div>
-                            </div>
-                        ))}
-                    </div>
-                )}
-            </div>
-            */}
 
       {/* All Meals Grid - Fetched from API */}
       <div>
@@ -680,11 +623,10 @@ export function Meals({
                         {eligibleMeals.map((meal) => (
                           <Card
                             key={meal.id}
-                            className={`relative hover:shadow-lg transition-all ${
-                              isApplied && appliedReward?.meal_id === meal.id
+                            className={`relative hover:shadow-lg transition-all ${isApplied && appliedReward?.meal_id === meal.id
                                 ? "ring-2 ring-secondary"
                                 : ""
-                            }`}
+                              }`}
                           >
                             <div className="relative h-32 overflow-hidden rounded-t-lg">
                               {meal.image_url || meal.image_path ? (
@@ -724,7 +666,7 @@ export function Meals({
                                 size="sm"
                                 variant={
                                   isApplied &&
-                                  appliedReward?.meal_id === meal.id
+                                    appliedReward?.meal_id === meal.id
                                     ? "default"
                                     : "outline"
                                 }
@@ -734,7 +676,7 @@ export function Meals({
                                 }
                               >
                                 {isApplied &&
-                                appliedReward?.meal_id === meal.id ? (
+                                  appliedReward?.meal_id === meal.id ? (
                                   <>
                                     <Check className="w-3 h-3 mr-1" />
                                     Applied
@@ -937,11 +879,10 @@ export function Meals({
                     return (
                       <Card
                         key={drink.id}
-                        className={`relative transition-shadow ${
-                          selectedFreeDesserts[drink.id]?.quantity > 0
+                        className={`relative transition-shadow ${selectedFreeDesserts[drink.id]?.quantity > 0
                             ? "ring-2 ring-green-400 bg-green-50"
                             : "hover:shadow-lg"
-                        }`}
+                          }`}
                       >
                         <div className="relative h-32 overflow-hidden rounded-t-lg">
                           {drink.image_url || drink.image_path ? (
@@ -1214,7 +1155,7 @@ export function Meals({
               <div className="text-muted-foreground">No meals selected.</div>
             ) : (
               <ul className="space-y-2">
-                {selectedMealObjects.map((meal : any) => (
+                {selectedMealObjects.map((meal: any) => (
                   <li key={meal.id} className="flex items-center gap-4">
                     {meal.image_url || meal.image_path ? (
                       <img
@@ -1247,7 +1188,7 @@ export function Meals({
               <div className="text-muted-foreground">No drinks selected.</div>
             ) : (
               <ul className="space-y-2">
-                {selectedDrinkObjects.map((drink : any) => (
+                {selectedDrinkObjects.map((drink: any) => (
                   <li key={drink.id} className="flex items-center gap-4">
                     {drink.image_url || drink.image_path ? (
                       <img
@@ -1282,7 +1223,7 @@ export function Meals({
                 Free Desserts (Membership)
               </h4>
               <ul className="space-y-2">
-                {Object.values(selectedFreeDesserts).map((drink : any) => (
+                {Object.values(selectedFreeDesserts).map((drink: any) => (
                   <li
                     key={drink.id}
                     className="flex items-center gap-4 bg-green-50 p-2 rounded"

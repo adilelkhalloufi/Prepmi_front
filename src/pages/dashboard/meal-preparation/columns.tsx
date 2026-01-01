@@ -36,91 +36,126 @@ const statusConfig = {
 export const columns = (
   onStatusUpdate?: (orderId: string, status: string) => Promise<void>
 ): ColumnDef<any>[] => [
-  {
-    accessorKey: "order_num",
-    header: "N° Commande",
-    cell: ({ row }) => row.original.order_num,
-  },
-  {
-    accessorKey: "meals",
-    header: "Repas & Quantité",
-    cell: ({ row }) => {
-      const meals = row.original.meals || [];
-      return (
-        <div>
-          {meals.map((meal: any, idx: number) => (
-            <div key={idx} className="flex gap-2 items-center">
-              <span className="font-medium">{meal.name}</span>
-              <span className="text-xs text-muted-foreground">
-                x{meal.quantity}
-              </span>
-            </div>
-          ))}
-        </div>
-      );
+    {
+      accessorKey: "order_num",
+      header: "N° Commande",
+      cell: ({ row }) => row.original.order_num,
     },
-  },
-  {
-    accessorKey: "order_status",
-    header: "Statut commande",
-    filterFn: (row, columnId, filterValue) => {
-      if (!filterValue) return true;
-      const status = row.getValue(columnId);
-      return status === filterValue;
+    {
+      accessorKey: "meals",
+      header: "Repas & Quantité",
+      cell: ({ row }) => {
+        const meals = row.original.meals || [];
+        return (
+          <div>
+            {meals.map((meal: any, idx: number) => (
+              <div key={idx} className="flex gap-2 items-center">
+                <span className="font-medium">{meal.name}</span>
+                <span className="text-xs text-muted-foreground">
+                  x{meal.quantity}
+                </span>
+              </div>
+            ))}
+          </div>
+        );
+      },
     },
-    cell: ({ row }) => {
-      const status = row.original.order_status;
-      const config =
-        statusConfig[status as keyof typeof statusConfig] ||
-        statusConfig.Pending;
-      return (
-        <div className="flex items-center gap-2">
-          <Badge className={`capitalize ${config.variant}`}>
-            {config.label}
-          </Badge>
-        </div>
-      );
-    },
-  },
-  {
-    accessorKey: "action",
-    header: "Actions",
-    cell: ({ row }) => {
-      const status = row.original.order_status;
-      const config =
-        statusConfig[status as keyof typeof statusConfig] ||
-        statusConfig.Pending;
+    {
+      accessorKey: "deliveries",
+      header: "Jours de livraison",
+      cell: ({ row }) => {
+        const deliveries = row.original.deliveries || [];
+        const daysMap: Record<number, string> = {
+          0: 'Dim',
+          1: 'Lun',
+          2: 'Mar',
+          3: 'Mer',
+          4: 'Jeu',
+          5: 'Ven',
+          6: 'Sam'
+        };
 
-      return (
-        <div className="flex items-center gap-2">
-          {onStatusUpdate && (
-            <Select
-              value={status}
-              onValueChange={async (newStatus) => {
-                await onStatusUpdate(row.original.order_id, newStatus);
-              }}
-            >
-              <SelectTrigger
-                className={`w-[120px] ${config.variant} text-white border-none`}
-              >
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                {Object.entries(statusConfig).map(([key, value]) => (
-                  <SelectItem key={key} value={key}>
-                    <div className="flex items-center gap-2">
-                      <div
-                        className={`w-3 h-3 rounded-full ${value.variant}`}
-                      ></div>
-                      {value.label}
-                    </div>
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          )}
-        </div>
-      );
+        if (deliveries.length === 0) return <span className="text-muted-foreground">-</span>;
+
+        return (
+          <div className="flex flex-wrap gap-1">
+            {deliveries.map((delivery: any, idx: number) => {
+              const deliveryDate = delivery.delivery_window_start
+                ? new Date(delivery.delivery_window_start)
+                : null;
+              const dayOfWeek = deliveryDate ? daysMap[deliveryDate.getDay()] : '-';
+
+              return (
+                <Badge key={idx} variant="outline" className="text-xs">
+                  {dayOfWeek}
+                </Badge>
+              );
+            })}
+          </div>
+        );
+      },
     },
-  },
-];
+    {
+      accessorKey: "order_status",
+      header: "Statut commande",
+      filterFn: (row, columnId, filterValue) => {
+        if (!filterValue) return true;
+        const status = row.getValue(columnId);
+        return status === filterValue;
+      },
+      cell: ({ row }) => {
+        const status = row.original.order_status;
+        const config =
+          statusConfig[status as keyof typeof statusConfig] ||
+          statusConfig.Pending;
+        return (
+          <div className="flex items-center gap-2">
+            <Badge className={`capitalize ${config.variant}`}>
+              {config.label}
+            </Badge>
+          </div>
+        );
+      },
+    },
+    {
+      accessorKey: "action",
+      header: "Actions",
+      cell: ({ row }) => {
+        const status = row.original.order_status;
+        const config =
+          statusConfig[status as keyof typeof statusConfig] ||
+          statusConfig.Pending;
+
+        return (
+          <div className="flex items-center gap-2">
+            {onStatusUpdate && (
+              <Select
+                value={status}
+                onValueChange={async (newStatus) => {
+                  await onStatusUpdate(row.original.order_id, newStatus);
+                }}
+              >
+                <SelectTrigger
+                  className={`w-[120px] ${config.variant} text-white border-none`}
+                >
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {Object.entries(statusConfig).map(([key, value]) => (
+                    <SelectItem key={key} value={key}>
+                      <div className="flex items-center gap-2">
+                        <div
+                          className={`w-3 h-3 rounded-full ${value.variant}`}
+                        ></div>
+                        {value.label}
+                      </div>
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            )}
+          </div>
+        );
+      },
+    },
+  ];

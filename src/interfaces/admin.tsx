@@ -67,6 +67,22 @@ export interface Plan {
     updated_at?: string
 }
 
+export interface DeliverySlot {
+    id?: number
+    slot_name: string
+    slot_type: string
+    start_time: string
+    end_time: string
+    max_capacity: number
+    current_bookings?: number
+    day_of_week?: string
+    is_active: boolean
+    price_adjustment?: number
+    description?: string
+    created_at?: string
+    updated_at?: string
+}
+
 
 
 

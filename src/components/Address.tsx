@@ -4,7 +4,8 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
- import { useDispatch, useSelector } from "react-redux"
+import { Checkbox } from "@/components/ui/checkbox"
+import { useDispatch, useSelector } from "react-redux"
 import { RootState } from "@/store"
 import { updatePlanData } from "@/store/slices/joinProcessSlice"
 import {
@@ -15,12 +16,12 @@ import {
     Clock,
     Shield,
     Mail,
-    Globe,
+
     Lock
 } from "lucide-react"
 import { useTranslation } from "react-i18next"
 
- 
+
 
 const hearAboutUsOptions = [
     { value: 'google', label: 'Google Search' },
@@ -31,13 +32,31 @@ const hearAboutUsOptions = [
     { value: 'other', label: 'Other' }
 ]
 
-export function Address() {
+export function Address({ deliverySlotsData = [], membershipData = null, isLoadingDeliverySlots = false }: {
+    deliverySlotsData?: any[],
+    membershipData?: any,
+    isLoadingDeliverySlots?: boolean
+}) {
     const { t } = useTranslation()
     const dispatch = useDispatch()
     const planData = useSelector((state: RootState) => state.joinProcess.planData)
     const admin = useSelector((state: RootState) => state.admin?.user?.id) // Uncomment if auth slice exists
 
-   
+    // Filter delivery slots based on membership status
+    const filteredDeliverySlots = deliverySlotsData.filter((slot: any) => {
+        if (!slot.is_active) return false
+
+        // Check if user has active membership
+        const hasActiveMembership = membershipData && membershipData.status === 'active'
+
+        if (hasActiveMembership) {
+            // Show membership and both types for membership users
+            return slot.slot_type === 'membership' || slot.slot_type === 'both'
+        } else {
+            // Show only normal and both types for non-membership users (exclude membership-only slots)
+            return slot.slot_type === 'normal' || slot.slot_type === 'both'
+        }
+    })
 
     const [addressData, setAddressData] = useState({
         firstName: planData?.firstName || '',
@@ -50,11 +69,14 @@ export function Address() {
         password: '',
         repeatPassword: ''
     })
+    const [selectedDeliverySlots, setSelectedDeliverySlots] = useState<number[]>(
+        planData?.delivery_slot_ids || []
+    )
     const [isManualAddress, setIsManualAddress] = useState(true)
     const [addressSuggestions, setAddressSuggestions] = useState<string[]>([])
     const [isLoadingSuggestions, setIsLoadingSuggestions] = useState(false)
     const searchTimeoutRef = useRef<NodeJS.Timeout | null>(null)
-
+    console.log('membershipData :', membershipData);
     // Update local state when Redux state changes
     useEffect(() => {
         if (planData) {
@@ -68,6 +90,7 @@ export function Address() {
                 hearAboutUs: planData.hearAboutUs || '',
                 email: planData.email || ''
             }))
+            setSelectedDeliverySlots(planData.delivery_slot_ids || [])
         }
     }, [planData])
 
@@ -75,6 +98,15 @@ export function Address() {
         const updatedData = { ...addressData, [field]: value }
         setAddressData(updatedData)
         dispatch(updatePlanData({ [field]: value }))
+    }
+
+    const handleDeliverySlotToggle = (slotId: number) => {
+        const updatedSlots = selectedDeliverySlots.includes(slotId)
+            ? selectedDeliverySlots.filter(id => id !== slotId)
+            : [...selectedDeliverySlots, slotId]
+
+        setSelectedDeliverySlots(updatedSlots)
+        dispatch(updatePlanData({ delivery_slot_ids: updatedSlots }))
     }
 
     // Address search handler using Nominatim API
@@ -104,7 +136,8 @@ export function Address() {
         const basicValid = addressData.firstName &&
             addressData.lastName &&
             addressData.phoneNumber &&
-            addressData.address;
+            addressData.address &&
+            selectedDeliverySlots.length > 0; // Require at least one delivery slot
         if (!admin) {
 
             return basicValid && addressData.email && addressData.password && addressData.password === addressData.repeatPassword;
@@ -370,6 +403,80 @@ export function Address() {
                             </div>
                         </div>
                     </div>
+                </CardContent>
+            </Card>
+
+            {/* Delivery Slots Selection */}
+            <Card>
+                <CardHeader>
+                    <CardTitle className="flex items-center space-x-2">
+                        <Clock className="w-5 h-5 text-primary" />
+                        <span>{t('joinNow.address.deliverySlots', 'Select Delivery Time Slots')} *</span>
+                    </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                    {isLoadingDeliverySlots ? (
+                        <div className="text-center py-4">
+                            <p className="text-muted-foreground">{t('joinNow.address.loadingSlots', 'Loading delivery slots...')}</p>
+                        </div>
+                    ) : filteredDeliverySlots.length === 0 ? (
+                        <div className="text-center py-4">
+                            <p className="text-muted-foreground">{t('joinNow.address.noSlots', 'No delivery slots available')}</p>
+                        </div>
+                    ) : (
+                        <div className="space-y-3">
+                            <p className="text-sm text-muted-foreground">
+                                {t('joinNow.address.selectSlotsDescription', 'Select your preferred delivery time slots')}
+                            </p>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                {filteredDeliverySlots.map((slot: any) => {
+                                    const isSelected = selectedDeliverySlots.includes(slot.id)
+                                    const isFull = slot.current_bookings >= slot.max_capacity
+
+                                    return (
+                                        <div
+                                            key={slot.id}
+                                            className={`relative border rounded-lg p-4 cursor-pointer transition-all ${isSelected
+                                                ? 'border-primary bg-primary/5'
+                                                : 'border-border hover:border-primary/50'
+                                                } ${isFull ? 'opacity-50 cursor-not-allowed' : ''}`}
+                                            onClick={() => !isFull && handleDeliverySlotToggle(slot.id)}
+                                        >
+                                            <div className="flex items-start space-x-3">
+                                                <Checkbox
+                                                    checked={isSelected}
+                                                    disabled={isFull}
+                                                    onCheckedChange={() => !isFull && handleDeliverySlotToggle(slot.id)}
+                                                    className="mt-1"
+                                                />
+                                                <div className="flex-1 min-w-0">
+                                                    <div className="flex items-center justify-between">
+                                                        <h4 className="font-semibold text-foreground">
+                                                            {t(`joinNow.address.days.${slot.day_of_week}`, ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'][slot.day_of_week])}
+
+                                                        </h4>
+
+                                                    </div>
+                                                    <div className="flex items-center space-x-2 mt-1 text-sm text-muted-foreground">
+                                                        <Clock className="w-3 h-3" />
+                                                        <span>{slot.start_time} - {slot.end_time}</span>
+                                                    </div>
+
+
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    )
+                                })}
+                            </div>
+                            {selectedDeliverySlots.length === 0 && (
+                                <p className="text-sm text-red-500 mt-2">
+                                    {t('joinNow.address.selectAtLeastOneSlot', 'Please select at least one delivery slot')}
+                                </p>
+                            )}
+                        </div>
+                    )}
                 </CardContent>
             </Card>
 

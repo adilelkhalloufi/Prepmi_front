@@ -25,7 +25,7 @@ const statusConfig = {
         label: "En attente",
         variant: "bg-yellow-500 hover:bg-yellow-600",
     },
- 
+
     Preparing: {
         label: "En préparation",
         variant: "bg-cyan-500 hover:bg-cyan-600",
@@ -42,7 +42,7 @@ const statusConfig = {
         label: "Annulé",
         variant: "bg-red-500 hover:bg-red-600",
     },
-  
+
 };
 
 interface GroupedOrder {
@@ -55,44 +55,45 @@ interface GroupedOrder {
     total_amount?: number;
 }
 
-    const groupByOrder = (items: any[]) => {
-        // If items are flat meal preparations (old format)
-        if (items.length && items[0]?.order_num) {
-            const grouped: Record<string, any> = {};
-            items.forEach(item => {
-                const orderNum = item.order_num;
-                if (!grouped[orderNum]) {
-                    grouped[orderNum] = {
-                        order_num: orderNum,
-                        meals: [],
-                        order_status: item.order_status,
-                        order_id: item.order_id,
-                    };
-                }
-                grouped[orderNum].meals.push({
-                    name: item.meal?.name,
-                    quantity: item.quantity,
-                    order_meal_id: item.order_meal_id,
-                });
+const groupByOrder = (items: any[]) => {
+    // If items are flat meal preparations (old format)
+    if (items.length && items[0]?.order_num) {
+        const grouped: Record<string, any> = {};
+        items.forEach(item => {
+            const orderNum = item.order_num;
+            if (!grouped[orderNum]) {
+                grouped[orderNum] = {
+                    order_num: orderNum,
+                    meals: [],
+                    order_status: item.order_status,
+                    order_id: item.order_id,
+                };
+            }
+            grouped[orderNum].meals.push({
+                name: item.meal?.name,
+                quantity: item.quantity,
+                order_meal_id: item.order_meal_id,
             });
-            return Object.values(grouped);
-        }
-        // If items are nested order objects (new format)
-        if (items.length && items[0]?.order_meals) {
-            return items.map(order => ({
-                order_num: order.num_order || order.order_num,
-                order_status: order.statue || order.order_status,
-                order_id: order.id || order.order_id,
-                meals: order.order_meals.map(mealItem => ({
-                    name: mealItem.meal?.name,
-                    quantity: mealItem.quantity,
-                    order_meal_id: mealItem.id || mealItem.order_meal_id,
-                }))
-            }));
-        }
-        // Fallback: return empty array
-        return [];
-    };
+        });
+        return Object.values(grouped);
+    }
+    // If items are nested order objects (new format)
+    if (items.length && items[0]?.order_meals) {
+        return items.map(order => ({
+            order_num: order.num_order || order.order_num,
+            order_status: order.statue || order.order_status,
+            order_id: order.id || order.order_id,
+            deliveries: order.deliveries || [],
+            meals: order.order_meals.map(mealItem => ({
+                name: mealItem.meal?.name,
+                quantity: mealItem.quantity,
+                order_meal_id: mealItem.id || mealItem.order_meal_id,
+            }))
+        }));
+    }
+    // Fallback: return empty array
+    return [];
+};
 
 export function CalendarView({ data, loading, onStatusUpdate }: CalendarViewProps) {
     const [selectedDate, setSelectedDate] = useState<Date | undefined>(new Date())
@@ -170,7 +171,7 @@ export function CalendarView({ data, loading, onStatusUpdate }: CalendarViewProp
                             {selectedDate ? format(selectedDate, "EEEE d MMMM yyyy", { locale: fr }) : "Sélectionnez une date"}
                         </CardTitle>
                         <Badge variant="outline" className="text-lg px-4 py-1">
-                            {data.length} commandes 
+                            {data.length} commandes
                         </Badge>
                     </div>
                 </CardHeader>
@@ -215,6 +216,33 @@ export function CalendarView({ data, loading, onStatusUpdate }: CalendarViewProp
                                                         </div>
                                                     ))}
                                                 </div>
+                                                {/* Deliveries */}
+                                                {order.deliveries && order.deliveries.length > 0 && (
+                                                    <div className="text-sm bg-muted p-2 rounded mt-2">
+                                                        <span className="font-medium">🚚 Jours de livraison: </span>
+                                                        {order.deliveries.map((delivery: any, dIdx: number) => {
+                                                            const daysMap: Record<number, string> = {
+                                                                0: 'Dimanche',
+                                                                1: 'Lundi',
+                                                                2: 'Mardi',
+                                                                3: 'Mercredi',
+                                                                4: 'Jeudi',
+                                                                5: 'Vendredi',
+                                                                6: 'Samedi'
+                                                            };
+                                                            const deliveryDate = delivery.delivery_window_start
+                                                                ? new Date(delivery.delivery_window_start)
+                                                                : null;
+                                                            const dayOfWeek = deliveryDate ? daysMap[deliveryDate.getDay()] : '-';
+
+                                                            return (
+                                                                <Badge key={dIdx} variant="secondary" className="ml-1">
+                                                                    {dayOfWeek}
+                                                                </Badge>
+                                                            );
+                                                        })}
+                                                    </div>
+                                                )}
                                                 {/* Notes */}
                                                 {order.notes && (
                                                     <p className="text-sm bg-muted p-2 rounded">

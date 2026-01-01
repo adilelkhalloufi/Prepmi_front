@@ -4,6 +4,7 @@ import registerSlice from './slices/registerSlice';
 import cartSlice from './slices/cartSlice';
 import userSlice, { UserState } from './slices/userSlice';
 import joinProcessSlice, { JoinProcessState } from './slices/joinProcessSlice';
+import deliverySlotsSlice, { DeliverySlotsState } from './slices/deliverySlotsSlice';
 
 
 
@@ -31,6 +32,7 @@ const rootReducer = combineReducers({
   cart: cartSlice,
   user: userSlice,
   joinProcess: joinProcessSlice,
+  deliverySlots: deliverySlotsSlice,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
@@ -51,5 +53,6 @@ export type RootState = {
   cart: Cart;
   user: UserState;
   joinProcess: JoinProcessState;
+  deliverySlots: DeliverySlotsState;
 };
 export type AppDispatch = typeof store.dispatch;

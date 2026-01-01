@@ -1,4 +1,4 @@
- import { API_URL } from '../utils';
+import { API_URL } from '../utils';
 
 export const apiRoutes = {
   // ... other routes ...
@@ -27,5 +27,7 @@ export const apiRoutes = {
   memberships: `${API_URL}/memberships`,
   membershipTransactions: `${API_URL}/membership-transactions`,
 
+  // Delivery slots routes
+  deliverySlots: `${API_URL}/delivery-slots`,
+
 };
- 

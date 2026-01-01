@@ -21,7 +21,20 @@ const JoinNow = () => {
     const { currentStep, planData } = useSelector((state: RootState) => state.joinProcess)
     const admin = useSelector((state: RootState) => state.admin?.user) // Uncomment if auth slice exists
 
- 
+    // Fetch delivery slots from API
+    const { isLoading: isLoadingDeliverySlots, data: deliverySlotsResponse } = useQuery<{ data: any[] }>({
+        queryKey: ["delivery-slots"],
+        queryFn: () =>
+            http
+                .get(apiRoutes.deliverySlots)
+                .then((res) => res.data)
+                .catch((e) => {
+                    handleErrorResponse(e);
+                    throw e;
+                }),
+        staleTime: 0,
+        cacheTime: 0,
+    });
 
     // Fetch categories from API
     const { isLoading: isLoadingCategories, data: categoriesResponse } = useQuery<{ data: any[] }>({
@@ -69,27 +82,14 @@ const JoinNow = () => {
         cacheTime: 0,
     });
 
-    // Fetch weekly menu from API for current week
-    // const { isLoading: isLoadingMenu, data: weeklyMenuResponse } = useQuery<{ data: any[] }>({
-    //     queryKey: ["weeklyMenus", "current-week"],
-    //     queryFn: () =>
-    //         http
-    //             .get(`${apiRoutes.weeklyMenus}?is_active=1&is_published=1&week_start_date=${getCurrentWeekStart()}&type_id=1`)
-    //             .then((res) => res.data)
-    //             .catch((e) => {
-    //                 handleErrorResponse(e);
-    //                 throw e;
-    //             }),
-    //     staleTime: 0,
-    //     cacheTime: 0,
-    // });
+
 
     // Fetch all meals from API (for breakfasts and drinks)
     const { isLoading: isLoadingMeals, data: mealsResponse } = useQuery<{ data: any[] }>({
         queryKey: ["meals", membershipResponse ? "with-membership" : "no-membership"],
         queryFn: () =>
             http
-                .get(`${apiRoutes.meals}?active=1&type_id=0&is_membership=${membershipResponse ? '1' : ''}`)
+                .get(`${apiRoutes.meals}?active=1&type_id=1&is_membership=${membershipResponse ? '1' : ''}`)
                 .then((res) => res.data)
                 .catch((e) => {
                     handleErrorResponse(e);
@@ -104,7 +104,7 @@ const JoinNow = () => {
         queryKey: ["meals", "drinks"],
         queryFn: () =>
             http
-                .get(`${apiRoutes.meals}?type_id=2`)
+                .get(`${apiRoutes.meals}?type_id=3`)
                 .then((res) => res.data)
                 .catch((e) => {
                     handleErrorResponse(e);
@@ -202,6 +202,13 @@ const JoinNow = () => {
                 toast.error(t('joinNow.validation.fillAllFields', 'Please fill in all required fields.'))
                 return
             }
+
+            // Validate delivery slots selection
+            if (!planData.delivery_slot_ids || planData.delivery_slot_ids.length === 0) {
+                toast.error(t('joinNow.validation.selectDeliverySlot', 'Please select at least one delivery time slot.'))
+                return
+            }
+
             console.log('planData.password', planData.password);
             console.log('planData.email', planData.email);
 
@@ -255,12 +262,17 @@ const JoinNow = () => {
                     isLoadingRewards
                 }
             case 3:
-                return {}
+                return {
+                    deliverySlotsData: deliverySlotsResponse?.data || [],
+                    membershipData: membershipResponse || null,
+                    isLoadingDeliverySlots
+                }
             case 4:
                 return {
                     membershipData: membershipResponse || null,
                     pointsData: pointsResponse?.total_points_earned || 0,
-                    isLoadingPoints
+                    isLoadingPoints,
+                    deliverySlotsData: deliverySlotsResponse?.data || []
                 }
             default:
                 return {}

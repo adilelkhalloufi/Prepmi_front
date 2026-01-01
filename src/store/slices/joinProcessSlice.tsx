@@ -29,6 +29,7 @@ export type JoinProcessState = {
     country?: string
     address?: string
     hearAboutUs?: string
+    delivery_slot_ids?: number[]
 
     // Meal selections
     selectedMeals?: Record<string, any>
@@ -65,6 +66,7 @@ const initialState: JoinProcessState = {
     password: '',
     repeatPassword: '',
     hearAboutUs: '',
+    delivery_slot_ids: [],
     selectedMeals: {},
     selectedBreakfasts: {},
     selectedDrinks: {},
@@ -107,7 +109,7 @@ export const joinProcessSlice = createSlice({
   }
 })
 
-export const { setCurrentStep, updatePlanData, nextStep, prevStep, resetJoinProcess,clearMealSelections } = joinProcessSlice.actions
+export const { setCurrentStep, updatePlanData, nextStep, prevStep, resetJoinProcess, clearMealSelections } = joinProcessSlice.actions
 export default joinProcessSlice.reducer
 
 

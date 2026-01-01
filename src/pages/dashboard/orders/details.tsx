@@ -107,14 +107,14 @@ export default function OrderDetails() {
                                 <TableRow>
                                     <TableHead>Repas</TableHead>
                                     <TableHead>Quantité</TableHead>
-                                 </TableRow>
+                                </TableRow>
                             </TableHeader>
                             <TableBody>
                                 {order.order_meals && order.order_meals.map((item: any) => (
                                     <TableRow key={item.id}>
                                         <TableCell>{item.meal?.name}</TableCell>
                                         <TableCell>{item.quantity}</TableCell>
-                                       
+
 
                                     </TableRow>
                                 ))}
@@ -122,6 +122,81 @@ export default function OrderDetails() {
                         </Table>
                     </CardContent>
                 </Card>
+
+                {order.deliveries && order.deliveries.length > 0 && (
+                    <Card>
+                        <CardHeader>
+                            <CardTitle>Livraisons</CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                            <Table>
+                                <TableHeader>
+                                    <TableRow>
+                                        <TableHead>Jour</TableHead>
+                                        <TableHead>Date et heure</TableHead>
+                                        <TableHead>Créneau</TableHead>
+                                    </TableRow>
+                                </TableHeader>
+                                <TableBody>
+                                    {order.deliveries.map((delivery: any) => {
+                                        const daysMap: Record<number, string> = {
+                                            0: 'Dimanche',
+                                            1: 'Lundi',
+                                            2: 'Mardi',
+                                            3: 'Mercredi',
+                                            4: 'Jeudi',
+                                            5: 'Vendredi',
+                                            6: 'Samedi'
+                                        };
+
+                                        const deliveryDate = delivery.delivery_window_start
+                                            ? new Date(delivery.delivery_window_start)
+                                            : null;
+
+                                        const dayOfWeek = deliveryDate ? daysMap[deliveryDate.getDay()] : '-';
+
+                                        return (
+                                            <TableRow key={delivery.id}>
+                                                <TableCell>
+                                                    <div className="font-medium">{dayOfWeek}</div>
+                                                    {delivery.delivery_slot?.day_of_week !== null && (
+                                                        <div className="text-xs text-muted-foreground">
+                                                            Créneau: {daysMap[delivery.delivery_slot.day_of_week] || 'Tous les jours'}
+                                                        </div>
+                                                    )}
+                                                </TableCell>
+                                                <TableCell>
+                                                    {deliveryDate ? (
+                                                        <div>
+                                                            <div>{deliveryDate.toLocaleDateString('fr-FR')}</div>
+                                                            <div className="text-sm text-muted-foreground">
+                                                                {deliveryDate.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}
+                                                                {delivery.delivery_window_end && (
+                                                                    <> - {new Date(delivery.delivery_window_end).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}</>
+                                                                )}
+                                                            </div>
+                                                        </div>
+                                                    ) : '-'}
+                                                </TableCell>
+                                                <TableCell>
+                                                    {delivery.delivery_slot ? (
+                                                        <div>
+                                                            <div className="font-medium">{delivery.delivery_slot.slot_name}</div>
+                                                            <div className="text-sm text-muted-foreground">
+                                                                {delivery.delivery_slot.start_time?.substring(0, 5)} - {delivery.delivery_slot.end_time?.substring(0, 5)}
+                                                            </div>
+                                                        </div>
+                                                    ) : '-'}
+                                                </TableCell>
+
+                                            </TableRow>
+                                        );
+                                    })}
+                                </TableBody>
+                            </Table>
+                        </CardContent>
+                    </Card>
+                )}
 
                 {order.status_histories && order.status_histories.length > 0 && (
                     <Card>

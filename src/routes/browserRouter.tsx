@@ -10,7 +10,7 @@ import Layout from "@/components/dashboard/layout";
 import Register from "@/pages/register/index";
 import Checkout from "@/pages/checkout";
 import LogoutPage from "@/pages/logoutPage";
- import PrivacyPolicy from "@/pages/privacy-policy";
+import PrivacyPolicy from "@/pages/privacy-policy";
 import TermsOfService from "@/pages/terms-of-service";
 import CookieSettings from "@/pages/cookie-settings";
 import { MenuPage } from "@/components/MenuPage";
@@ -158,6 +158,22 @@ const MembershipPlans = loadable(() => import("../pages/membership-plans"), {
 });
 
 const MembershipCheckout = loadable(() => import("../pages/membership-checkout"), {
+  fallback: fallbackElement,
+});
+
+const DeliverySlotsIndex = loadable(() => import('../pages/dashboard/delivery-slots/index'), {
+  fallback: fallbackElement,
+});
+
+const DeliverySlotsView = loadable(() => import('../pages/dashboard/delivery-slots/view'), {
+  fallback: fallbackElement,
+});
+
+const DeliverySlotsAdd = loadable(() => import('../pages/dashboard/delivery-slots/add'), {
+  fallback: fallbackElement,
+});
+
+const DeliverySlotsEdit = loadable(() => import('../pages/dashboard/delivery-slots/edit'), {
   fallback: fallbackElement,
 });
 
@@ -348,7 +364,23 @@ export const browserRouter = createBrowserRouter([
       {
         path: webRoutes.dashboard_memberships_view,
         element: <DashboardMembershipDetails />,
-      }
+      },
+      {
+        path: webRoutes.dashboard_delivery_slots,
+        element: <DeliverySlotsIndex />,
+      },
+      {
+        path: webRoutes.dashboard_delivery_slots_view,
+        element: <DeliverySlotsView />,
+      },
+      {
+        path: webRoutes.dashboard_delivery_slots_add,
+        element: <DeliverySlotsAdd />,
+      },
+      {
+        path: webRoutes.dashboard_delivery_slots_edit,
+        element: <DeliverySlotsEdit />,
+      },
 
     ],
   },

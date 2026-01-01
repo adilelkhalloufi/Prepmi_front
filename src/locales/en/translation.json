@@ -313,7 +313,24 @@
       "password": "Password",
       "passwordPlaceholder": "Enter your password",
       "repeatPassword": "Repeat Password",
-      "repeatPasswordPlaceholder": "Repeat your password"
+      "repeatPasswordPlaceholder": "Repeat your password",
+      "deliverySlots": "Select Delivery Time Slots",
+      "loadingSlots": "Loading delivery slots...",
+      "noSlots": "No delivery slots available",
+      "selectSlotsDescription": "Select your preferred delivery time slots",
+      "selectAtLeastOneSlot": "Please select at least one delivery slot",
+      "slotFull": "Fully booked",
+      "slotAlmostFull": "Almost full",
+      "booked": "booked",
+      "days": {
+        "0": "Sunday",
+        "1": "Monday",
+        "2": "Tuesday",
+        "3": "Wednesday",
+        "4": "Thursday",
+        "5": "Friday",
+        "6": "Saturday"
+      }
     },
     "payment": {
       "title": "ORDER SUMMARY & PAYMENT",
@@ -407,7 +424,8 @@
         "standardDelivery": "Standard Delivery",
         "standardDeliveryTime": "3-5 business days",
         "expressDelivery": "Express Delivery",
-        "expressDeliveryTime": "1-2 business days"
+        "expressDeliveryTime": "1-2 business days",
+        "deliverySlots": "Delivery Time Slots"
       },
       "address": {
         "title": "DELIVERY DETAILS",

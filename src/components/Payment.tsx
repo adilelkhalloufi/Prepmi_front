@@ -38,12 +38,14 @@ interface PaymentProps {
     membershipData?: any
     pointsData?: number
     isLoadingPoints?: boolean
+    deliverySlotsData?: any[]
 }
 
 export function Payment({
     membershipData = null,
     pointsData = 0,
-    isLoadingPoints = false
+    isLoadingPoints = false,
+    deliverySlotsData = []
 }: PaymentProps) {
     const { t } = useTranslation()
     const dispatch = useDispatch()
@@ -227,6 +229,7 @@ export function Payment({
             originalAmount: subtotalBeforeDiscount,
             membershipDiscount: membershipDiscount,
             membershipId: userMembership?.id || null,
+            delivery_slot_ids: planData?.delivery_slot_ids || [],
             infos: {
                 firstName: planData?.firstName,
                 lastName: planData?.lastName,
@@ -302,6 +305,26 @@ export function Payment({
                                     <p className="text-sm text-muted-foreground">{planData?.country || 'N/A'}</p>
                                 </div>
                             </div>
+                            {planData?.delivery_slot_ids && planData.delivery_slot_ids.length > 0 && (
+                                <div className="flex items-start space-x-2">
+                                    <Receipt className="w-4 h-4 text-muted-foreground mt-1" />
+                                    <div>
+                                        <p className="text-sm font-medium">{t('joinNow.payment.deliverySlots', 'Delivery Time Slots')}</p>
+                                        <div className="space-y-1 mt-1">
+                                            {planData.delivery_slot_ids.map((slotId: number) => {
+                                                const slot = deliverySlotsData.find((s: any) => s.id === slotId)
+                                                if (!slot) return null
+                                                const dayName = slot.day_of_week !== null ? ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'][slot.day_of_week] : ''
+                                                return (
+                                                    <Badge key={slotId} variant="outline" className="mr-2 mb-1">
+                                                        {dayName} {slot.start_time} - {slot.end_time}
+                                                    </Badge>
+                                                )
+                                            })}
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
                         </CardContent>
                     </Card>
                     {/* Edit Modal */}
