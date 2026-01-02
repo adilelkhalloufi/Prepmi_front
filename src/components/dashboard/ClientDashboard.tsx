@@ -2,10 +2,9 @@ import { useEffect, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { IconClipboardList, IconMeat, IconBread, IconApple } from '@tabler/icons-react';
-import { Check, Dumbbell } from 'lucide-react';
+import { Check, Dumbbell, Gift, TrendingUp, ShoppingBag, Award, Calendar } from 'lucide-react';
 import http from '@/utils/http';
 import { apiRoutes } from '@/routes/api';
-import { Gift } from "lucide-react";
 
 interface NutritionSummary {
     calories: number;
@@ -209,8 +208,8 @@ export default function ClientDashboard() {
                                             <div
                                                 key={i}
                                                 className={`w-12 h-12 rounded-lg border-2 flex items-center justify-center ${i < Math.min(data.orders_this_month, 5)
-                                                        ? 'border-purple-400 bg-purple-50'
-                                                        : 'border-gray-300 bg-white'
+                                                    ? 'border-purple-400 bg-purple-50'
+                                                    : 'border-gray-300 bg-white'
                                                     }`}
                                             >
                                                 {i < Math.min(data.orders_this_month, 5) && (
@@ -243,8 +242,51 @@ export default function ClientDashboard() {
                     </Card>
                 </div>
 
-                {/* Right column - Meal History */}
-                <div>
+                {/* Right column - Meal History & Stats */}
+                <div className="space-y-6">
+                    {/* Quick Stats Cards */}
+                    <div className="grid grid-cols-2 gap-4">
+                        {/* Orders This Month */}
+                        <Card className="bg-gradient-to-br from-blue-50 to-blue-100 border-blue-200">
+                            <CardContent className="pt-6">
+                                <div className="flex items-start justify-between">
+                                    <div>
+                                        <p className="text-sm font-medium text-blue-700 mb-1">Orders</p>
+                                        <p className="text-3xl font-bold text-blue-900">{data.orders_this_month}</p>
+                                        {data.orders_difference !== 0 && (
+                                            <div className="flex items-center gap-1 mt-2">
+                                                <TrendingUp className={`w-4 h-4 ${data.orders_difference > 0 ? 'text-green-600' : 'text-red-600'}`} />
+                                                <span className={`text-xs font-medium ${data.orders_difference > 0 ? 'text-green-600' : 'text-red-600'}`}>
+                                                    {data.orders_difference > 0 ? '+' : ''}{data.orders_difference} this month
+                                                </span>
+                                            </div>
+                                        )}
+                                    </div>
+                                    <div className="w-12 h-12 bg-blue-500 rounded-full flex items-center justify-center">
+                                        <ShoppingBag className="w-6 h-6 text-white" />
+                                    </div>
+                                </div>
+                            </CardContent>
+                        </Card>
+
+                        {/* Loyalty Points */}
+                        <Card className="bg-gradient-to-br from-purple-50 to-purple-100 border-purple-200">
+                            <CardContent className="pt-6">
+                                <div className="flex items-start justify-between">
+                                    <div>
+                                        <p className="text-sm font-medium text-purple-700 mb-1">Points</p>
+                                        <p className="text-3xl font-bold text-purple-900">{data.total_points_earned}</p>
+                                        <p className="text-xs text-purple-600 mt-2">Loyalty rewards</p>
+                                    </div>
+                                    <div className="w-12 h-12 bg-purple-500 rounded-full flex items-center justify-center">
+                                        <Gift className="w-6 h-6 text-white" />
+                                    </div>
+                                </div>
+                            </CardContent>
+                        </Card>
+                    </div>
+
+                    {/* Meal History */}
                     <Card>
                         <CardHeader>
                             <CardTitle>Meal history</CardTitle>
@@ -256,19 +298,26 @@ export default function ClientDashboard() {
                                         Aucun repas trouvé.
                                     </div>
                                 ) : (
-                                    (data.meals_history ?? []).map((item, idx) => (
+                                    (data.meals_history ?? []).slice(0, 4).map((item, idx) => (
                                         <div
                                             key={idx}
-                                            className="flex items-center justify-between p-3 border rounded-lg hover:bg-gray-50"
+                                            className="flex items-center justify-between p-3 border rounded-lg hover:bg-gray-50 transition-colors"
                                         >
                                             <div className="flex items-center gap-3">
-                                                <div className="w-12 h-12 bg-gray-200 rounded-lg"></div>
-                                                <span className="font-medium">{item.meal_name}</span>
+                                                <div className="w-12 h-12 bg-gradient-to-br from-emerald-100 to-emerald-200 rounded-lg flex items-center justify-center">
+                                                    <span className="text-xl">🍽️</span>
+                                                </div>
+                                                <div>
+                                                    <span className="font-medium block">{item.meal_name}</span>
+                                                    <span className="text-xs text-muted-foreground">
+                                                        {new Date(item.order_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+                                                    </span>
+                                                </div>
                                             </div>
                                             <Button
                                                 variant="outline"
                                                 size="sm"
-                                                className="text-emerald-600 hover:text-emerald-700 hover:bg-emerald-50"
+                                                className="text-emerald-600 hover:text-emerald-700 hover:bg-emerald-50 border-emerald-300"
                                             >
                                                 Reorder
                                             </Button>
