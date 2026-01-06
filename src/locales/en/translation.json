@@ -108,6 +108,16 @@
     "review5": "From Agadir with love! PrepMe has made healthy eating so convenient. The meals arrive fresh and the packaging is eco-friendly. Highly recommend!",
     "review6": "Tanger resident here! The chef-crafted meals are restaurant-quality. I've never eaten so well while maintaining my fitness goals. Simply exceptional!"
   },
+  "client_reviews": {
+    "title": "CLIENT TESTIMONIALS",
+    "description": "See what our satisfied customers are saying about their meal prep experience.",
+    "review1": "The meals are absolutely delicious and so convenient! I love that I can focus on my work while still eating healthy, nutritious food every day.",
+    "review2": "PrepMe has completely changed my lifestyle. The portion sizes are perfect and the flavors are amazing. Highly recommend to anyone busy like me!",
+    "review3": "I've tried many meal services, but PrepMe stands out with their quality and taste. The customer service is also excellent. Five stars!",
+    "review4": "Perfect for my fitness goals! The nutritional balance is spot on and the meals keep me energized throughout the day. Will definitely continue!",
+    "review5": "The variety keeps me excited about meal time. Never boring, always fresh and delicious. PrepMe is worth every penny!",
+    "review6": "As someone with dietary restrictions, I appreciate how accommodating PrepMe is. The meals are fresh, tasty, and meet all my nutritional needs."
+  },
   "about": {
     "badge": "Our Story",
     "title": "FROM OUR KITCHEN TO YOURS",

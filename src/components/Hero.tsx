@@ -8,12 +8,12 @@ export function Hero({ meals }) {
   const navigator = useNavigate();
 
   return (
-    <section className="relative overflow-hidden bg-[#1e4d3a] min-h-[600px] flex items-center">
+    <section className="relative overflow-hidden bg-primary min-h-[600px] flex items-center">
       <div className="container  px-4 py-12 md:py-20">
         <div className="grid lg:grid-cols-2 gap-8 items-center">
           {/* Left Content */}
-          <div className="text-center lg:text-left space-y-8">
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight text-white uppercase">
+          <div className="text-center lg:text-left space-y-8 lg:flex-shrink-0">
+            <h1 className="text-8xl md:text-8xl lg:text-8xl font-bold leading-tight text-white uppercase">
               HEALTHY<br />
               MEALS<br />
               DELIVERED
@@ -29,12 +29,12 @@ export function Hero({ meals }) {
           </div>
 
           {/* Right Image */}
-          <div className="flex justify-center lg:justify-end">
-            <div className="relative w-full max-w-md">
+          <div className="flex justify-center lg:justify-end lg:flex-1">
+            <div className="relative w-full max-w-lg lg:max-w-xl">
               <img
                 src="/hero.png"
                 alt="Healthy meal prep containers"
-                className="w-full h-auto object-contain drop-shadow-2xl"
+                className="w-full h-auto object-contain drop-shadow-2xl  rotate-[-30deg] scale-150"
               />
             </div>
           </div>

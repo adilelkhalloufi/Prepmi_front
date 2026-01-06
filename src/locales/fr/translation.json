@@ -108,6 +108,16 @@
     "review5": "D'Agadir avec amour ! PrepMe a rendu l'alimentation saine si pratique. Les repas arrivent frais et l'emballage est écologique. Je recommande vivement !",
     "review6": "Résident de Tanger ici ! Les repas créés par le chef sont de qualité restaurant. Je n'ai jamais aussi bien mangé tout en maintenant mes objectifs de fitness. Simplement exceptionnel !"
   },
+  "client_reviews": {
+    "title": "TÉMOIGNAGES CLIENTS",
+    "description": "Découvrez ce que nos clients satisfaits disent de leur expérience de préparation de repas.",
+    "review1": "Les repas sont absolument délicieux et si pratiques ! J'adore pouvoir me concentrer sur mon travail tout en mangeant une nourriture saine et nutritive tous les jours.",
+    "review2": "PrepMe a complètement changé mon mode de vie. Les portions sont parfaites et les saveurs sont incroyables. Je recommande vivement à tous ceux qui sont occupés comme moi !",
+    "review3": "J'ai essayé beaucoup de services de repas, mais PrepMe se distingue par sa qualité et son goût. Le service client est également excellent. Cinq étoiles !",
+    "review4": "Parfait pour mes objectifs de fitness ! L'équilibre nutritionnel est impeccable et les repas me gardent énergisé tout au long de la journée. Je continuerai définitivement !",
+    "review5": "La variété me garde excité par les heures de repas. Jamais ennuyeux, toujours frais et délicieux. PrepMe vaut chaque centime !",
+    "review6": "En tant que personne avec des restrictions alimentaires, j'apprécie à quel point PrepMe est accommodant. Les repas sont frais, savoureux et répondent à tous mes besoins nutritionnels."
+  },
   "about": {
     "badge": "Notre Histoire",
     "title": "DE NOTRE CUISINE À LA VÔTRE",
