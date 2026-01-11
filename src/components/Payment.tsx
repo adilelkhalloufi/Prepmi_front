@@ -17,8 +17,7 @@ import {
     Gift,
     Star,
     ImageIcon,
-    Check,
-    Crown
+
 } from "lucide-react"
 import { useDispatch, useSelector } from "react-redux"
 import { RootState } from "@/store"
@@ -54,12 +53,10 @@ export function Payment({
     const admin = useSelector((state: RootState) => state.admin?.user)
 
     // Get selected meals and drinks as arrays of objects
-    const selectedMeals = Object.values(planData.selectedMeals || {})
-    const selectedDrinks = Object.values(planData.selectedDrinks || {})
-    const selectedFreeDrinks = Object.values(planData.selectedFreeDrinks || {})
-    const selectedRewardsMeals = planData.selectedRewardsMeals
-    console.log('Selected Rewards Meal:', selectedRewardsMeals);
-    console.log('Selected Free Drinks:', selectedFreeDrinks);
+    const selectedMeals = Object.values(planData?.selectedMeals || {})
+    const selectedDrinks = Object.values(planData?.selectedDrinks || {})
+    const selectedFreeDrinks = Object.values(planData?.selectedFreeDrinks || {})
+    const selectedRewardsMeals = planData?.selectedRewardsMeals
 
     const [paymentMethod, setPaymentMethod] = useState<'COD' | 'ONLINE'>((planData as any)?.paymentMethod || 'COD')
     const [isEditingMeals, setIsEditingMeals] = useState(false)
@@ -181,10 +178,9 @@ export function Payment({
     }
 
     // Calculate totals with membership discount
-    const mealsSubtotal = selectedMeals.reduce((sum, meal) => sum + ((meal.price || 0) * (meal.quantity || 0)), 0)
     // const breakfastSubtotal = selectedBreakfasts.reduce((sum, item) => sum + ((item.price || 0) * (item.quantity || 0)), 0)
     const drinksSubtotal = selectedDrinks.reduce((sum, item) => sum + ((item.price || 0) * (item.quantity || 0)), 0)
-    const planSubtotal = Number(planData.plan?.price_per_week || 0)
+    const planSubtotal = Number(planData?.plan?.price_per_week || 0)
     const subtotalBeforeDiscount = planSubtotal + drinksSubtotal
 
     // Apply membership discount
@@ -244,7 +240,7 @@ export function Payment({
         console.log('Placing order with payload:', payload);
         setIsPlacingOrder(true)
 
-        defaultHttp.post(apiRoutes.orders, payload).then((response) => {
+        defaultHttp.post(apiRoutes.orders, payload).then(() => {
             // Optionally redirect to order confirmation page
             toast.success(t('joinNow.payment.orderSuccess'))
             dispatch(resetJoinProcess())
@@ -675,10 +671,10 @@ export function Payment({
                         <CardContent className="space-y-4">
                             <div className="space-y-2">
                                 {/* Show plan total */}
-                                {planData.pricePerWeek && (
+                                {planData?.pricePerWeek && (
                                     <div className="flex justify-between text-sm">
-                                        <span>Plan ({planData.plan?.name})</span>
-                                        <span>{Number(planData.plan.price_per_week).toFixed(2)} {t('menu.currency')}</span>
+                                        <span>Plan ({planData?.plan?.name})</span>
+                                        <span>{Number(planData?.plan?.price_per_week).toFixed(2)} {t('menu.currency')}</span>
                                     </div>
                                 )}
                                 {/* Show drinks total if any drinks selected */}
@@ -756,7 +752,7 @@ export function Payment({
                                         }`}
                                     onClick={() => {
                                         setPaymentMethod('COD')
-                                        dispatch(updatePlanData({ paymentMethod: 'COD' }))
+                                        dispatch(updatePlanData({ paymentMethod: 'COD' } as any))
                                     }}
                                 >
                                     <div className="flex items-center space-x-3">

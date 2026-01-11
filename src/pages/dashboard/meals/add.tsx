@@ -21,7 +21,7 @@ export default function AddMeal() {
     const [formData, setFormData] = useState({
         // Basic info
         name: "",
-       
+
         description: "",
         short_description: "",
         image_path: "",
@@ -107,7 +107,7 @@ export default function AddMeal() {
             });
     }, []);
 
-    const handleChange = (e) => {
+    const handleChange = (e: any) => {
         const { name, value, type, checked } = e.target;
         setFormData((prev) => ({
             ...prev,
@@ -125,7 +125,7 @@ export default function AddMeal() {
         setFormData((prev) => ({ ...prev, [name]: parsedValue }));
     };
 
-    const handleImageChange = (e) => {
+    const handleImageChange = (e: any) => {
         const file = e.target.files[0];
         if (file) {
             setFormData((prev) => ({ ...prev, image_path: file }));
@@ -138,10 +138,10 @@ export default function AddMeal() {
         }
     };
 
-    const handleGalleryChange = (e) => {
+    const handleGalleryChange = (e: any) => {
         const files = Array.from(e.target.files);
         if (files.length > 0) {
-            setFormData((prev) => ({ ...prev, gallery_images: files }));
+            setFormData((prev: any) => ({ ...prev, gallery_images: files }));
 
             const previews: string[] = [];
             files.forEach((file: any, index) => {
@@ -165,11 +165,11 @@ export default function AddMeal() {
         if (formData.name) {
             // Create FormData for file upload
             const submitData = new FormData();
-            
+
             // Append all form fields
             Object.keys(formData).forEach((key) => {
                 const value = formData[key as keyof typeof formData];
-                
+
                 if (key === 'image_path' && value instanceof File) {
                     // Append the image file
                     submitData.append('image_path', value);
@@ -194,7 +194,7 @@ export default function AddMeal() {
                     'Content-Type': 'multipart/form-data',
                 },
             })
-                .then((res) => {
+                .then(() => {
                     setSuccess(true);
                     setTimeout(() => {
                         navigate(webRoutes.dashboard_meals);
@@ -279,7 +279,7 @@ export default function AddMeal() {
                                     <Label>Nom *</Label>
                                     <Input name="name" value={formData.name} onChange={handleChange} />
                                 </div>
-                             
+
                                 <div>
                                     <Label>Catégorie</Label>
                                     <Select
@@ -313,7 +313,7 @@ export default function AddMeal() {
                                             <SelectValue placeholder="Sélectionnez un type" />
                                         </SelectTrigger>
                                         <SelectContent>
-                                            {types.map((type) => (
+                                            {types.map((type: any) => (
                                                 <SelectItem key={type.id} value={String(type.id)}>
                                                     {type.name[i18next.language] || type.name}
                                                 </SelectItem>
@@ -571,7 +571,7 @@ export default function AddMeal() {
                                 ].map(({ key, label }) => (
                                     <div key={key} className="flex items-center space-x-2">
                                         <Switch
-                                            checked={formData[key]}
+                                            checked={formData[key as keyof typeof formData] as boolean}
                                             onCheckedChange={(checked) => handleSwitchChange(key, checked)}
                                         />
                                         <Label>{label}</Label>

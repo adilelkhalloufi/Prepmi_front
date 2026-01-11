@@ -1,8 +1,7 @@
 import { useEffect, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { IconClipboardList, IconMeat, IconBread, IconApple } from '@tabler/icons-react';
-import { Check, Dumbbell, Gift, TrendingUp, ShoppingBag, Award, Calendar } from 'lucide-react';
+import { Check, Dumbbell, Gift, TrendingUp, ShoppingBag } from 'lucide-react';
 import http from '@/utils/http';
 import { apiRoutes } from '@/routes/api';
 
@@ -65,7 +64,6 @@ export default function ClientDashboard() {
     // SVG donut chart values
     const radius = 70;
     const circumference = 2 * Math.PI * radius;
-    const proteinOffset = 0;
     const carbsOffset = (proteinPercentage / 100) * circumference;
 
     return (

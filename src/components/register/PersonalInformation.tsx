@@ -2,26 +2,23 @@ import { useDispatch, useSelector } from "react-redux";
 import { Checkbox } from "../ui/checkbox";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
-import { ImageUpload } from "../ui/image-upload";
 import { RootState } from "@/store";
 import { register } from "@/store/slices/registerSlice";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "../ui/select";
 import Cities from "@/data/cities.json";
 import { useTranslation } from "react-i18next";
-const PersonalInformation = ({ form }) => {
+const PersonalInformation = () => {
     const dispatch = useDispatch();
     const data = useSelector((state: RootState) => state.register);
 
-    const handleChange = (e) => {
+    const handleChange = (e: any) => {
         dispatch(register({ key: e.target.name, value: e.target.value }));
     }
 
-    const handleImageChange = (file: File | null) => {
-        dispatch(register({ key: 'company_logo', value: file }));
-    };
+
 
     const { t } = useTranslation();
-    
+
     return (
         <div className="flex flex-col space-y-4">
             {/* Company Logo Upload Section */}
@@ -36,14 +33,14 @@ const PersonalInformation = ({ form }) => {
             <Label>
                 {t('register.form.first')}
                 <Input name="first_name"
-                    onChange={(e) => handleChange(e)}
+                    onChange={(e: any) => handleChange(e)}
                     defaultValue={data.first_name}
 
                 />
             </Label>
             <Label>
                 {t('register.form.last')}
-                <Input name="last_name" onChange={(e) => handleChange(e)}
+                <Input name="last_name" onChange={(e: any) => handleChange(e)}
                     defaultValue={data.last_name}
 
                 />
@@ -58,7 +55,7 @@ const PersonalInformation = ({ form }) => {
             </Label>
             <Label>
                 {t('register.form.email')}
-                <Input name="email" type="email" onChange={(e) => handleChange(e)}
+                <Input name="email" type="email" onChange={(e: any) => handleChange(e)}
                     defaultValue={data.email}
                 />
             </Label>
@@ -108,13 +105,13 @@ const PersonalInformation = ({ form }) => {
                 />
                 <span>
                     {t('register.form.terms')}{' '}
-                    <a 
-                        href="/terms-of-service" 
+                    <a
+                        href="/terms-of-service"
                         className="text-blue-600 hover:text-blue-800 hover:underline font-medium"
                         target="_blank"
                         rel="noopener noreferrer"
                     >
-                        {t('register.form.terms_link')  }
+                        {t('register.form.terms_link')}
                     </a>
                 </span>
             </Label>

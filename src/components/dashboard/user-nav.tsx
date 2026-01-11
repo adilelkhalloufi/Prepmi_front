@@ -22,7 +22,7 @@ import { RootState } from "@/store";
 export function UserNav() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const user = useSelector((state: RootState) => state.admin.user);
+  const user = useSelector((state: RootState) => state?.admin?.user);
   const logoutAdmin = () => {
 
 
@@ -59,14 +59,14 @@ export function UserNav() {
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
-          <DropdownMenuItem
-          onClick={() => {
-            navigate(webRoutes.dashboard_profile);
-          }}  
+          {/* <DropdownMenuItem
+            onClick={() => {
+              // navigate(webRoutes.dashboard_profile);
+            }}
           >
             Profile
             <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
-          </DropdownMenuItem>
+          </DropdownMenuItem> */}
 
         </DropdownMenuGroup>
         <DropdownMenuSeparator />

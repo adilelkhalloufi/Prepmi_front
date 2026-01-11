@@ -60,7 +60,7 @@ export default function MealPreparationIndex() {
                 order_status: order.statue || order.order_status,
                 order_id: order.id || order.order_id,
                 deliveries: order.deliveries || [],
-                meals: order.order_meals.map(mealItem => ({
+                meals: order.order_meals.map((mealItem: any) => ({
                     name: mealItem.meal?.name,
                     quantity: mealItem.quantity,
                     order_meal_id: mealItem.id || mealItem.order_meal_id,
@@ -80,20 +80,21 @@ export default function MealPreparationIndex() {
 
     ];
 
-    const handleStatusUpdate = async (order_id: number, newStatus: string) => {
-        if (!allowedStatuses.includes(newStatus)) {
+    const handleStatusUpdate = async (orderId: string, status: string): Promise<void> => {
+        if (!allowedStatuses.includes(status)) {
             toast.error("Statut sélectionné invalide.");
-            return;
+            throw new Error("Statut sélectionné invalide.");
         }
-        console.log("Updating order", order_id, "to status", newStatus);
-        http.put(apiRoutes.updateMealPreparationStatus(order_id), { statue: newStatus })
-            .then(() => {
-                fetchMealPreparations();
-                toast.success("Statut mis à jour avec succès");
-            })
-            .catch((error) => {
-                handleErrorResponse(error);
-            });
+        const id = parseInt(orderId, 10);
+        console.log("Updating order", id, "to status", status);
+        try {
+            await http.put(apiRoutes.updateMealPreparationStatus(id), { statue: status });
+            fetchMealPreparations();
+            toast.success("Statut mis à jour avec succès");
+        } catch (error) {
+            handleErrorResponse(error);
+            throw error;
+        }
     };
 
     return (

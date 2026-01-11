@@ -40,9 +40,9 @@ export default function MembershipPlansPage() {
     // Auto-scroll to continue button when a plan is selected
     useEffect(() => {
         if (selectedPlanId && continueButtonRef.current) {
-            continueButtonRef.current.scrollIntoView({ 
-                behavior: 'smooth', 
-                block: 'center' 
+            continueButtonRef.current.scrollIntoView({
+                behavior: 'smooth',
+                block: 'center'
             })
         }
     }, [selectedPlanId])
@@ -155,7 +155,7 @@ export default function MembershipPlansPage() {
 
                 {/* Plans Grid */}
                 <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto mb-12">
-                    {plans.map((plan) => {
+                    {plans.map((plan: any) => {
                         const Icon = getPlanIcon(plan.name)
                         const isSelected = selectedPlanId === plan.id
                         const colorClass = getPlanColor(plan.name)
@@ -163,11 +163,10 @@ export default function MembershipPlansPage() {
                         return (
                             <Card
                                 key={plan.id}
-                                className={`relative cursor-pointer transition-all duration-300 hover:shadow-xl ${
-                                    isSelected
-                                        ? 'ring-4 ring-primary shadow-2xl scale-105'
-                                        : 'hover:scale-102'
-                                } ${colorClass}`}
+                                className={`relative cursor-pointer transition-all duration-300 hover:shadow-xl ${isSelected
+                                    ? 'ring-4 ring-primary shadow-2xl scale-105'
+                                    : 'hover:scale-102'
+                                    } ${colorClass}`}
                                 onClick={() => handleSelectPlan(plan.id)}
                             >
                                 {isSelected && (
@@ -193,11 +192,11 @@ export default function MembershipPlansPage() {
                                     <div className="text-center py-4 bg-white/50 rounded-lg">
                                         <div className="flex items-baseline justify-center gap-2">
                                             <span className="text-4xl font-bold text-gray-900">
-                                                {parseFloat(plan.monthly_fee).toFixed(2)}
+                                                {plan.monthly_fee}
                                             </span>
                                             <span className="text-lg text-gray-600">MAD/month</span>
                                         </div>
-                                        {parseFloat(plan.discount_percentage) > 0 && (
+                                        {plan.discount_percentage > 0 && (
                                             <Badge variant="secondary" className="mt-2 text-white">
                                                 {plan.discount_percentage}% {t('membershipPlans.discount', 'Discount')}
                                             </Badge>
@@ -235,7 +234,7 @@ export default function MembershipPlansPage() {
                                                 {t('membershipPlans.perks', 'Additional Perks')}:
                                             </h4>
                                             <ul className="space-y-1.5">
-                                                {plan.perks.map((perk, index) => (
+                                                {plan.perks.map((perk: string, index: number) => (
                                                     <li key={index} className="flex items-start gap-2 text-sm text-gray-600">
                                                         <Check className="w-4 h-4 text-primary flex-shrink-0 mt-0.5" />
                                                         <span>{perk}</span>

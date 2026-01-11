@@ -23,7 +23,7 @@ interface VendorContactProps {
 export const VendorContact: React.FC<VendorContactProps> = ({ vendor, productId }) => {
   const { t } = useTranslation();
   const dispatch = useDispatch();
-  const currentUser = useSelector((state: RootState) => state.admin.user);
+  const currentUser = useSelector((state: RootState) => state?.admin?.user);
   const [hasViewedContact, setHasViewedContact] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -45,7 +45,7 @@ export const VendorContact: React.FC<VendorContactProps> = ({ vendor, productId 
     try {
       // Try to make API call first, but fall back to local state if it fails
       try {
-        const response = await http.post(apiRoutes.spend_coins, {
+        const response = await http.post(apiRoutes.deliverySlots, {
           amount: CONTACT_COST,
           reason: 'vendor_contact_view',
           product_id: productId
@@ -60,7 +60,7 @@ export const VendorContact: React.FC<VendorContactProps> = ({ vendor, productId 
         }
       } catch (apiError) {
         console.log('API call failed, using local state management:', apiError);
-        
+
         // Fall back to local state management for demo purposes
         dispatch(spendCoins(CONTACT_COST));
         setHasViewedContact(true);
@@ -68,7 +68,7 @@ export const VendorContact: React.FC<VendorContactProps> = ({ vendor, productId 
         toast.success(t('product.vendor.contact_unlocked'));
         return;
       }
-      
+
       throw new Error('Failed to spend coins');
     } catch (error) {
       console.error('Error spending coins:', error);
@@ -112,8 +112,8 @@ export const VendorContact: React.FC<VendorContactProps> = ({ vendor, productId 
           {t('product.vendor.title')}
         </CardTitle>
         <CardDescription>
-          {hasViewedContact 
-            ? t('product.vendor.contact_info') 
+          {hasViewedContact
+            ? t('product.vendor.contact_info')
             : t('product.vendor.description')
           }
         </CardDescription>
@@ -130,7 +130,7 @@ export const VendorContact: React.FC<VendorContactProps> = ({ vendor, productId 
               <div>
                 <p className="font-medium">{vendor.name || t('product.vendor.anonymous')}</p>
                 <p className="text-sm text-muted-foreground">
-                  {typeof vendor.role === 'object' 
+                  {typeof vendor.role === 'object'
                     ? vendor.role?.name || t('seller')
                     : vendor.role || t('seller')
                   }
@@ -149,7 +149,7 @@ export const VendorContact: React.FC<VendorContactProps> = ({ vendor, productId 
               <p className="text-sm text-muted-foreground mb-4">
                 {t('product.vendor.cost_description', { cost: CONTACT_COST })}
               </p>
-              
+
               <div className="flex items-center justify-center gap-2 mb-4 text-sm">
                 <span>{t('product.vendor.your_balance')}:</span>
                 <Badge variant="outline" className="font-mono">
@@ -159,7 +159,7 @@ export const VendorContact: React.FC<VendorContactProps> = ({ vendor, productId 
 
               <AlertDialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
                 <AlertDialogTrigger asChild>
-                  <Button 
+                  <Button
                     className="flex items-center gap-2"
                     disabled={(currentUser.coins || 0) < CONTACT_COST}
                   >

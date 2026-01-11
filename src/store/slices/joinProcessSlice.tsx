@@ -37,6 +37,7 @@ export type JoinProcessState = {
     selectedDrinks?: Record<string, any>
     selectedFreeDesserts?: Record<string, any>
     selectedRewardsMeals?: Record<string, any>
+    selectedFreeDrinks?: Record<string, any>
   }
 }
 
@@ -81,20 +82,20 @@ export const joinProcessSlice = createSlice({
     setCurrentStep: (state, action: PayloadAction<number>) => {
       state.currentStep = action.payload
     },
-    updatePlanData: (state, action: PayloadAction<Partial<JoinProcessState['planData']>>) => {
+    updatePlanData: (state: any, action: PayloadAction<Partial<JoinProcessState['planData']>>) => {
       state.planData = { ...state.planData, ...action.payload }
     },
-    nextStep: (state) => {
+    nextStep: (state: any) => {
       if (state.currentStep < 4) {
         state.currentStep += 1
       }
     },
-    prevStep: (state) => {
+    prevStep: (state: any) => {
       if (state.currentStep > 1) {
         state.currentStep -= 1
       }
     },
-    resetJoinProcess: (state) => {
+    resetJoinProcess: () => {
       return initialState
     },
     // clear just meal selections

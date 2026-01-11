@@ -13,7 +13,8 @@ import { handleErrorResponse } from "@/utils";
 import { User } from "@/interfaces/admin";
 import { RoleEnum } from "@/enum/RoleEnum";
 
-const getRoleName = (roleId: number) => {
+const getRoleName = (roleId: number | undefined) => {
+    if (roleId === undefined) return "Inconnu";
     switch (roleId) {
         case RoleEnum.ADMIN:
             return "Administrateur";
@@ -28,7 +29,8 @@ const getRoleName = (roleId: number) => {
     }
 };
 
-const getRoleColor = (roleId: number) => {
+const getRoleColor = (roleId: number | undefined) => {
+    if (roleId === undefined) return "bg-gray-400";
     switch (roleId) {
         case RoleEnum.ADMIN:
             return "bg-red-500";
@@ -141,7 +143,7 @@ export default function UserView() {
                         </div>
                         <h2 className="text-2xl font-bold text-center">{user.name}</h2>
                         <Badge className={`mt-2 ${getRoleColor(user.role_id)}`}>
-                            {getRoleName(user.role_id)}
+                            {getRoleName(user?.role_id)}
                         </Badge>
                         <Badge variant={user.is_active ? "default" : "secondary"} className="mt-2">
                             {user.is_active ? "Actif" : "Inactif"}
@@ -226,7 +228,7 @@ export default function UserView() {
                                 <div>
                                     <p className="text-sm text-muted-foreground">Date de création</p>
                                     <p className="font-medium">
-                                        {new Date(user.created_at).toLocaleDateString('fr-FR', {
+                                        {new Date(user?.created_at || '').toLocaleDateString('fr-FR', {
                                             year: 'numeric',
                                             month: 'long',
                                             day: 'numeric',
@@ -241,7 +243,7 @@ export default function UserView() {
                                 <div>
                                     <p className="text-sm text-muted-foreground">Dernière modification</p>
                                     <p className="font-medium">
-                                        {new Date(user.updated_at).toLocaleDateString('fr-FR', {
+                                        {new Date(user?.updated_at || '').toLocaleDateString('fr-FR', {
                                             year: 'numeric',
                                             month: 'long',
                                             day: 'numeric',

@@ -1,14 +1,11 @@
 import { Button } from "@/components/ui/button";
 import { useTranslation } from "react-i18next";
 import { webRoutes } from "@/routes/web";
-import { IconBasket, IconCactus, IconDashboard, IconLogin, IconRecycle, IconUser } from "@tabler/icons-react";
-import i18next from "../i18n";
+import { IconDashboard, IconLogin } from "@tabler/icons-react";
 import { LangToggle } from "./lang-toggle";
-import ThemeSwitcher from "./theme-switcher";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store";
-import { Badge } from "./ui/badge";
 import logo from "../assets/Prepme.svg";
 interface RouteProps {
   href: string;
@@ -38,9 +35,7 @@ export function Header2() {
     },
 
   ];
-  const cart = useSelector((state: RootState) => state.cart);
   const admin = useSelector((state: RootState) => state.admin?.user);
-  console.log("admin in Header:", admin);
   return (
     <header className="fixed left-1/2 -translate-x-1/2 z-50 mt-7 rounded-lg top-0 w-3/4 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-16 items-center justify-between">
@@ -54,25 +49,25 @@ export function Header2() {
               <img src={logo} alt="Prepme" className="h-16 w-auto" />
             </a>
           </span>
-    
-        </div>
-              <nav className="hidden md:flex ">
-            {routeList.map((route: RouteProps, i) => (
-              <a
 
-                href={route.href}
-                key={i}
-                className="text-sm font-medium hover:text-primary m-2"
-              >
-                {route.label}
-              </a>
-            ))}
-          </nav>
+        </div>
+        <nav className="hidden md:flex ">
+          {routeList.map((route: RouteProps, i) => (
+            <a
+
+              href={route.href}
+              key={i}
+              className="text-sm font-medium hover:text-primary m-2"
+            >
+              {route.label}
+            </a>
+          ))}
+        </nav>
         <div className="flex items-center space-x-4">
           {/* <ThemeSwitcher /> */}
           <div className="hidden md:flex">
 
-          <LangToggle />
+            <LangToggle />
           </div>
 
           {/* <Button

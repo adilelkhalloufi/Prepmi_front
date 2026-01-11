@@ -1,10 +1,9 @@
-import { Product } from '@/interfaces/models/admin'
 import { Button } from './button'
 // import { useDispatch } from 'react-redux'
 import { FormatPrice } from '@/utils'
 
 
-export default function ProductItem(product: Product) {
+export default function ProductItem(product: any) {
   // const dispatch = useDispatch()
 
   return (

@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
 
-export function Why({ meals }) {
+export function Why({ meals }: any) {
   const { t } = useTranslation();
 
   return (
@@ -82,7 +82,7 @@ export function Why({ meals }) {
         </div>
 
         <div className="container mx-auto px-4 flex gap-4 items-stretch justify-center flex-wrap">
-          {Array.isArray(meals) && meals.map((meal: any, index) => (
+          {Array.isArray(meals) && meals.map((meal: any) => (
             <div
               key={meal.id}
               className="rounded-lg   flex flex-col p-4 items-center w-72 max-w-72"
@@ -115,33 +115,33 @@ export function Why({ meals }) {
           ))}
         </div>
       </section>{" "}
-    
-    {/* Footer SVG Wave with image in middle */}
-    <div className="relative z-10 min-h-96" style={{ marginTop: '-1px' }}>
-      {/* Meal image in the middle */}
-      <div className="absolute left-1/2 -translate-x-1/2 md:top-[100px] top-[60px] -translate-y-1/2 z-20 pointer-events-none  h-72 w-72 md:h-96 md:w-96">
-        <img
-          src="./footer.png"
-          alt="Meal decoration"
-          className="  object-cover rounded-full    md:h-96 md:w-96 h-72 w-72  "
-        />
+
+      {/* Footer SVG Wave with image in middle */}
+      <div className="relative z-10 min-h-96" style={{ marginTop: '-1px' }}>
+        {/* Meal image in the middle */}
+        <div className="absolute left-1/2 -translate-x-1/2 md:top-[100px] top-[60px] -translate-y-1/2 z-20 pointer-events-none  h-72 w-72 md:h-96 md:w-96">
+          <img
+            src="./footer.png"
+            alt="Meal decoration"
+            className="  object-cover rounded-full    md:h-96 md:w-96 h-72 w-72  "
+          />
+        </div>
+
+        {/* SVG Wave Shape for footer */}
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 1440 320"
+          className="w-full relative"
+          style={{ display: 'block', transform: 'rotate(180deg)' }}
+        >
+          <path
+            fill="#E8F5E9"
+            fillOpacity="1"
+            d="M0,224L60,229.3C120,235,240,245,360,250.7C480,256,600,256,720,229.3C840,203,960,149,1080,149.3C1200,149,1320,203,1380,229.3L1440,256L1440,320L1380,320C1320,320,1200,320,1080,320C960,320,840,320,720,320C600,320,480,320,360,320C240,320,120,320,60,320L0,320Z"
+          />
+        </svg>
       </div>
-      
-      {/* SVG Wave Shape for footer */}
-      <svg 
-        xmlns="http://www.w3.org/2000/svg" 
-        viewBox="0 0 1440 320"
-        className="w-full relative"
-        style={{ display: 'block', transform: 'rotate(180deg)' }}
-      >
-        <path 
-          fill="#E8F5E9" 
-          fillOpacity="1" 
-          d="M0,224L60,229.3C120,235,240,245,360,250.7C480,256,600,256,720,229.3C840,203,960,149,1080,149.3C1200,149,1320,203,1380,229.3L1440,256L1440,320L1380,320C1320,320,1200,320,1080,320C960,320,840,320,720,320C600,320,480,320,360,320C240,320,120,320,60,320L0,320Z"
-        />
-      </svg>
-    </div>
-    
+
     </div>
   );
 }

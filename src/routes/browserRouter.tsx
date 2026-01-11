@@ -8,14 +8,12 @@ import SignIn from "@/pages/SignIn";
 import RequireAuth from "./requireAuth";
 import Layout from "@/components/dashboard/layout";
 import Register from "@/pages/register/index";
-import Checkout from "@/pages/checkout";
 import LogoutPage from "@/pages/logoutPage";
 import PrivacyPolicy from "@/pages/privacy-policy";
 import TermsOfService from "@/pages/terms-of-service";
 import CookieSettings from "@/pages/cookie-settings";
 import { MenuPage } from "@/components/MenuPage";
 import JoinNow from "@/pages/join-now";
-import MealDetails from "@/pages/dashboard/meals/details";
 
 
 const fallbackElement = <ProgressBar />;
@@ -391,10 +389,7 @@ export const browserRouter = createBrowserRouter([
       </RequireAuth>
     ),
     children: [
-      {
-        path: webRoutes.checkout,
-        element: <Checkout />,
-      },
+
       {
         path: webRoutes.membership_checkout,
         element: <MembershipCheckout />,

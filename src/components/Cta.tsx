@@ -1,9 +1,5 @@
-import { Button } from "@/components/ui/button"
-import { IconBrandKakoTalk, IconBrandWhatsapp } from "@tabler/icons-react"
-import { useTranslation } from "react-i18next"
 
 export function Cta() {
-  const { t } = useTranslation()
 
   return (
     <section className="py-16 container">

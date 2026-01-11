@@ -10,7 +10,7 @@ import { webRoutes } from "@/routes/web";
 import { Badge } from "@/components/ui/badge";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 
-const statusVariant = {
+const statusVariant: any = {
     pending: "bg-yellow-500",
     preparing: "bg-blue-500",
     shipped: "bg-indigo-500",

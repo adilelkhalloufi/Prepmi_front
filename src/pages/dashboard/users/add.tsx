@@ -42,7 +42,7 @@ export default function AddUser() {
         { id: RoleEnum.CLIENT, name: "Client" },
     ];
 
-    const handleChange = (e) => {
+    const handleChange = (e: any) => {
         const { name, value } = e.target;
         setFormData((prev) => ({
             ...prev,
@@ -58,7 +58,7 @@ export default function AddUser() {
         setFormData((prev) => ({ ...prev, [name]: parseInt(value, 10) }));
     };
 
-    const handleImageChange = (e) => {
+    const handleImageChange = (e: any) => {
         const file = e.target.files[0];
         if (file) {
             setFormData((prev) => ({ ...prev, profile_image: file }));
@@ -80,9 +80,9 @@ export default function AddUser() {
             const submitData = new FormData();
 
             Object.keys(formData).forEach((key) => {
-                const value = formData[key as keyof typeof formData];
+                const value: any = formData[key as keyof typeof formData];
 
-                if (key === 'profile_image' && value instanceof File) {
+                if (key === 'profile_image' && value) {
                     submitData.append('profile_image', value);
                 } else if (typeof value === 'boolean') {
                     submitData.append(key, value ? '1' : '0');
@@ -96,7 +96,7 @@ export default function AddUser() {
                     'Content-Type': 'multipart/form-data',
                 },
             })
-                .then((res) => {
+                .then(() => {
                     setSuccess(true);
                     setTimeout(() => {
                         navigate(webRoutes.dashboard_users);

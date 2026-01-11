@@ -1,8 +1,8 @@
-import { PageContainer, ProCard } from '@ant-design/pro-components';
-import { Breadcrumb, Spin } from 'antd';
-import useBreakpoint from '../hooks/breakpoint';
+import { PageContainer, ProCard, useBreakpoint } from '@ant-design/pro-components';
+import { Breadcrumb } from 'antd';
 import Loader from '../loader';
 import type { BreadcrumbProps } from 'antd/es/breadcrumb/Breadcrumb';
+import { CONFIG } from '@/CONFIG';
 
 export interface BasePageContainerProps {
   title?: string;
@@ -34,7 +34,7 @@ const BasePageContainer = (props: BasePageContainerProps) => {
         ghost={props.transparent}
         loading={
           props.loading ? (
-            <Loader text={''} spinner={<Spin size="large" />} />
+            <Loader />
           ) : (
             false
           )

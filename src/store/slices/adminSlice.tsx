@@ -13,7 +13,7 @@ const initialState: AdminState = {
     role: '',
     token: '',
   },
-  favoris :[]
+  favoris: []
 
 };
 
@@ -26,7 +26,7 @@ export const adminSlice = createSlice({
       return state;
     },
 
-    logout: (state) => {
+    logout: (state: any) => {
       state = null;
       return state;
 

@@ -13,14 +13,14 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { useNavigate, useParams } from "react-router-dom";
 import { ArrowLeft, Plus, Trash2, GripVertical, Star, Loader2 } from "lucide-react";
 import { webRoutes } from "@/routes/web";
-import { Meal, MenuMeal } from "@/interfaces/admin";
+import { MenuMeal } from "@/interfaces/admin";
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
 } from "@/components/ui/dialog";
 
 export default function EditWeeklyMenu() {
@@ -40,8 +40,6 @@ export default function EditWeeklyMenu() {
     const [loading, setLoading] = useState(false);
     const [loadingMenu, setLoadingMenu] = useState(true);
     const [selectedMeals, setSelectedMeals] = useState<MenuMeal[]>([]);
-    const [availableMeals, setAvailableMeals] = useState<Meal[]>([]);
-    const [loadingMeals, setLoadingMeals] = useState(false);
     const [mealSelectionOpen, setMealSelectionOpen] = useState(false);
     const [searchQuery, setSearchQuery] = useState("");
 
@@ -49,7 +47,6 @@ export default function EditWeeklyMenu() {
         if (id) {
             fetchWeeklyMenu();
         }
-        fetchAvailableMeals();
     }, [id]);
 
     const fetchWeeklyMenu = () => {
@@ -65,11 +62,11 @@ export default function EditWeeklyMenu() {
                     is_active: menu.is_active !== undefined ? menu.is_active : true,
                     is_published: menu.is_published !== undefined ? menu.is_published : false,
                 });
-                
+
                 if (menu.meals && Array.isArray(menu.meals)) {
                     setSelectedMeals(menu.meals);
                 }
-                
+
                 setLoadingMenu(false);
             })
             .catch((error) => {
@@ -78,18 +75,7 @@ export default function EditWeeklyMenu() {
             });
     };
 
-    const fetchAvailableMeals = () => {
-        setLoadingMeals(true);
-        http.get(apiRoutes.meals)
-            .then((res) => {
-                setAvailableMeals(res.data.data || []);
-                setLoadingMeals(false);
-            })
-            .catch((error) => {
-                console.error("Error fetching meals:", error);
-                setLoadingMeals(false);
-            });
-    };
+
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;
@@ -103,43 +89,43 @@ export default function EditWeeklyMenu() {
         setFormData((prev) => ({ ...prev, [name]: checked }));
     };
 
-    const handleAddMeal = (meal: Meal) => {
-        const exists = selectedMeals.find(m => m.meal_id === meal.id);
-        if (!exists) {
-            const newMenuMeal: MenuMeal = {
-                weekly_menu_id: parseInt(id || "0"),
-                meal_id: meal.id,
-                position: selectedMeals.length + 1,
-                is_featured: false,
-                special_price: null,
-                availability_count: 50,
-                sold_count: 0,
-                meal: meal
-            };
-            setSelectedMeals([...selectedMeals, newMenuMeal]);
-        }
-    };
+    // const handleAddMeal = (meal: Meal) => {
+    //     const exists = selectedMeals.find(m => m.meal_id === meal.id);
+    //     if (!exists) {
+    //         const newMenuMeal: MenuMeal = {
+    //             weekly_menu_id: parseInt(id || "0"),
+    //             meal_id: meal.id,
+    //             position: selectedMeals.length + 1,
+    //             is_featured: false,
+    //             special_price: null,
+    //             availability_count: 50,
+    //             sold_count: 0,
+    //             meal: meal
+    //         };
+    //         setSelectedMeals([...selectedMeals, newMenuMeal]);
+    //     }
+    // };
 
     const handleRemoveMeal = (mealId: number) => {
         setSelectedMeals(selectedMeals.filter(m => m.meal_id !== mealId));
     };
 
     const handleToggleFeatured = (mealId: number) => {
-        setSelectedMeals(selectedMeals.map(m => 
+        setSelectedMeals(selectedMeals.map(m =>
             m.meal_id === mealId ? { ...m, is_featured: !m.is_featured } : m
         ));
     };
 
     const handleSpecialPriceChange = (mealId: number, price: string) => {
         const numericPrice = price === "" ? null : parseFloat(price);
-        setSelectedMeals(selectedMeals.map(m => 
+        setSelectedMeals(selectedMeals.map(m =>
             m.meal_id === mealId ? { ...m, special_price: numericPrice } : m
         ));
     };
 
     const handleAvailabilityChange = (mealId: number, count: string) => {
         const numericCount = parseInt(count) || 0;
-        setSelectedMeals(selectedMeals.map(m => 
+        setSelectedMeals(selectedMeals.map(m =>
             m.meal_id === mealId ? { ...m, availability_count: numericCount } : m
         ));
     };
@@ -162,7 +148,7 @@ export default function EditWeeklyMenu() {
             };
 
             http.put(`${apiRoutes.weeklyMenus}/${id}`, submitData)
-                .then((res) => {
+                .then(() => {
                     setSuccess(true);
                     setTimeout(() => {
                         navigate(webRoutes.dashboard_weekly_menus);
@@ -181,10 +167,7 @@ export default function EditWeeklyMenu() {
         }
     };
 
-    const filteredMeals = availableMeals.filter(meal => 
-        meal.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        meal.description?.toLowerCase().includes(searchQuery.toLowerCase())
-    );
+    // const filteredMeals = []; // Removed availableMeals state and related code
 
     if (loadingMenu) {
         return (
@@ -215,8 +198,8 @@ export default function EditWeeklyMenu() {
                         </div>
                     </div>
                     <div className="flex justify-end space-x-2">
-                        <Button 
-                            variant="outline" 
+                        <Button
+                            variant="outline"
                             onClick={() => navigate(webRoutes.dashboard_weekly_menus)}
                         >
                             Annuler
@@ -264,9 +247,9 @@ export default function EditWeeklyMenu() {
                             <div className="grid grid-cols-2 gap-4">
                                 <div className="col-span-2">
                                     <Label>Titre du menu *</Label>
-                                    <Input 
-                                        name="title" 
-                                        value={formData.title} 
+                                    <Input
+                                        name="title"
+                                        value={formData.title}
                                         onChange={handleChange}
                                         placeholder="Menu de la semaine du 7 au 13 octobre"
                                     />
@@ -274,20 +257,20 @@ export default function EditWeeklyMenu() {
 
                                 <div>
                                     <Label>Date de début *</Label>
-                                    <Input 
+                                    <Input
                                         type="date"
-                                        name="week_start_date" 
-                                        value={formData.week_start_date} 
+                                        name="week_start_date"
+                                        value={formData.week_start_date}
                                         onChange={handleChange}
                                     />
                                 </div>
 
                                 <div>
                                     <Label>Date de fin *</Label>
-                                    <Input 
+                                    <Input
                                         type="date"
-                                        name="week_end_date" 
-                                        value={formData.week_end_date} 
+                                        name="week_end_date"
+                                        value={formData.week_end_date}
                                         onChange={handleChange}
                                     />
                                 </div>
@@ -369,9 +352,9 @@ export default function EditWeeklyMenu() {
                                                 onChange={(e) => setSearchQuery(e.target.value)}
                                             />
                                             <div className="grid grid-cols-2 gap-4">
-                                                {filteredMeals.map((meal) => (
-                                                    <Card 
-                                                        key={meal.id} 
+                                                {/* {filteredMeals.map((meal) => (
+                                                    <Card
+                                                        key={meal.id}
                                                         className="cursor-pointer hover:border-primary transition-colors"
                                                         onClick={() => {
                                                             handleAddMeal(meal);
@@ -381,8 +364,8 @@ export default function EditWeeklyMenu() {
                                                         <CardContent className="p-4">
                                                             <div className="flex gap-3">
                                                                 {meal.image_path && (
-                                                                    <img 
-                                                                        src={meal.image_path} 
+                                                                    <img
+                                                                        src={meal.image_path}
                                                                         alt={meal.name}
                                                                         className="w-20 h-20 object-cover rounded"
                                                                     />
@@ -399,7 +382,7 @@ export default function EditWeeklyMenu() {
                                                             </div>
                                                         </CardContent>
                                                     </Card>
-                                                ))}
+                                                ))} */}
                                             </div>
                                         </div>
                                     </DialogContent>
@@ -426,8 +409,8 @@ export default function EditWeeklyMenu() {
                                                     </div>
 
                                                     {menuMeal.meal?.image_path && (
-                                                        <img 
-                                                            src={menuMeal.meal.image_path} 
+                                                        <img
+                                                            src={menuMeal.meal.image_path}
                                                             alt={menuMeal.meal.name}
                                                             className="w-16 h-16 object-cover rounded"
                                                         />

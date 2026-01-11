@@ -10,7 +10,7 @@ import { webRoutes } from "@/routes/web";
 import { DeliverySlot } from "@/interfaces/admin";
 import { Badge } from "@/components/ui/badge";
 
-const DetailItem = ({ label, value }) => (
+const DetailItem = ({ label, value }: any) => (
     <div>
         <p className="text-sm font-semibold text-muted-foreground">{label}</p>
         <p>{value !== null && value !== undefined ? value : "-"}</p>

@@ -1,13 +1,7 @@
 import { Button } from "@/components/ui/button";
-import { defineStepper } from "@stepperize/react";
 import { useTranslation } from "react-i18next";
-import TypeAccount from "@/components/register/TypeAccount";
-import InterseingForm from "@/components/register/InterseingForm";
-import PersonalInformation from "@/components/register/PersonalInformation";
-import { useEffect, useState } from "react";
-import { Categorie, RegisterForm, Specialitie } from "@/interfaces/admin";
-import { apiRoutes } from "@/routes/api";
-import { defaultHttp } from "@/utils/http";
+import { useState } from "react";
+
 import { handleErrorResponse } from "@/utils";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/store";
@@ -30,7 +24,6 @@ const Register = () => {
 
     const { t } = useTranslation();
     const form = useSelector((state: RootState) => state.register)
-    const [Stepper, setStepper] = useState(1);
     const navigator = useNavigate();
     const dispatch = useDispatch();
     const [loading, setLoading] = useState(false);
@@ -80,26 +73,15 @@ const Register = () => {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        
+
         if (!validateForm()) {
             return;
         }
 
         setLoading(true);
-        
+
         try {
-            const response = await defaultHttp.post(apiRoutes.register, {
-                first_name: form.first_name,
-                last_name: form.last_name,
-                email: form.email,
-                password: form.password,
-                phone: form.phone,
-                address: form.address,
-                city_id: form.city_id,
-                zip_code: form.zip_code,
-                country: form.country || 'Morocco',
-                agreement: form.agreement,
-            });
+
 
             toast.success("Account created successfully! Please login.");
             dispatch(restRegister());
@@ -111,7 +93,7 @@ const Register = () => {
         }
     };
 
-  
+
     return (
         <>
 
@@ -349,7 +331,7 @@ const Register = () => {
                                         className="text-sm text-muted-foreground leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                                     >
                                         {t('register.form.agreement', 'I agree to the')}{' '}
-                                        <a href={webRoutes.terms_of_service} className="text-primary hover:underline">
+                                        <a href={webRoutes.terms_service} className="text-primary hover:underline">
                                             {t('register.form.terms', 'Terms and Conditions')}
                                         </a>
                                         {' '}{t('register.form.and', 'and')}{' '}
@@ -384,7 +366,7 @@ const Register = () => {
                                 {/* Login Link */}
                                 <div className="text-center text-sm text-muted-foreground">
                                     {t('register.form.haveAccount', 'Already have an account?')}{' '}
-                                    <a href={webRoutes.sign_in} className="text-primary font-semibold hover:underline">
+                                    <a href={webRoutes.login} className="text-primary font-semibold hover:underline">
                                         {t('register.form.login', 'Login here')}
                                     </a>
                                 </div>
@@ -392,7 +374,7 @@ const Register = () => {
                         </CardContent>
                     </Card>
                 </div>
-         
+
 
             </div >
         </>

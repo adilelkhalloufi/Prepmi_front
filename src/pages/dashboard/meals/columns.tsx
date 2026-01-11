@@ -54,6 +54,7 @@ export const columns: ColumnDef<Meal>[] = [
     header: "Catégorie",
     enableColumnFilter: true,
     filterFn: (row, columnId, filterValue) => {
+      console.log("Filtering by category:", columnId);
       if (!filterValue) return true;
       const categoryName = row.original.category?.name || "";
       return categoryName === filterValue;
@@ -221,8 +222,8 @@ export const columns: ColumnDef<Meal>[] = [
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
             <DropdownMenuItem onClick={() => (
-                      navigate(webRoutes.meal_single.replace(':id', meal.id?.toString() || ''))
-            
+              navigate(webRoutes.meal_single.replace(':id', meal.id?.toString() || ''))
+
             )}>
               Voir les détails
             </DropdownMenuItem>

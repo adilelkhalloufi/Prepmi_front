@@ -22,7 +22,7 @@ export default function EditMeal() {
     const [formData, setFormData] = useState({
         // Basic info
         name: "",
-       
+
         description: "",
         short_description: "",
         image_path: "",
@@ -76,7 +76,7 @@ export default function EditMeal() {
         available_from: "",
         available_to: "",
         is_active: true,
-    });
+    } as any);
 
     const [error, setError] = useState(false);
     const [success, setSuccess] = useState(false);
@@ -115,26 +115,26 @@ export default function EditMeal() {
             http.get(`${apiRoutes.meals}/${id}`)
                 .then((res) => {
                     const meal = res.data.data;
-                    
+
                     // Extract nutrition data from nested object
                     const nutrition = meal.nutrition || {};
-                    
+
                     // Extract dietary info from nested object
                     const dietaryInfo = meal.dietary_info || {};
-                    
+
                     // Extract preparation data from nested object
                     const preparation = meal.preparation || {};
-                    
+
                     // Convert ingredients array to string if needed
-                    const ingredientsStr = Array.isArray(meal.ingredients) 
-                        ? meal.ingredients.join(', ') 
+                    const ingredientsStr = Array.isArray(meal.ingredients)
+                        ? meal.ingredients.join(', ')
                         : meal.ingredients || "";
-                    
+
                     // Convert allergens array to string if needed
-                    const allergensStr = Array.isArray(meal.allergens) 
-                        ? meal.allergens.join(', ') 
+                    const allergensStr = Array.isArray(meal.allergens)
+                        ? meal.allergens.join(', ')
                         : meal.allergens || "";
-                    
+
                     setFormData({
                         name: meal.name || "",
                         description: meal.description || "",
@@ -177,12 +177,12 @@ export default function EditMeal() {
                         available_to: meal.available_to || "",
                         is_active: meal.is_active !== undefined ? meal.is_active : true,
                     });
-                    
+
                     // Set image preview if exists
                     if (meal.image_url) {
                         setImagePreview(meal.image_url);
                     }
-                    
+
                     // Set gallery previews if exists
                     if (meal.gallery_urls && Array.isArray(meal.gallery_urls)) {
                         console.log("meal.gallery_urls", meal.gallery_urls);
@@ -199,28 +199,28 @@ export default function EditMeal() {
         }
     }, [id]);
 
-    const handleChange = (e) => {
+    const handleChange = (e: any) => {
         const { name, value, type, checked } = e.target;
-        setFormData((prev) => ({
+        setFormData((prev: any) => ({
             ...prev,
             [name]: type === "checkbox" ? checked : value,
         }));
     };
 
     const handleSwitchChange = (name: string, checked: boolean) => {
-        setFormData((prev) => ({ ...prev, [name]: checked }));
+        setFormData((prev: any) => ({ ...prev, [name]: checked }));
     };
 
     const handleSelectChange = (name: string, value: string) => {
         const numericFields = ['category_id', 'type_id', 'spice_level', 'difficulty_level'];
         const parsedValue = numericFields.includes(name) ? parseInt(value, 10) : value;
-        setFormData((prev) => ({ ...prev, [name]: parsedValue }));
+        setFormData((prev: any) => ({ ...prev, [name]: parsedValue }));
     };
 
-    const handleImageChange = (e) => {
+    const handleImageChange = (e: any) => {
         const file = e.target.files[0];
         if (file) {
-            setFormData((prev) => ({ ...prev, image_path: file }));
+            setFormData((prev: any) => ({ ...prev, image_path: file }));
 
             const reader = new FileReader();
             reader.onloadend = () => {
@@ -230,10 +230,10 @@ export default function EditMeal() {
         }
     };
 
-    const handleGalleryChange = (e) => {
+    const handleGalleryChange = (e: any) => {
         const files = Array.from(e.target.files);
         if (files.length > 0) {
-            setFormData((prev) => ({ ...prev, gallery_images: files }));
+            setFormData((prev: any) => ({ ...prev, gallery_images: files }));
 
             const previews: string[] = [];
             files.forEach((file: any, index) => {
@@ -257,11 +257,11 @@ export default function EditMeal() {
         if (formData.name && id) {
             // Create FormData for file upload
             const submitData = new FormData();
-            
+
             // Append all form fields
             Object.keys(formData).forEach((key) => {
                 const value = formData[key as keyof typeof formData];
-                
+
                 if (key === 'image_path' && value instanceof File) {
                     // Append the image file
                     submitData.append('image_path', value);
@@ -292,7 +292,7 @@ export default function EditMeal() {
                     'Content-Type': 'multipart/form-data',
                 },
             })
-                .then((res) => {
+                .then(() => {
                     setSuccess(true);
                     setTimeout(() => {
                         navigate(webRoutes.dashboard_meals);
@@ -388,7 +388,7 @@ export default function EditMeal() {
                                     <Label>Nom *</Label>
                                     <Input name="name" value={formData.name} onChange={handleChange} />
                                 </div>
-                             
+
                                 <div>
                                     <Label>Catégorie</Label>
                                     <Select
@@ -422,7 +422,7 @@ export default function EditMeal() {
                                             <SelectValue placeholder="Sélectionnez un type" />
                                         </SelectTrigger>
                                         <SelectContent>
-                                            {types.map((type) => (
+                                            {types.map((type: any) => (
                                                 <SelectItem key={type.id} value={String(type.id)}>
                                                     {type.name[i18next.language] || type.name}
                                                 </SelectItem>
@@ -601,7 +601,7 @@ export default function EditMeal() {
                                     </div>
                                     <div>
                                         <Label>Niveau de difficulté</Label>
-                                        <Select 
+                                        <Select
                                             onValueChange={(value) => handleSelectChange("difficulty_level", value)}
                                             value={String(formData.difficulty_level)}
                                         >
@@ -627,7 +627,7 @@ export default function EditMeal() {
                                     {formData.is_spicy && (
                                         <div>
                                             <Label>Niveau épicé</Label>
-                                            <Select 
+                                            <Select
                                                 onValueChange={(value) => handleSelectChange("spice_level", value)}
                                                 value={String(formData.spice_level)}
                                             >
@@ -674,7 +674,7 @@ export default function EditMeal() {
                                     { key: "is_paleo", label: "Paleo" },
                                     { key: "is_low_carb", label: "Faible en glucides" },
                                     { key: "is_high_protein", label: "Riche en protéines" },
-                                ].map(({ key, label }) => (
+                                ].map(({ key, label }: any) => (
                                     <div key={key} className="flex items-center space-x-2">
                                         <Switch
                                             checked={formData[key]}

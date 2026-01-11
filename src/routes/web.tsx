@@ -1,4 +1,3 @@
-import { join } from "path";
 
 export const webRoutes = {
   home: '/',

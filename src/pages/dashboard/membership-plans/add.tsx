@@ -31,7 +31,7 @@ export default function AddMembershipPlan() {
     const [success, setSuccess] = useState(false);
     const [loading, setLoading] = useState(false);
 
-    const handleChange = (e) => {
+    const handleChange = (e: any) => {
         const { name, value, type, checked } = e.target;
         setFormData((prev) => ({
             ...prev,
@@ -132,50 +132,50 @@ export default function AddMembershipPlan() {
                         </div>
                         <div className="col-span-2">
                             <Label>Description</Label>
-                            <Textarea 
-                                name="description" 
-                                value={formData.description} 
+                            <Textarea
+                                name="description"
+                                value={formData.description}
                                 onChange={handleChange}
                                 rows={3}
                             />
                         </div>
                         <div>
                             <Label>Frais mensuels (MAD) *</Label>
-                            <Input 
-                                type="number" 
-                                name="monthly_fee" 
-                                value={formData.monthly_fee} 
-                                onChange={handleChange} 
-                                step="0.01" 
+                            <Input
+                                type="number"
+                                name="monthly_fee"
+                                value={formData.monthly_fee}
+                                onChange={handleChange}
+                                step="0.01"
                             />
                         </div>
                         <div>
                             <Label>Pourcentage de réduction (%)</Label>
-                            <Input 
-                                type="number" 
-                                name="discount_percentage" 
-                                value={formData.discount_percentage} 
-                                onChange={handleChange} 
+                            <Input
+                                type="number"
+                                name="discount_percentage"
+                                value={formData.discount_percentage}
+                                onChange={handleChange}
                                 min="0"
                                 max="100"
                             />
                         </div>
                         <div>
                             <Label>Créneaux de livraison</Label>
-                            <Input 
-                                type="number" 
-                                name="delivery_slots" 
-                                value={formData.delivery_slots} 
-                                onChange={handleChange} 
+                            <Input
+                                type="number"
+                                name="delivery_slots"
+                                value={formData.delivery_slots}
+                                onChange={handleChange}
                                 min="0"
                             />
                         </div>
                         <div>
                             <Label>Quantité de desserts gratuits</Label>
-                            <Input 
-                                type="number" 
-                                name="free_desserts_quantity" 
-                                value={formData.free_desserts_quantity} 
+                            <Input
+                                type="number"
+                                name="free_desserts_quantity"
+                                value={formData.free_desserts_quantity}
                                 onChange={handleChange}
                                 min="0"
                                 disabled={!formData.includes_free_desserts}
@@ -183,10 +183,10 @@ export default function AddMembershipPlan() {
                         </div>
                         <div>
                             <Label>Jour de facturation (1-28)</Label>
-                            <Input 
-                                type="number" 
-                                name="billing_day_of_month" 
-                                value={formData.billing_day_of_month} 
+                            <Input
+                                type="number"
+                                name="billing_day_of_month"
+                                value={formData.billing_day_of_month}
                                 onChange={handleChange}
                                 min="1"
                                 max="28"

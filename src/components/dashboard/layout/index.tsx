@@ -13,7 +13,7 @@ const Layout = () => {
 
   const [isCollapsed, setIsCollapsed] = useIsCollapsed()
 
-  const topNav = [
+  const topNav: any = [
     // {
     //   title: 'Overview',
     //   href: 'dashboard/overview',

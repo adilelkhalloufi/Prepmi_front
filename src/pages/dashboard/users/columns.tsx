@@ -52,7 +52,7 @@ export const columns: ColumnDef<User>[] = [
             return (
                 <div className="w-10 h-10 rounded-full overflow-hidden bg-gray-200 flex items-center justify-center">
                     <span className="text-gray-500 font-semibold">
-                        {user.first_name.charAt(0).toUpperCase()}
+                        {user?.first_name ? user.first_name.charAt(0).toUpperCase() : '?'}
                     </span>
                 </div>
             )

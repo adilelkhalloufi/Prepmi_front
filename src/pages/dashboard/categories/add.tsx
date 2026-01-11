@@ -87,7 +87,7 @@ export default function AddCategory() {
                     'Content-Type': 'multipart/form-data',
                 },
             })
-                .then((res) => {
+                .then(() => {
                     setSuccess(true);
                     setTimeout(() => {
                         navigate(webRoutes.dashboard_categories);

@@ -4,7 +4,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import http from "@/utils/http";
 import { apiRoutes } from "@/routes/api";
 import { useNavigate, useParams } from "react-router-dom";
-import { ArrowLeft, Calendar, Edit, Loader2, Star, TrendingUp } from "lucide-react";
+import { ArrowLeft, Calendar, Edit, Loader2, Star } from "lucide-react";
 import { webRoutes } from "@/routes/web";
 import { Badge } from "@/components/ui/badge";
 import { WeeklyMenu } from "@/interfaces/admin";
@@ -52,8 +52,8 @@ export default function ViewWeeklyMenu() {
             <div className="container mx-auto p-6 max-w-6xl">
                 <div className="text-center py-12">
                     <p className="text-muted-foreground">Menu introuvable</p>
-                    <Button 
-                        variant="outline" 
+                    <Button
+                        variant="outline"
                         className="mt-4"
                         onClick={() => navigate(webRoutes.dashboard_weekly_menus)}
                     >
@@ -200,8 +200,8 @@ export default function ViewWeeklyMenu() {
                                                     </div>
 
                                                     {menuMeal.meal?.image_path && (
-                                                        <img 
-                                                            src={menuMeal.meal.image_path} 
+                                                        <img
+                                                            src={menuMeal.meal.image_path}
                                                             alt={menuMeal.meal.name}
                                                             className="w-24 h-24 object-cover rounded-lg"
                                                         />
@@ -300,7 +300,7 @@ export default function ViewWeeklyMenu() {
                             <div>
                                 <p className="text-muted-foreground">Date de publication</p>
                                 <p className="font-medium">
-                                    {menu.published_at 
+                                    {menu.published_at
                                         ? format(new Date(menu.published_at), "dd MMM yyyy 'à' HH:mm", { locale: fr })
                                         : "Non publié"
                                     }
@@ -309,7 +309,7 @@ export default function ViewWeeklyMenu() {
                             <div>
                                 <p className="text-muted-foreground">Créé le</p>
                                 <p className="font-medium">
-                                    {menu.created_at 
+                                    {menu.created_at
                                         ? format(new Date(menu.created_at), "dd MMM yyyy 'à' HH:mm", { locale: fr })
                                         : "-"
                                     }
@@ -318,7 +318,7 @@ export default function ViewWeeklyMenu() {
                             <div>
                                 <p className="text-muted-foreground">Dernière modification</p>
                                 <p className="font-medium">
-                                    {menu.updated_at 
+                                    {menu.updated_at
                                         ? format(new Date(menu.updated_at), "dd MMM yyyy 'à' HH:mm", { locale: fr })
                                         : "-"
                                     }

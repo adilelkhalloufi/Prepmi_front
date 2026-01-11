@@ -10,7 +10,7 @@ import { webRoutes } from "@/routes/web";
 import { MembershipPlan } from "@/interfaces/admin";
 import { Badge } from "@/components/ui/badge";
 
-const DetailItem = ({ label, value }) => (
+const DetailItem = ({ label, value }: any) => (
     <div>
         <p className="text-sm font-semibold text-muted-foreground">{label}</p>
         <p>{value !== null && value !== undefined ? value : "-"}</p>
@@ -96,16 +96,16 @@ export default function MembershipPlanDetails() {
                                 <p>Non inclus</p>
                             )}
                         </div>
-                        <DetailItem 
-                            label="Jour de facturation" 
-                            value={plan.billing_day_of_month ? `Le ${plan.billing_day_of_month} de chaque mois` : "-"} 
+                        <DetailItem
+                            label="Jour de facturation"
+                            value={plan.billing_day_of_month ? `Le ${plan.billing_day_of_month} de chaque mois` : "-"}
                         />
                     </div>
                 </CardContent>
             </Card>
 
             <div className="flex justify-end space-x-2">
-                <Button 
+                <Button
                     variant="outline"
                     onClick={() => navigate(webRoutes.dashboard_membership_plans_edit.replace(':id', String(plan.id)))}
                 >

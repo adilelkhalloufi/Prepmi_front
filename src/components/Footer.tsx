@@ -6,11 +6,10 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip"
-import { Facebook, Instagram, Linkedin, Moon, Send, Sun, Twitter } from "lucide-react"
+import { Facebook, Instagram, Linkedin } from "lucide-react"
 import { useTranslation } from "react-i18next"
 import { Link } from "react-router-dom"
 import { webRoutes } from "@/routes/web"
-import ThemeSwitcher from "./theme-switcher"
 import logo from "../assets/Prepme.svg";
 
 

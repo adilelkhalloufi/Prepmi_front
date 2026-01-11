@@ -36,7 +36,7 @@ export default function AddOrder() {
         http.get(apiRoutes.meals).then((res) => setMeals(res.data.data));
     }, []);
 
-    const handleChange = (e) => {
+    const handleChange = (e: any) => {
         const { name, value } = e.target;
         setFormData((prev) => ({ ...prev, [name]: value }));
     };
@@ -45,8 +45,8 @@ export default function AddOrder() {
         setFormData((prev) => ({ ...prev, [name]: value }));
     };
 
-    const handleMealChange = (index, field, value) => {
-        const newOrderMeals = [...formData.order_meals];
+    const handleMealChange = (index: number, field: string, value: any) => {
+        const newOrderMeals: any = [...formData.order_meals];
         newOrderMeals[index][field] = value;
 
         if (field === 'meal_id') {
@@ -54,7 +54,7 @@ export default function AddOrder() {
             newOrderMeals[index]['price'] = selectedMeal?.price || 0;
         }
 
-        const totalPrice = newOrderMeals.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+        const totalPrice = newOrderMeals.reduce((sum: number, item: any) => sum + (item.price * item.quantity), 0);
         setFormData(prev => ({ ...prev, order_meals: newOrderMeals, total_price: totalPrice }));
     };
 
@@ -65,9 +65,9 @@ export default function AddOrder() {
         }));
     };
 
-    const removeMeal = (index) => {
+    const removeMeal = (index: number) => {
         const newOrderMeals = formData.order_meals.filter((_, i) => i !== index);
-        const totalPrice = newOrderMeals.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+        const totalPrice = newOrderMeals.reduce((sum: number, item: any) => sum + (item.price * item.quantity), 0);
         setFormData(prev => ({ ...prev, order_meals: newOrderMeals, total_price: totalPrice }));
     };
 

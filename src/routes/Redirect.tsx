@@ -6,7 +6,7 @@ import { RootState } from '@/store'
 const Redirect = () => {
   const admin = useSelector((state: RootState) => state.admin)
 
-  return <Navigate to={admin ? webRoutes.Dashboard : webRoutes.login} replace />
+  return <Navigate to={admin ? webRoutes.dashboard : webRoutes.login} replace />
 }
 
 export default Redirect

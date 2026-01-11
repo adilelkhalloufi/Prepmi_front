@@ -17,7 +17,7 @@ import { ScrollArea } from "@/components/ui/scroll-area"
 interface CalendarViewProps {
     data: MealPreparation[]
     loading: boolean
-    onStatusUpdate: (id: number, status: string) => void
+    onStatusUpdate: (orderId: string, status: string) => Promise<void>
 }
 
 const statusConfig = {
@@ -45,15 +45,7 @@ const statusConfig = {
 
 };
 
-interface GroupedOrder {
-    order_num: string;
-    meals: { name: string; quantity: number; image_path?: string }[];
-    customer?: any;
-    notes?: string;
-    order_status?: string;
-    order_id?: number; // Add order_id here
-    total_amount?: number;
-}
+
 
 const groupByOrder = (items: any[]) => {
     // If items are flat meal preparations (old format)
@@ -84,7 +76,7 @@ const groupByOrder = (items: any[]) => {
             order_status: order.statue || order.order_status,
             order_id: order.id || order.order_id,
             deliveries: order.deliveries || [],
-            meals: order.order_meals.map(mealItem => ({
+            meals: order.order_meals.map((mealItem: any) => ({
                 name: mealItem.meal?.name,
                 quantity: mealItem.quantity,
                 order_meal_id: mealItem.id || mealItem.order_meal_id,
@@ -98,29 +90,14 @@ const groupByOrder = (items: any[]) => {
 export function CalendarView({ data, loading, onStatusUpdate }: CalendarViewProps) {
     const [selectedDate, setSelectedDate] = useState<Date | undefined>(new Date())
 
-    // Get orders for selected date (not meals)
-    const ordersForSelectedDate = data.filter(order =>
-        selectedDate && isSameDay(parseISO(order.created_at), selectedDate)
-    )
+
 
     // Get dates that have orders
-    const datesWithOrders = data.map(order => parseISO(order.created_at))
+    const datesWithOrders = data.map((order: any) => parseISO(order.created_at))
 
-    // Group orders by order_status for summary
-    const ordersByStatus = ordersForSelectedDate.reduce((acc, order) => {
-        const status = order.order_status;
-        if (!acc[status]) {
-            acc[status] = [];
-        }
-        acc[status].push(order);
-        return acc;
-    }, {} as Record<string, MealPreparation[]>);
-
-    // Calculate total quantities
-    const totalQuantity = ordersForSelectedDate.reduce((sum, order) => sum + order.quantity, 0);
 
     // Filter orders for selected date
-    const filteredOrders = data.filter(order =>
+    const filteredOrders = data.filter((order: any) =>
         selectedDate && isSameDay(parseISO(order.created_at), selectedDate)
     );
 
@@ -197,12 +174,12 @@ export function CalendarView({ data, loading, onStatusUpdate }: CalendarViewProp
                                                         </p>
                                                     </div>
                                                     <Badge variant="outline" className="text-xl font-bold px-4 py-2">
-                                                        {order.meals.reduce((sum, m) => sum + m.quantity, 0)} repas
+                                                        {order.meals.reduce((sum: number, m: any) => sum + m.quantity, 0)} repas
                                                     </Badge>
                                                 </div>
                                                 {/* Meals List */}
                                                 <div className="flex flex-col gap-2 mt-2">
-                                                    {order.meals.map((meal, mIdx) => (
+                                                    {order.meals.map((meal: any, mIdx: number) => (
                                                         <div key={mIdx} className="flex items-center gap-3">
                                                             {meal.image_path && (
                                                                 <img
@@ -259,7 +236,7 @@ export function CalendarView({ data, loading, onStatusUpdate }: CalendarViewProp
                                                         value={order.order_status}
                                                         onValueChange={async (newStatus) => {
                                                             // Use order_id instead of meal ids
-                                                            await onStatusUpdate(order.order_id, newStatus);
+                                                            await onStatusUpdate(String(order.order_id), newStatus);
                                                         }}
                                                     >
                                                         <SelectTrigger className={`w-[120px] ${statusConfig[order.order_status as keyof typeof statusConfig]?.variant || ''} text-white `}>

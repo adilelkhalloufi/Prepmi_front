@@ -13,7 +13,7 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { useNavigate } from "react-router-dom";
 import { ArrowLeft, Plus, Trash2, GripVertical, Star } from "lucide-react";
 import { webRoutes } from "@/routes/web";
-import { Meal, MenuMeal } from "@/interfaces/admin";
+import { MenuMeal } from "@/interfaces/admin";
 import {
     Dialog,
     DialogContent,
@@ -38,27 +38,27 @@ export default function AddWeeklyMenu() {
     const [success, setSuccess] = useState(false);
     const [loading, setLoading] = useState(false);
     const [selectedMeals, setSelectedMeals] = useState<MenuMeal[]>([]);
-    const [availableMeals, setAvailableMeals] = useState<Meal[]>([]);
-    const [loadingMeals, setLoadingMeals] = useState(false);
+    // const [availableMeals, setAvailableMeals] = useState<Meal[]>([]);
+    // const [loadingMeals, setLoadingMeals] = useState(false);
     const [mealSelectionOpen, setMealSelectionOpen] = useState(false);
     const [searchQuery, setSearchQuery] = useState("");
 
     useEffect(() => {
-        fetchAvailableMeals();
+        // fetchAvailableMeals();
     }, []);
 
-    const fetchAvailableMeals = () => {
-        setLoadingMeals(true);
-        http.get(apiRoutes.meals)
-            .then((res) => {
-                setAvailableMeals(res.data.data || []);
-                setLoadingMeals(false);
-            })
-            .catch((error) => {
-                console.error("Error fetching meals:", error);
-                setLoadingMeals(false);
-            });
-    };
+    // const fetchAvailableMeals = () => {
+    //     setLoadingMeals(true);
+    //     http.get(apiRoutes.meals)
+    //         .then((res) => {
+    //             setAvailableMeals(res.data.data || []);
+    //             setLoadingMeals(false);
+    //         })
+    //         .catch((error) => {
+    //             console.error("Error fetching meals:", error);
+    //             setLoadingMeals(false);
+    //         });
+    // };
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;
@@ -72,22 +72,22 @@ export default function AddWeeklyMenu() {
         setFormData((prev) => ({ ...prev, [name]: checked }));
     };
 
-    const handleAddMeal = (meal: Meal) => {
-        const exists = selectedMeals.find(m => m.meal_id === meal.id);
-        if (!exists) {
-            const newMenuMeal: MenuMeal = {
-                weekly_menu_id: 0, // Will be set after menu creation
-                meal_id: meal.id,
-                position: selectedMeals.length + 1,
-                is_featured: false,
-                special_price: null,
-                availability_count: 50,
-                sold_count: 0,
-                meal: meal
-            };
-            setSelectedMeals([...selectedMeals, newMenuMeal]);
-        }
-    };
+    // const handleAddMeal = (meal: Meal) => {
+    //     const exists = selectedMeals.find(m => m.meal_id === meal.id);
+    //     if (!exists) {
+    //         const newMenuMeal: MenuMeal = {
+    //             weekly_menu_id: 0, // Will be set after menu creation
+    //             meal_id: meal.id,
+    //             position: selectedMeals.length + 1,
+    //             is_featured: false,
+    //             special_price: null,
+    //             availability_count: 50,
+    //             sold_count: 0,
+    //             meal: meal
+    //         };
+    //         setSelectedMeals([...selectedMeals, newMenuMeal]);
+    //     }
+    // };
 
     const handleRemoveMeal = (mealId: number) => {
         setSelectedMeals(selectedMeals.filter(m => m.meal_id !== mealId));
@@ -125,7 +125,7 @@ export default function AddWeeklyMenu() {
             };
 
             http.post(apiRoutes.weeklyMenus, submitData)
-                .then((res) => {
+                .then(() => {
                     setSuccess(true);
                     setTimeout(() => {
                         navigate(webRoutes.dashboard_weekly_menus);
@@ -144,10 +144,10 @@ export default function AddWeeklyMenu() {
         }
     };
 
-    const filteredMeals = availableMeals.filter(meal =>
-        meal.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        meal.description?.toLowerCase().includes(searchQuery.toLowerCase())
-    );
+    // const filteredMeals = availableMeals.filter(meal =>
+    //     meal.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    //     meal.description?.toLowerCase().includes(searchQuery.toLowerCase())
+    // );
 
     return (
         <div className="container mx-auto p-6 max-w-6xl">
@@ -322,7 +322,7 @@ export default function AddWeeklyMenu() {
                                                 onChange={(e) => setSearchQuery(e.target.value)}
                                             />
                                             <div className="grid grid-cols-2 gap-4">
-                                                {filteredMeals.map((meal) => (
+                                                {/* {filteredMeals.map((meal) => (
                                                     <Card
                                                         key={meal.id}
                                                         className="cursor-pointer hover:border-primary transition-colors"
@@ -352,7 +352,7 @@ export default function AddWeeklyMenu() {
                                                             </div>
                                                         </CardContent>
                                                     </Card>
-                                                ))}
+                                                ))} */}
                                             </div>
                                         </div>
                                     </DialogContent>

@@ -133,7 +133,7 @@ export function DataTable<TData, TValue>({
                 </TableHeader>
                 <TableBody>
                     {loading ? (
-                        <TableLoading columns={columns.length} />
+                        <TableLoading />
                     ) : table.getRowModel().rows?.length ? (
                         table.getRowModel().rows.map((row) => (
                             <TableRow

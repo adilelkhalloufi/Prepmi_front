@@ -3,11 +3,7 @@ import { DataTable } from "./data-table"
 import { useEffect, useState } from "react"
 import http from "@/utils/http"
 import { apiRoutes } from "@/routes/api"
-import { Button } from "@/components/ui/button"
-import { useNavigate } from "react-router-dom"
-import { webRoutes } from "@/routes/web"
 import { toast } from "sonner"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { handleErrorResponse } from "@/utils"
 
 interface Membership {
@@ -22,28 +18,20 @@ interface Membership {
     membership_plan?: any
 }
 
-interface MembershipStats {
-    total: number
-    active: number
-    frozen: number
-    cancelled: number
-    pending: number
-}
+
 
 export default function MembershipIndex() {
-    const navigate = useNavigate()
     const [data, setData] = useState<Membership[]>([])
-    const [stats, setStats] = useState<MembershipStats | null>(null)
     const [loading, setLoading] = useState<boolean>(true)
 
     const fetchMemberships = () => {
         setLoading(true)
-      
-             http.get(apiRoutes.memberships).then((response) => {
-                const memberships = response.data.data ?? response.data
-                
-                setData(Array.isArray(memberships) ? memberships : [])
-             })
+
+        http.get(apiRoutes.memberships).then((response) => {
+            const memberships = response.data.data ?? response.data
+
+            setData(Array.isArray(memberships) ? memberships : [])
+        })
             .catch((error) => {
                 console.error("Error fetching memberships:", error)
                 toast.error("Error loading memberships")
@@ -102,7 +90,7 @@ export default function MembershipIndex() {
             </div>
 
             {/* Statistics Cards */}
-            {stats && (
+            {/* {stats && (
                 <div className="grid gap-4 md:grid-cols-5 mb-6">
                     <Card>
                         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -145,7 +133,7 @@ export default function MembershipIndex() {
                         </CardContent>
                     </Card>
                 </div>
-            )}
+            )} */}
 
             <DataTable
                 columns={columns({

@@ -35,9 +35,9 @@ export const registerSlice = createSlice({
 
             return state;
         },
-        toggleInterests: (state, action) => {
+        toggleInterests: (state: any, action) => {
             if (state.interests.includes(action.payload)) {
-                state.interests = state.interests.filter((id) => id !== action.payload);
+                state.interests = state.interests.filter((id: any) => id !== action.payload);
             } else {
                 state.interests.push(action.payload);
             }

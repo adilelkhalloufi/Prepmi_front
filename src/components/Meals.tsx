@@ -12,7 +12,6 @@ import { useNavigate } from "react-router-dom";
 import { webRoutes } from "@/routes/web";
 import {
   Calendar,
-  Users,
   Utensils,
   Coffee,
   Plus,
@@ -59,14 +58,14 @@ export function Meals({
   );
   const admin = useSelector((state: RootState) => state.admin?.user);
 
-  const [selectedMeals, setSelectedMeals] = useState<{ [key: number]: number }>(
+  const [selectedMeals, setSelectedMeals] = useState<{ [key: number]: Meal & { quantity: number } }>(
     planData?.selectedMeals || {}
   );
   const [selectedDrinks, setSelectedDrinks] = useState<{
-    [key: number]: number;
+    [key: number]: Meal & { quantity: number };
   }>(planData?.selectedDrinks || {});
   const [selectedFreeDesserts, setSelectedFreeDesserts] = useState<{
-    [key: number]: number;
+    [key: number]: Meal & { quantity: number };
   }>(planData?.selectedFreeDesserts || {});
   const [showDrinks, setShowDrinks] = useState(false);
   const [showRewards, setShowRewards] = useState(false);
@@ -138,7 +137,7 @@ export function Meals({
   // Filter meals that are eligible for reward (based on value)
   const getRewardEligibleMeals = (reward: Reward) => {
     const rewardValue = Number(reward.value);
-    return mainMeals.filter((meal) => {
+    return mainMeals.filter((meal: Meal) => {
       const mealPrice = Number(meal.price || 0);
       return mealPrice <= rewardValue;
     });
@@ -154,7 +153,7 @@ export function Meals({
 
   // Calculate total selected meals using new structure
   const totalSelectedMeals = Object.values(selectedMeals).reduce(
-    (sum, meal) => sum + (meal.quantity || 0),
+    (sum, meal: any) => sum + (meal.quantity || 0),
     0
   );
   const remainingMeals = (planData?.mealsPerWeek || 10) - totalSelectedMeals;
@@ -164,11 +163,11 @@ export function Meals({
     const mealObj = allMeals.find((m) => m.id === mealId);
     if (!mealObj) return;
 
-    setSelectedMeals((prev) => {
+    setSelectedMeals((prev: any) => {
       const currentQty = prev[mealId]?.quantity || 0;
       // Recalculate remainingMeals based on new structure
-      const totalSelected = Object.values(prev).reduce(
-        (sum, meal) => sum + (meal.quantity || 0),
+      const totalSelected: any = Object.values(prev).reduce(
+        (sum, meal: any) => sum + (meal.quantity || 0),
         0
       );
       const remaining = (planData?.mealsPerWeek || 10) - totalSelected;
@@ -201,7 +200,7 @@ export function Meals({
     const drinkObj = drinks.find((d) => d.id === itemId);
     if (!drinkObj) return;
 
-    setSelectedDrinks((prev) => {
+    setSelectedDrinks((prev: any) => {
       const currentQty = prev[itemId]?.quantity || 0;
       const newQty = Math.max(0, currentQty + change);
 
@@ -229,10 +228,10 @@ export function Meals({
     const drinkObj = drinks.find((d) => d.id === itemId);
     if (!drinkObj) return;
 
-    setSelectedFreeDesserts((prev) => {
+    setSelectedFreeDesserts((prev: any) => {
       const currentQty = prev[itemId]?.quantity || 0;
       const totalFreeDesserts = Object.values(prev).reduce(
-        (sum, drink) => sum + (drink.quantity || 0),
+        (sum: number, drink: any) => sum + (drink.quantity || 0),
         0
       );
       const remainingFreeDesserts = freeDessertsQuantity - totalFreeDesserts;
@@ -268,7 +267,7 @@ export function Meals({
 
   const handleApplyReward = (mealId: number, rewardId: number) => {
     const reward = availableRewards.find((r) => r.id === rewardId);
-    const selectedMeal = mainMeals.find((m) => m.id === mealId);
+    const selectedMeal = mainMeals.find((m: Meal) => m.id === mealId);
     if (!reward || !selectedMeal) return;
 
     setAppliedReward(reward);
@@ -391,7 +390,7 @@ export function Meals({
                   </p>
                   <p className="font-semibold text-foreground">
                     {Object.values(selectedFreeDesserts).reduce(
-                      (sum, drink) => sum + (drink.quantity || 0),
+                      (sum: number, drink: any) => sum + (drink.quantity || 0),
                       0
                     )}
                     /{freeDessertsQuantity}
@@ -620,18 +619,18 @@ export function Meals({
                       </div>
                     ) : (
                       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                        {eligibleMeals.map((meal) => (
+                        {eligibleMeals.map((meal: Meal) => (
                           <Card
                             key={meal.id}
                             className={`relative hover:shadow-lg transition-all ${isApplied && appliedReward?.meal_id === meal.id
-                                ? "ring-2 ring-secondary"
-                                : ""
+                              ? "ring-2 ring-secondary"
+                              : ""
                               }`}
                           >
                             <div className="relative h-32 overflow-hidden rounded-t-lg">
                               {meal.image_url || meal.image_path ? (
                                 <img
-                                  src={meal.image_url || meal.image_path}
+                                  src={meal?.image_url || meal?.image_path || ""}
                                   alt={meal.name}
                                   className="w-full h-full object-cover"
                                 />
@@ -880,14 +879,14 @@ export function Meals({
                       <Card
                         key={drink.id}
                         className={`relative transition-shadow ${selectedFreeDesserts[drink.id]?.quantity > 0
-                            ? "ring-2 ring-green-400 bg-green-50"
-                            : "hover:shadow-lg"
+                          ? "ring-2 ring-green-400 bg-green-50"
+                          : "hover:shadow-lg"
                           }`}
                       >
                         <div className="relative h-32 overflow-hidden rounded-t-lg">
                           {drink.image_url || drink.image_path ? (
                             <img
-                              src={drink.image_url || drink.image_path}
+                              src={drink.image_url || drink.image_path || ""}
                               alt={drink.name}
                               className="w-full h-full object-cover"
                             />
@@ -1022,7 +1021,7 @@ export function Meals({
                     <div className="relative h-32 overflow-hidden rounded-t-lg">
                       {drink.image_url || drink.image_path ? (
                         <img
-                          src={drink.image_url || drink.image_path}
+                          src={drink.image_url || drink.image_path || ""}
                           alt={drink.name}
                           className="w-full h-full object-cover"
                         />
@@ -1123,7 +1122,7 @@ export function Meals({
                   <img
                     src={
                       appliedRewardMeal.image_url ||
-                      appliedRewardMeal.image_path
+                      appliedRewardMeal.image_path || ""
                     }
                     alt={appliedRewardMeal.name}
                     className="w-16 h-16 object-cover rounded"

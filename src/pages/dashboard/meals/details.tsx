@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import http from "@/utils/http";
 import { apiRoutes } from "@/routes/api";
 import { handleErrorResponse } from "@/utils";
@@ -11,14 +11,14 @@ import { Meal } from "@/interfaces/admin";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
-const DetailItem = ({ label, value }) => (
+const DetailItem = ({ label, value }: any) => (
     <div>
         <p className="text-sm font-semibold text-muted-foreground">{label}</p>
         <p>{value || "-"}</p>
     </div>
 );
 
-const BooleanBadge = ({ value, label }) => (
+const BooleanBadge = ({ value, label }: any) => (
     value ? <Badge>{label}</Badge> : null
 );
 
@@ -48,15 +48,15 @@ export default function MealDetails() {
     }
 
     const dietaryFlags = [
-        { key: "is_vegetarian", label: "Végétarien" },
-        { key: "is_vegan", label: "Vegan" },
-        { key: "is_gluten_free", label: "Sans gluten" },
-        { key: "is_dairy_free", label: "Sans lactose" },
-        { key: "is_nut_free", label: "Sans noix" },
-        { key: "is_keto", label: "Keto" },
-        { key: "is_paleo", label: "Paleo" },
-        { key: "is_low_carb", label: "Faible en glucides" },
-        { key: "is_high_protein", label: "Riche en protéines" },
+        { key: "is_vegetarian" as const, label: "Végétarien" },
+        { key: "is_vegan" as const, label: "Vegan" },
+        { key: "is_gluten_free" as const, label: "Sans gluten" },
+        { key: "is_dairy_free" as const, label: "Sans lactose" },
+        { key: "is_nut_free" as const, label: "Sans noix" },
+        { key: "is_keto" as const, label: "Keto" },
+        { key: "is_paleo" as const, label: "Paleo" },
+        { key: "is_low_carb" as const, label: "Faible en glucides" },
+        { key: "is_high_protein" as const, label: "Riche en protéines" },
     ];
 
     return (

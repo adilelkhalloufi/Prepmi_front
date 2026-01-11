@@ -14,7 +14,6 @@ interface PlanProps {
     membershipData?: any
     isLoadingCategories?: boolean
     isLoadingPlans?: boolean
-    isLoadingMembership?: boolean
 }
 
 export const Plan = ({
@@ -23,12 +22,11 @@ export const Plan = ({
     membershipData = null,
     isLoadingCategories = false,
     isLoadingPlans = false,
-    isLoadingMembership = false
+
 }: PlanProps) => {
     const { t } = useTranslation()
     const dispatch = useDispatch()
     const planData = useSelector((state: RootState) => state.joinProcess.planData)
-    const admin = useSelector((state: RootState) => state.admin?.user)
 
     const [selectedProtein, setSelectedProtein] = useState(planData?.protein || '')
     const [selectedPortion, setSelectedPortion] = useState(planData?.portion || '')

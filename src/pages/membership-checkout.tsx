@@ -12,7 +12,6 @@ import { apiRoutes } from "@/routes/api"
 import { handleErrorResponse } from "@/utils"
 import { useSelector } from "react-redux"
 import { RootState } from "@/store"
-import { webRoutes } from "@/routes/web"
 import { toast } from "sonner"
 
 interface MembershipPlan {
@@ -35,7 +34,7 @@ export default function MembershipCheckout() {
     const location = useLocation()
     const { planId } = useParams()
     const admin = useSelector((state: RootState) => state.admin?.user)
-    
+
     const [isProcessing, setIsProcessing] = useState(false)
     const selectedPlanId = planId ? parseInt(planId) : location.state?.membershipPlanId
 
@@ -81,7 +80,7 @@ export default function MembershipCheckout() {
     const createMembership = useMutation({
         mutationFn: (data: { membership_plan_id: number; payment_method?: string }) =>
             http.post(apiRoutes.memberships, data),
-        onSuccess: (response) => {
+        onSuccess: () => {
             toast.success(t('membershipCheckout.success', 'Membership activated successfully!'))
             // Redirect to dashboard or thank you page
             setTimeout(() => {
@@ -98,7 +97,7 @@ export default function MembershipCheckout() {
         if (!selectedPlanId || !admin?.id) return
 
         setIsProcessing(true)
-        
+
         createMembership.mutate({
             membership_plan_id: selectedPlanId,
             payment_method: 'card', // You can add payment method selection
@@ -279,7 +278,7 @@ export default function MembershipCheckout() {
                                         <span className="text-gray-600">{t('membershipCheckout.monthlyFee', 'Monthly Fee')}:</span>
                                         <span className="font-medium">{monthlyFee.toFixed(2)} MAD</span>
                                     </div>
-                                
+
                                 </div>
 
                                 <Separator />

@@ -43,7 +43,7 @@ export default function EditCategory() {
                         image: category.image_url || "",
                         is_active: category.is_active !== undefined ? category.is_active : true,
                     });
-                    
+
                     if (category.image_url) {
                         setImagePreview(category.image_url);
                     }
@@ -99,10 +99,10 @@ export default function EditCategory() {
 
         if (formData.name && formData.slug && id) {
             const submitData = new FormData();
-            
+
             Object.keys(formData).forEach((key) => {
                 const value = formData[key as keyof typeof formData];
-                
+
                 if (key === 'image' && value && typeof value === 'object' && 'name' in value) {
                     submitData.append('image', value as File);
                 } else if (key === 'image' && typeof value === 'string' && value) {
@@ -121,7 +121,7 @@ export default function EditCategory() {
                     'Content-Type': 'multipart/form-data',
                 },
             })
-                .then((res) => {
+                .then(() => {
                     setSuccess(true);
                     setTimeout(() => {
                         navigate(webRoutes.dashboard_categories);

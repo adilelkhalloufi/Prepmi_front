@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react"
+import { useState } from "react"
 import { Card, CardContent } from "@/components/ui/card"
 import { useTranslation } from "react-i18next"
 import { MealCard } from "./MealCard"
@@ -18,20 +18,11 @@ import {
 } from "lucide-react"
 import { Meal } from "@/interfaces/admin"
 
-// Get current week's start date (Monday)
-const getCurrentWeekStart = () => {
-    const today = new Date();
-    const day = today.getDay();
-    const diff = today.getDate() - day + (day === 0 ? -6 : 1);
-    const monday = new Date(today.setDate(diff));
-    monday.setHours(0, 0, 0, 0);
-    return monday.toISOString().split('T')[0];
-};
+
 
 export function MenuPage() {
     const { t } = useTranslation();
     const [activeCategory, setActiveCategory] = useState<string>('weekly');
-    const [selectedDate, setSelectedDate] = useState<string>(getCurrentWeekStart());
     const [isAnimating, setIsAnimating] = useState(false);
 
     // Fetch all meals
@@ -74,8 +65,8 @@ export function MenuPage() {
     });
 
     const allMeals = mealsResponse?.data || [];
-    const mainMeals = allMeals.filter(meal => 
-        meal.type === 'lunch' || meal.type === 'dinner' || 
+    const mainMeals = allMeals.filter(meal =>
+        meal.type === 'lunch' || meal.type === 'dinner' ||
         meal.category?.slug === 'weekly' ||
         (!meal.type?.includes('breakfast') && !meal.category?.name?.toLowerCase().includes('breakfast') && meal.category?.slug !== 'drinks')
     );
@@ -84,33 +75,17 @@ export function MenuPage() {
     );
     const drinks = drinksResponse?.data || [];
 
-    // Generate week dates for current week
-    const generateWeekDates = () => {
-        const startDate = new Date(getCurrentWeekStart());
-        const dates = [];
-        const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-        
-        for (let i = 0; i < 7; i++) {
-            const date = new Date(startDate);
-            date.setDate(date.getDate() + i);
-            dates.push({
-                date: date.toISOString().split('T')[0],
-                day: dayNames[date.getDay()]
-            });
-        }
-        return dates;
-    };
 
-    const weeklyDates = generateWeekDates();
+
     const isLoading = isLoadingMeals || isLoadingDrinks || isLoadingCategories;
 
     // Calculate stats from meals data
     const totalRecipes = allMeals.length || 0;
-    const avgPrepTime = allMeals.length > 0 
+    const avgPrepTime = allMeals.length > 0
         ? Math.round(allMeals.reduce((sum, meal) => sum + ((meal.prep_time_minutes || 0) + (meal.cooking_time_minutes || 0)), 0) / allMeals.length)
         : 15;
     const satisfactionRate = 98; // Default satisfaction rate
-    
+
     const statsItems = [
         {
             icon: <ChefHat className="w-8 h-8 text-primary" />,
@@ -144,17 +119,17 @@ export function MenuPage() {
         id: cat.slug || cat.id.toString(),
         name: cat.name,
         icon: cat.slug === 'weekly' ? <Calendar className="w-5 h-5" /> :
-              cat.slug === 'breakfast' ? <Coffee className="w-5 h-5" /> :
-              cat.slug === 'drinks' ? <Wine className="w-5 h-5" /> :
-              <Utensils className="w-5 h-5" />,
+            cat.slug === 'breakfast' ? <Coffee className="w-5 h-5" /> :
+                cat.slug === 'drinks' ? <Wine className="w-5 h-5" /> :
+                    <Utensils className="w-5 h-5" />,
         color: cat.slug === 'weekly' ? 'from-primary/20 to-primary/10' :
-               cat.slug === 'breakfast' ? 'from-secondary/20 to-secondary/10' :
-               cat.slug === 'drinks' ? 'from-accent/20 to-accent/10' :
-               'from-muted/20 to-muted/10',
+            cat.slug === 'breakfast' ? 'from-secondary/20 to-secondary/10' :
+                cat.slug === 'drinks' ? 'from-accent/20 to-accent/10' :
+                    'from-muted/20 to-muted/10',
         accent: cat.slug === 'weekly' ? 'border-primary/30 text-primary' :
-                cat.slug === 'breakfast' ? 'border-secondary/30 text-secondary' :
+            cat.slug === 'breakfast' ? 'border-secondary/30 text-secondary' :
                 cat.slug === 'drinks' ? 'border-accent/30 text-accent' :
-                'border-muted/30 text-muted-foreground'
+                    'border-muted/30 text-muted-foreground'
     })) as Array<{
         id: string;
         name: string;
@@ -181,18 +156,15 @@ export function MenuPage() {
             return drinks;
         } else {
             // For any other category from API, filter by type or slug
-            return allMeals.filter(meal => 
-                meal.type === activeCategory || 
+            return allMeals.filter(meal =>
+                meal.type === activeCategory ||
                 meal.category?.slug === activeCategory ||
                 meal.category?.name?.toLowerCase().includes(activeCategory.toLowerCase())
             );
         }
     })();
 
-    const formatDate = (dateString: string) => {
-        const date = new Date(dateString);
-        return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
-    };
+
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-background via-background/95 to-primary/5 ">
@@ -246,7 +218,7 @@ export function MenuPage() {
                     ))}
                 </div>
 
-          
+
                 {/* Stats Card */}
                 <Card className="mb-12 bg-gradient-to-r from-card/90 to-card/70 border-border/50 shadow-xl backdrop-blur-sm">
                     <CardContent className="p-8">

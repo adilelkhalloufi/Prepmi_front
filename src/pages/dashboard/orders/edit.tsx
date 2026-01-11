@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import http from "@/utils/http";
 import { apiRoutes } from "@/routes/api";
@@ -11,12 +11,12 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { useNavigate, useParams } from "react-router-dom";
 import { ArrowLeft, PlusCircle, Trash2 } from "lucide-react";
 import { webRoutes } from "@/routes/web";
-import { User, Meal, Order } from "@/interfaces/admin";
+import { User, Meal } from "@/interfaces/admin";
 
 export default function EditOrder() {
     const navigate = useNavigate();
     const { id } = useParams();
-    const [formData, setFormData] = useState<Partial<Order>>({
+    const [formData, setFormData] = useState<Partial<any>>({
         user_id: "",
         order_date: "",
         delivery_date: "",
@@ -51,7 +51,7 @@ export default function EditOrder() {
         }
     }, [id]);
 
-    const handleChange = (e) => {
+    const handleChange = (e: any) => {
         const { name, value } = e.target;
         setFormData((prev) => ({ ...prev, [name]: value }));
     };
@@ -60,7 +60,7 @@ export default function EditOrder() {
         setFormData((prev) => ({ ...prev, [name]: value }));
     };
 
-    const handleMealChange = (index, field, value) => {
+    const handleMealChange = (index: number, field: string, value: any) => {
         const newOrderMeals = [...(formData.order_meals || [])];
         newOrderMeals[index] = { ...newOrderMeals[index], [field]: value };
 
@@ -78,9 +78,9 @@ export default function EditOrder() {
         setFormData(prev => ({ ...prev, order_meals: newOrderMeals }));
     };
 
-    const removeMeal = (index) => {
-        const newOrderMeals = (formData.order_meals || []).filter((_, i) => i !== index);
-        const totalPrice = newOrderMeals.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+    const removeMeal = (index: number) => {
+        const newOrderMeals = (formData.order_meals || []).filter((_: any, i: number) => i !== index);
+        const totalPrice = newOrderMeals.reduce((sum: number, item: any) => sum + (item.price * item.quantity), 0);
         setFormData(prev => ({ ...prev, order_meals: newOrderMeals, total_price: totalPrice }));
     };
 
@@ -165,7 +165,7 @@ export default function EditOrder() {
                         <CardTitle>Repas commandés</CardTitle>
                     </CardHeader>
                     <CardContent className="space-y-4">
-                        {(formData.order_meals || []).map((item, index) => (
+                        {(formData.order_meals || []).map((item: any, index: number) => (
                             <div key={index} className="flex items-center gap-4">
                                 <div className="flex-1">
                                     <Label>Repas</Label>

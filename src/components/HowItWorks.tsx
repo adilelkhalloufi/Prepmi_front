@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next";
-import { IconChefHat, IconFlame, IconToolsKitchen2, IconArrowRight } from "@tabler/icons-react";
+import { IconChefHat, IconFlame, IconToolsKitchen2 } from "@tabler/icons-react";
 import { useEffect, useState } from "react";
 
 export function HowItWorks() {

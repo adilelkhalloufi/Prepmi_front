@@ -13,18 +13,10 @@ export interface Reward {
   conditions?: string;
 }
 import { ColumnDef } from "@tanstack/react-table"
-import { ArrowUpDown, MoreHorizontal } from "lucide-react"
+import { ArrowUpDown } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+
 import { Badge } from "@/components/ui/badge"
-import { useNavigate } from "react-router-dom"
 
 export const columns: ColumnDef<Reward>[] = [
   {
@@ -127,5 +119,5 @@ export const columns: ColumnDef<Reward>[] = [
       return <span>{conditions || "-"}</span>;
     }
   },
- 
+
 ]

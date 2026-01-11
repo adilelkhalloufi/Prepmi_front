@@ -1,6 +1,4 @@
-import i18next from "i18next";
 import { useTranslation } from "react-i18next";
-import { useState } from "react";
 import { Meal } from "@/interfaces/admin";
 import { Heart, Clock, ChefHat, Flame, Leaf, CheckCircle2, AlertCircle } from "lucide-react";
 
@@ -11,7 +9,6 @@ import { useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 
 import ListProductSkeleton from "@/components/skeleton/ListProductSkeleton";
-import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import RelatedProduct from "@/components/products/RelatedProduct";
@@ -21,16 +18,9 @@ export const SingleMeal = () => {
   const { t } = useTranslation();
   const { id } = useParams<{ id: string }>();
 
-  // State for favorites
-  const [isFavorite, setIsFavorite] = useState(false);
 
-  const addToFavorite = (product_id: any) => {
-    // http.post(apiRoutes.favoris, { product_id: product_id })
-    //   .then((res) => {
-    //   })
-  }
 
-  const { isLoading, data: mealResponse } = useQuery<{data: Meal}>({
+  const { isLoading, data: mealResponse } = useQuery<{ data: Meal }>({
     queryKey: ["meal", id],
     queryFn: () =>
       http
@@ -45,8 +35,7 @@ export const SingleMeal = () => {
         }),
   });
 
-  const meal = mealResponse?.data;
-  console.log("MEAL DATA:", meal);
+  const meal: any = mealResponse?.data;
   const getDietaryBadges = (meal: Meal) => {
     const badges = [];
     // Check both flat and nested structures
@@ -85,7 +74,7 @@ export const SingleMeal = () => {
             />
             <div className="hidden md:grid grid-cols-4 gap-3">
               {meal?.gallery_urls && meal.gallery_urls.length > 0 ? (
-                meal.gallery_urls.slice(0, 4).map((url, index) => (
+                meal.gallery_urls.slice(0, 4).map((url: string, index: number) => (
                   <button key={index} className="border hover:border-primary rounded-lg overflow-hidden transition-colors">
                     <img
                       src={url || "/placeholder.svg"}
@@ -297,7 +286,7 @@ export const SingleMeal = () => {
           </div>
 
           <Separator />
-          
+
           {/* Description */}
           <div className="grid gap-4 text-sm leading-loose">
             {meal?.description}
@@ -309,7 +298,7 @@ export const SingleMeal = () => {
               <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Ingredients</h3>
               {Array.isArray(meal.ingredients) ? (
                 <ul className="list-disc list-inside space-y-1">
-                  {meal.ingredients.map((ingredient, index) => (
+                  {meal.ingredients.map((ingredient: any, index: number) => (
                     <li key={index} className="text-sm text-gray-700 dark:text-gray-300">{ingredient}</li>
                   ))}
                 </ul>
@@ -357,7 +346,7 @@ export const SingleMeal = () => {
               <p className="text-sm text-yellow-700 dark:text-yellow-300 leading-relaxed">{meal.chef_notes}</p>
             </div>
           )}
-{/* 
+          {/* 
           <form className="grid gap-4 md:gap-10">
             <div className="flex flex-col sm:flex-row gap-3">
               <Button size="lg" className="flex-1">
@@ -391,7 +380,7 @@ export const SingleMeal = () => {
             <h2 className="font-bold text-lg">Related Meals</h2>
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
               {meal?.relatedProducts?.length > 0 ? (
-                meal.relatedProducts.map((relatedMeal) => (
+                meal.relatedProducts.map((relatedMeal: any) => (
                   <RelatedProduct key={relatedMeal.id} product={relatedMeal} />
                 ))
               ) : (

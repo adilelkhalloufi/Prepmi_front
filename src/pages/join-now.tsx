@@ -18,7 +18,7 @@ import http from "@/utils/http"
 const JoinNow = () => {
     const { t } = useTranslation()
     const dispatch = useDispatch()
-    const { currentStep, planData } = useSelector((state: RootState) => state.joinProcess)
+    const { currentStep = 1, planData } = useSelector((state: RootState) => state.joinProcess)
     const admin = useSelector((state: RootState) => state.admin?.user) // Uncomment if auth slice exists
 
     // Fetch delivery slots from API
@@ -33,7 +33,7 @@ const JoinNow = () => {
                     throw e;
                 }),
         staleTime: 0,
-        cacheTime: 0,
+        gcTime: 0,
     });
 
     // Fetch categories from API
@@ -48,7 +48,7 @@ const JoinNow = () => {
                     throw e;
                 }),
         staleTime: 0,
-        cacheTime: 0,
+        gcTime: 0,
     });
 
     // Fetch plans from API
@@ -63,7 +63,7 @@ const JoinNow = () => {
                     throw e;
                 }),
         staleTime: 0,
-        cacheTime: 0,
+        gcTime: 0,
     });
 
     // Fetch user's active membership if logged in
@@ -79,7 +79,7 @@ const JoinNow = () => {
                 .catch(() => null),
         enabled: !!admin?.id,
         staleTime: 0,
-        cacheTime: 0,
+        gcTime: 0,
     });
 
 
@@ -96,7 +96,7 @@ const JoinNow = () => {
                     throw e;
                 }),
         staleTime: 0,
-        cacheTime: 0,
+        gcTime: 0,
     });
 
     // Fetch drinks from API with type_id=2 filter
@@ -111,7 +111,7 @@ const JoinNow = () => {
                     throw e;
                 }),
         staleTime: 0,
-        cacheTime: 0,
+        gcTime: 0,
     });
 
     // Fetch rewards for current user
@@ -126,7 +126,7 @@ const JoinNow = () => {
                 }),
         enabled: !!admin?.id,
         staleTime: 0,
-        cacheTime: 0,
+        gcTime: 0,
     });
 
     // Fetch total points earned
@@ -138,7 +138,7 @@ const JoinNow = () => {
                 .catch(() => ({ total_points_earned: 0 })),
         enabled: !!admin?.id,
         staleTime: 0,
-        cacheTime: 0,
+        gcTime: 0,
     });
 
     const steps = [
@@ -156,21 +156,21 @@ const JoinNow = () => {
     const handleNext = () => {
         // Validate Plan step (step 1)
         if (currentStep === 1) {
-            if (!planData.protein || planData.protein === '') {
+            if (!planData?.protein || planData?.protein === '') {
                 toast.error(t('joinNow.validation.selectProtein'))
                 return
             }
-            if (!planData.mealsPerWeek || planData.mealsPerWeek === 0) {
+            if (!planData?.mealsPerWeek || planData?.mealsPerWeek === 0) {
                 toast.error(t('joinNow.validation.selectPlan'))
                 return
             }
         }
         // Validate Meals step (step 2)
         if (currentStep === 2) {
-            const selectedMealsCount = planData.selectedMeals
+            const selectedMealsCount = planData?.selectedMeals
                 ? Object.values(planData.selectedMeals).reduce((sum, meal: any) => sum + (meal.quantity || 0), 0)
                 : 0
-            if (!planData.mealsPerWeek || selectedMealsCount < planData.mealsPerWeek) {
+            if (!planData?.mealsPerWeek || selectedMealsCount < planData?.mealsPerWeek) {
                 toast.error(t('joinNow.validation.selectAllMeals', 'Please select all your meals before continuing.'))
                 return
             }
@@ -181,7 +181,7 @@ const JoinNow = () => {
             const freeDessertsQuantity = Number(membershipPlan?.free_desserts_quantity || 0)
 
             if (hasFreeDesserts && freeDessertsQuantity > 0) {
-                const selectedFreeDrinksCount = planData.selectedFreeDrinks
+                const selectedFreeDrinksCount = planData?.selectedFreeDrinks
                     ? Object.values(planData.selectedFreeDrinks).reduce((sum, drink: any) => sum + (drink.quantity || 0), 0)
                     : 0
 
@@ -194,32 +194,32 @@ const JoinNow = () => {
         // Validate Address step (step 3)
         if (currentStep === 3) {
             if (
-                !planData.firstName ||
-                !planData.lastName ||
-                !planData.phoneNumber ||
-                !planData.address
+                !planData?.firstName ||
+                !planData?.lastName ||
+                !planData?.phoneNumber ||
+                !planData?.address
             ) {
                 toast.error(t('joinNow.validation.fillAllFields', 'Please fill in all required fields.'))
                 return
             }
 
             // Validate delivery slots selection
-            if (!planData.delivery_slot_ids || planData.delivery_slot_ids.length === 0) {
+            if (!planData?.delivery_slot_ids || planData?.delivery_slot_ids.length === 0) {
                 toast.error(t('joinNow.validation.selectDeliverySlot', 'Please select at least one delivery time slot.'))
                 return
             }
 
-            console.log('planData.password', planData.password);
-            console.log('planData.email', planData.email);
+            console.log('planData.password', planData?.password);
+            console.log('planData.email', planData?.email);
 
             if (!admin?.id) {
                 console.log('ha  admin', admin);
 
-                if (!planData.email || !planData.password) {
+                if (!planData?.email || !planData?.password) {
                     toast.error(t('joinNow.validation.fillAccountFields', 'Please fill in email and password.'))
                     return
                 }
-                if (planData.password !== planData.repeatPassword) {
+                if (planData?.password !== planData?.repeatPassword) {
                     toast.error(t('joinNow.validation.passwordMismatch', 'Passwords do not match.'))
                     return
                 }

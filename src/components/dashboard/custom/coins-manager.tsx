@@ -6,14 +6,12 @@ import { IconCoins, IconPlus, IconMinus } from "@tabler/icons-react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/store";
 import { addCoins, spendCoins, updateCoins } from "@/store/slices/userSlice";
-import { useTranslation } from "react-i18next";
 import React from "react";
 import { toast } from "sonner";
 
 export default function CoinsManager() {
   const currentUser = useSelector((state: RootState) => state.user.currentUser);
   const dispatch = useDispatch();
-  const { t } = useTranslation();
   const [amount, setAmount] = React.useState<number>(100);
 
   const handleAddCoins = () => {

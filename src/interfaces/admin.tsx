@@ -52,6 +52,14 @@ export interface User {
     coins?: number
     address?: string
     company?: string
+    is_active?: boolean
+    email_verified_at?: string
+    role_id?: number
+    postal_code?: string
+    city?: string
+    created_at?: string
+    updated_at?: string
+    status?: any
 }
 
 export interface Plan {
@@ -131,6 +139,7 @@ export interface Reward {
     used_order_id?: number
     discount_applied?: number
     conditions?: string
+    meal_id?: number
 
 }
 export interface joinProcess {

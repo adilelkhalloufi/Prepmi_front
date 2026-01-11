@@ -80,7 +80,7 @@ export default function EditUser() {
         }
     }, [id]);
 
-    const handleChange = (e) => {
+    const handleChange = (e: any) => {
         const { name, value } = e.target;
         setFormData((prev) => ({
             ...prev,
@@ -96,7 +96,7 @@ export default function EditUser() {
         setFormData((prev) => ({ ...prev, [name]: parseInt(value, 10) }));
     };
 
-    const handleImageChange = (e) => {
+    const handleImageChange = (e: any) => {
         const file = e.target.files[0];
         if (file) {
             setFormData((prev) => ({ ...prev, profile_image: file }));
@@ -118,9 +118,9 @@ export default function EditUser() {
             const submitData = new FormData();
 
             Object.keys(formData).forEach((key) => {
-                const value = formData[key as keyof typeof formData];
+                const value: any = formData[key as keyof typeof formData];
 
-                if (key === 'profile_image' && value instanceof File) {
+                if (key === 'profile_image' && value) {
                     submitData.append('profile_image', value);
                 } else if (key === 'profile_image' && typeof value === 'string' && value) {
                     // Skip existing image path
@@ -143,7 +143,7 @@ export default function EditUser() {
                     'Content-Type': 'multipart/form-data',
                 },
             })
-                .then((res) => {
+                .then(() => {
                     setSuccess(true);
                     setTimeout(() => {
                         navigate(webRoutes.dashboard_users);
