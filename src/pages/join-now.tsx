@@ -175,18 +175,18 @@ const JoinNow = () => {
                 return
             }
 
-            // Validate free drinks from membership
+            // Validate free desserts from membership
             const membershipPlan = membershipResponse?.membership_plan || null
             const hasFreeDesserts = membershipPlan?.includes_free_desserts || false
             const freeDessertsQuantity = Number(membershipPlan?.free_desserts_quantity || 0)
 
             if (hasFreeDesserts && freeDessertsQuantity > 0) {
-                const selectedFreeDrinksCount = planData?.selectedFreeDrinks
-                    ? Object.values(planData.selectedFreeDrinks).reduce((sum, drink: any) => sum + (drink.quantity || 0), 0)
+                const selectedFreeDessertsCount = planData?.selectedFreeDesserts
+                    ? Object.values(planData.selectedFreeDesserts).reduce((sum, dessert: any) => sum + (dessert.quantity || 0), 0)
                     : 0
 
-                if (selectedFreeDrinksCount < freeDessertsQuantity) {
-                    toast.error(t('joinNow.validation.selectFreeDrinks', `Please select all ${freeDessertsQuantity} free drinks from your membership before continuing.`))
+                if (selectedFreeDessertsCount < freeDessertsQuantity) {
+                    toast.error(t('joinNow.validation.selectFreeDesserts', `Please select all ${freeDessertsQuantity} free desserts from your membership before continuing.`))
                     return
                 }
             }

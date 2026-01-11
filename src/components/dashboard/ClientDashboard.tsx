@@ -4,6 +4,8 @@ import { Button } from '@/components/ui/button';
 import { Check, Dumbbell, Gift, TrendingUp, ShoppingBag } from 'lucide-react';
 import http from '@/utils/http';
 import { apiRoutes } from '@/routes/api';
+import { useSelector } from "react-redux";
+import { RootState } from "@/store";
 
 interface NutritionSummary {
     calories: number;
@@ -30,12 +32,11 @@ interface ClientDashboardData {
 export default function ClientDashboard() {
     const [data, setData] = useState<ClientDashboardData | null>(null);
     const [loading, setLoading] = useState(true);
-    const userName = "John"; // Replace with actual user name from auth
+    const user = useSelector((state: RootState) => state.admin?.user);
 
     useEffect(() => {
         http.get(apiRoutes.dashboard).then((res) => {
             setData(res.data);
-            console.log(res.data);
         }).finally(() => setLoading(false));
     }, []);
 
@@ -71,7 +72,7 @@ export default function ClientDashboard() {
             {/* Header with greeting and gym button */}
             <div className="flex justify-between items-center">
                 <h1 className="text-3xl font-bold">
-                    Hi {userName}, this week at a glance
+                    Hi {user?.first_name + " " + user?.last_name}, this week at a glance
                 </h1>
                 <Button className="bg-emerald-500 hover:bg-emerald-600 text-white">
                     <Dumbbell className="mr-2 h-4 w-4" />

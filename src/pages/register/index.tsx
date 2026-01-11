@@ -16,6 +16,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { toast } from "sonner";
 import { Eye, EyeOff, UserPlus, Mail, Lock, Phone, MapPin, User } from "lucide-react";
 import Cities from "@/data/cities.json";
+import { defaultHttp } from "@/utils/http";
+import { apiRoutes } from "@/routes/api";
 
 
 
@@ -80,17 +82,31 @@ const Register = () => {
 
         setLoading(true);
 
-        try {
 
 
+        defaultHttp.post(apiRoutes.register, {
+            first_name: form.first_name,
+            last_name: form.last_name,
+            email: form.email,
+            phone: form.phone,
+            password: form.password,
+            address: form.address,
+            city_id: form.city_id,
+            zip_code: form.zip_code,
+            country: form.country,
+            agreement: form.agreement,
+
+        }).then(() => {
             toast.success("Account created successfully! Please login.");
             dispatch(restRegister());
             navigator(webRoutes.login);
-        } catch (error: any) {
-            handleErrorResponse(error);
-        } finally {
+        }).catch(() => {
             setLoading(false);
-        }
+            handleErrorResponse(t('register.errors.creation', 'Failed to create account. Please try again.'));
+        });
+
+
+
     };
 
 
