@@ -274,9 +274,9 @@ export const SingleMeal = () => {
             </div>
 
             <div className="grid gap-2">
-              <div className="text-4xl font-bold">
+              {/* <div className="text-4xl font-bold">
                 {typeof meal?.price === 'number' ? meal.price.toFixed(2) : meal?.price} {t("menu.currency")}
-              </div>
+              </div> */}
               {meal?.cost_per_serving && (
                 <div className="text-sm text-gray-600 dark:text-gray-400">
                   Cost per serving: {typeof meal.cost_per_serving === 'number' ? meal.cost_per_serving.toFixed(2) : meal.cost_per_serving} {t("currency")}

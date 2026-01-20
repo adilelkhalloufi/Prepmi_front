@@ -14,6 +14,7 @@
   "hero_title": "HEALTHY MEALS DELIVERED",
   "hero_description": "Fresh, nutritious meals prepared by professional chefs and delivered straight to your door. Start your healthy lifestyle today!",
   "hero_get_started": "GET STARTED",
+  "hero_alt_text": "Healthy meal prep containers",
   "login": {
     "title": "Login",
     "email": "Email",
@@ -587,5 +588,18 @@
     "create": "Create account"
   },
   "menu.currency": "MAD",
-  "menu_plans": "Adhésion"
+  "menu_plans": "Adhésion",
+  "landing": {
+    "rotating_menu_title": "ROTATING-MENU",
+    "rotating_menu_desc1": "New delicious dishes",
+    "rotating_menu_desc2": "every week & daily",
+    "nutritional_title1": "NUTRITIONAL",
+    "nutritional_title2": "BALANCE",
+    "nutritional_desc1": "Carefully balanced",
+    "nutritional_desc2": "macro nutrients",
+    "convenient_title1": "CONVENIENT",
+    "convenient_title2": "DELIVERY",
+    "convenient_desc1": "On-the-go versatile",
+    "convenient_desc2": "meals"
+  }
 }

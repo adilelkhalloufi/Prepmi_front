@@ -36,7 +36,7 @@ export default function Dashboard() {
                 <h1 className='text-2xl font-bold tracking-tight'>{getDashboardTitle()}</h1>
                 <div className='flex items-center space-x-2'>
                     {/* Sélecteur de rôle pour demo - à supprimer en production */}
-                    <select
+                    {/* <select
                         value={userRole}
                         onChange={(e) => setUserRole(e.target.value as UserRole)}
                         className='px-3 py-1 border rounded'
@@ -45,7 +45,7 @@ export default function Dashboard() {
                         <option value="admin">Admin</option>
                         <option value="delivery">Livreur</option>
                         <option value="cuisine">Cuisine</option>
-                    </select>
+                    </select> */}
                 </div>
             </div>
 
@@ -65,7 +65,7 @@ export default function Dashboard() {
                     {userRole === 'delivery' && <DeliveryDashboard />}
                     {userRole === 'cuisine' && <CuisineDashboard />}
 
- 
+
                 </TabsContent>
             </Tabs>
         </>

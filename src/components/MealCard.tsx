@@ -75,9 +75,9 @@ export function MealCard({ meal }: MealCardProps) {
 
                 {/* Price Badge */}
                 <div className="absolute top-4 right-4">
-                    <Badge className="bg-gradient-to-r from-primary to-primary/90 text-primary-foreground font-bold px-3 py-1.5 shadow-lg hover:shadow-primary/25 transition-all duration-300 border-0">
+                    {/* <Badge className="bg-gradient-to-r from-primary to-primary/90 text-primary-foreground font-bold px-3 py-1.5 shadow-lg hover:shadow-primary/25 transition-all duration-300 border-0">
                         {typeof meal.price === 'number' ? meal.price.toFixed(2) : meal.price} {t('menu.currency')}
-                    </Badge>
+                    </Badge> */}
                 </div>
 
                 {/* Difficulty Badge */}

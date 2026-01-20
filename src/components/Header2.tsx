@@ -65,10 +65,9 @@ export function Header2() {
         </nav>
         <div className="flex items-center space-x-4">
           {/* <ThemeSwitcher /> */}
-          <div className="hidden md:flex">
 
-            <LangToggle />
-          </div>
+          <LangToggle />
+
 
           {/* <Button
             variant="ghost"
@@ -108,7 +107,9 @@ export function Header2() {
               }}
             >
               <IconLogin className="mr-2 w-5 h-5" />
-              {t("menu_login")}
+              <span className="hidden sm:inline">
+                {t("menu_login")}
+              </span>
             </Button>
           )}
 

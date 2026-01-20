@@ -105,7 +105,8 @@ export function Header() {
               }}
             >
               <IconLogin className="mr-2 w-5 h-5" />
-              {t("menu_login")}
+
+              <span className="hidden sm:inline">{t("menu_login")}</span>
             </Button>
           )}
 

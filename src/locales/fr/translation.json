@@ -21,6 +21,7 @@
   "hero_title": "REPAS SAINS LIVRÉS",
   "hero_description": "Des repas frais et nutritifs préparés par des chefs professionnels et livrés directement à votre porte. Commencez votre mode de vie sain dès aujourd'hui!",
   "hero_get_started": "COMMENCER",
+  "hero_alt_text": "Conteneurs de préparation de repas sains",
   "how_it_works": {
     "simple_process": "Processus Simple",
     "title": "Comment Ça Marche",
@@ -459,5 +460,18 @@
     "create": "Créer un compte"
   },
   "menu.currency": "MAD",
-  "menu_plans": "Membership"
+  "menu_plans": "Membership",
+  "landing": {
+    "rotating_menu_title": "MENU ROTATIF",
+    "rotating_menu_desc1": "Nouveaux plats délicieux",
+    "rotating_menu_desc2": "chaque semaine & chaque jour",
+    "nutritional_title1": "NUTRITIONNEL",
+    "nutritional_title2": "ÉQUILIBRE",
+    "nutritional_desc1": "Équilibre soigneusement étudié",
+    "nutritional_desc2": "macronutriments",
+    "convenient_title1": "PRATIQUE",
+    "convenient_title2": "LIVRAISON",
+    "convenient_desc1": "Repas polyvalents à emporter",
+    "convenient_desc2": "repas"
+  }
 }

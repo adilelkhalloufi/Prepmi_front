@@ -7,9 +7,16 @@ import Footer from "@/components/Footer";
 import { IconRefresh, IconScale, IconTruck, IconFlame, IconMeat } from "@tabler/icons-react";
 import { useTranslation } from "react-i18next";
 import { ClientReviews } from "@/components/ClientReviews";
+import { Button } from "@/components/ui/button";
+import { webRoutes } from "@/routes/web";
+import { useNavigate } from "react-router-dom";
 
 const Index = () => {
   const { t } = useTranslation();
+  const navigator = useNavigate();
+  const handleCardClick = (mealId: number) => {
+    navigator(webRoutes.meal_single.replace(':id', mealId.toString() || ''));
+  };
   const {
     data: meals,
 
@@ -33,12 +40,12 @@ const Index = () => {
             <IconRefresh className="w-10 h-10 text-primary" stroke={1.5} />
           </div>
           <h3 className="text-primary font-bold text-2xl uppercase tracking-wide">
-            ROTATING-MENU
+            {t("landing.rotating_menu_title", "ROTATING-MENU")}
           </h3>
           <p className="text-primary/80 text-lg">
-            New delicious dishes
+            {t("landing.rotating_menu_desc1", "New delicious dishes")}
             <br />
-            every week & daily
+            {t("landing.rotating_menu_desc2", "every week & daily")}
           </p>
         </div>
 
@@ -48,14 +55,14 @@ const Index = () => {
             <IconScale className="w-10 h-10 text-primary" stroke={1.5} />
           </div>
           <h3 className="text-primary font-bold text-2xl uppercase tracking-wide">
-            NUTRITIONAL
+            {t("landing.nutritional_title1", "NUTRITIONAL")}
             <br />
-            BALANCE
+            {t("landing.nutritional_title2", "BALANCE")}
           </h3>
           <p className="text-primary/80 text-lg">
-            Carefully balanced
+            {t("landing.nutritional_desc1", "Carefully balanced")}
             <br />
-            macro nutrients
+            {t("landing.nutritional_desc2", "macro nutrients")}
           </p>
         </div>
 
@@ -65,34 +72,39 @@ const Index = () => {
             <IconTruck className="w-10 h-10 text-primary" stroke={1.5} />
           </div>
           <h3 className="text-primary font-bold text-2xl uppercase tracking-wide">
-            CONVENIENT
+            {t("landing.convenient_title1", "CONVENIENT")}
             <br />
-            DELIVERY
+            {t("landing.convenient_title2", "DELIVERY")}
           </h3>
           <p className="text-primary/80 text-lg">
-            On-the-go versatile
+            {t("landing.convenient_desc1", "On-the-go versatile")}
             <br />
-            meals
+            {t("landing.convenient_desc2", "meals")}
           </p>
         </div>
       </div>
       {/* Meals display */}
       <div className=" bg-primary  py-10 flex flex-col items-center">
         {/* add button see all the menu */}
-        <button className="text-white bg-secondary px-4 py-2 rounded-md mb-4 animate-in fade-in slide-in-from-bottom-4 duration-700 delay-300">
+        <Button
+          onClick={() => {
+            navigator(webRoutes.menu);
+          }}
+          className="text-white bg-secondary px-4 py-2 rounded-md mb-4 animate-in fade-in slide-in-from-bottom-4 duration-700 delay-300">
           {t("see_all_menu")}
-        </button>
+        </Button>
         <div className="flex flex-col md:flex-row  gap-4 justify-center">
           {meals?.map((meal: any, index: number) => (
             <div
+              onClick={() => handleCardClick(meal.id)}
               key={meal.id}
-              className=" flex flex-col p-2 items-center w-72 max-w-72 animate-in fade-in slide-in-from-bottom-6 duration-700"
+              className="cursor-pointer flex flex-col p-2 items-center w-72 max-w-72 animate-in fade-in slide-in-from-bottom-6 duration-700"
               style={{ animationDelay: `${600 + index * 150}ms` }}
             >
               <div className="w-40 h-40 md:w-48 md:h-48 lg:w-56 lg:h-56 flex-shrink-0 relative">
                 {/* give image shadow down like light */}
                 <img
-                  src="./example1.png"
+                  src={meal.image_url || "./example1.png"}
                   alt={meal.name}
                   className="w-full h-full object-cover rounded-lg shadow-lg animate-in zoom-in duration-700"
                   style={{ animationDelay: `${700 + index * 150}ms` }}
