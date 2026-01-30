@@ -1,28 +1,5 @@
 [
-    { "id": 1, "name": "Casablanca" },
-    { "id": 2, "name": "Rabat" },
-    { "id": 3, "name": "Marrakech" },
-    { "id": 4, "name": "Fès" },
-    { "id": 5, "name": "Tanger" },
-    { "id": 6, "name": "Agadir" },
-    { "id": 7, "name": "Meknès" },
-    { "id": 8, "name": "Oujda" },
-    { "id": 9, "name": "Kenitra" },
-    { "id": 10, "name": "Tétouan" },
-    { "id": 11, "name": "Safi" },
-    { "id": 12, "name": "El Jadida" },
-    { "id": 13, "name": "Béni Mellal" },
-    { "id": 14, "name": "Nador" },
-    { "id": 15, "name": "Taza" },
-    { "id": 16, "name": "Khouribga" },
-    { "id": 17, "name": "Settat" },
-    { "id": 18, "name": "Laâyoune" },
-    { "id": 19, "name": "Mohammédia" },
-    { "id": 20, "name": "Errachidia" },
-    { "id": 21, "name": "Kénitra" },
-    { "id": 22, "name": "Ouarzazate" },
-    { "id": 23, "name": "Larache" },
-    { "id": 24, "name": "Guelmim" },
-    { "id": 25, "name": "Al Hoceima" }
+    { "id": 1, "name": "Rabat" },
+    { "id": 2, "name": "Sale" }
+ 
   ]
-  
