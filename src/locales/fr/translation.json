@@ -461,6 +461,8 @@
   },
   "menu.currency": "MAD",
   "menu_plans": "Membership",
+  "menu_for_teams": "Pour les Équipes",
+  "menu_for_collab": "Pour Collab",
   "landing": {
     "rotating_menu_title": "MENU ROTATIF",
     "rotating_menu_desc1": "Nouveaux plats délicieux",
@@ -472,6 +474,8 @@
     "convenient_title1": "PRATIQUE",
     "convenient_title2": "LIVRAISON",
     "convenient_desc1": "Repas polyvalents à emporter",
-    "convenient_desc2": "repas"
+    "convenient_desc2": "repas",
+    "video_title": "VOIR PREPME EN ACTION",
+    "video_description": "Regardez comment nous préparons vos repas sains et les livrons frais à votre porte"
   }
 }

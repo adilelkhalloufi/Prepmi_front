@@ -6,7 +6,7 @@ import { LangToggle } from "./lang-toggle";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store";
-import logo from "../assets/Prepme.svg";
+import logo from "../assets/Prepme-simple.svg";
 interface RouteProps {
   href: string;
   label: string;
@@ -22,22 +22,23 @@ export function Header() {
       label: t("menu_meals"),
     },
     {
-      href: "#how-it-works",
-      label: t("menu_how_it_works"),
-    },
-    {
       href: webRoutes.membership_plans,
       label: t("menu_plans"),
     },
     {
-      href: "#about",
-      label: t("menu_about"),
+      href: webRoutes.for_teams,
+      label: t("menu_for_teams"),
     },
+    {
+      href: webRoutes.for_collab,
+      label: t("menu_for_collab"),
+    },
+   
 
   ];
   const admin = useSelector((state: RootState) => state.admin?.user);
   return (
-    <header className="fixed z-50 top-0 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+    <header className="fixed left-1/2 -translate-x-1/2 z-50 mt-7 rounded-lg top-0 w-3/4 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-16 items-center justify-between">
         <div className="flex items-center space-x-4">
           <span className="text-xl font-bold flex items-center">
@@ -46,7 +47,7 @@ export function Header() {
               href="/"
               className="ml-2 font-bold text-xl flex text-center"
             >
-              <img src={logo} alt="Prepme" className="h-16 w-auto" />
+              <img src={logo} alt="Prepme" className="h-16 w-auto" width="400" height="120" />
             </a>
           </span>
 
@@ -65,7 +66,9 @@ export function Header() {
         </nav>
         <div className="flex items-center space-x-4">
           {/* <ThemeSwitcher /> */}
+
           <LangToggle />
+
 
           {/* <Button
             variant="ghost"
@@ -105,8 +108,9 @@ export function Header() {
               }}
             >
               <IconLogin className="mr-2 w-5 h-5" />
-
-              <span className="hidden sm:inline">{t("menu_login")}</span>
+              <span className="hidden sm:inline">
+                {t("menu_login")}
+              </span>
             </Button>
           )}
 
@@ -115,6 +119,7 @@ export function Header() {
             onClick={() => {
               navigate(webRoutes.join_now);
             }}
+            className="hidden md:flex"
           >
             {t("menu_get_started")}
           </Button>

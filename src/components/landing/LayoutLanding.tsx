@@ -1,6 +1,6 @@
 import { Outlet } from "react-router-dom";
 import { ScrollToTop } from "../ScrollToTop";
-import { Header2 } from "../Header2";
+import { Header } from "../Header";
 
 export default function LayoutLanding() {
 
@@ -9,7 +9,7 @@ export default function LayoutLanding() {
     <>
       <div className="w-full">
 
-        <Header2 />
+        <Header />
       </div>
 
       <Outlet />

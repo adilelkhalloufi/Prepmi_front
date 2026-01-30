@@ -6,7 +6,7 @@ import { LangToggle } from "./lang-toggle";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store";
-import logo from "../assets/Prepme.svg";
+import logo from "../assets/Prepme-simple.svg";
 interface RouteProps {
   href: string;
   label: string;
@@ -22,17 +22,18 @@ export function Header2() {
       label: t("menu_meals"),
     },
     {
-      href: "#how-it-works",
-      label: t("menu_how_it_works"),
-    },
-    {
       href: webRoutes.membership_plans,
       label: t("menu_plans"),
     },
     {
-      href: "#about",
-      label: t("menu_about"),
+      href: webRoutes.for_teams,
+      label: t("menu_for_teams"),
     },
+    {
+      href: webRoutes.for_collab,
+      label: t("menu_for_collab"),
+    },
+   
 
   ];
   const admin = useSelector((state: RootState) => state.admin?.user);
@@ -46,7 +47,7 @@ export function Header2() {
               href="/"
               className="ml-2 font-bold text-xl flex text-center"
             >
-              <img src={logo} alt="Prepme" className="h-16 w-auto" />
+              <img src={logo} alt="Prepme" className="h-16 w-auto" width="400" height="120" />
             </a>
           </span>
 

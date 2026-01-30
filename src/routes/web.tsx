@@ -54,6 +54,8 @@ export const webRoutes = {
   privacy_policy: '/privacy-policy',
   terms_service: '/terms-of-service',
   cookie_settings: '/cookie-settings',
+  for_teams: '/for-teams',
+  for_collab: '/for-collab',
 
 
 };

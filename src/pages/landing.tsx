@@ -83,6 +83,29 @@ const Index = () => {
           </p>
         </div>
       </div>
+      {/* Video Section */}
+      <div className="container my-16 pt-8">
+        <div className="text-center mb-8">
+          <h2 className="text-3xl font-bold text-primary mb-4">
+            {t("landing.video_title", "SEE PREPME IN ACTION")}
+          </h2>
+          <p className="text-primary/80 text-lg max-w-2xl mx-auto">
+            {t("landing.video_description", "Watch how we prepare your healthy meals and deliver them fresh to your door")}
+          </p>
+        </div>
+        <div className="flex justify-center">
+          <div className="w-full max-w-4xl aspect-video rounded-lg overflow-hidden shadow-2xl">
+            <iframe
+              src="https://www.youtube.com/embed/CRd8dHqU1AM?si=o3QPG9FPq-QEeL4c"
+              title="PrepMe - Healthy Meals Made Easy"
+              frameBorder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+              className="w-full h-full"
+            ></iframe>
+          </div>
+        </div>
+      </div>
       {/* Meals display */}
       <div className=" bg-primary  py-10 flex flex-col items-center">
         {/* add button see all the menu */}

@@ -589,6 +589,8 @@
   },
   "menu.currency": "MAD",
   "menu_plans": "Adhésion",
+  "menu_for_teams": "For Teams",
+  "menu_for_collab": "For Collab",
   "landing": {
     "rotating_menu_title": "ROTATING-MENU",
     "rotating_menu_desc1": "New delicious dishes",
@@ -600,6 +602,8 @@
     "convenient_title1": "CONVENIENT",
     "convenient_title2": "DELIVERY",
     "convenient_desc1": "On-the-go versatile",
-    "convenient_desc2": "meals"
+    "convenient_desc2": "meals",
+    "video_title": "SEE PREPME IN ACTION",
+    "video_description": "Watch how we prepare your healthy meals and deliver them fresh to your door"
   }
 }
