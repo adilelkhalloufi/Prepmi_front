@@ -159,6 +159,14 @@ const MembershipCheckout = loadable(() => import("../pages/membership-checkout")
   fallback: fallbackElement,
 });
 
+const ForTeams = loadable(() => import("../pages/for-teams"), {
+  fallback: fallbackElement,
+});
+
+const ForCollab = loadable(() => import("../pages/for-collab"), {
+  fallback: fallbackElement,
+});
+
 const DeliverySlotsIndex = loadable(() => import('../pages/dashboard/delivery-slots/index'), {
   fallback: fallbackElement,
 });
@@ -199,6 +207,14 @@ export const browserRouter = createBrowserRouter([
       {
         path: webRoutes.membership_plans,
         element: <MembershipPlans />,
+      },
+      {
+        path: webRoutes.for_teams,
+        element: <ForTeams />,
+      },
+      {
+        path: webRoutes.for_collab,
+        element: <ForCollab />,
       },
       {
         path: webRoutes.register,
