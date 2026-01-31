@@ -37,105 +37,111 @@ export const sidelinks: SideLink[] = [
     role: [RoleEnum.ADMIN, RoleEnum.CUISINIER, RoleEnum.LIVREUR, RoleEnum.CLIENT]
   },
   {
-    title: 'Repas',
+    title: 'Gestion des repas',
     label: '',
-    href: webRoutes.dashboard_meals,
+    href: '',
     icon: <IconBox size={18} />,
-    role: [RoleEnum.ADMIN]
-
+    role: [RoleEnum.ADMIN],
+    sub: [
+      {
+        title: 'Repas',
+        href: webRoutes.dashboard_meals,
+        icon: <IconBox size={18} />
+      },
+      {
+        title: 'Plans hebdomadaires',
+        href: webRoutes.dashboard_weekly_menus,
+        icon: <IconCalendarMonth size={18} />
+      },
+      {
+        title: 'Catégories',
+        href: webRoutes.dashboard_categories,
+        icon: <IconHeart size={18} />
+      }
+    ]
   },
-
   {
-    title: 'Weekly Plans',
+    title: 'Gestion des utilisateurs',
     label: '',
-    href: webRoutes.dashboard_weekly_menus,
-    icon: <IconCalendarMonth size={18} />,
-    role: [RoleEnum.ADMIN]
-
-  },
-
-  {
-    title: 'Utilisateurs',
-    label: '',
-    href: webRoutes.dashboard_users,
+    href: '',
     icon: <IconUser size={18} />,
-    role: [RoleEnum.ADMIN]
-
+    role: [RoleEnum.ADMIN],
+    sub: [
+      {
+        title: 'Utilisateurs',
+        href: webRoutes.dashboard_users,
+        icon: <IconUser size={18} />
+      },
+      {
+        title: 'Collaborateurs',
+        href: webRoutes.dashboard_collaborators,
+        icon: <IconUsers size={18} />
+      },
+      {
+        title: 'Partenaires',
+        href: webRoutes.dashboard_partners,
+        icon: <IconUser size={18} />
+      }
+    ]
   },
   {
-    title: 'Commandes',
+    title: 'Commandes & opérations',
     label: '',
-    href: webRoutes.dashboard_orders,
+    href: '',
     icon: <IconShoppingCart size={18} />,
-    role: [RoleEnum.ADMIN, RoleEnum.CLIENT]
-
+    role: [RoleEnum.ADMIN, RoleEnum.CUISINIER, RoleEnum.CLIENT],
+    sub: [
+      {
+        title: 'Commandes',
+        href: webRoutes.dashboard_orders,
+        icon: <IconShoppingCart size={18} />,
+        role: [RoleEnum.ADMIN, RoleEnum.CLIENT]
+      },
+      {
+        title: 'Préparation repas',
+        href: webRoutes.dashboard_meal_preparation,
+        icon: <IconChefHat size={18} />,
+        role: [RoleEnum.ADMIN, RoleEnum.CUISINIER]
+      },
+      {
+        title: 'Créneaux livraison',
+        href: webRoutes.dashboard_delivery_slots,
+        icon: <IconSettings size={18} />,
+        role: [RoleEnum.ADMIN]
+      }
+    ]
   },
   {
-    title: 'Préparation Repas',
+    title: 'Business & abonnements',
     label: '',
-    href: webRoutes.dashboard_meal_preparation,
-    icon: <IconChefHat size={18} />,
-    role: [RoleEnum.ADMIN, RoleEnum.CUISINIER]
-
-  },
-  {
-    title: 'Plans',
-    label: '',
-    href: webRoutes.dashboard_plans,
-    icon: <IconFileInvoice size={18} />,
-    role: [RoleEnum.ADMIN]
-  },
-  {
-    title: 'Catégories',
-    label: '',
-    href: webRoutes.dashboard_categories,
-    icon: <IconHeart size={18} />,
-    role: [RoleEnum.ADMIN]
-  },
-  {
-    title: 'Rewards',
-    label: '',
-    href: webRoutes.dashboard_rewards,
-    icon: <IconSettings2 size={18} />,
-    role: [RoleEnum.ADMIN, RoleEnum.CLIENT]
-  },
-  {
-    title: 'Membership Plans',
-    label: '',
-    href: webRoutes.dashboard_membership_plans,
+    href: '',
     icon: <IconCreditCard size={18} />,
-    role: [RoleEnum.ADMIN]
-  },
-  {
-    title: 'Memberships',
-    label: '',
-    href: webRoutes.dashboard_memberships,
-    icon: <IconUsers size={18} />,
-    role: [RoleEnum.ADMIN, RoleEnum.CLIENT]
-  },
-  {
-    title: 'Créneaux de livraison',
-    label: '',
-    href: webRoutes.dashboard_delivery_slots,
-    icon: <IconSettings size={18} />,
-    role: [RoleEnum.ADMIN]
-  },
-  // show collaborators and partners only to admin
-  {
-    title: 'Collaborateurs',
-    label: '',
-    href: webRoutes.dashboard_collaborators,
-    icon: <IconUsers size={18} />,
-    role: [RoleEnum.ADMIN]
-  },
-  {
-    title: 'Partenaires',
-    label: '',
-    href: webRoutes.dashboard_partners,
-    icon: <IconUser size={18} />,
-    role: [RoleEnum.ADMIN]
+    role: [RoleEnum.ADMIN, RoleEnum.CLIENT],
+    sub: [
+      {
+        title: 'Plans tarifaires',
+        href: webRoutes.dashboard_plans,
+        icon: <IconFileInvoice size={18} />,
+        role: [RoleEnum.ADMIN]
+      },
+      {
+        title: 'Plans d\'adhésion',
+        href: webRoutes.dashboard_membership_plans,
+        icon: <IconCreditCard size={18} />,
+        role: [RoleEnum.ADMIN]
+      },
+      {
+        title: 'Adhésions',
+        href: webRoutes.dashboard_memberships,
+        icon: <IconUsers size={18} />,
+        role: [RoleEnum.ADMIN, RoleEnum.CLIENT]
+      },
+      {
+        title: 'Récompenses',
+        href: webRoutes.dashboard_rewards,
+        icon: <IconSettings2 size={18} />,
+        role: [RoleEnum.ADMIN, RoleEnum.CLIENT]
+      }
+    ]
   }
-
-
-
 ]
