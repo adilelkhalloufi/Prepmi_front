@@ -30,4 +30,8 @@ export const apiRoutes = {
   // Delivery slots routes
   deliverySlots: `${API_URL}/delivery-slots`,
 
+
+
+  teamPartnerships: `${API_URL}/team-partnerships`,
+  collaborations: `${API_URL}/collaborations`,
 };

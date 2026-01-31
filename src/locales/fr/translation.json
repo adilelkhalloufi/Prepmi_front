@@ -515,7 +515,28 @@
     "cta_title": "PRÊT À NOURRIR VOTRE ÉQUIPE ?",
     "cta_description": "Contactez-nous aujourd'hui pour en savoir plus sur nos solutions de livraison de repas d'entreprise.",
     "start_today": "COMMENCER AUJOURD'HUI",
-    "call_us": "APPELEZ-NOUS"
+    "call_us": "APPELEZ-NOUS",
+    "contact_title": "Contactez-nous pour les repas d'entreprise",
+    "form": {
+      "job_title": "Titre du poste (Optionnel)",
+      "email": "Email",
+      "first_name": "Prénom",
+      "last_name": "Nom de famille",
+      "company_name": "Nom de l'entreprise",
+      "company_website": "Site web de l'entreprise (Optionnel)",
+      "partnership_type": "Type de partenariat",
+      "team_members_per_week": "Membres de l'équipe par semaine",
+      "products_interested": "Produits intéressés",
+      "heard_about_us": "Comment avez-vous entendu parler de nous ? (Optionnel)",
+      "accept_terms": "J'accepte les termes et conditions",
+      "accept_communications": "J'accepte de recevoir des communications",
+      "submit": "Soumettre",
+      "select_partnership_type": "Sélectionner le type de partenariat",
+      "select_range": "Sélectionner la plage",
+      "select_option": "Sélectionner une option",
+      "list_products": "Lister les produits qui vous intéressent",
+      "https_example": "https://exemple.com"
+    }
   },
   "for_collab": {
     "hero_title": "DEVENEZ PARTENAIRE PREPME",
@@ -562,6 +583,18 @@
     "stat1_desc": "Partenaires Actifs",
     "stat2_desc": "Gains des Partenaires",
     "stat3_desc": "Clients Parrainés",
-    "stat4_desc": "Satisfaction des Partenaires"
+    "stat4_desc": "Satisfaction des Partenaires",
+    "form": {
+      "title": "Formulaire de Candidature",
+      "full_name": "Nom Complet",
+      "email": "Email",
+      "phone": "Téléphone",
+      "country": "Pays",
+      "social_url_1": "URL Réseau Social 1",
+      "social_url_2": "URL Réseau Social 2 (Optionnel)",
+      "social_url_3": "URL Réseau Social 3 (Optionnel)",
+      "https_example": "https://exemple.com",
+      "submit": "Soumettre la Candidature"
+    }
   }
 }

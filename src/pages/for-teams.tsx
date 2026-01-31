@@ -1,18 +1,86 @@
 import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
-import { IconCheck, IconTruck, IconUsers, IconClock, IconHeart, IconStar } from "@tabler/icons-react";
+import { IconCheck, IconUsers, IconClock, IconHeart, IconStar } from "@tabler/icons-react";
 import { webRoutes } from "@/routes/web";
 import { useNavigate } from "react-router-dom";
 import Footer from "@/components/Footer";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Textarea } from "@/components/ui/textarea";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { apiRoutes } from "@/routes/api";
+import http from "@/utils/http";
+import { toast } from "sonner";
+
+const formSchema = z.object({
+  job_title: z.string().optional(),
+  email: z.string().email("Invalid email address"),
+  first_name: z.string().min(1, "First name is required"),
+  last_name: z.string().min(1, "Last name is required"),
+  company_name: z.string().min(1, "Company name is required"),
+  company_website: z.string().url("Invalid URL").optional().or(z.literal("")),
+  partnership_type: z.string().min(1, "Partnership type is required"),
+  team_members_per_week: z.string().min(1, "Team members per week is required"),
+  products_interested: z.string().min(1, "Products interested is required"),
+  heard_about_us: z.string().optional(),
+  accept_terms: z.boolean().refine((val) => val === true, "You must accept the terms"),
+  accept_communications: z.boolean(),
+});
+
+type FormData = z.infer<typeof formSchema>;
 
 const ForTeams = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
 
+  const form = useForm<FormData>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      job_title: "",
+      email: "",
+      first_name: "",
+      last_name: "",
+      company_name: "",
+      company_website: "",
+      partnership_type: "",
+      team_members_per_week: "",
+      products_interested: "",
+      heard_about_us: "",
+      accept_terms: false,
+      accept_communications: false,
+    },
+  });
+
+  const onSubmit = async (data: FormData) => {
+    try {
+      const response = await http.post(apiRoutes.teamPartnerships, data);
+      toast.success("Form submitted successfully!");
+      console.log('Success:', response.data);
+      // Reset form or navigate
+      form.reset();
+    } catch (error) {
+      toast.error("Failed to submit form. Please try again.");
+      console.error('Error:', error);
+    }
+  };
+
   return (
     <main>
       {/* Hero Section */}
-      <section className="bg-gradient-to-br from-primary/10 to-primary/5 py-32 ">
+      <section className="relative bg-gradient-to-br from-primary/10 to-primary/5 py-20 overflow-hidden pt-32 ">
+        <div className="absolute inset-0 bg-cover bg-center opacity-10" style={{ backgroundImage: 'url(https://images.unsplash.com/photo-1490645935967-10de6ba17061?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2053&q=80)' }}></div>
         <div className="container mx-auto px-4">
           <div className="text-center max-w-4xl mx-auto">
             <h1 className="text-4xl md:text-5xl font-bold text-primary mb-6">
@@ -221,25 +289,220 @@ const ForTeams = () => {
           <p className="text-xl mb-8 opacity-90">
             {t("for_teams.cta_description", "Contact us today to learn more about our corporate meal delivery solutions.")}
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button
-              size="lg"
-              variant="secondary"
-              className="bg-white text-primary hover:bg-gray-100 px-8 py-3"
-              onClick={() => navigate(webRoutes.join_now)}
-            >
-              {t("for_teams.start_today", "START TODAY")}
-            </Button>
-            <Button
-              size="lg"
-              variant="outline"
-              className="border-white hover:bg-white text-primary px-8 py-3 hover:text-white hover:bg-primary"
-              onClick={() => window.open('tel:+212600000000', '_self')}
-            >
-              <IconTruck className="w-5 h-5 mr-2" />
-              {t("for_teams.call_us", "CALL US")}
-            </Button>
-          </div>
+          <Card className="bg-white text-black p-6 max-w-2xl mx-auto mb-8">
+            <CardHeader>
+              <CardTitle>{t("for_teams.contact_title", "Contact Us for Corporate Meals")}</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <Form {...form}>
+                <form onSubmit={form.handleSubmit(onSubmit)} className="grid grid-cols-2 gap-4">
+                  <FormField
+                    control={form.control}
+                    name="job_title"
+                    render={({ field }) => (
+                      <FormItem className="col-span-2">
+                        <FormLabel className="text-left">{t("for_teams.form.job_title", "Job Title (Optional)")}</FormLabel>
+                        <FormControl>
+                          <Input placeholder={t("for_teams.form.job_title", "Job Title")} {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="email"
+                    render={({ field }) => (
+                      <FormItem className="col-span-2">
+                        <FormLabel className="text-left">{t("for_teams.form.email", "Email")}</FormLabel>
+                        <FormControl>
+                          <Input type="email" placeholder={t("for_teams.form.email", "Email")} {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="first_name"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="text-left">{t("for_teams.form.first_name", "First Name")}</FormLabel>
+                        <FormControl>
+                          <Input placeholder={t("for_teams.form.first_name", "First Name")} {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="last_name"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="text-left">{t("for_teams.form.last_name", "Last Name")}</FormLabel>
+                        <FormControl>
+                          <Input placeholder={t("for_teams.form.last_name", "Last Name")} {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="company_name"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="text-left">{t("for_teams.form.company_name", "Company Name")}</FormLabel>
+                        <FormControl>
+                          <Input placeholder={t("for_teams.form.company_name", "Company Name")} {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="company_website"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="text-left">{t("for_teams.form.company_website", "Company Website (Optional)")}</FormLabel>
+                        <FormControl>
+                          <Input placeholder={t("for_teams.form.https_example", "https://example.com")} {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="partnership_type"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="text-left">{t("for_teams.form.partnership_type", "Partnership Type")}</FormLabel>
+                        <Select onValueChange={field.onChange} defaultValue={field.value}>
+                          <FormControl>
+                            <SelectTrigger>
+                              <SelectValue placeholder={t("for_teams.form.select_partnership_type", "Select partnership type")} />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            <SelectItem value="vendor">Vendor</SelectItem>
+                            <SelectItem value="partner">Partner</SelectItem>
+                            <SelectItem value="client">Client</SelectItem>
+                          </SelectContent>
+                        </Select>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="team_members_per_week"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="text-left">{t("for_teams.form.team_members_per_week", "Team Members per Week")}</FormLabel>
+                        <Select onValueChange={field.onChange} defaultValue={field.value}>
+                          <FormControl>
+                            <SelectTrigger>
+                              <SelectValue placeholder={t("for_teams.form.select_range", "Select range")} />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            <SelectItem value="1-10">1-10</SelectItem>
+                            <SelectItem value="11-50">11-50</SelectItem>
+                            <SelectItem value="51-100">51-100</SelectItem>
+                            <SelectItem value="100+">100+</SelectItem>
+                          </SelectContent>
+                        </Select>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="products_interested"
+                    render={({ field }) => (
+                      <FormItem className="col-span-2">
+                        <FormLabel className="text-left">{t("for_teams.form.products_interested", "Products Interested")}</FormLabel>
+                        <FormControl>
+                          <Textarea placeholder={t("for_teams.form.list_products", "List products you're interested in")} {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="heard_about_us"
+                    render={({ field }) => (
+                      <FormItem className="col-span-2">
+                        <FormLabel className="text-left">{t("for_teams.form.heard_about_us", "How did you hear about us? (Optional)")}</FormLabel>
+                        <Select onValueChange={field.onChange} defaultValue={field.value}>
+                          <FormControl>
+                            <SelectTrigger>
+                              <SelectValue placeholder={t("for_teams.form.select_option", "Select option")} />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            <SelectItem value="social_media">Social Media</SelectItem>
+                            <SelectItem value="referral">Referral</SelectItem>
+                            <SelectItem value="search">Search Engine</SelectItem>
+                            <SelectItem value="advertisement">Advertisement</SelectItem>
+                          </SelectContent>
+                        </Select>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="accept_terms"
+                    render={({ field }) => (
+                      <FormItem className="col-span-2 flex flex-row items-start space-x-3 space-y-0">
+                        <FormControl>
+                          <Checkbox
+                            checked={field.value}
+                            onCheckedChange={field.onChange}
+                          />
+                        </FormControl>
+                        <div className="space-y-1 leading-none">
+                          <FormLabel className="text-left">
+                            {t("for_teams.form.accept_terms", "I accept the terms and conditions")}
+                          </FormLabel>
+                          <FormMessage />
+                        </div>
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="accept_communications"
+                    render={({ field }) => (
+                      <FormItem className="col-span-2 flex flex-row items-start space-x-3 space-y-0">
+                        <FormControl>
+                          <Checkbox
+                            checked={field.value}
+                            onCheckedChange={field.onChange}
+                          />
+                        </FormControl>
+                        <div className="space-y-1 leading-none">
+                          <FormLabel className="text-left">
+                            {t("for_teams.form.accept_communications", "I agree to receive communications")}
+                          </FormLabel>
+                          <FormMessage />
+                        </div>
+                      </FormItem>
+                    )}
+                  />
+                  <Button type="submit" className="col-span-2 w-full">
+                    {t("for_teams.form.submit", "Submit")}
+                  </Button>
+                </form>
+              </Form>
+            </CardContent>
+          </Card>
+
         </div>
       </section>
 

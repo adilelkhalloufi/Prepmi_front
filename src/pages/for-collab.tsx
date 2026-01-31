@@ -1,16 +1,69 @@
 import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
-import { IconStar } from "@tabler/icons-react";
+import { IconStar, IconTarget, IconLeaf, IconCurrencyDollar, IconClipboardList, IconShieldCheck, IconShare, IconAward, IconUsers, IconUserPlus, IconHeart, IconUser } from "@tabler/icons-react";
 import Footer from "@/components/Footer";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { apiRoutes } from "@/routes/api";
+import http from "@/utils/http";
+import { toast } from "sonner";
+
+const formSchema = z.object({
+  full_name: z.string().min(1, "Full name is required"),
+  social_url_1: z.string().url("Invalid URL"),
+  social_url_2: z.string().url("Invalid URL").optional().or(z.literal("")),
+  social_url_3: z.string().url("Invalid URL").optional().or(z.literal("")),
+  email: z.string().email("Invalid email address"),
+  phone: z.string().min(1, "Phone is required"),
+  country: z.string().min(1, "Country is required"),
+});
+
+type FormData = z.infer<typeof formSchema>;
 
 const ForCollab = () => {
   const { t } = useTranslation();
 
+  const form = useForm<FormData>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      full_name: "",
+      social_url_1: "",
+      social_url_2: "",
+      social_url_3: "",
+      email: "",
+      phone: "",
+      country: "",
+    },
+  });
+
+  const onSubmit = async (data: FormData) => {
+    try {
+      const response = await http.post(apiRoutes.collaborations, data);
+      toast.success("Application submitted successfully!");
+      console.log('Success:', response.data);
+      form.reset();
+    } catch (error) {
+      toast.error("Failed to submit application. Please try again.");
+      console.error('Error:', error);
+    }
+  };
+
   return (
     <main>
       {/* Hero Section */}
-      <section className="relative bg-gradient-to-br from-primary/10 to-primary/5 py-20 overflow-hidden">
-        <div className="absolute inset-0 bg-cover bg-center opacity-10" style={{backgroundImage: 'url(https://images.unsplash.com/photo-1490645935967-10de6ba17061?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2053&q=80)'}}></div>
+      <section className="relative bg-gradient-to-br from-primary/10 to-primary/5 py-20 overflow-hidden pt-32">
+        <div className="absolute inset-0 bg-cover bg-center opacity-10" style={{ backgroundImage: 'url(https://images.unsplash.com/photo-1490645935967-10de6ba17061?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2053&q=80)' }}></div>
         <div className="relative container mx-auto px-4">
           <div className="text-center max-w-4xl mx-auto">
             <h1 className="text-4xl md:text-5xl font-bold text-primary mb-6">
@@ -43,12 +96,8 @@ const ForCollab = () => {
 
           <div className="grid md:grid-cols-3 gap-8">
             <div className="text-center p-6 rounded-lg bg-primary/5 hover:bg-primary/10 transition-colors">
-              <div className="w-24 h-24 mx-auto mb-4 rounded-full overflow-hidden">
-                <img
-                  src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2080&q=80"
-                  alt="Healthy meal results"
-                  className="w-full h-full object-cover"
-                />
+              <div className="w-24 h-24 mx-auto mb-4 rounded-full bg-primary/10 flex items-center justify-center">
+                <IconTarget className="w-12 h-12 text-primary" />
               </div>
               <h3 className="text-xl font-semibold text-primary mb-3">
                 {t("for_collab.benefit1_title", "Achieve Results")}
@@ -59,12 +108,8 @@ const ForCollab = () => {
             </div>
 
             <div className="text-center p-6 rounded-lg bg-primary/5 hover:bg-primary/10 transition-colors">
-              <div className="w-24 h-24 mx-auto mb-4 rounded-full overflow-hidden">
-                <img
-                  src="https://images.unsplash.com/photo-1490645935967-10de6ba17061?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2053&q=80"
-                  alt="Sustainable healthy eating"
-                  className="w-full h-full object-cover"
-                />
+              <div className="w-24 h-24 mx-auto mb-4 rounded-full bg-primary/10 flex items-center justify-center">
+                <IconLeaf className="w-12 h-12 text-primary" />
               </div>
               <h3 className="text-xl font-semibold text-primary mb-3">
                 {t("for_collab.benefit2_title", "Sustainable Growth")}
@@ -75,12 +120,8 @@ const ForCollab = () => {
             </div>
 
             <div className="text-center p-6 rounded-lg bg-primary/5 hover:bg-primary/10 transition-colors">
-              <div className="w-24 h-24 mx-auto mb-4 rounded-full overflow-hidden">
-                <img
-                  src="https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1981&q=80"
-                  alt="Healthy meal rewards"
-                  className="w-full h-full object-cover"
-                />
+              <div className="w-24 h-24 mx-auto mb-4 rounded-full bg-primary/10 flex items-center justify-center">
+                <IconCurrencyDollar className="w-12 h-12 text-primary" />
               </div>
               <h3 className="text-xl font-semibold text-primary mb-3">
                 {t("for_collab.benefit3_title", "Generate Revenue")}
@@ -107,12 +148,8 @@ const ForCollab = () => {
 
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
             <div className="text-center">
-              <div className="w-20 h-20 mx-auto mb-4 rounded-full overflow-hidden">
-                <img
-                  src="https://images.unsplash.com/photo-1546793665-c74683f339c1?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1974&q=80"
-                  alt="Healthy meal application"
-                  className="w-full h-full object-cover"
-                />
+              <div className="w-20 h-20 mx-auto mb-4 rounded-full bg-primary/10 flex items-center justify-center">
+                <IconClipboardList className="w-10 h-10 text-primary" />
               </div>
               <div className="w-16 h-16 bg-primary rounded-full flex items-center justify-center mx-auto mb-4 text-white font-bold text-xl">
                 1
@@ -126,12 +163,8 @@ const ForCollab = () => {
             </div>
 
             <div className="text-center">
-              <div className="w-20 h-20 mx-auto mb-4 rounded-full overflow-hidden">
-                <img
-                  src="https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1980&q=80"
-                  alt="Fresh healthy meals"
-                  className="w-full h-full object-cover"
-                />
+              <div className="w-20 h-20 mx-auto mb-4 rounded-full bg-primary/10 flex items-center justify-center">
+                <IconShieldCheck className="w-10 h-10 text-primary" />
               </div>
               <div className="w-16 h-16 bg-primary rounded-full flex items-center justify-center mx-auto mb-4 text-white font-bold text-xl">
                 2
@@ -145,12 +178,8 @@ const ForCollab = () => {
             </div>
 
             <div className="text-center">
-              <div className="w-20 h-20 mx-auto mb-4 rounded-full overflow-hidden">
-                <img
-                  src="https://images.unsplash.com/photo-1559847844-5315695dadae?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1964&q=80"
-                  alt="Sharing healthy meals"
-                  className="w-full h-full object-cover"
-                />
+              <div className="w-20 h-20 mx-auto mb-4 rounded-full bg-primary/10 flex items-center justify-center">
+                <IconShare className="w-10 h-10 text-primary" />
               </div>
               <div className="w-16 h-16 bg-primary rounded-full flex items-center justify-center mx-auto mb-4 text-white font-bold text-xl">
                 3
@@ -164,12 +193,8 @@ const ForCollab = () => {
             </div>
 
             <div className="text-center">
-              <div className="w-20 h-20 mx-auto mb-4 rounded-full overflow-hidden">
-                <img
-                  src="https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1981&q=80"
-                  alt="Healthy meal rewards"
-                  className="w-full h-full object-cover"
-                />
+              <div className="w-20 h-20 mx-auto mb-4 rounded-full bg-primary/10 flex items-center justify-center">
+                <IconAward className="w-10 h-10 text-primary" />
               </div>
               <div className="w-16 h-16 bg-primary rounded-full flex items-center justify-center mx-auto mb-4 text-white font-bold text-xl">
                 4
@@ -200,11 +225,7 @@ const ForCollab = () => {
           <div className="grid md:grid-cols-4 gap-8">
             <div className="text-center">
               <div className="w-20 h-20 mx-auto mb-4 bg-primary rounded-full flex items-center justify-center">
-                <img
-                  src="https://images.unsplash.com/photo-1551782450-17144efb5723?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1964&q=80"
-                  alt="Healthy meal partners"
-                  className="w-12 h-12 rounded-full object-cover"
-                />
+                <IconUsers className="w-10 h-10 text-white" />
               </div>
               <div className="text-3xl font-bold text-primary mb-2">500+</div>
               <p className="text-primary/70">
@@ -214,11 +235,7 @@ const ForCollab = () => {
 
             <div className="text-center">
               <div className="w-20 h-20 mx-auto mb-4 bg-primary rounded-full flex items-center justify-center">
-                <img
-                  src="https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1981&q=80"
-                  alt="Healthy meal earnings"
-                  className="w-12 h-12 rounded-full object-cover"
-                />
+                <IconCurrencyDollar className="w-10 h-10 text-white" />
               </div>
               <div className="text-3xl font-bold text-primary mb-2">$2M+</div>
               <p className="text-primary/70">
@@ -228,11 +245,7 @@ const ForCollab = () => {
 
             <div className="text-center">
               <div className="w-20 h-20 mx-auto mb-4 bg-primary rounded-full flex items-center justify-center">
-                <img
-                  src="https://images.unsplash.com/photo-1490645935967-10de6ba17061?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2053&q=80"
-                  alt="Healthy meal clients"
-                  className="w-12 h-12 rounded-full object-cover"
-                />
+                <IconUserPlus className="w-10 h-10 text-white" />
               </div>
               <div className="text-3xl font-bold text-primary mb-2">10K+</div>
               <p className="text-primary/70">
@@ -242,11 +255,7 @@ const ForCollab = () => {
 
             <div className="text-center">
               <div className="w-20 h-20 mx-auto mb-4 bg-primary rounded-full flex items-center justify-center">
-                <img
-                  src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2080&q=80"
-                  alt="Healthy meal satisfaction"
-                  className="w-12 h-12 rounded-full object-cover"
-                />
+                <IconHeart className="w-10 h-10 text-white" />
               </div>
               <div className="text-3xl font-bold text-primary mb-2">98%</div>
               <p className="text-primary/70">
@@ -271,12 +280,8 @@ const ForCollab = () => {
 
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
             <div className="bg-gray-50 p-6 rounded-lg text-center">
-              <div className="w-16 h-16 mx-auto mb-4 rounded-full overflow-hidden">
-                <img
-                  src="https://images.unsplash.com/photo-1494790108755-2616b612b786?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1974&q=80"
-                  alt="Sarah M."
-                  className="w-full h-full object-cover"
-                />
+              <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-primary/10 flex items-center justify-center">
+                <IconUser className="w-8 h-8 text-primary" />
               </div>
               <div className="flex justify-center mb-4">
                 {[...Array(5)].map((_, i) => (
@@ -295,12 +300,8 @@ const ForCollab = () => {
             </div>
 
             <div className="bg-gray-50 p-6 rounded-lg text-center">
-              <div className="w-16 h-16 mx-auto mb-4 rounded-full overflow-hidden">
-                <img
-                  src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80"
-                  alt="Ahmed K."
-                  className="w-full h-full object-cover"
-                />
+              <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-primary/10 flex items-center justify-center">
+                <IconUser className="w-8 h-8 text-primary" />
               </div>
               <div className="flex justify-center mb-4">
                 {[...Array(5)].map((_, i) => (
@@ -319,12 +320,8 @@ const ForCollab = () => {
             </div>
 
             <div className="bg-gray-50 p-6 rounded-lg text-center">
-              <div className="w-16 h-16 mx-auto mb-4 rounded-full overflow-hidden">
-                <img
-                  src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80"
-                  alt="Fatima R."
-                  className="w-full h-full object-cover"
-                />
+              <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-primary/10 flex items-center justify-center">
+                <IconUser className="w-8 h-8 text-primary" />
               </div>
               <div className="flex justify-center mb-4">
                 {[...Array(5)].map((_, i) => (
@@ -343,12 +340,8 @@ const ForCollab = () => {
             </div>
 
             <div className="bg-gray-50 p-6 rounded-lg text-center">
-              <div className="w-16 h-16 mx-auto mb-4 rounded-full overflow-hidden">
-                <img
-                  src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80"
-                  alt="Youssef B."
-                  className="w-full h-full object-cover"
-                />
+              <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-primary/10 flex items-center justify-center">
+                <IconUser className="w-8 h-8 text-primary" />
               </div>
               <div className="flex justify-center mb-4">
                 {[...Array(5)].map((_, i) => (
@@ -378,23 +371,111 @@ const ForCollab = () => {
           <p className="text-xl mb-8 opacity-90 max-w-2xl mx-auto">
             {t("for_collab.apply_description", "Join our growing network of health professionals and start earning while helping others achieve their wellness goals.")}
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button
-              size="lg"
-              variant="secondary"
-              className="bg-white text-primary hover:bg-gray-100 px-8 py-3"
-            >
-              {t("for_collab.apply_now", "APPLY NOW")}
-            </Button>
-            <Button
-              size="lg"
-              variant="outline"
-              className="border-white text-white hover:bg-white hover:text-primary px-8 py-3"
-              onClick={() => window.open('mailto:partnerships@prepme.ma', '_self')}
-            >
-              {t("for_collab.contact_us", "CONTACT US")}
-            </Button>
-          </div>
+          <Card className="bg-white text-black p-6 max-w-2xl mx-auto mb-8">
+            <CardHeader>
+              <CardTitle>{t("for_collab.form.title", "Application Form")}</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <Form {...form}>
+                <form onSubmit={form.handleSubmit(onSubmit)} className="grid grid-cols-2 gap-4">
+                  <FormField
+                    control={form.control}
+                    name="full_name"
+                    render={({ field }) => (
+                      <FormItem className="col-span-2">
+                        <FormLabel className="text-left">{t("for_collab.form.full_name", "Full Name")}</FormLabel>
+                        <FormControl>
+                          <Input placeholder={t("for_collab.form.full_name", "Full Name")} {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="email"
+                    render={({ field }) => (
+                      <FormItem className="col-span-2">
+                        <FormLabel className="text-left">{t("for_collab.form.email", "Email")}</FormLabel>
+                        <FormControl>
+                          <Input type="email" placeholder={t("for_collab.form.email", "Email")} {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="phone"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="text-left">{t("for_collab.form.phone", "Phone")}</FormLabel>
+                        <FormControl>
+                          <Input placeholder={t("for_collab.form.phone", "Phone")} {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="country"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="text-left">{t("for_collab.form.country", "Country")}</FormLabel>
+                        <FormControl>
+                          <Input placeholder={t("for_collab.form.country", "Country")} {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="social_url_1"
+                    render={({ field }) => (
+                      <FormItem className="col-span-2">
+                        <FormLabel className="text-left">{t("for_collab.form.social_url_1", "Social Media URL 1")}</FormLabel>
+                        <FormControl>
+                          <Input placeholder={t("for_collab.form.https_example", "https://example.com")} {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="social_url_2"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="text-left">{t("for_collab.form.social_url_2", "Social Media URL 2 (Optional)")}</FormLabel>
+                        <FormControl>
+                          <Input placeholder={t("for_collab.form.https_example", "https://example.com")} {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="social_url_3"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="text-left">{t("for_collab.form.social_url_3", "Social Media URL 3 (Optional)")}</FormLabel>
+                        <FormControl>
+                          <Input placeholder={t("for_collab.form.https_example", "https://example.com")} {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <Button type="submit" className="col-span-2 w-full">
+                    {t("for_collab.form.submit", "Submit Application")}
+                  </Button>
+                </form>
+              </Form>
+            </CardContent>
+          </Card>
           <p className="text-sm opacity-75 mt-6">
             {t("for_collab.application_note", "Applications are reviewed within 48 hours. We'll get back to you with next steps.")}
           </p>

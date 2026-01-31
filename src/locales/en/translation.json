@@ -643,7 +643,28 @@
     "cta_title": "READY TO FEED YOUR TEAM?",
     "cta_description": "Contact us today to learn more about our corporate meal delivery solutions.",
     "start_today": "START TODAY",
-    "call_us": "CALL US"
+    "call_us": "CALL US",
+    "contact_title": "Contact Us for Corporate Meals",
+    "form": {
+      "job_title": "Job Title (Optional)",
+      "email": "Email",
+      "first_name": "First Name",
+      "last_name": "Last Name",
+      "company_name": "Company Name",
+      "company_website": "Company Website (Optional)",
+      "partnership_type": "Partnership Type",
+      "team_members_per_week": "Team Members per Week",
+      "products_interested": "Products Interested",
+      "heard_about_us": "How did you hear about us? (Optional)",
+      "accept_terms": "I accept the terms and conditions",
+      "accept_communications": "I agree to receive communications",
+      "submit": "Submit",
+      "select_partnership_type": "Select partnership type",
+      "select_range": "Select range",
+      "select_option": "Select option",
+      "list_products": "List products you're interested in",
+      "https_example": "https://example.com"
+    }
   },
   "for_collab": {
     "hero_title": "BECOME A PREPME PARTNER",
@@ -690,6 +711,18 @@
     "stat1_desc": "Active Partners",
     "stat2_desc": "Partner Earnings",
     "stat3_desc": "Clients Referred",
-    "stat4_desc": "Partner Satisfaction"
+    "stat4_desc": "Partner Satisfaction",
+    "form": {
+      "title": "Application Form",
+      "full_name": "Full Name",
+      "email": "Email",
+      "phone": "Phone",
+      "country": "Country",
+      "social_url_1": "Social Media URL 1",
+      "social_url_2": "Social Media URL 2 (Optional)",
+      "social_url_3": "Social Media URL 3 (Optional)",
+      "https_example": "https://example.com",
+      "submit": "Submit Application"
+    }
   }
 }
