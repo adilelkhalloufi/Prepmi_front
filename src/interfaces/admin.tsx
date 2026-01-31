@@ -429,8 +429,33 @@ export interface MealPreparation {
     updated_at?: string
 }
 
+export interface Collaborator {
+    id: number
+    full_name: string
+    social_url_1: string
+    social_url_2?: string
+    social_url_3?: string
+    email: string
+    phone: string
+    country: string
+    created_at?: string
+    updated_at?: string
+}
 
-
-
-
-
+export interface Partner {
+    id: number
+    job_title?: string
+    email: string
+    first_name: string
+    last_name: string
+    company_name: string
+    company_website?: string
+    partnership_type: string
+    team_members_per_week: string
+    products_interested: string[] // json field, assuming it's an array
+    heard_about_us?: string
+    accept_terms: boolean
+    accept_communications: boolean
+    created_at?: string
+    updated_at?: string
+}

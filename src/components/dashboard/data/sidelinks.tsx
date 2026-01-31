@@ -119,6 +119,21 @@ export const sidelinks: SideLink[] = [
     href: webRoutes.dashboard_delivery_slots,
     icon: <IconSettings size={18} />,
     role: [RoleEnum.ADMIN]
+  },
+  // show collaborators and partners only to admin
+  {
+    title: 'Collaborateurs',
+    label: '',
+    href: webRoutes.dashboard_collaborators,
+    icon: <IconUsers size={18} />,
+    role: [RoleEnum.ADMIN]
+  },
+  {
+    title: 'Partenaires',
+    label: '',
+    href: webRoutes.dashboard_partners,
+    icon: <IconUser size={18} />,
+    role: [RoleEnum.ADMIN]
   }
 
 

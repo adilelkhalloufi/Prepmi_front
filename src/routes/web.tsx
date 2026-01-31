@@ -4,6 +4,7 @@ export const webRoutes = {
   login: '/login',
   logout: '/logout',
   register: '/register',
+  forgot_password: '/forgot-password',
   checkout: '/checkout',
   dashboard: '/dashboard',
   dashboard_menus: '/dashboard/menus',
@@ -43,7 +44,8 @@ export const webRoutes = {
   dashboard_categories_view: '/dashboard/categories/view/:id',
   dashboard_meal_preparation: '/dashboard/meal-preparation',
   dashboard_rewards: '/dashboard/rewards',
-
+  dashboard_collaborators: '/dashboard/collaborators',
+  dashboard_partners: '/dashboard/partners',
   menu: '/menu',
   meal_single: '/meal/:id',
   join_now: '/join-now',

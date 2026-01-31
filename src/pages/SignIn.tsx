@@ -11,59 +11,16 @@ export default function SignIn() {
     <>
       <div className='container relative grid h-svh flex-col items-center justify-center lg:max-w-none lg:grid-cols-2 lg:px-0'>
         {/* First Section */}
-        <div className='relative hidden h-full flex-col bg-muted p-10 text-white dark:border-r lg:flex overflow-hidden'>
-          <div className='absolute inset-0 bg-primary' />
-          
-          {/* Watermark Background - Overflowing */}
-          <div className='absolute inset-0 opacity-20 pointer-events-none' style={{
-            overflow: 'visible',
-          }}>
-            <div style={{
-              transform: 'rotate(-45deg) translate(-20%, -20%)',
-              display: 'grid',
-              gridTemplateColumns: 'repeat(5, 1fr)',
-              columnGap: '0rem',
-              width: '250%',
-              height: '250%',
-              position: 'absolute',
-              top: '-75%',
-              left: '-75%',
-              fontSize: '8rem',
-              lineHeight: '1',
-            }}>
-              <span>🍽️</span>
-              <span>🍲</span>
-              <span>🍱</span>
-              <span>🥘</span>
-              <span>🍛</span>
-              <span>🍜</span>
-              <span>🍝</span>
-              <span>🍳</span>
-              <span>🥗</span>
-              <span>🍽️</span>
-              <span>🍲</span>
-              <span>🍱</span>
-              <span>🥘</span>
-              <span>🍛</span>
-              <span>🍜</span>
-              <span>🍝</span>
-              <span>🍳</span>
-              <span>🥗</span>
-              <span>🍽️</span>
-              <span>🍲</span>
-              <span>🍱</span>
-              <span>🥘</span>
-              <span>🍛</span>
-              <span>🍜</span>
-              <span>🍝</span>
-            </div>
-          </div>
+        <div className='relative hidden h-full flex-col bg-muted p-10 text-white dark:border-r lg:flex overflow-hidden bg-primary'>
+          <div className='  bg-primary' />
+
+
 
           <div className='relative z-20 flex items-center text-lg font-medium'>
 
           </div>
           <div className='flex justify-center items-center h-full'>
-            <img src={logo} alt='logo' className='h-20 w-full filter brightness-0 invert' />
+            <img src='./example4.png' alt='logo' className=' w-full  z-50' />
 
           </div>
 
@@ -83,7 +40,7 @@ export default function SignIn() {
         <div className='lg:p-8'>
           <div className='mx-auto flex w-full flex-col justify-center space-y-2 sm:w-[350px]'>
             <div className='flex flex-col space-y-2 text-left'>
-                    <img src={logo} />
+              <img src={logo} />
 
               <h1 className='text-2xl font-semibold tracking-tight'>{t('login.title')}</h1>
               < p className='text-sm text-muted-foreground' dangerouslySetInnerHTML={{ __html: t('login.description') }} >

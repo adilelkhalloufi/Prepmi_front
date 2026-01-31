@@ -5,6 +5,7 @@ import LayoutLanding from "@/components/landing/LayoutLanding";
 import loadable from "@loadable/component";
 import ProgressBar from "@/components/loader/progressBar";
 import SignIn from "@/pages/SignIn";
+import ForgotPassword from "@/pages/ForgotPassword";
 import RequireAuth from "./requireAuth";
 import Layout from "@/components/dashboard/layout";
 import Register from "@/pages/register/index";
@@ -64,6 +65,14 @@ const UserEdit = loadable(() => import('../pages/dashboard/users/edit'), {
 });
 
 const UserView = loadable(() => import('../pages/dashboard/users/view'), {
+  fallback: fallbackElement,
+});
+
+const CollaboratorManager = loadable(() => import('../pages/dashboard/collaborators'), {
+  fallback: fallbackElement,
+});
+
+const PartnerManager = loadable(() => import('../pages/dashboard/partners'), {
   fallback: fallbackElement,
 });
 
@@ -298,7 +307,14 @@ export const browserRouter = createBrowserRouter([
         path: webRoutes.dashboard_users_view,
         element: <UserView />,
       },
-
+      {
+        path: webRoutes.dashboard_collaborators,
+        element: <CollaboratorManager />,
+      },
+      {
+        path: webRoutes.dashboard_partners,
+        element: <PartnerManager />,
+      },
       {
         path: webRoutes.dashboard_orders,
         element: <OrderManger />,
@@ -415,6 +431,11 @@ export const browserRouter = createBrowserRouter([
   {
     path: webRoutes.login,
     element: <SignIn />,
+    // errorElement: errorElement,
+  },
+  {
+    path: webRoutes.forgot_password,
+    element: <ForgotPassword />,
     // errorElement: errorElement,
   },
   {

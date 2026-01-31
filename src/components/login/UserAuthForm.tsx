@@ -14,7 +14,7 @@ import { Input } from '@/components/ui/input'
 
 import { cn } from '@/lib/utils'
 import { useDispatch, useSelector } from 'react-redux'
-import { useLocation, useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate, Link } from 'react-router-dom'
 import { webRoutes } from '@/routes/web'
 import { RootState } from '@/store'
 import { defaultHttp } from '@/utils/http'
@@ -125,12 +125,12 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
                 <FormItem className='space-y-1'>
                   <div className='flex items-center justify-between'>
                     <FormLabel>{t('login.password')}</FormLabel>
-                    {/* <Link
+                    <Link
                       to='/forgot-password'
                       className='text-sm font-medium text-muted-foreground hover:opacity-75'
                     >
-                      Forgot password?
-                    </Link> */}
+                      {t('login.forgot_password')}
+                    </Link>
                   </div>
                   <FormControl>
                     <PasswordInput placeholder='********' {...field} />
