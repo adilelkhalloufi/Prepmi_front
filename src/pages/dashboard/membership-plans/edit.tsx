@@ -28,6 +28,14 @@ export default function EditMembershipPlan() {
         is_active: true,
         billing_day_of_month: 1,
         perks: [] as string[],
+        free_delivery: false,
+        fixed_discount_amount: "",
+        has_premium_access: false,
+        premium_upgrade_fee_min: "",
+        premium_upgrade_fee_max: "",
+        free_freezes_per_period: 0,
+        freeze_period_months: 0,
+        cancellable_anytime: false,
     });
 
     const [planMeta, setPlanMeta] = useState({ created_at: "", updated_at: "" });
@@ -60,6 +68,14 @@ export default function EditMembershipPlan() {
                         is_active: plan.is_active !== undefined ? plan.is_active : true,
                         billing_day_of_month: plan.billing_day_of_month ? Number(plan.billing_day_of_month) : 1,
                         perks: Array.isArray(plan.perks) ? plan.perks : [],
+                        free_delivery: plan.free_delivery || false,
+                        fixed_discount_amount: plan.fixed_discount_amount ?? "",
+                        has_premium_access: plan.has_premium_access || false,
+                        premium_upgrade_fee_min: plan.premium_upgrade_fee_min ?? "",
+                        premium_upgrade_fee_max: plan.premium_upgrade_fee_max ?? "",
+                        free_freezes_per_period: plan.free_freezes_per_period ? Number(plan.free_freezes_per_period) : 0,
+                        freeze_period_months: plan.freeze_period_months ? Number(plan.freeze_period_months) : 0,
+                        cancellable_anytime: plan.cancellable_anytime || false,
                     });
                     setPlanMeta({
                         created_at: plan.created_at || "",
@@ -209,9 +225,9 @@ export default function EditMembershipPlan() {
                         </div>
                         <div className="col-span-2">
                             <Label>Description</Label>
-                            <Textarea 
-                                name="description" 
-                                value={formData.description} 
+                            <Textarea
+                                name="description"
+                                value={formData.description}
                                 onChange={handleChange}
                                 rows={3}
                             />
@@ -227,41 +243,41 @@ export default function EditMembershipPlan() {
                         </div>
                         <div>
                             <Label>Frais mensuels (MAD) *</Label>
-                            <Input 
-                                type="number" 
-                                name="monthly_fee" 
-                                value={formData.monthly_fee} 
-                                onChange={handleChange} 
-                                step="0.01" 
+                            <Input
+                                type="number"
+                                name="monthly_fee"
+                                value={formData.monthly_fee}
+                                onChange={handleChange}
+                                step="0.01"
                             />
                         </div>
                         <div>
                             <Label>Pourcentage de réduction (%)</Label>
-                            <Input 
-                                type="number" 
-                                name="discount_percentage" 
-                                value={formData.discount_percentage} 
-                                onChange={handleChange} 
+                            <Input
+                                type="number"
+                                name="discount_percentage"
+                                value={formData.discount_percentage}
+                                onChange={handleChange}
                                 min="0"
                                 max="100"
                             />
                         </div>
                         <div>
                             <Label>Créneaux de livraison</Label>
-                            <Input 
-                                type="number" 
-                                name="delivery_slots" 
-                                value={formData.delivery_slots} 
-                                onChange={handleChange} 
+                            <Input
+                                type="number"
+                                name="delivery_slots"
+                                value={formData.delivery_slots}
+                                onChange={handleChange}
                                 min="0"
                             />
                         </div>
                         <div>
                             <Label>Quantité de desserts gratuits</Label>
-                            <Input 
-                                type="number" 
-                                name="free_desserts_quantity" 
-                                value={formData.free_desserts_quantity} 
+                            <Input
+                                type="number"
+                                name="free_desserts_quantity"
+                                value={formData.free_desserts_quantity}
                                 onChange={handleChange}
                                 min="0"
                                 disabled={!formData.includes_free_desserts}
@@ -269,13 +285,66 @@ export default function EditMembershipPlan() {
                         </div>
                         <div>
                             <Label>Jour de facturation (1-28)</Label>
-                            <Input 
-                                type="number" 
-                                name="billing_day_of_month" 
-                                value={formData.billing_day_of_month} 
+                            <Input
+                                type="number"
+                                name="billing_day_of_month"
+                                value={formData.billing_day_of_month}
                                 onChange={handleChange}
                                 min="1"
                                 max="28"
+                            />
+                        </div>
+                        <div>
+                            <Label>Montant de réduction fixe (MAD)</Label>
+                            <Input
+                                type="number"
+                                name="fixed_discount_amount"
+                                value={formData.fixed_discount_amount}
+                                onChange={handleChange}
+                                step="0.01"
+                                min="0"
+                            />
+                        </div>
+                        <div>
+                            <Label>Frais de mise à niveau premium min (MAD)</Label>
+                            <Input
+                                type="number"
+                                name="premium_upgrade_fee_min"
+                                value={formData.premium_upgrade_fee_min}
+                                onChange={handleChange}
+                                step="0.01"
+                                min="0"
+                            />
+                        </div>
+                        <div>
+                            <Label>Frais de mise à niveau premium max (MAD)</Label>
+                            <Input
+                                type="number"
+                                name="premium_upgrade_fee_max"
+                                value={formData.premium_upgrade_fee_max}
+                                onChange={handleChange}
+                                step="0.01"
+                                min="0"
+                            />
+                        </div>
+                        <div>
+                            <Label>Nombre de congélations gratuites par période</Label>
+                            <Input
+                                type="number"
+                                name="free_freezes_per_period"
+                                value={formData.free_freezes_per_period}
+                                onChange={handleChange}
+                                min="0"
+                            />
+                        </div>
+                        <div>
+                            <Label>Période de congélation (mois)</Label>
+                            <Input
+                                type="number"
+                                name="freeze_period_months"
+                                value={formData.freeze_period_months}
+                                onChange={handleChange}
+                                min="0"
                             />
                         </div>
                     </div>
@@ -286,6 +355,30 @@ export default function EditMembershipPlan() {
                             onCheckedChange={(checked) => handleSwitchChange("includes_free_desserts", checked)}
                         />
                         <Label htmlFor="includes_free_desserts">Inclut des desserts gratuits</Label>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                        <Switch
+                            id="free_delivery"
+                            checked={formData.free_delivery}
+                            onCheckedChange={(checked) => handleSwitchChange("free_delivery", checked)}
+                        />
+                        <Label htmlFor="free_delivery">Livraison gratuite</Label>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                        <Switch
+                            id="has_premium_access"
+                            checked={formData.has_premium_access}
+                            onCheckedChange={(checked) => handleSwitchChange("has_premium_access", checked)}
+                        />
+                        <Label htmlFor="has_premium_access">Accès premium</Label>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                        <Switch
+                            id="cancellable_anytime"
+                            checked={formData.cancellable_anytime}
+                            onCheckedChange={(checked) => handleSwitchChange("cancellable_anytime", checked)}
+                        />
+                        <Label htmlFor="cancellable_anytime">Annulable à tout moment</Label>
                     </div>
                     <div className="flex items-center space-x-2">
                         <Switch

@@ -66,16 +66,68 @@ export const columns: ColumnDef<MembershipPlan>[] = [
         }
     },
     {
-        accessorKey: "is_active",
-        header: "Statut",
+        accessorKey: "free_delivery",
+        header: "Livraison gratuite",
         cell: ({ row }) => {
-            const isActive = row.getValue("is_active")
-            return (
-                <Badge className={isActive ? "bg-primary" : "bg-secondary"}>
-                    {isActive ? "Actif" : "Inactif"}
-                </Badge>
-            )
-        },
+            const freeDelivery = row.getValue("free_delivery")
+            return freeDelivery ? <Badge variant="secondary">Oui</Badge> : <Badge variant="outline">Non</Badge>
+        }
+    },
+    {
+        accessorKey: "fixed_discount_amount",
+        header: "Remise fixe",
+        cell: ({ row }) => {
+            const amount = row.getValue("fixed_discount_amount") as number
+            return amount ? `${amount} MAD` : "-"
+        }
+    },
+    {
+        accessorKey: "has_premium_access",
+        header: "Accès premium",
+        cell: ({ row }) => {
+            const hasPremium = row.getValue("has_premium_access")
+            return hasPremium ? <Badge variant="secondary">Oui</Badge> : <Badge variant="outline">Non</Badge>
+        }
+    },
+    {
+        accessorKey: "premium_upgrade_fee_min",
+        header: "Frais upgrade min",
+        cell: ({ row }) => {
+            const minFee = row.getValue("premium_upgrade_fee_min") as number
+            return minFee ? `${minFee} MAD` : "-"
+        }
+    },
+    {
+        accessorKey: "premium_upgrade_fee_max",
+        header: "Frais upgrade max",
+        cell: ({ row }) => {
+            const maxFee = row.getValue("premium_upgrade_fee_max") as number
+            return maxFee ? `${maxFee} MAD` : "-"
+        }
+    },
+    {
+        accessorKey: "free_freezes_per_period",
+        header: "Congélations gratuites",
+        cell: ({ row }) => {
+            const freezes = row.getValue("free_freezes_per_period") as number
+            return freezes || 0
+        }
+    },
+    {
+        accessorKey: "freeze_period_months",
+        header: "Période congélation",
+        cell: ({ row }) => {
+            const months = row.getValue("freeze_period_months") as number
+            return months ? `${months} mois` : "-"
+        }
+    },
+    {
+        accessorKey: "cancellable_anytime",
+        header: "Annulable anytime",
+        cell: ({ row }) => {
+            const cancellable = row.getValue("cancellable_anytime")
+            return cancellable ? <Badge variant="secondary">Oui</Badge> : <Badge variant="outline">Non</Badge>
+        }
     },
     {
         id: "actions",
@@ -93,9 +145,9 @@ export const columns: ColumnDef<MembershipPlan>[] = [
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
                         <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                        {/* <DropdownMenuItem onClick={() => navigate(webRoutes.dashboard_membership_plans_view.replace(':id', String(plan.id)))}>
+                        <DropdownMenuItem onClick={() => navigate(webRoutes.dashboard_membership_plans_view.replace(':id', String(plan.id)))}>
                             Voir les détails
-                        </DropdownMenuItem> */}
+                        </DropdownMenuItem>
                         <DropdownMenuItem onClick={() => navigate(webRoutes.dashboard_membership_plans_edit.replace(':id', String(plan.id)))}>
                             Modifier
                         </DropdownMenuItem>

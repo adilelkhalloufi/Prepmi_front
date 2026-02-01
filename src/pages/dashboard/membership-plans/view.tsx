@@ -27,7 +27,7 @@ export default function MembershipPlanDetails() {
         if (id) {
             http.get(`${apiRoutes.membershipPlans}/${id}`)
                 .then((res) => {
-                    setPlan(res.data.data);
+                    setPlan(res.data);
                 })
                 .catch(handleErrorResponse)
                 .finally(() => setLoading(false));
@@ -81,25 +81,33 @@ export default function MembershipPlanDetails() {
 
             <Card className="mb-4">
                 <CardHeader>
-                    <CardTitle>Tarification et avantages</CardTitle>
+                    <CardTitle>Avantages supplémentaires</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
                     <div className="grid grid-cols-2 gap-4">
-                        <DetailItem label="Frais mensuels" value={`${plan.monthly_fee} MAD`} />
-                        <DetailItem label="Réduction" value={plan.discount_percentage ? `${plan.discount_percentage}%` : "-"} />
-                        <DetailItem label="Créneaux de livraison" value={plan.delivery_slots || "-"} />
                         <div>
-                            <p className="text-sm font-semibold text-muted-foreground">Desserts gratuits</p>
-                            {plan.includes_free_desserts ? (
-                                <Badge variant="secondary">{plan.free_desserts_quantity || 0} gratuit(s)</Badge>
-                            ) : (
-                                <p>Non inclus</p>
-                            )}
+                            <p className="text-sm font-semibold text-muted-foreground">Livraison gratuite</p>
+                            <Badge className={plan.free_delivery ? "bg-green-500" : "bg-red-500"}>
+                                {plan.free_delivery ? "Oui" : "Non"}
+                            </Badge>
                         </div>
-                        <DetailItem
-                            label="Jour de facturation"
-                            value={plan.billing_day_of_month ? `Le ${plan.billing_day_of_month} de chaque mois` : "-"}
-                        />
+                        <DetailItem label="Remise fixe" value={plan.fixed_discount_amount ? `${plan.fixed_discount_amount} MAD` : "-"} />
+                        <div>
+                            <p className="text-sm font-semibold text-muted-foreground">Accès premium</p>
+                            <Badge className={plan.has_premium_access ? "bg-green-500" : "bg-red-500"}>
+                                {plan.has_premium_access ? "Oui" : "Non"}
+                            </Badge>
+                        </div>
+                        <DetailItem label="Frais upgrade minimum" value={plan.premium_upgrade_fee_min ? `${plan.premium_upgrade_fee_min} MAD` : "-"} />
+                        <DetailItem label="Frais upgrade maximum" value={plan.premium_upgrade_fee_max ? `${plan.premium_upgrade_fee_max} MAD` : "-"} />
+                        <DetailItem label="Congélations gratuites par période" value={plan.free_freezes_per_period || 0} />
+                        <DetailItem label="Période de congélation" value={plan.freeze_period_months ? `${plan.freeze_period_months} mois` : "-"} />
+                        <div>
+                            <p className="text-sm font-semibold text-muted-foreground">Annulable à tout moment</p>
+                            <Badge className={plan.cancellable_anytime ? "bg-green-500" : "bg-red-500"}>
+                                {plan.cancellable_anytime ? "Oui" : "Non"}
+                            </Badge>
+                        </div>
                     </div>
                 </CardContent>
             </Card>

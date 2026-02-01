@@ -106,6 +106,14 @@ export interface MembershipPlan {
     perks?: string[]
     is_active: boolean
     billing_day_of_month?: number
+    free_delivery?: boolean
+    fixed_discount_amount?: number
+    has_premium_access?: boolean
+    premium_upgrade_fee_min?: number
+    premium_upgrade_fee_max?: number
+    free_freezes_per_period?: number
+    freeze_period_months?: number
+    cancellable_anytime?: boolean
     created_at?: string
     updated_at?: string
 }

@@ -5,9 +5,6 @@ import { Input } from "@/components/ui/input"
 import {
     CreditCard,
     Edit,
-    Trash2,
-    Plus,
-    Minus,
     Receipt,
     ShoppingCart,
     MapPin,
@@ -60,7 +57,6 @@ export function Payment({
     const selectedRewardsMeals = planData?.selectedRewardsMeals
 
     const [paymentMethod, setPaymentMethod] = useState<'COD' | 'ONLINE'>((planData as any)?.paymentMethod || 'COD')
-    const [isEditingMeals, setIsEditingMeals] = useState(false)
     const [editModalOpen, setEditModalOpen] = useState(false)
     const [editData, setEditData] = useState({
         firstName: planData?.firstName || '',
@@ -111,63 +107,6 @@ export function Payment({
             setPaymentMethod((planData as any).paymentMethod)
         }
     }, [(planData as any)?.paymentMethod])
-
-    const updateQuantity = (type: 'meal' | 'breakfast' | 'drink', id: number, change: number) => {
-        if (type === 'meal') {
-            const updatedMeals = selectedMeals
-                .map(meal =>
-                    meal.id === id
-                        ? { ...meal, quantity: Math.max(0, (meal.quantity || 0) + change) }
-                        : meal
-                )
-                .filter(meal => meal.quantity > 0)
-            dispatch(updatePlanData({
-                selectedMeals: Object.fromEntries(updatedMeals.map(m => [m.id, m]))
-            }))
-        } else if (type === 'breakfast') {
-            // const updatedBreakfasts = selectedBreakfasts
-            //     .map(item =>
-            //         item.id === id
-            //             ? { ...item, quantity: Math.max(0, (item.quantity || 0) + change) }
-            //             : item
-            //     )
-            //     .filter(item => item.quantity > 0)
-            // dispatch(updatePlanData({
-            //     selectedBreakfasts: Object.fromEntries(updatedBreakfasts.map(b => [b.id, b]))
-            // }))
-        } else if (type === 'drink') {
-            const updatedDrinks = selectedDrinks
-                .map(drink =>
-                    drink.id === id
-                        ? { ...drink, quantity: Math.max(0, (drink.quantity || 0) + change) }
-                        : drink
-                )
-                .filter(drink => drink.quantity > 0)
-            dispatch(updatePlanData({
-                selectedDrinks: Object.fromEntries(updatedDrinks.map(d => [d.id, d]))
-            }))
-        }
-    }
-
-    const removeItem = (type: 'meal' | 'breakfast' | 'drink', id: number) => {
-        if (type === 'meal') {
-            const updatedMeals = selectedMeals.filter(meal => meal.id !== id)
-            dispatch(updatePlanData({
-                selectedMeals: Object.fromEntries(updatedMeals.map(m => [m.id, m]))
-            }))
-        } else if (type === 'breakfast') {
-            // If you use selectedBreakfasts, apply similar logic:
-            // const updatedBreakfasts = selectedBreakfasts.filter(item => item.id !== id)
-            // dispatch(updatePlanData({
-            //     selectedBreakfasts: Object.fromEntries(updatedBreakfasts.map(b => [b.id, b]))
-            // }))
-        } else if (type === 'drink') {
-            const updatedDrinks = selectedDrinks.filter(drink => drink.id !== id)
-            dispatch(updatePlanData({
-                selectedDrinks: Object.fromEntries(updatedDrinks.map(d => [d.id, d]))
-            }))
-        }
-    }
 
     const handleEditChange = (field: string, value: string) => {
         setEditData(prev => ({ ...prev, [field]: value }))
@@ -481,40 +420,10 @@ export function Payment({
                                                     <h5 className="font-medium text-foreground">{item.name}</h5>
                                                     <p className="text-sm text-muted-foreground">{item.price} {t('menu.currency')} {t('joinNow.payment.each')}</p>
                                                 </div>
-                                                {isEditingMeals ? (
-                                                    <div className="flex items-center space-x-2">
-                                                        <Button
-                                                            size="sm"
-                                                            variant="outline"
-                                                            className="h-6 w-6 p-0"
-                                                            onClick={() => updateQuantity('drink', item.id, -1)}
-                                                        >
-                                                            <Minus className="h-3 w-3" />
-                                                        </Button>
-                                                        <span className="w-6 text-center text-sm font-semibold">{item.quantity}</span>
-                                                        <Button
-                                                            size="sm"
-                                                            variant="outline"
-                                                            className="h-6 w-6 p-0"
-                                                            onClick={() => updateQuantity('drink', item.id, 1)}
-                                                        >
-                                                            <Plus className="h-3 w-3" />
-                                                        </Button>
-                                                        <Button
-                                                            size="sm"
-                                                            variant="ghost"
-                                                            className="h-6 w-6 p-0 text-destructive"
-                                                            onClick={() => removeItem('drink', item.id)}
-                                                        >
-                                                            <Trash2 className="h-3 w-3" />
-                                                        </Button>
-                                                    </div>
-                                                ) : (
-                                                    <div className="text-right">
-                                                        <p className="text-sm text-muted-foreground">{t('joinNow.payment.qty')}: {item.quantity}</p>
-                                                        <p className="font-semibold">{(item.price * item.quantity).toFixed(2)} {t('menu.currency')}</p>
-                                                    </div>
-                                                )}
+                                                <div className="text-right">
+                                                    <p className="text-sm text-muted-foreground">{t('joinNow.payment.qty')}: {item.quantity}</p>
+                                                    <p className="font-semibold">{(item.price * item.quantity).toFixed(2)} {t('menu.currency')}</p>
+                                                </div>
                                             </div>
                                         ))}
                                     </div>

@@ -25,6 +25,14 @@ export default function AddMembershipPlan() {
         free_desserts_quantity: 0,
         is_active: true,
         billing_day_of_month: 1,
+        free_delivery: false,
+        fixed_discount_amount: 0,
+        has_premium_access: false,
+        premium_upgrade_fee_min: 0,
+        premium_upgrade_fee_max: 0,
+        free_freezes_per_period: 0,
+        freeze_period_months: 0,
+        cancellable_anytime: false,
     });
 
     const [error, setError] = useState(false);
@@ -192,6 +200,59 @@ export default function AddMembershipPlan() {
                                 max="28"
                             />
                         </div>
+                        <div>
+                            <Label>Montant de réduction fixe (MAD)</Label>
+                            <Input
+                                type="number"
+                                name="fixed_discount_amount"
+                                value={formData.fixed_discount_amount}
+                                onChange={handleChange}
+                                step="0.01"
+                                min="0"
+                            />
+                        </div>
+                        <div>
+                            <Label>Frais de mise à niveau premium min (MAD)</Label>
+                            <Input
+                                type="number"
+                                name="premium_upgrade_fee_min"
+                                value={formData.premium_upgrade_fee_min}
+                                onChange={handleChange}
+                                step="0.01"
+                                min="0"
+                            />
+                        </div>
+                        <div>
+                            <Label>Frais de mise à niveau premium max (MAD)</Label>
+                            <Input
+                                type="number"
+                                name="premium_upgrade_fee_max"
+                                value={formData.premium_upgrade_fee_max}
+                                onChange={handleChange}
+                                step="0.01"
+                                min="0"
+                            />
+                        </div>
+                        <div>
+                            <Label>Nombre de congélations gratuites par période</Label>
+                            <Input
+                                type="number"
+                                name="free_freezes_per_period"
+                                value={formData.free_freezes_per_period}
+                                onChange={handleChange}
+                                min="0"
+                            />
+                        </div>
+                        <div>
+                            <Label>Période de congélation (mois)</Label>
+                            <Input
+                                type="number"
+                                name="freeze_period_months"
+                                value={formData.freeze_period_months}
+                                onChange={handleChange}
+                                min="0"
+                            />
+                        </div>
                     </div>
                     <div className="flex items-center space-x-2">
                         <Switch
@@ -200,6 +261,30 @@ export default function AddMembershipPlan() {
                             onCheckedChange={(checked) => handleSwitchChange("includes_free_desserts", checked)}
                         />
                         <Label htmlFor="includes_free_desserts">Inclut des desserts gratuits</Label>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                        <Switch
+                            id="free_delivery"
+                            checked={formData.free_delivery}
+                            onCheckedChange={(checked) => handleSwitchChange("free_delivery", checked)}
+                        />
+                        <Label htmlFor="free_delivery">Livraison gratuite</Label>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                        <Switch
+                            id="has_premium_access"
+                            checked={formData.has_premium_access}
+                            onCheckedChange={(checked) => handleSwitchChange("has_premium_access", checked)}
+                        />
+                        <Label htmlFor="has_premium_access">Accès premium</Label>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                        <Switch
+                            id="cancellable_anytime"
+                            checked={formData.cancellable_anytime}
+                            onCheckedChange={(checked) => handleSwitchChange("cancellable_anytime", checked)}
+                        />
+                        <Label htmlFor="cancellable_anytime">Annulable à tout moment</Label>
                     </div>
                     <div className="flex items-center space-x-2">
                         <Switch
