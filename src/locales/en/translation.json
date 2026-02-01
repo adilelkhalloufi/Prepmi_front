@@ -393,7 +393,18 @@
       "viewSubscription": "View Subscription",
       "placeOrderCOD": "Place Order (COD)",
       "note": "Note",
-      "subscriberNote": "As a subscriber, you can cancel or freeze your subscription anytime if you want."
+      "subscriberNote": "As a subscriber, you can cancel or freeze your subscription anytime if you want.",
+      "noMealsSelected": "No meals selected.",
+      "appliedReward": "Applied Reward",
+      "freeRewardApplied": "FREE (Reward Applied)",
+      "freeDessertsMembership": "Free Desserts (Membership)",
+      "freeMembershipBenefit": "Free (Membership Benefit)",
+      "loading": "Loading...",
+      "processing": "Processing...",
+      "discountPercent": "Discount ({{percent}}%)",
+      "subtotal": "Subtotal",
+      "youSaved": "You saved {{amount}} {{currency}}!",
+      "planName": "Plan ({{name}})"
     },
     "joinNow": {
       "steps": {

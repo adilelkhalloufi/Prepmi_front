@@ -431,8 +431,18 @@
       "deliverySlots": "Créneaux de Livraison",
       "note": "Note",
       "viewSubscription": "Voir l'abonnement",
-
-      "subscriberNote": "En tant qu'abonné, vous pouvez annuler ou suspendre votre abonnement à tout moment si vous le souhaitez."
+      "subscriberNote": "En tant qu'abonné, vous pouvez annuler ou suspendre votre abonnement à tout moment si vous le souhaitez.",
+      "noMealsSelected": "Aucun repas sélectionné.",
+      "appliedReward": "Récompense Appliquée",
+      "freeRewardApplied": "GRATUIT (Récompense Appliquée)",
+      "freeDessertsMembership": "Desserts Gratuits (Adhésion)",
+      "freeMembershipBenefit": "Gratuit (Avantage d'Adhésion)",
+      "loading": "Chargement...",
+      "processing": "Traitement...",
+      "discountPercent": "Remise ({{percent}}%)",
+      "subtotal": "Sous-total",
+      "youSaved": "Vous avez économisé {{amount}} {{currency}}!",
+      "planName": "Plan ({{name}})"
     },
     "address": {
       "title": "DÉTAILS DE LIVRAISON",

@@ -56,7 +56,7 @@ export function Payment({
     // Get selected meals and drinks as arrays of objects
     const selectedMeals = Object.values(planData?.selectedMeals || {})
     const selectedDrinks = Object.values(planData?.selectedDrinks || {})
-    const selectedFreeDrinks = Object.values(planData?.selectedFreeDrinks || {})
+    const selectedFreeDesserts = Object.values(planData?.selectedFreeDesserts || {})
     const selectedRewardsMeals = planData?.selectedRewardsMeals
 
     const [paymentMethod, setPaymentMethod] = useState<'COD' | 'ONLINE'>((planData as any)?.paymentMethod || 'COD')
@@ -194,7 +194,7 @@ export function Payment({
         selectedMeals.reduce((sum, meal) => sum + (meal.quantity || 0), 0) +
         // selectedBreakfasts.reduce((sum, item) => sum + (item.quantity || 0), 0) +
         selectedDrinks.reduce((sum, item) => sum + (item.quantity || 0), 0) +
-        selectedFreeDrinks.reduce((sum, item) => sum + (item.quantity || 0), 0)
+        selectedFreeDesserts.reduce((sum, item) => sum + (item.quantity || 0), 0)
 
 
 
@@ -221,7 +221,7 @@ export function Payment({
             plan: planData?.plan || null,
             meals: selectedMeals, // array of meal objects
             drinks: selectedDrinks, // array of drink objects
-            freeDrinks: selectedFreeDrinks, // array of free drink objects
+            freeDesserts: selectedFreeDesserts, // array of free dessert objects
             rewardMeal: selectedRewardsMeals,
             totalAmount: subtotal,
             originalAmount: subtotalBeforeDiscount,
@@ -367,7 +367,7 @@ export function Payment({
                                 <ShoppingCart className="w-5 h-5 text-primary" />
                                 <span>{t('joinNow.payment.yourOrder', { count: totalItems })}</span>
                             </CardTitle>
-                            <Button
+                            {/* <Button
                                 variant="ghost"
                                 size="sm"
                                 className="text-primary"
@@ -375,7 +375,7 @@ export function Payment({
                             >
                                 <Edit className="w-4 h-4 mr-1" />
                                 {isEditingMeals ? t('joinNow.payment.done') : t('joinNow.payment.edit')}
-                            </Button>
+                            </Button> */}
                         </CardHeader>
                         <CardContent className="space-y-6">
                             {/* Main Meals */}
@@ -417,7 +417,7 @@ export function Payment({
                                 </div>
                             ) : (
                                 <div className="text-center py-8">
-                                    <p className="text-muted-foreground">No meals selected.</p>
+                                    <p className="text-muted-foreground">{t('joinNow.payment.noMealsSelected')}</p>
                                 </div>
                             )}
 
@@ -426,7 +426,7 @@ export function Payment({
                                 <div>
                                     <div className="flex items-center space-x-2 mb-4">
                                         <Gift className="w-4 h-4 text-secondary" />
-                                        <h4 className="font-semibold text-foreground">{t('joinNow.payment.appliedReward', 'Applied Reward')}</h4>
+                                        <h4 className="font-semibold text-foreground">{t('joinNow.payment.appliedReward')}</h4>
                                     </div>
                                     <div className="p-3 bg-secondary/10 rounded-lg border border-secondary/30">
                                         <div className="flex items-center space-x-4">
@@ -446,7 +446,7 @@ export function Payment({
                                                 <p className="text-sm text-muted-foreground">
                                                     {selectedRewardsMeals.mealCalories || 0} kcal • {selectedRewardsMeals.mealProtein || 0}g protein
                                                 </p>
-                                                <p className="text-xs text-secondary font-semibold mt-1">FREE (Reward Applied)</p>
+                                                <p className="text-xs text-secondary font-semibold mt-1">{t('joinNow.payment.freeRewardApplied')}</p>
                                             </div>
                                             <div className="text-right">
                                                 <p className="text-sm font-semibold text-secondary">-{selectedRewardsMeals.mealPrice || 0} {t('menu.currency')}</p>
@@ -521,15 +521,15 @@ export function Payment({
                                 </div>
                             )}
 
-                            {/* Free Drinks (Membership Benefits) */}
-                            {selectedFreeDrinks.length > 0 && (
+                            {/* Free Desserts (Membership Benefits) */}
+                            {selectedFreeDesserts.length > 0 && (
                                 <div>
                                     <div className="flex items-center space-x-2 mb-4">
                                         <Gift className="w-4 h-4 text-green-600" />
-                                        <h4 className="font-semibold text-foreground">Free Drinks (Membership)</h4>
+                                        <h4 className="font-semibold text-foreground">{t('joinNow.payment.freeDessertsMembership')}</h4>
                                     </div>
                                     <div className="space-y-3">
-                                        {selectedFreeDrinks.map((item) => (
+                                        {selectedFreeDesserts.map((item) => (
                                             <div key={item.id} className="flex items-center space-x-4 p-3 bg-green-50 rounded-lg border border-green-200">
                                                 {item.image_url || item.image_path ? (
                                                     <img
@@ -544,7 +544,7 @@ export function Payment({
                                                 )}
                                                 <div className="flex-1">
                                                     <h5 className="font-medium text-foreground">{item.name}</h5>
-                                                    <p className="text-sm text-green-600 font-medium">Free (Membership Benefit)</p>
+                                                    <p className="text-sm text-green-600 font-medium">{t('joinNow.payment.freeMembershipBenefit')}</p>
                                                     <p className="text-xs text-muted-foreground">
                                                         {item.calories || 0} kcal • {item.protein || 0}g protein
                                                     </p>
@@ -552,7 +552,6 @@ export function Payment({
                                                 <div className="text-right">
                                                     <Badge className="bg-green-600 text-white mb-2">FREE</Badge>
                                                     <p className="text-sm text-muted-foreground">{t('joinNow.payment.qty')}: {item.quantity}</p>
-                                                    <p className="font-semibold text-green-600">0.00 {t('menu.currency')}</p>
                                                 </div>
                                             </div>
                                         ))}
@@ -579,7 +578,7 @@ export function Payment({
                                 <div className="text-center space-y-2">
                                     <div className="flex items-center justify-center space-x-2">
                                         {pointsLoading ? (
-                                            <span className="text-muted-foreground text-sm">Loading...</span>
+                                            <span className="text-muted-foreground text-sm">{t('joinNow.payment.loading')}</span>
                                         ) : (
                                             <>
                                                 <span className="text-2xl font-bold text-primary">{currentPoints}</span>
@@ -675,7 +674,7 @@ export function Payment({
                                 {/* Show plan total */}
                                 {planData?.pricePerWeek && (
                                     <div className="flex justify-between text-sm">
-                                        <span>Plan ({planData?.plan?.name})</span>
+                                        <span>{t('joinNow.payment.planName', { name: planData?.plan?.name })}</span>
                                         <span>{Number(planData?.plan?.price_per_week).toFixed(2)} {t('menu.currency')}</span>
                                     </div>
                                 )}
@@ -690,7 +689,7 @@ export function Payment({
                                 {/* Subtotal before discount */}
                                 {membershipDiscount > 0 && (
                                     <div className="flex justify-between text-sm">
-                                        <span>Subtotal</span>
+                                        <span>{t('joinNow.payment.subtotal')}</span>
                                         <span>{subtotalBeforeDiscount.toFixed(2)} {t('menu.currency')}</span>
                                     </div>
                                 )}
@@ -699,7 +698,7 @@ export function Payment({
                                 {membershipDiscount > 0 && (
                                     <>
                                         <div className="flex justify-between text-sm text-green-600">
-                                            <span>Discount ({membershipDiscountPercent}%)</span>
+                                            <span>{t('joinNow.payment.discountPercent', { percent: membershipDiscountPercent })}</span>
                                             <span>-{membershipDiscount.toFixed(2)} {t('menu.currency')}</span>
                                         </div>
                                         <Separator />
@@ -713,7 +712,7 @@ export function Payment({
                                         {subtotal.toFixed(2)} {t('menu.currency')}
                                         {membershipDiscount > 0 && (
                                             <span className="block text-xs font-normal text-green-600">
-                                                You saved {membershipDiscount.toFixed(2)} {t('menu.currency')}!
+                                                {t('joinNow.payment.youSaved', { amount: membershipDiscount.toFixed(2), currency: t('menu.currency') })}
                                             </span>
                                         )}
                                     </span>
@@ -801,7 +800,7 @@ export function Payment({
                                     <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                                     <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
                                 </svg>
-                                Processing...
+                                {t('joinNow.payment.processing')}
                             </>
                         ) : (
                             (paymentMethod === 'COD'

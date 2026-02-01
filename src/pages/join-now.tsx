@@ -326,7 +326,26 @@ const JoinNow = () => {
                         ))}
                     </div>
                 </div>
+                <div className="flex flex-col sm:flex-row justify-between items-center  mx-auto mt-8 gap-4 sm:gap-0">
+                    <Button
+                        variant="outline"
+                        onClick={handlePrev}
+                        disabled={currentStep === 1}
+                        className="flex items-center gap-2 border-primary text-primary hover:bg-primary hover:text-primary-foreground w-full sm:w-auto order-2 sm:order-1"
+                    >
+                        <ChevronLeft className="h-4 w-4" />
+                        {t('joinNow.navigation.previous')}
+                    </Button>
 
+                    <Button
+                        onClick={handleNext}
+                        disabled={currentStep === steps.length}
+                        className="flex items-center gap-2 bg-primary hover:bg-primary/90 text-primary-foreground w-full sm:w-auto order-1 sm:order-2"
+                    >
+                        {t('joinNow.navigation.next')}
+                        <ChevronRight className="h-4 w-4" />
+                    </Button>
+                </div>
                 {/* Step Content */}
                 <div className=" mx-auto max-w-6xl">
                     {CurrentStepComponent && (
