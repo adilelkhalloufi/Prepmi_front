@@ -51,6 +51,7 @@ export function Payment({
     const navigate = useNavigate()
     const planData = useSelector((state: RootState) => state.joinProcess.planData)
     const admin = useSelector((state: RootState) => state.admin?.user)
+    const settings = useSelector((state: RootState) => state.settings)
 
     // Get selected meals and drinks as arrays of objects
     const selectedMeals = Object.values(planData?.selectedMeals || {})
@@ -73,7 +74,7 @@ export function Payment({
     const [currentPoints, setCurrentPoints] = useState(pointsData)
     const [pointsLoading, setPointsLoading] = useState(isLoadingPoints)
     const [useReward, setUseReward] = useState(false)
-    const rewardThreshold = 12
+    const rewardThreshold = parseInt(settings.settings.find(s => s.key === 'system_points_per_order')?.value || '12')
     const rewardValue = 49 // MAD
     const canUseReward = currentPoints >= rewardThreshold
 

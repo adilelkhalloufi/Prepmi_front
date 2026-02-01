@@ -6,8 +6,9 @@ import { Button } from "@/components/ui/button"
 import { ChevronLeft, ChevronRight } from "lucide-react"
 import { useTranslation } from "react-i18next"
 import { useDispatch, useSelector } from "react-redux"
-import { RootState } from "@/store"
+import { RootState, AppDispatch } from "@/store"
 import { nextStep, prevStep } from "@/store/slices/joinProcessSlice"
+import { setSettings } from "@/store/slices/settingsSlice"
 import { useEffect } from "react"
 import { toast } from "sonner"
 import { useQuery } from "@tanstack/react-query"
@@ -17,7 +18,7 @@ import http from "@/utils/http"
 
 const JoinNow = () => {
     const { t } = useTranslation()
-    const dispatch = useDispatch()
+    const dispatch = useDispatch<AppDispatch>()
     const { currentStep = 1, planData } = useSelector((state: RootState) => state.joinProcess)
     const admin = useSelector((state: RootState) => state.admin?.user) // Uncomment if auth slice exists
 
@@ -81,9 +82,15 @@ const JoinNow = () => {
         staleTime: 0,
         gcTime: 0,
     });
-
-
-
+    // Fetch setting if user logged in settings 
+    useQuery({
+        queryKey: ["settings", admin?.id],
+        queryFn: () => http.get(apiRoutes.settings).then(res => {
+            dispatch(setSettings(res.data.data || res.data))
+            return res.data
+        }).catch(() => null),
+        enabled: !!admin?.id,
+    });
     // Fetch all meals from API (for breakfasts and drinks)
     const { isLoading: isLoadingMeals, data: mealsResponse } = useQuery<{ data: any[] }>({
         queryKey: ["meals", membershipResponse ? "with-membership" : "no-membership"],
@@ -209,11 +216,7 @@ const JoinNow = () => {
                 return
             }
 
-            console.log('planData.password', planData?.password);
-            console.log('planData.email', planData?.email);
-
             if (!admin?.id) {
-                console.log('ha  admin', admin);
 
                 if (!planData?.email || !planData?.password) {
                     toast.error(t('joinNow.validation.fillAccountFields', 'Please fill in email and password.'))
