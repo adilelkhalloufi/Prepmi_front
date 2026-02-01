@@ -388,6 +388,7 @@
       "customerDetails": "Détails du Client",
       "edit": "Modifier",
       "done": "Terminé",
+      "membershipDiscount": "Remise d'Adhésion",
       "deliveryAddress": "Adresse de Livraison",
       "yourOrder": "Votre Commande ({{count}} articles)",
       "mainMeals": "Repas Principaux",

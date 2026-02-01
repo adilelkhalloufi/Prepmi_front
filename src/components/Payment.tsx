@@ -125,7 +125,19 @@ export function Payment({
 
     // Apply membership discount
     const membershipDiscountPercent = membershipPlan ? Number(membershipPlan.discount_percentage || 0) : 0
-    const membershipDiscount = membershipDiscountPercent > 0 ? (subtotalBeforeDiscount * membershipDiscountPercent) / 100 : 0
+    const membershipFixedDiscount = membershipPlan ? Number(membershipPlan.fixed_discount_amount || 0) : 0
+
+    let membershipDiscount = 0
+    let discountType = 'none'
+
+    if (membershipDiscountPercent > 0) {
+        membershipDiscount = (subtotalBeforeDiscount * membershipDiscountPercent) / 100
+        discountType = 'percentage'
+    } else if (membershipFixedDiscount > 0) {
+        membershipDiscount = membershipFixedDiscount
+        discountType = 'fixed'
+    }
+
     const subtotal = subtotalBeforeDiscount - membershipDiscount
 
     // Always use arrays for totalItems calculation
@@ -607,7 +619,12 @@ export function Payment({
                                 {membershipDiscount > 0 && (
                                     <>
                                         <div className="flex justify-between text-sm text-green-600">
-                                            <span>{t('joinNow.payment.discountPercent', { percent: membershipDiscountPercent })}</span>
+                                            <span>
+                                                {discountType === 'percentage'
+                                                    ? t('joinNow.payment.discountPercent', { percent: membershipDiscountPercent })
+                                                    : `${t('joinNow.payment.membershipDiscount')} (${t('menu.currency')}${membershipFixedDiscount.toFixed(2)})`
+                                                }
+                                            </span>
                                             <span>-{membershipDiscount.toFixed(2)} {t('menu.currency')}</span>
                                         </div>
                                         <Separator />

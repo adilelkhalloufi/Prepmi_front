@@ -113,14 +113,25 @@ export const Plan = ({
 
         // Calculate membership discount
         const membershipDiscountPercent = membershipPlan ? Number(membershipPlan.discount_percentage || 0) : 0;
-        const membershipDiscount = membershipDiscountPercent > 0 ? (subtotal * membershipDiscountPercent) / 100 : 0;
+        const membershipFixedDiscount = membershipPlan ? Number(membershipPlan.fixed_discount_amount || 0) : 0;
+
+        let membershipDiscount = 0;
+        let discountType = 'none';
+
+        if (membershipDiscountPercent > 0) {
+            membershipDiscount = (subtotal * membershipDiscountPercent) / 100;
+            discountType = 'percentage';
+        } else if (membershipFixedDiscount > 0) {
+            membershipDiscount = membershipFixedDiscount;
+            discountType = 'fixed';
+        }
 
         // Apply membership benefits for delivery
         const hasFreeDesserts = membershipPlan?.includes_free_desserts || false;
         const freeDessertsQuantity = Number(membershipPlan?.free_desserts_quantity || 0);
 
         // Check if membership provides free delivery or if plan has free shipping
-        const isFreeDelivery = selectedPlan?.is_free_shipping || (membershipPlan && membershipDiscountPercent >= 10);
+        const isFreeDelivery = selectedPlan?.is_free_shipping || (membershipPlan && (membershipDiscountPercent >= 10 || membershipFixedDiscount >= 5));
         const delivery = isFreeDelivery ? 0 : Number(selectedPlan?.delivery_fee || 0);
 
         const finalSubtotal = subtotal - membershipDiscount;
@@ -130,6 +141,8 @@ export const Plan = ({
             subtotal,
             membershipDiscount,
             membershipDiscountPercent,
+            membershipFixedDiscount,
+            discountType,
             delivery,
             total,
             hasFreeDesserts,
@@ -322,10 +335,16 @@ export const Plan = ({
                                             {membershipPlan.name} Benefits
                                         </h3>
                                         <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-sm">
-                                            {totals.membershipDiscountPercent > 0 && (
+                                            {totals.discountType === 'percentage' && totals.membershipDiscountPercent > 0 && (
                                                 <div className="flex items-center text-green-700">
                                                     <Check className="w-4 h-4 mr-1" />
                                                     {totals.membershipDiscountPercent}% discount on meals
+                                                </div>
+                                            )}
+                                            {totals.discountType === 'fixed' && totals.membershipFixedDiscount > 0 && (
+                                                <div className="flex items-center text-green-700">
+                                                    <Check className="w-4 h-4 mr-1" />
+                                                    {t('menu.currency')}{totals.membershipFixedDiscount.toFixed(2)} discount on meals
                                                 </div>
                                             )}
                                             {totals.hasFreeDesserts && (
@@ -378,7 +397,7 @@ export const Plan = ({
                                     {totals.membershipDiscount > 0 && (
                                         <div className="flex justify-between items-center py-3 border-b border-gray-100">
                                             <span className="text-green-600 font-medium">
-                                                Membership Discount ({totals.membershipDiscountPercent}%)
+                                                Membership Discount {totals.discountType === 'percentage' ? `(${totals.membershipDiscountPercent}%)` : `(${t('menu.currency')}${totals.membershipFixedDiscount.toFixed(2)})`}
                                             </span>
                                             <span className="font-semibold text-green-600">
                                                 -{totals.membershipDiscount.toFixed(2)}
