@@ -6,7 +6,7 @@ import { handleErrorResponse } from "@/utils";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/store";
 import { register as registerAction, restRegister } from "@/store/slices/registerSlice";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { webRoutes } from "@/routes/web";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -18,6 +18,7 @@ import { Eye, EyeOff, UserPlus, Mail, Lock, Phone, MapPin, User } from "lucide-r
 import Cities from "@/data/cities.json";
 import { defaultHttp } from "@/utils/http";
 import { apiRoutes } from "@/routes/api";
+import { deobfuscateId } from "@/lib/utils";
 
 
 
@@ -25,6 +26,9 @@ import { apiRoutes } from "@/routes/api";
 const Register = () => {
 
     const { t } = useTranslation();
+    const [searchParams] = useSearchParams();
+    const ref = searchParams.get('ref');
+    const referrerId = ref ? deobfuscateId(ref) : null;
     const form = useSelector((state: RootState) => state.register)
     const navigator = useNavigate();
     const dispatch = useDispatch();
@@ -95,7 +99,7 @@ const Register = () => {
             zip_code: form.zip_code,
             country: form.country,
             agreement: form.agreement,
-
+            referrer_id: referrerId,
         }).then(() => {
             toast.success("Account created successfully! Please login.");
             dispatch(restRegister());

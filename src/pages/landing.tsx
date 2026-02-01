@@ -10,10 +10,30 @@ import { ClientReviews } from "@/components/ClientReviews";
 import { Button } from "@/components/ui/button";
 import { webRoutes } from "@/routes/web";
 import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
+import { useState, useEffect } from "react";
+import { obfuscateId } from "@/lib/utils";
+import { Gift, Share2, Users } from "lucide-react";
+import { toast } from "sonner";
 
 const Index = () => {
   const { t } = useTranslation();
   const navigator = useNavigate();
+  const admin = useSelector((state: RootState) => state.admin?.user);
+  const [referralDialogOpen, setReferralDialogOpen] = useState(false);
+
+  const referralLink = admin?.id ? `${window.location.origin}/register?ref=${obfuscateId(admin.id)}` : '';
+
+  useEffect(() => {
+    // Show dialog after a short delay for better UX
+    const timer = setTimeout(() => {
+      setReferralDialogOpen(true);
+    }, 2000);
+    return () => clearTimeout(timer);
+  }, []);
+
   const handleCardClick = (mealId: number) => {
     navigator(webRoutes.meal_single.replace(':id', mealId.toString() || ''));
   };
@@ -158,6 +178,71 @@ const Index = () => {
       <ClientReviews />
 
       <Footer />
+
+      <Dialog open={referralDialogOpen} onOpenChange={setReferralDialogOpen}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <div className="flex items-center gap-2">
+              <Gift className="w-6 h-6 text-primary" />
+              <DialogTitle>{admin ? t('landing.referral_popup_title', 'Earn Points with Referrals!') : t('landing.referral_popup_title_guest', 'Join and Earn Points!')}</DialogTitle>
+            </div>
+            <DialogDescription>
+              {admin
+                ? t('landing.referral_popup_desc', 'Share your referral link and earn points when someone creates an account using it.')
+                : t('landing.referral_popup_desc_guest', 'Connect your account and start earning points by sharing your referral link with friends!')
+              }
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4">
+            {admin ? (
+              <>
+                <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                  <Share2 className="w-4 h-4" />
+                  <p>{t('landing.referral_link_label', 'Your referral link:')}</p>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <input
+                    type="text"
+                    value={referralLink}
+                    readOnly
+                    className="flex-1 px-3 py-2 border rounded-md text-sm bg-muted"
+                  />
+                  <Button
+                    onClick={() => {
+                      window.navigator.clipboard.writeText(referralLink);
+                      toast.success(t('landing.link_copied', 'Link copied to clipboard!'));
+                    }}
+                    size="sm"
+                    className="flex items-center gap-1"
+                  >
+                    <Share2 className="w-4 h-4" />
+                    {t('landing.copy_link', 'Copy')}
+                  </Button>
+                </div>
+                <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                  <Users className="w-4 h-4" />
+                  <p>{t('landing.referral_note', 'Points will be credited once the referred user completes their first order.')}</p>
+                </div>
+              </>
+            ) : (
+              <div className="text-center space-y-4">
+                <div className="flex justify-center">
+                  <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center">
+                    <Gift className="w-8 h-8 text-primary" />
+                  </div>
+                </div>
+                <p className="text-sm">{t('landing.referral_benefits', 'Get rewarded for every friend you bring to PrepMe!')}</p>
+                <Button
+                  onClick={() => navigator(webRoutes.login)}
+                  className="w-full"
+                >
+                  {t('landing.connect_now', 'Connect Now')}
+                </Button>
+              </div>
+            )}
+          </div>
+        </DialogContent>
+      </Dialog>
     </main>
   );
 };

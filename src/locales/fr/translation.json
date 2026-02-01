@@ -502,7 +502,17 @@
     "convenient_desc1": "Repas polyvalents à emporter",
     "convenient_desc2": "repas",
     "video_title": "VOIR PREPME EN ACTION",
-    "video_description": "Regardez comment nous préparons vos repas sains et les livrons frais à votre porte"
+    "video_description": "Regardez comment nous préparons vos repas sains et les livrons frais à votre porte",
+    "referral_popup_title": "Gagnez des points avec les parrainages !",
+    "referral_popup_title_guest": "Rejoignez et gagnez des points !",
+    "referral_popup_desc": "Partagez votre lien de parrainage et gagnez des points lorsqu'une personne crée un compte en l'utilisant.",
+    "referral_popup_desc_guest": "Connectez votre compte et commencez à gagner des points en partageant votre lien de parrainage avec vos amis !",
+    "referral_link_label": "Votre lien de parrainage :",
+    "copy_link": "Copier",
+    "referral_note": "Les points seront crédités une fois que l'utilisateur parrainé aura terminé sa première commande.",
+    "link_copied": "Lien copié dans le presse-papiers !",
+    "referral_benefits": "Soyez récompensé pour chaque ami que vous amenez à PrepMe !",
+    "connect_now": "Se connecter maintenant"
   },
   "for_teams": {
     "hero_title": "LIVRAISON DE REPAS D'ENTREPRISE POUR VOTRE ÉQUIPE",

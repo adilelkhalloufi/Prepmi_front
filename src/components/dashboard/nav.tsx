@@ -28,7 +28,7 @@ interface NavProps extends React.HTMLAttributes<HTMLDivElement> {
   isCollapsed: boolean;
   links: SideLink[];
   closeNav: () => void;
-  role: number;
+  userRole: number;
 }
 
 export default function Nav({
@@ -36,7 +36,7 @@ export default function Nav({
   isCollapsed,
   className,
   closeNav,
-  role,
+  userRole,
 }: NavProps) {
   const renderLink = ({ sub, ...rest }: SideLink) => {
     const key = `${rest.title}-${rest.href}`;
@@ -47,7 +47,7 @@ export default function Nav({
           sub={sub}
           key={key}
           closeNav={closeNav}
-          role={role}
+          userRole={userRole}
         />
       );
 
@@ -56,7 +56,7 @@ export default function Nav({
 
     if (sub)
       return (
-        <NavLinkDropdown {...rest} sub={sub} key={key} closeNav={closeNav} role={role} />
+        <NavLinkDropdown {...rest} sub={sub} key={key} closeNav={closeNav} userRole={userRole} />
       );
 
     return <NavLink {...rest} key={key} closeNav={closeNav} />;
@@ -117,12 +117,12 @@ function NavLink({
   );
 }
 
-function NavLinkDropdown({ title, icon, label, sub, closeNav, role }: NavLinkProps & { role: number }) {
-  const { checkActiveNav } = useCheckActiveNav();
+function NavLinkDropdown({ title, icon, label, sub, closeNav, userRole }: NavLinkProps & { userRole: number }) {
+  // const { checkActiveNav } = useCheckActiveNav();
 
   /* Open collapsible by default
    * if one of child element is active */
-  const isChildActive = !!sub?.find((s) => checkActiveNav(s.href));
+  // const isChildActive = !!sub?.find((s) => checkActiveNav(s.href));
 
   return (
     <Collapsible defaultOpen={false}>
@@ -149,7 +149,7 @@ function NavLinkDropdown({ title, icon, label, sub, closeNav, role }: NavLinkPro
       </CollapsibleTrigger>
       <CollapsibleContent className="collapsibleDropdown" asChild>
         <ul>
-          {sub!.filter((sublink) => !sublink.role || sublink.role.includes(role)).map((sublink) => (
+          {sub!.filter((sublink) => !sublink.role || sublink.role.includes(userRole)).map((sublink) => (
             <li key={sublink.title} className="my-1 ml-8">
               <NavLink {...sublink} subLink closeNav={closeNav} />
             </li>
@@ -189,7 +189,7 @@ function NavLinkIcon({ title, icon, label, href }: NavLinkProps) {
   );
 }
 
-function NavLinkIconDropdown({ title, icon, label, sub, role }: NavLinkProps & { role: number }) {
+function NavLinkIconDropdown({ title, icon, label, sub, userRole }: NavLinkProps & { userRole: number }) {
   const { checkActiveNav } = useCheckActiveNav();
 
   /* Open collapsible by default
@@ -226,7 +226,7 @@ function NavLinkIconDropdown({ title, icon, label, sub, role }: NavLinkProps & {
           {title} {label ? `(${label})` : ""}
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
-        {sub!.filter((sublink) => !sublink.role || sublink.role.includes(role)).map(({ title, icon, label, href }) => (
+        {sub!.filter((sublink) => !sublink.role || sublink.role.includes(userRole)).map(({ title, icon, label, href }) => (
           <DropdownMenuItem key={`${title}-${href}`} asChild>
             <Link
               to={href}
