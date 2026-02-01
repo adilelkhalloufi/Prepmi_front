@@ -27,10 +27,16 @@ export const Plan = ({
     const { t } = useTranslation()
     const dispatch = useDispatch()
     const planData = useSelector((state: RootState) => state.joinProcess.planData)
+    const settings = useSelector((state: RootState) => state.settings)
 
     const [selectedProtein, setSelectedProtein] = useState(planData?.protein || '')
     const [selectedPortion, setSelectedPortion] = useState(planData?.portion || '')
     const [selectedMeals, setSelectedMeals] = useState(planData?.mealsPerWeek ?? '')
+    const [selectedSize, setSelectedSize] = useState(planData?.selectedSize || '')
+
+    // Get order sizes from settings
+    const orderSizes = settings.settings.find(s => s.key === 'order_sizes')?.value
+    const parsedOrderSizes = orderSizes ? JSON.parse(orderSizes) : []
 
     // Update local state when Redux state changes
     useEffect(() => {
@@ -38,6 +44,7 @@ export const Plan = ({
             setSelectedProtein(planData.protein || '')
             setSelectedPortion(planData.portion || '')
             setSelectedMeals(planData.mealsPerWeek ?? '')
+            setSelectedSize(planData.selectedSize || '')
         }
     }, [planData])
 
@@ -90,6 +97,11 @@ export const Plan = ({
                 plan: selectedPlan // Store the complete plan object
             }))
         }
+    }
+
+    const handleSizeSelect = (size: string) => {
+        setSelectedSize(size)
+        dispatch(updatePlanData({ selectedSize: size }))
     }
 
     const calculateTotal = () => {
@@ -194,12 +206,53 @@ export const Plan = ({
                         </div>
                     </div>
 
+                    {/* Order Size Selection */}
+                    {parsedOrderSizes.length > 0 && (
+                        <div className="space-y-8">
+                            <div className="text-center">
+                                <div className="inline-flex items-center justify-center w-12 h-12 bg-primary text-primary-foreground rounded-full font-bold text-xl mb-4">
+                                    1.5
+                                </div>
+                                <h2 className="text-3xl font-bold text-gray-900 mb-4">
+                                    {t('plan.size.title', 'Choose Your Order Size')}
+                                </h2>
+                                <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+                                    {t('plan.size.subtitle', 'Select the size that best fits your needs')}
+                                </p>
+                            </div>
+
+                            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 max-w-2xl mx-auto">
+                                {parsedOrderSizes.map((size: string) => (
+                                    <Card
+                                        key={size}
+                                        className={`cursor-pointer transition-all duration-300 hover:shadow-lg border-2 ${selectedSize === size
+                                            ? 'border-primary bg-primary/10 shadow-lg'
+                                            : 'border-gray-200 hover:border-primary/30'
+                                            }`}
+                                        onClick={() => handleSizeSelect(size)}
+                                    >
+                                        <CardContent className="p-8 text-center">
+                                            <h3 className="text-xl font-bold text-gray-900 mb-3 capitalize">{size}</h3>
+                                            <p className="text-gray-600">
+                                                {size === 'small' ? t('plan.size.small_desc', 'Perfect for individuals or couples') : t('plan.size.large_desc', 'Ideal for families or meal prepping')}
+                                            </p>
+                                            {selectedSize === size && (
+                                                <div className="mt-4">
+                                                    <Badge className="bg-primary text-primary-foreground">{t('common.selected')}</Badge>
+                                                </div>
+                                            )}
+                                        </CardContent>
+                                    </Card>
+                                ))}
+                            </div>
+                        </div>
+                    )}
 
                     {/* Meals Per Week */}
                     <div className="space-y-8">
                         <div className="text-center">
                             <div className="inline-flex items-center justify-center w-12 h-12 bg-primary text-primary-foreground rounded-full font-bold text-xl mb-4">
-                                2
+                                {parsedOrderSizes.length > 0 ? '2' : '2'}
                             </div>
                             <h2 className="text-3xl font-bold text-gray-900 mb-4">
                                 {t('plan.meals.title')}

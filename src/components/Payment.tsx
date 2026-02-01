@@ -216,6 +216,7 @@ export function Payment({
     const handlePlaceOrder = async () => {
 
         const payload = {
+            size: planData?.selectedSize || null,
             paymentMethod: paymentMethod,
             plan: planData?.plan || null,
             meals: selectedMeals, // array of meal objects
@@ -717,6 +718,21 @@ export function Payment({
                                         )}
                                     </span>
                                 </div>
+
+                                {/* Subscriber note */}
+                                {membershipDiscount > 0 && (
+                                    <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+                                        <p className="text-sm text-blue-800">
+                                            <strong>{t('joinNow.payment.note', 'Note')}:</strong> {t('joinNow.payment.subscriberNote', 'As a subscriber, you can cancel or freeze your subscription anytime if you want.')}
+                                            <button
+                                                onClick={() => navigate(webRoutes.dashboard_memberships_view.replace(':id', membershipPlan?.id || ''))}
+                                                className="ml-2 text-blue-600 underline hover:text-blue-800"
+                                            >
+                                                {t('joinNow.payment.viewSubscription', 'View Subscription')}
+                                            </button>
+                                        </p>
+                                    </div>
+                                )}
                             </div>
                         </CardContent>
                     </Card>

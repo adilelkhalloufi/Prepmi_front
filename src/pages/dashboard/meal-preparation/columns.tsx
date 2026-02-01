@@ -46,11 +46,12 @@ export const columns = (
       header: "Repas & Quantité",
       cell: ({ row }) => {
         const meals = row.original.meals || [];
+        console.log('ha hwa:', row.original);
         return (
           <div>
             {meals.map((meal: any, idx: number) => (
               <div key={idx} className="flex gap-2 items-center">
-                <span className="font-medium">{meal.name}</span>
+                <span className="font-medium">{meal.name} ({meal.size})</span>
                 <span className="text-xs text-muted-foreground">
                   x{meal.quantity}
                 </span>

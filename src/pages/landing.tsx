@@ -22,9 +22,13 @@ const Index = () => {
   const { t } = useTranslation();
   const navigator = useNavigate();
   const admin = useSelector((state: RootState) => state.admin?.user);
+  const isLoggedIn = admin?.id && admin.id > 0;
   const [referralDialogOpen, setReferralDialogOpen] = useState(false);
+  const settings = useSelector((state: RootState) => state.settings.settings);
 
-  const referralLink = admin?.id ? `${window.location.origin}/register?ref=${obfuscateId(admin.id)}` : '';
+  const referralLink = isLoggedIn ? `${window.location.origin}/register?ref=${obfuscateId(admin.id!)}` : '';
+
+  const youtubeVideo = settings.find(s => s.key === 'youtube_explanation_video')?.value || 'https://www.youtube.com/embed/CRd8dHqU1AM?si=o3QPG9FPq-QEeL4c';
 
   useEffect(() => {
     // Show dialog after a short delay for better UX
@@ -116,7 +120,7 @@ const Index = () => {
         <div className="flex justify-center">
           <div className="w-full max-w-4xl aspect-video rounded-lg overflow-hidden shadow-2xl">
             <iframe
-              src="https://www.youtube.com/embed/CRd8dHqU1AM?si=o3QPG9FPq-QEeL4c"
+              src={youtubeVideo}
               title="PrepMe - Healthy Meals Made Easy"
               frameBorder="0"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
@@ -184,17 +188,17 @@ const Index = () => {
           <DialogHeader>
             <div className="flex items-center gap-2">
               <Gift className="w-6 h-6 text-primary" />
-              <DialogTitle>{admin ? t('landing.referral_popup_title', 'Earn Points with Referrals!') : t('landing.referral_popup_title_guest', 'Join and Earn Points!')}</DialogTitle>
+              <DialogTitle>{isLoggedIn ? t('landing.referral_popup_title', 'Earn Points with Referrals!') : t('landing.referral_popup_title_guest', 'Join and Earn Points!')}</DialogTitle>
             </div>
             <DialogDescription>
-              {admin
+              {isLoggedIn
                 ? t('landing.referral_popup_desc', 'Share your referral link and earn points when someone creates an account using it.')
                 : t('landing.referral_popup_desc_guest', 'Connect your account and start earning points by sharing your referral link with friends!')
               }
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-4">
-            {admin ? (
+            {isLoggedIn ? (
               <>
                 <div className="flex items-center gap-2 text-sm text-muted-foreground">
                   <Share2 className="w-4 h-4" />

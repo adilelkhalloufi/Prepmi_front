@@ -390,7 +390,10 @@
       "paySecurely": "Pay securely with card",
       "cashOnDelivery": "Cash on Delivery",
       "payWhenReceive": "Pay when you receive",
-      "placeOrderCOD": "Place Order (COD)"
+      "viewSubscription": "View Subscription",
+      "placeOrderCOD": "Place Order (COD)",
+      "note": "Note",
+      "subscriberNote": "As a subscriber, you can cancel or freeze your subscription anytime if you want."
     },
     "joinNow": {
       "steps": {
@@ -630,17 +633,7 @@
     "convenient_desc1": "On-the-go versatile",
     "convenient_desc2": "meals",
     "video_title": "SEE PREPME IN ACTION",
-    "video_description": "Watch how we prepare your healthy meals and deliver them fresh to your door",
-    "referral_popup_title": "Earn Points with Referrals!",
-    "referral_popup_title_guest": "Join and Earn Points!",
-    "referral_popup_desc": "Share your referral link and earn points when someone creates an account using it.",
-    "referral_popup_desc_guest": "Connect your account and start earning points by sharing your referral link with friends!",
-    "referral_link_label": "Your referral link:",
-    "copy_link": "Copy",
-    "referral_note": "Points will be credited once the referred user completes their first order.",
-    "link_copied": "Link copied to clipboard!",
-    "referral_benefits": "Get rewarded for every friend you bring to PrepMe!",
-    "connect_now": "Connect Now"
+    "video_description": "Watch how we prepare your healthy meals and deliver them fresh to your door"
   },
   "for_teams": {
     "hero_title": "CORPORATE MEAL DELIVERY FOR YOUR TEAM",

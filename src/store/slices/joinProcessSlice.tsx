@@ -30,7 +30,7 @@ export type JoinProcessState = {
     address?: string
     hearAboutUs?: string
     delivery_slot_ids?: number[]
-
+    selectedSize?: string
     // Meal selections
     selectedMeals?: Record<string, any>
     selectedBreakfasts?: Record<string, any>
@@ -67,6 +67,7 @@ const initialState: JoinProcessState = {
     password: '',
     repeatPassword: '',
     hearAboutUs: '',
+    selectedSize: '',
     delivery_slot_ids: [],
     selectedMeals: {},
     selectedBreakfasts: {},

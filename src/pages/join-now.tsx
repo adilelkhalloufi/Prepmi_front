@@ -21,6 +21,7 @@ const JoinNow = () => {
     const dispatch = useDispatch<AppDispatch>()
     const { currentStep = 1, planData } = useSelector((state: RootState) => state.joinProcess)
     const admin = useSelector((state: RootState) => state.admin?.user) // Uncomment if auth slice exists
+    const settings = useSelector((state: RootState) => state.settings)
 
     // Fetch delivery slots from API
     const { isLoading: isLoadingDeliverySlots, data: deliverySlotsResponse } = useQuery<{ data: any[] }>({
@@ -89,7 +90,7 @@ const JoinNow = () => {
             dispatch(setSettings(res.data.data || res.data))
             return res.data
         }).catch(() => null),
-        enabled: !!admin?.id,
+
     });
     // Fetch all meals from API (for breakfasts and drinks)
     const { isLoading: isLoadingMeals, data: mealsResponse } = useQuery<{ data: any[] }>({
@@ -167,6 +168,15 @@ const JoinNow = () => {
                 toast.error(t('joinNow.validation.selectProtein'))
                 return
             }
+
+            // Check if order sizes are required
+            const orderSizes = settings.settings.find(s => s.key === 'order_sizes')?.value
+            const parsedOrderSizes = orderSizes ? JSON.parse(orderSizes) : []
+            if (parsedOrderSizes.length > 0 && (!planData?.selectedSize || planData?.selectedSize === '')) {
+                toast.error(t('joinNow.validation.selectSize', 'Please select an order size'))
+                return
+            }
+
             if (!planData?.mealsPerWeek || planData?.mealsPerWeek === 0) {
                 toast.error(t('joinNow.validation.selectPlan'))
                 return

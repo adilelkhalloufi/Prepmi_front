@@ -59,12 +59,14 @@ const groupByOrder = (items: any[]) => {
                     meals: [],
                     order_status: item.order_status,
                     order_id: item.order_id,
+                    size: item.size,
                 };
             }
             grouped[orderNum].meals.push({
                 name: item.meal?.name,
                 quantity: item.quantity,
                 order_meal_id: item.order_meal_id,
+                size: item.size,
             });
         });
         return Object.values(grouped);
@@ -80,6 +82,7 @@ const groupByOrder = (items: any[]) => {
                 name: mealItem.meal?.name,
                 quantity: mealItem.quantity,
                 order_meal_id: mealItem.id || mealItem.order_meal_id,
+                size: order.size,
             }))
         }));
     }
@@ -188,7 +191,7 @@ export function CalendarView({ data, loading, onStatusUpdate }: CalendarViewProp
                                                                     className="w-12 h-12 rounded-md object-cover"
                                                                 />
                                                             )}
-                                                            <span className="font-medium">{meal.name}</span>
+                                                            <span className="font-medium">{meal.name} ({meal.size})</span>
                                                             <span className="text-xs text-muted-foreground">x{meal.quantity}</span>
                                                         </div>
                                                     ))}

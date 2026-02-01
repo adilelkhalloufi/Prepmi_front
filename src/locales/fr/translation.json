@@ -428,7 +428,11 @@
       "standardDeliveryTime": "3-5 jours ouvrables",
       "expressDelivery": "Livraison Express",
       "expressDeliveryTime": "1-2 jours ouvrables",
-      "deliverySlots": "Créneaux de Livraison"
+      "deliverySlots": "Créneaux de Livraison",
+      "note": "Note",
+      "viewSubscription": "Voir l'abonnement",
+
+      "subscriberNote": "En tant qu'abonné, vous pouvez annuler ou suspendre votre abonnement à tout moment si vous le souhaitez."
     },
     "address": {
       "title": "DÉTAILS DE LIVRAISON",

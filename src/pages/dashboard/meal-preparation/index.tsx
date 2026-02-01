@@ -17,7 +17,7 @@ export default function MealPreparationIndex() {
     const fetchMealPreparations = () => {
         // Replace with your actual API endpoint for meal preparations
         http.get(apiRoutes.mealPreparations).then((res) => {
-            console.log(res.data.data);
+            console.log("ha hwa lwal :", res.data.data);
             setData(res.data.data);
             setLoading(false);
         }).catch(() => {
@@ -43,12 +43,14 @@ export default function MealPreparationIndex() {
                         meals: [],
                         order_status: item.order_status,
                         order_id: item.order_id,
+                        size: item.size,
                     };
                 }
                 grouped[orderNum].meals.push({
                     name: item.meal?.name,
                     quantity: item.quantity,
                     order_meal_id: item.order_meal_id,
+                    size: item.size,
                 });
             });
             return Object.values(grouped);
@@ -64,6 +66,7 @@ export default function MealPreparationIndex() {
                     name: mealItem.meal?.name,
                     quantity: mealItem.quantity,
                     order_meal_id: mealItem.id || mealItem.order_meal_id,
+                    size: order.size,
                 }))
             }));
         }
