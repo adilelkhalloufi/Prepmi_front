@@ -28,6 +28,7 @@ interface NavProps extends React.HTMLAttributes<HTMLDivElement> {
   isCollapsed: boolean;
   links: SideLink[];
   closeNav: () => void;
+  role: number;
 }
 
 export default function Nav({
@@ -35,6 +36,7 @@ export default function Nav({
   isCollapsed,
   className,
   closeNav,
+  role,
 }: NavProps) {
   const renderLink = ({ sub, ...rest }: SideLink) => {
     const key = `${rest.title}-${rest.href}`;
@@ -45,6 +47,7 @@ export default function Nav({
           sub={sub}
           key={key}
           closeNav={closeNav}
+          role={role}
         />
       );
 
@@ -53,7 +56,7 @@ export default function Nav({
 
     if (sub)
       return (
-        <NavLinkDropdown {...rest} sub={sub} key={key} closeNav={closeNav} />
+        <NavLinkDropdown {...rest} sub={sub} key={key} closeNav={closeNav} role={role} />
       );
 
     return <NavLink {...rest} key={key} closeNav={closeNav} />;
@@ -114,7 +117,7 @@ function NavLink({
   );
 }
 
-function NavLinkDropdown({ title, icon, label, sub, closeNav }: NavLinkProps) {
+function NavLinkDropdown({ title, icon, label, sub, closeNav, role }: NavLinkProps & { role: number }) {
   const { checkActiveNav } = useCheckActiveNav();
 
   /* Open collapsible by default
@@ -146,7 +149,7 @@ function NavLinkDropdown({ title, icon, label, sub, closeNav }: NavLinkProps) {
       </CollapsibleTrigger>
       <CollapsibleContent className="collapsibleDropdown" asChild>
         <ul>
-          {sub!.map((sublink) => (
+          {sub!.filter((sublink) => !sublink.role || sublink.role.includes(role)).map((sublink) => (
             <li key={sublink.title} className="my-1 ml-8">
               <NavLink {...sublink} subLink closeNav={closeNav} />
             </li>
@@ -186,7 +189,7 @@ function NavLinkIcon({ title, icon, label, href }: NavLinkProps) {
   );
 }
 
-function NavLinkIconDropdown({ title, icon, label, sub }: NavLinkProps) {
+function NavLinkIconDropdown({ title, icon, label, sub, role }: NavLinkProps & { role: number }) {
   const { checkActiveNav } = useCheckActiveNav();
 
   /* Open collapsible by default
@@ -223,7 +226,7 @@ function NavLinkIconDropdown({ title, icon, label, sub }: NavLinkProps) {
           {title} {label ? `(${label})` : ""}
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
-        {sub!.map(({ title, icon, label, href }) => (
+        {sub!.filter((sublink) => !sublink.role || sublink.role.includes(role)).map(({ title, icon, label, href }) => (
           <DropdownMenuItem key={`${title}-${href}`} asChild>
             <Link
               to={href}
