@@ -86,7 +86,7 @@ export function Payment({
     // Use props data instead of fetching
     const userMembership = membershipData;
     const membershipPlan = userMembership?.membership_plan || null;
-
+    console.log('userMembership:', userMembership);
     // add loading state
     const [isPlacingOrder, setIsPlacingOrder] = useState(false)
 
@@ -725,7 +725,7 @@ export function Payment({
                                         <p className="text-sm text-blue-800">
                                             <strong>{t('joinNow.payment.note', 'Note')}:</strong> {t('joinNow.payment.subscriberNote', 'As a subscriber, you can cancel or freeze your subscription anytime if you want.')}
                                             <button
-                                                onClick={() => navigate(webRoutes.dashboard_memberships_view.replace(':id', membershipPlan?.id || ''))}
+                                                onClick={() => navigate(webRoutes.dashboard_memberships_view.replace(':id', userMembership?.id || ''))}
                                                 className="ml-2 text-blue-600 underline hover:text-blue-800"
                                             >
                                                 {t('joinNow.payment.viewSubscription', 'View Subscription')}
