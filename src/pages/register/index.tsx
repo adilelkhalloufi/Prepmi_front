@@ -104,9 +104,9 @@ const Register = () => {
             toast.success("Account created successfully! Please login.");
             dispatch(restRegister());
             navigator(webRoutes.login);
-        }).catch(() => {
+        }).catch((error) => {
             setLoading(false);
-            handleErrorResponse(t('register.errors.creation', 'Failed to create account. Please try again.'));
+            handleErrorResponse(error);
         });
 
 

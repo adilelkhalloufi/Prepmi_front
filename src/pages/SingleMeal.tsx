@@ -136,56 +136,56 @@ export const SingleMeal = () => {
 
             {/* Nutritional Information */}
             <div className="grid gap-4 p-4 bg-gray-50 dark:bg-gray-900 rounded-lg border">
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">Nutritional Information</h3>
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">{t("meal.nutritional_info")}</h3>
 
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
                 {(meal?.nutrition?.calories || meal?.calories) && (
                   <div className="text-center p-3 bg-white dark:bg-gray-800 rounded-lg">
                     <Flame className="h-6 w-6 text-orange-500 mx-auto mb-1" />
                     <div className="text-2xl font-bold text-gray-900 dark:text-gray-100">{meal.nutrition?.calories || meal.calories}</div>
-                    <div className="text-sm text-gray-600 dark:text-gray-400">Calories</div>
+                    <div className="text-sm text-gray-600 dark:text-gray-400">{t("meal.calories")}</div>
                   </div>
                 )}
                 {(meal?.nutrition?.protein || meal?.protein) && (
                   <div className="text-center p-3 bg-white dark:bg-gray-800 rounded-lg">
                     <ChefHat className="h-6 w-6 text-red-500 mx-auto mb-1" />
                     <div className="text-2xl font-bold text-gray-900 dark:text-gray-100">{meal.nutrition?.protein || meal.protein}g</div>
-                    <div className="text-sm text-gray-600 dark:text-gray-400">Protein</div>
+                    <div className="text-sm text-gray-600 dark:text-gray-400">{t("meal.protein")}</div>
                   </div>
                 )}
                 {(meal?.nutrition?.carbohydrates || meal?.carbohydrates) && (
                   <div className="text-center p-3 bg-white dark:bg-gray-800 rounded-lg">
                     <Leaf className="h-6 w-6 text-yellow-500 mx-auto mb-1" />
                     <div className="text-2xl font-bold text-gray-900 dark:text-gray-100">{meal.nutrition?.carbohydrates || meal.carbohydrates}g</div>
-                    <div className="text-sm text-gray-600 dark:text-gray-400">Carbs</div>
+                    <div className="text-sm text-gray-600 dark:text-gray-400">{t("meal.carbs")}</div>
                   </div>
                 )}
                 {(meal?.nutrition?.fats || meal?.fats) && (
                   <div className="text-center p-3 bg-white dark:bg-gray-800 rounded-lg">
                     <Heart className="h-6 w-6 text-purple-500 mx-auto mb-1" />
                     <div className="text-2xl font-bold text-gray-900 dark:text-gray-100">{meal.nutrition?.fats || meal.fats}g</div>
-                    <div className="text-sm text-gray-600 dark:text-gray-400">Fats</div>
+                    <div className="text-sm text-gray-600 dark:text-gray-400">{t("meal.fats")}</div>
                   </div>
                 )}
                 {(meal?.nutrition?.fiber || meal?.fiber) && (
                   <div className="text-center p-3 bg-white dark:bg-gray-800 rounded-lg">
                     <Leaf className="h-6 w-6 text-green-500 mx-auto mb-1" />
                     <div className="text-2xl font-bold text-gray-900 dark:text-gray-100">{meal.nutrition?.fiber || meal.fiber}g</div>
-                    <div className="text-sm text-gray-600 dark:text-gray-400">Fiber</div>
+                    <div className="text-sm text-gray-600 dark:text-gray-400">{t("meal.fiber")}</div>
                   </div>
                 )}
                 {(meal?.nutrition?.sodium || meal?.sodium) && (
                   <div className="text-center p-3 bg-white dark:bg-gray-800 rounded-lg">
                     <AlertCircle className="h-6 w-6 text-blue-500 mx-auto mb-1" />
                     <div className="text-2xl font-bold text-gray-900 dark:text-gray-100">{meal.nutrition?.sodium || meal.sodium}mg</div>
-                    <div className="text-sm text-gray-600 dark:text-gray-400">Sodium</div>
+                    <div className="text-sm text-gray-600 dark:text-gray-400">{t("meal.sodium")}</div>
                   </div>
                 )}
                 {(meal?.nutrition?.sugar || meal?.sugar) && (
                   <div className="text-center p-3 bg-white dark:bg-gray-800 rounded-lg">
                     <Flame className="h-6 w-6 text-pink-500 mx-auto mb-1" />
                     <div className="text-2xl font-bold text-gray-900 dark:text-gray-100">{meal.nutrition?.sugar || meal.sugar}g</div>
-                    <div className="text-sm text-gray-600 dark:text-gray-400">Sugar</div>
+                    <div className="text-sm text-gray-600 dark:text-gray-400">{t("meal.sugar")}</div>
                   </div>
                 )}
               </div>
@@ -193,14 +193,14 @@ export const SingleMeal = () => {
 
             {/* Preparation Details */}
             <div className="grid gap-4 p-4 bg-gray-50 dark:bg-gray-900 rounded-lg border">
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">Preparation Details</h3>
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">{t("meal.preparation_details")}</h3>
 
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 {(meal?.preparation?.prep_time_minutes || meal?.prep_time_minutes) && (
                   <div className="flex items-center gap-3">
                     <Clock className="h-5 w-5 text-blue-600" />
                     <div>
-                      <div className="text-sm font-medium text-gray-700 dark:text-gray-300">Prep Time</div>
+                      <div className="text-sm font-medium text-gray-700 dark:text-gray-300">{t("meal.prep_time")}</div>
                       <div className="text-lg font-bold">{meal.preparation?.prep_time_minutes || meal.prep_time_minutes} min</div>
                     </div>
                   </div>
@@ -209,7 +209,7 @@ export const SingleMeal = () => {
                   <div className="flex items-center gap-3">
                     <ChefHat className="h-5 w-5 text-green-600" />
                     <div>
-                      <div className="text-sm font-medium text-gray-700 dark:text-gray-300">Cook Time</div>
+                      <div className="text-sm font-medium text-gray-700 dark:text-gray-300">{t("meal.cook_time")}</div>
                       <div className="text-lg font-bold">{meal.preparation?.cooking_time_minutes || meal.cooking_time_minutes} min</div>
                     </div>
                   </div>
@@ -218,7 +218,7 @@ export const SingleMeal = () => {
                   <div className="flex items-center gap-3">
                     <Clock className="h-5 w-5 text-indigo-600" />
                     <div>
-                      <div className="text-sm font-medium text-gray-700 dark:text-gray-300">Total Time</div>
+                      <div className="text-sm font-medium text-gray-700 dark:text-gray-300">{t("meal.total_time")}</div>
                       <div className="text-lg font-bold">{meal.preparation?.total_time_minutes || meal.total_time_minutes} min</div>
                     </div>
                   </div>
@@ -227,7 +227,7 @@ export const SingleMeal = () => {
                   <div className="flex items-center gap-3">
                     <CheckCircle2 className="h-5 w-5 text-purple-600" />
                     <div>
-                      <div className="text-sm font-medium text-gray-700 dark:text-gray-300">Difficulty</div>
+                      <div className="text-sm font-medium text-gray-700 dark:text-gray-300">{t("meal.difficulty")}</div>
                       <Badge variant="outline" className="font-medium transition-all duration-300 hover:scale-105 hover:text-white hover:bg-primary hover:border-primary cursor-pointer">
                         {getDifficultyLevel(meal.preparation?.difficulty_level || meal.difficulty_level)}
                       </Badge>
@@ -241,13 +241,13 @@ export const SingleMeal = () => {
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2 border-t">
                   {meal?.serving_size && (
                     <div className="flex items-center gap-2">
-                      <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Serving Size:</span>
+                      <span className="text-sm font-medium text-gray-700 dark:text-gray-300">{t("meal.serving_size")}</span>
                       <span className="text-sm text-gray-600 dark:text-gray-400">{meal.serving_size}</span>
                     </div>
                   )}
                   {meal?.weight_grams && (
                     <div className="flex items-center gap-2">
-                      <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Weight:</span>
+                      <span className="text-sm font-medium text-gray-700 dark:text-gray-300">{t("meal.weight")}</span>
                       <span className="text-sm text-gray-600 dark:text-gray-400">{meal.weight_grams}g</span>
                     </div>
                   )}
@@ -259,7 +259,7 @@ export const SingleMeal = () => {
                 <div className="flex items-center gap-3 pt-2 border-t">
                   <AlertCircle className="h-5 w-5 text-red-600" />
                   <div className="flex items-center gap-2">
-                    <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Spice Level:</span>
+                    <span className="text-sm font-medium text-gray-700 dark:text-gray-300">{t("meal.spice_level")}</span>
                     <div className="flex gap-1">
                       {[1, 2, 3, 4, 5].map((level) => (
                         <Flame
@@ -295,7 +295,7 @@ export const SingleMeal = () => {
           {/* Ingredients */}
           {meal?.ingredients && (
             <div className="grid gap-2 p-4 bg-gray-50 dark:bg-gray-900 rounded-lg border">
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Ingredients</h3>
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">{t("meal.ingredients")}</h3>
               {Array.isArray(meal.ingredients) ? (
                 <ul className="list-disc list-inside space-y-1">
                   {meal.ingredients.map((ingredient: any, index: number) => (
@@ -311,7 +311,7 @@ export const SingleMeal = () => {
           {/* Allergens */}
           {meal?.allergens && (
             <div className="grid gap-2 p-4 bg-red-50 dark:bg-red-900/20 rounded-lg border border-red-200 dark:border-red-800">
-              <h3 className="text-lg font-semibold text-red-900 dark:text-red-100">Allergen Information</h3>
+              <h3 className="text-lg font-semibold text-red-900 dark:text-red-100">{t("meal.allergen_info")}</h3>
               <p className="text-sm text-red-700 dark:text-red-300 leading-relaxed">{meal.allergens}</p>
             </div>
           )}
@@ -319,7 +319,7 @@ export const SingleMeal = () => {
           {/* Preparation Instructions */}
           {(meal?.preparation_instructions || meal?.preparation?.instructions) && (
             <div className="grid gap-2 p-4 bg-gray-50 dark:bg-gray-900 rounded-lg border">
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Preparation Instructions</h3>
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">{t("meal.preparation_instructions")}</h3>
               <p className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed whitespace-pre-line">
                 {meal.preparation_instructions || meal.preparation?.instructions}
               </p>
@@ -329,7 +329,7 @@ export const SingleMeal = () => {
           {/* Storage Instructions */}
           {(meal?.storage_instructions || meal?.preparation?.storage_instructions) && (
             <div className="grid gap-2 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800">
-              <h3 className="text-lg font-semibold text-blue-900 dark:text-blue-100">Storage Instructions</h3>
+              <h3 className="text-lg font-semibold text-blue-900 dark:text-blue-100">{t("meal.storage_instructions")}</h3>
               <p className="text-sm text-blue-700 dark:text-blue-300 leading-relaxed">
                 {meal.storage_instructions || meal.preparation?.storage_instructions}
               </p>
@@ -341,7 +341,7 @@ export const SingleMeal = () => {
             <div className="grid gap-2 p-4 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg border border-yellow-200 dark:border-yellow-800">
               <h3 className="text-lg font-semibold text-yellow-900 dark:text-yellow-100 flex items-center gap-2">
                 <ChefHat className="h-5 w-5" />
-                Chef's Notes
+                {t("meal.chef_notes")}
               </h3>
               <p className="text-sm text-yellow-700 dark:text-yellow-300 leading-relaxed">{meal.chef_notes}</p>
             </div>
@@ -377,14 +377,14 @@ export const SingleMeal = () => {
           )}
 
           <div className="grid gap-4">
-            <h2 className="font-bold text-lg">Related Meals</h2>
+            <h2 className="font-bold text-lg">{t("meal.related_meals")}</h2>
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
               {meal?.relatedProducts?.length > 0 ? (
                 meal.relatedProducts.map((relatedMeal: any) => (
                   <RelatedProduct key={relatedMeal.id} product={relatedMeal} />
                 ))
               ) : (
-                <p className="text-muted-foreground">No related meals found</p>
+                <p className="text-muted-foreground">{t("meal.no_related_meals")}</p>
               )}
             </div>
           </div>

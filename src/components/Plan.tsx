@@ -234,7 +234,7 @@ export const Plan = ({
                                 </p>
                             </div>
 
-                            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 max-w-2xl mx-auto">
+                            <div className="flex flex-row justify-center gap-6 mb-12">
                                 {parsedOrderSizes.map((size: string) => (
                                     <Card
                                         key={size}

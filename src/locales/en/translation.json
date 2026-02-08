@@ -272,6 +272,12 @@
         }
       }
     },
+    "size": {
+      "title": "Choose Your Order Size",
+      "subtitle": "Select the size that best fits your needs",
+      "small_desc": "Perfect for individuals or couples",
+      "large_desc": "Ideal for families or meal prepping"
+    },
     "portion": {
       "title": "Choose Your Portion Preference",
       "options": {
@@ -321,10 +327,61 @@
     },
     "validation": {
       "selectProtein": "Please select your protein preference before continuing",
+      "selectSize": "Please select an order size",
       "selectPlan": "Please select a meal plan before continuing",
+      "selectAllMeals": "Please select all your meals before continuing.",
+      "selectFreeDesserts": "Please select all {{count}} free desserts from your membership before continuing.",
+      "selectDeliverySlot": "Please select at least one delivery time slot.",
       "fillAllFields": "Please fill in all required fields.",
       "fillAccountFields": "Please fill in email and password.",
       "passwordMismatch": "Passwords do not match."
+    },
+    "meals": {
+      "title": "CHOOSE YOUR MEALS",
+      "subtitle": "Menu changes weekly with 50+ options per month",
+      "deliveryWeek": "During the week",
+      "proteinPreference": "Protein Preference",
+      "mainMeals": "Main Meals",
+      "membership": "Membership",
+      "freeDessertsPerMonth": "Free Desserts/Month",
+      "deliveryDate": "Delivery Date",
+      "availableRewards": "Available Rewards",
+      "allAvailableMeals": "All Available Meals",
+      "noMealsAvailable": "No meals available. Please check back later.",
+      "mealsRemaining": "{{count}} meals remaining to select",
+      "freeMealRewards": "You have {{count}} free meal reward(s)",
+      "view": "View",
+      "hide": "Hide",
+      "selectMealForReward": "Select a meal to apply this reward ({{count}} eligible meals):",
+      "noMealsForReward": "No meals available for this reward value.",
+      "applyReward": "Apply Reward",
+      "applied": "Applied",
+      "freeDessertsMembershipBenefit": "Free Desserts (Membership Benefit)",
+      "selectFreeDesserts": "Select up to {{count}} free desserts included in your {{membershipName}} membership",
+      "addDrinks": "Add Drinks",
+      "optionalHealthyBeverages": "Optional - Healthy beverages",
+      "add": "Add",
+      "skip": "Skip",
+      "noDrinksAvailable": "No drinks available at the moment.",
+      "selectedMealsDrinksSummary": "Selected Meals & Drinks Summary",
+      "appliedReward": "Applied Reward",
+      "meals": "Meals",
+      "noMealsSelected": "No meals selected.",
+      "drinks": "Drinks",
+      "noDrinksSelected": "No drinks selected.",
+      "freeDessertsMembership": "Free Desserts (Membership)",
+      "discount": "discount",
+      "selected": "selected",
+      "free": "FREE",
+      "quantity": "x {{count}}",
+      "kcal": "kcal",
+      "protein": "protein",
+      "calories": "Calories",
+      "proteinLabel": "Protein",
+      "price": "Price",
+      "currency": "£",
+      "separator": "•",
+      "grams": "g"
     },
     "address": {
       "title": "Delivery Information",
@@ -566,6 +623,31 @@
         "total": "Total"
       }
     },
+    "meal": {
+      "nutritional_info": "Nutritional Information",
+      "calories": "Calories",
+      "protein": "Protein",
+      "carbs": "Carbs",
+      "fats": "Fats",
+      "fiber": "Fiber",
+      "sodium": "Sodium",
+      "sugar": "Sugar",
+      "preparation_details": "Preparation Details",
+      "prep_time": "Prep Time",
+      "cook_time": "Cook Time",
+      "total_time": "Total Time",
+      "difficulty": "Difficulty",
+      "serving_size": "Serving Size:",
+      "weight": "Weight:",
+      "spice_level": "Spice Level:",
+      "ingredients": "Ingredients",
+      "allergen_info": "Allergen Information",
+      "preparation_instructions": "Preparation Instructions",
+      "storage_instructions": "Storage Instructions",
+      "chef_notes": "Chef's Notes",
+      "related_meals": "Related Meals",
+      "no_related_meals": "No related meals found"
+    },
     "common": {
       "selected": "Selected",
       "meal": "meal",
@@ -765,5 +847,10 @@
       "https_example": "https://example.com",
       "submit": "Submit Application"
     }
+  },
+  "thank_you": {
+    "title": "Thank you!",
+    "description": "Your order has been received. We will send a confirmation to your account shortly.",
+    "home": "Home"
   }
 }

@@ -1,27 +1,19 @@
 import { useState, useEffect } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/store";
 import { updatePlanData } from "@/store/slices/joinProcessSlice";
-import { MealCard } from "@/components/MealCard";
 import { Meal, Reward } from "@/interfaces/admin";
 import { useNavigate } from "react-router-dom";
 import { webRoutes } from "@/routes/web";
-import {
-  Calendar,
-  Utensils,
-  Coffee,
-  Plus,
-  Minus,
-  Check,
-  X,
-  ImageIcon,
-  Gift,
-  Crown,
-} from "lucide-react";
+import { MealsHeader } from "@/components/meals/MealsHeader";
+import { PlanSummary } from "@/components/meals/PlanSummary";
+import { MealSelector } from "@/components/meals/MealSelector";
+import { RewardsSection } from "@/components/meals/RewardsSection";
+import { FreeDesserts } from "@/components/meals/FreeDesserts";
+import { DrinksSection } from "@/components/meals/DrinksSection";
+import { MealsSummary } from "@/components/meals/MealsSummary";
 
 interface MealsProps {
   categoriesData?: any[];
@@ -75,10 +67,6 @@ export function Meals({
   // Use props data instead of fetching
   const weeklyMenu = weeklyMenuData;
   const allMeals = mealsData;
-  console.log("All Meals:", allMeals);
-
-  const mainMeals = weeklyMenu?.meals || [];
-
   const drinks = drinksData;
 
   // Membership data
@@ -137,7 +125,7 @@ export function Meals({
   // Filter meals that are eligible for reward (based on value)
   const getRewardEligibleMeals = (reward: Reward) => {
     const rewardValue = Number(reward.value);
-    return mainMeals.filter((meal: Meal) => {
+    return allMeals.filter((meal: Meal) => {
       const mealPrice = Number(meal.price || 0);
       return mealPrice <= rewardValue;
     });
@@ -267,7 +255,7 @@ export function Meals({
 
   const handleApplyReward = (mealId: number, rewardId: number) => {
     const reward = availableRewards.find((r) => r.id === rewardId);
-    const selectedMeal = mainMeals.find((m: Meal) => m.id === mealId);
+    const selectedMeal = allMeals.find((m: Meal) => m.id === mealId);
     if (!reward || !selectedMeal) return;
 
     setAppliedReward(reward);
@@ -293,156 +281,20 @@ export function Meals({
   return (
     <div className="space-y-8">
       {/* Header */}
-      <div className="text-center mb-8">
-        <h2 className="text-3xl font-bold text-foreground mb-2">
-          {weeklyMenu?.title || t("joinNow.meals.title", "CHOOSE YOUR MEALS")}
-        </h2>
-        <p className="text-muted-foreground">
-          {weeklyMenu?.description ||
-            t(
-              "joinNow.meals.subtitle",
-              "Menu changes weekly with 50+ options per month"
-            )}
-        </p>
-        {weeklyMenu && (
-          <div className="mt-3">
-            <Badge variant="outline" className="text-sm px-4 py-1">
-              <Calendar className="w-4 h-4 mr-2 inline" />
-              {new Date(weeklyMenu.week_start_date).toLocaleDateString(
-                "en-GB",
-                {
-                  day: "numeric",
-                  month: "short",
-                }
-              )}{" "}
-              -{" "}
-              {new Date(weeklyMenu.week_end_date).toLocaleDateString("en-GB", {
-                day: "numeric",
-                month: "short",
-                year: "numeric",
-              })}
-            </Badge>
-          </div>
-        )}
-      </div>
+      <MealsHeader weeklyMenu={weeklyMenu} />
 
       {/* Plan Summary */}
-      <Card className="bg-gradient-to-r from-primary/5 to-primary/10 border-primary/20">
-        <CardContent className="p-6">
-          <div className="flex flex-col md:flex-row md:justify-between md:space-x-6 space-y-4 md:space-y-0">
-            <div className="flex items-center space-x-3">
-              <div className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center">
-                <Utensils className="w-5 h-5 text-primary" />
-              </div>
-              <div>
-                <p className="text-sm text-muted-foreground">
-                  Protein Preference
-                </p>
-                <p className="font-semibold text-foreground">
-                  {planData?.category?.name}
-                </p>
-              </div>
-            </div>
-
-            <div className="flex items-center space-x-3">
-              <div className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center">
-                <Badge className="w-5 h-5 bg-primary text-primary-foreground">
-                  {planData?.mealsPerWeek || 0}
-                </Badge>
-              </div>
-              <div>
-                <p className="text-sm text-muted-foreground">Main Meals</p>
-                <p className="font-semibold text-foreground">
-                  {totalSelectedMeals}/{planData?.mealsPerWeek || 0}
-                </p>
-              </div>
-            </div>
-
-            {/* Membership Section */}
-            {userMembership && membershipPlan && (
-              <div className="flex items-center space-x-3">
-                <div className="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center">
-                  <Check className="w-5 h-5 text-green-600" />
-                </div>
-                <div>
-                  <p className="text-sm text-muted-foreground">Membership</p>
-                  <p className="font-semibold text-foreground">
-                    {membershipPlan.name}
-                  </p>
-                  {membershipDiscount > 0 && (
-                    <p className="text-xs text-green-600">
-                      {membershipDiscount}% discount
-                    </p>
-                  )}
-                </div>
-              </div>
-            )}
-
-            {/* Free Desserts/Drinks */}
-            {hasFreeDesserts && freeDessertsQuantity > 0 && (
-              <div className="flex items-center space-x-3">
-                <div className="w-10 h-10 rounded-full bg-secondary/20 flex items-center justify-center">
-                  <Gift className="w-5 h-5 text-secondary" />
-                </div>
-                <div>
-                  <p className="text-sm text-muted-foreground">
-                    Free Desserts/Month
-                  </p>
-                  <p className="font-semibold text-foreground">
-                    {Object.values(selectedFreeDesserts).reduce(
-                      (sum: number, drink: any) => sum + (drink.quantity || 0),
-                      0
-                    )}
-                    /{freeDessertsQuantity}
-                  </p>
-                </div>
-              </div>
-            )}
-
-            <div className="flex items-center space-x-3">
-              <div className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center">
-                <Calendar className="w-5 h-5 text-primary" />
-              </div>
-              <div>
-                <p className="text-sm text-muted-foreground">Delivery Date</p>
-                <p className="font-semibold text-foreground">
-                  {weeklyMenu
-                    ? `${new Date(
-                      weeklyMenu.week_start_date
-                    ).toLocaleDateString("en-GB", {
-                      day: "numeric",
-                      month: "short",
-                    })} - ${new Date(
-                      weeklyMenu.week_end_date
-                    ).toLocaleDateString("en-GB", {
-                      day: "numeric",
-                      month: "short",
-                    })}`
-                    : t("joinNow.meals.deliveryWeek", "During the week")}
-                </p>
-              </div>
-            </div>
-
-            {availableRewards.length > 0 && (
-              <div className="flex items-center space-x-3">
-                <div className="w-10 h-10 rounded-full bg-secondary/20 flex items-center justify-center">
-                  <Gift className="w-5 h-5 text-secondary" />
-                </div>
-                <div>
-                  <p className="text-sm text-muted-foreground">
-                    Available Rewards
-                  </p>
-                  <p className="font-semibold text-foreground">
-                    {availableRewards
-                      .map((r) => `${Number(r.value).toFixed(2)} MAD`)
-                      .join(", ")}
-                  </p>
-                </div>
-              </div>
-            )}
-          </div>
-        </CardContent>
-      </Card>
+      <PlanSummary
+        planData={planData}
+        totalSelectedMeals={totalSelectedMeals}
+        userMembership={userMembership}
+        membershipPlan={membershipPlan}
+        hasFreeDesserts={hasFreeDesserts}
+        freeDessertsQuantity={freeDessertsQuantity}
+        membershipDiscount={membershipDiscount}
+        selectedFreeDesserts={selectedFreeDesserts}
+        availableRewards={availableRewards}
+      />
 
       {/* Remaining Meals Counter */}
       {remainingMeals > 0 && (
@@ -451,814 +303,62 @@ export function Meals({
             variant="outline"
             className="text-lg px-4 py-2 border-primary text-primary"
           >
-            {remainingMeals} meals remaining to select
+            {t("joinNow.meals.mealsRemaining", { count: remainingMeals })}
           </Badge>
         </div>
       )}
 
-
       {/* All Meals Grid - Fetched from API */}
-      <div>
-        <h3 className="text-xl font-semibold mb-4 text-foreground">
-          All Available Meals
-        </h3>
-        {isLoadingMeals ? (
-          // Loading skeleton
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {Array.from({ length: 6 }).map((_, index) => (
-              <Card key={index} className="border-2 border-gray-200">
-                <CardContent className="p-6">
-                  <div className="animate-pulse">
-                    <div className="h-40 bg-gray-200 rounded mb-4"></div>
-                    <div className="h-6 bg-gray-200 rounded mb-3 w-3/4"></div>
-                    <div className="h-4 bg-gray-200 rounded mb-2 w-full"></div>
-                    <div className="h-4 bg-gray-200 rounded w-2/3"></div>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        ) : allMeals.length === 0 ? (
-          <div className="text-center py-12">
-            <p className="text-muted-foreground">
-              No meals available. Please check back later.
-            </p>
-          </div>
-        ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {allMeals.map((meal) => (
-              <div key={meal.id} className="relative">
-                <MealCard meal={meal} />
-
-                {/* Quantity Selector Overlay or Membership Button */}
-                {canAddMealToBasket(meal) ? (
-                  // Show normal add/minus buttons if user can add to basket
-                  <div className="absolute top-4 left-4 bg-white dark:bg-card rounded-lg shadow-lg border border-border p-2 flex items-center space-x-2">
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      className="h-8 w-8 p-0"
-                      onClick={() => handleMealQuantityChange(meal.id, -1)}
-                      disabled={!selectedMeals[meal.id]}
-                    >
-                      <Minus className="h-4 w-4" />
-                    </Button>
-
-                    <span className="min-w-[2rem] text-center font-semibold">
-                      {selectedMeals[meal.id]?.quantity || 0}
-                    </span>
-
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      className="h-8 w-8 p-0"
-                      onClick={() => handleMealQuantityChange(meal.id, 1)}
-                      disabled={remainingMeals === 0}
-                    >
-                      <Plus className="h-4 w-4" />
-                    </Button>
-                  </div>
-                ) : (
-                  // Show membership button if meal requires membership and user doesn't have it
-                  <div className="absolute top-4 left-4 bg-white dark:bg-card rounded-lg shadow-lg border border-border">
-                    <Button
-                      size="sm"
-                      variant="default"
-                      className="bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-amber-600 hover:to-yellow-600 text-white font-semibold"
-                      onClick={handleMembershipRedirect}
-                    >
-                      <Crown className="h-4 w-4 mr-2" />
-                      {t('menu.get_membership', 'Get Membership')}
-                    </Button>
-                  </div>
-                )}
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
+      <MealSelector
+        allMeals={allMeals}
+        isLoadingMeals={isLoadingMeals}
+        selectedMeals={selectedMeals}
+        remainingMeals={remainingMeals}
+        canAddMealToBasket={canAddMealToBasket}
+        handleMealQuantityChange={handleMealQuantityChange}
+        handleMembershipRedirect={handleMembershipRedirect}
+      />
 
       {/* Rewards Section */}
-      {availableRewards.length > 0 && (
-        <Card className="border-2 border-dashed border-secondary/30 bg-secondary/5">
-          <CardHeader className="flex flex-row items-center justify-between">
-            <div className="flex items-center space-x-3">
-              <Gift className="w-6 h-6 text-secondary" />
-              <div>
-                <CardTitle className="text-lg">Available Rewards</CardTitle>
-                <p className="text-sm text-muted-foreground">
-                  You have {availableRewards.length} free meal reward(s)
-                </p>
-              </div>
-            </div>
-            <div className="flex space-x-2">
-              <Button
-                variant={showRewards ? "default" : "outline"}
-                size="sm"
-                onClick={() => setShowRewards(true)}
-                className="flex items-center space-x-1"
-              >
-                <Check className="w-4 h-4" />
-                <span>View</span>
-              </Button>
-              <Button
-                variant={!showRewards ? "default" : "outline"}
-                size="sm"
-                onClick={() => setShowRewards(false)}
-                className="flex items-center space-x-1"
-              >
-                <X className="w-4 h-4" />
-                <span>Hide</span>
-              </Button>
-            </div>
-          </CardHeader>
-
-          {showRewards && (
-            <CardContent className="space-y-6">
-              {availableRewards.map((reward) => {
-                const eligibleMeals = getRewardEligibleMeals(reward);
-                const isApplied = appliedReward?.id === reward.id;
-
-                return (
-                  <div
-                    key={reward.id}
-                    className="border rounded-lg p-4 bg-card"
-                  >
-                    <div className="mb-4">
-                      <div className="flex items-start justify-between mb-2">
-                        <div>
-                          <h4 className="font-semibold text-lg">
-                            {reward.title}
-                          </h4>
-                          <p className="text-sm text-muted-foreground">
-                            {reward.description}
-                          </p>
-                        </div>
-                        <Badge className="bg-secondary text-secondary-foreground whitespace-nowrap">
-                          £{Number(reward.value).toFixed(2)}
-                        </Badge>
-                      </div>
-                      {isApplied && (
-                        <Badge className="bg-green-500 text-white">
-                          <Check className="w-3 h-3 mr-1" />
-                          Applied
-                        </Badge>
-                      )}
-                    </div>
-
-                    <p className="text-sm font-medium mb-3 text-foreground">
-                      Select a meal to apply this reward ({eligibleMeals.length}{" "}
-                      eligible meals):
-                    </p>
-
-                    {eligibleMeals.length === 0 ? (
-                      <div className="text-center py-6">
-                        <p className="text-muted-foreground">
-                          No meals available for this reward value.
-                        </p>
-                      </div>
-                    ) : (
-                      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                        {eligibleMeals.map((meal: Meal) => (
-                          <Card
-                            key={meal.id}
-                            className={`relative hover:shadow-lg transition-all ${isApplied && appliedReward?.meal_id === meal.id
-                              ? "ring-2 ring-secondary"
-                              : ""
-                              }`}
-                          >
-                            <div className="relative h-32 overflow-hidden rounded-t-lg">
-                              {meal.image_url || meal.image_path ? (
-                                <img
-                                  src={meal?.image_url || meal?.image_path || ""}
-                                  alt={meal.name}
-                                  className="w-full h-full object-cover"
-                                />
-                              ) : (
-                                <div className="w-full h-full bg-gray-200 flex items-center justify-center">
-                                  <ImageIcon className="w-8 h-8 text-gray-400" />
-                                </div>
-                              )}
-                              <div className="absolute top-2 right-2">
-                                <Badge className="bg-primary text-primary-foreground">
-                                  {Number(meal.price).toFixed(2)} MAD
-                                </Badge>
-                              </div>
-                            </div>
-
-                            <CardContent className="p-4">
-                              <h4 className="font-semibold mb-1 text-sm">
-                                {meal.name}
-                              </h4>
-                              <p className="text-xs text-muted-foreground mb-3">
-                                {meal.short_description || meal.description}
-                              </p>
-
-                              <div className="flex items-center justify-between mb-3">
-                                <div className="text-xs text-muted-foreground">
-                                  {meal.calories || 0} kcal •{" "}
-                                  {meal.protein || 0}g protein
-                                </div>
-                              </div>
-
-                              <Button
-                                size="sm"
-                                variant={
-                                  isApplied &&
-                                    appliedReward?.meal_id === meal.id
-                                    ? "default"
-                                    : "outline"
-                                }
-                                className="w-full"
-                                onClick={() =>
-                                  handleApplyReward(meal.id, reward.id)
-                                }
-                              >
-                                {isApplied &&
-                                  appliedReward?.meal_id === meal.id ? (
-                                  <>
-                                    <Check className="w-3 h-3 mr-1" />
-                                    Applied
-                                  </>
-                                ) : (
-                                  "Apply Reward"
-                                )}
-                              </Button>
-                            </CardContent>
-                          </Card>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-                );
-              })}
-            </CardContent>
-          )}
-        </Card>
-      )}
-
-      {/* Breakfast Section */}
-      {/* <Card className="border-2 border-dashed border-muted-foreground/30">
-                <CardHeader className="flex flex-row items-center justify-between">
-                    <div className="flex items-center space-x-3">
-                        <Coffee className="w-6 h-6 text-primary" />
-                        <div>
-                            <CardTitle className="text-lg">Add Breakfast Options</CardTitle>
-                            <p className="text-sm text-muted-foreground">Optional - Start your day right</p>
-                        </div>
-                    </div>
-                    <div className="flex space-x-2">
-                        <Button
-                            variant={showBreakfast ? "default" : "outline"}
-                            size="sm"
-                            onClick={() => setShowBreakfast(true)}
-                            className="flex items-center space-x-1"
-                        >
-                            <Check className="w-4 h-4" />
-                            <span>Add</span>
-                        </Button>
-                        <Button
-                            variant={!showBreakfast ? "default" : "outline"}
-                            size="sm"
-                            onClick={() => setShowBreakfast(false)}
-                            className="flex items-center space-x-1"
-                        >
-                            <X className="w-4 h-4" />
-                            <span>Skip</span>
-                        </Button>
-                    </div>
-                </CardHeader>
-
-                {showBreakfast && (
-                    <CardContent>
-                        {isLoadingMeals ? (
-                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                                {Array.from({ length: 3 }).map((_, index) => (
-                                    <Card key={index} className="border-2 border-gray-200">
-                                        <CardContent className="p-4">
-                                            <div className="animate-pulse">
-                                                <div className="h-32 bg-gray-200 rounded mb-3"></div>
-                                                <div className="h-4 bg-gray-200 rounded mb-2 w-3/4"></div>
-                                                <div className="h-3 bg-gray-200 rounded w-full"></div>
-                                            </div>
-                                        </CardContent>
-                                    </Card>
-                                ))}
-                            </div>
-                        ) : breakfasts.length === 0 ? (
-                            <div className="text-center py-8">
-                                <p className="text-muted-foreground">No breakfast options available at the moment.</p>
-                            </div>
-                        ) : (
-                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                                {breakfasts.map((breakfast) => (
-                                    <Card key={breakfast.id} className="relative hover:shadow-lg transition-shadow">
-                                        <div className="relative h-32 overflow-hidden rounded-t-lg">
-                                            <img
-                                                src={breakfast.image_url || breakfast.image_path || "/api/placeholder/300/200"}
-                                                alt={breakfast.name}
-                                                className="w-full h-full object-cover"
-                                            />
-                                            <div className="absolute top-2 right-2">
-                                                <Badge className="bg-primary text-primary-foreground">
-                                                    £{Number(breakfast.price).toFixed(2)}
-                                                </Badge>
-                                            </div>
-                                        </div>
-
-                                        <CardContent className="p-4">
-                                            <h4 className="font-semibold mb-1">{breakfast.name}</h4>
-                                            <p className="text-sm text-muted-foreground mb-3">
-                                                {breakfast.short_description || breakfast.description}
-                                            </p>
-
-                                            <div className="flex items-center justify-between">
-                                                <div className="text-xs text-muted-foreground">
-                                                    {breakfast.calories || 0} kcal • {breakfast.protein || 0}g protein
-                                                </div>
-
-                                                <div className="flex items-center space-x-2">
-                                                    <Button
-                                                        size="sm"
-                                                        variant="outline"
-                                                        className="h-6 w-6 p-0"
-                                                        onClick={() => handleBreakfastQuantityChange(breakfast.id, -1)}
-                                                        disabled={!selectedBreakfasts[breakfast.id]}
-                                                    >
-                                                        <Minus className="h-3 w-3" />
-                                                    </Button>
-
-                                                    <span className="min-w-[1.5rem] text-center text-sm font-semibold">
-                                                        {selectedBreakfasts[breakfast.id] || 0}
-                                                    </span>
-
-                                                    <Button
-                                                        size="sm"
-                                                        variant="outline"
-                                                        className="h-6 w-6 p-0"
-                                                        onClick={() => handleBreakfastQuantityChange(breakfast.id, 1)}
-                                                    >
-                                                        <Plus className="h-3 w-3" />
-                                                    </Button>
-                                                </div>
-                                            </div>
-                                        </CardContent>
-                                    </Card>
-                                ))}
-                            </div>
-                        )}
-                    </CardContent>
-                )}
-            </Card> */}
+      <RewardsSection
+        availableRewards={availableRewards}
+        showRewards={showRewards}
+        setShowRewards={setShowRewards}
+        appliedReward={appliedReward}
+        getRewardEligibleMeals={getRewardEligibleMeals}
+        handleApplyReward={handleApplyReward}
+      />
 
       {/* Free Desserts Section (Membership Benefit) */}
-      {hasFreeDesserts && freeDessertsQuantity > 0 && (
-        <Card className="border-2 border-green-200 bg-green-50">
-          <CardHeader>
-            <div className="flex items-center space-x-3">
-              <Gift className="w-6 h-6 text-green-600" />
-              <div>
-                <CardTitle className="text-lg text-green-800">
-                  Free Desserts (Membership Benefit)
-                </CardTitle>
-                <p className="text-sm text-green-600">
-                  Select up to {freeDessertsQuantity} free desserts included in
-                  your {membershipPlan?.name} membership
-                </p>
-              </div>
-            </div>
-          </CardHeader>
-          <CardContent>
-            {isLoadingDrinks ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {Array.from({ length: 3 }).map((_, index) => (
-                  <Card key={index} className="border-2 border-gray-200">
-                    <CardContent className="p-4">
-                      <div className="animate-pulse">
-                        <div className="h-32 bg-gray-200 rounded mb-3"></div>
-                        <div className="h-4 bg-gray-200 rounded mb-2 w-3/4"></div>
-                        <div className="h-3 bg-gray-200 rounded w-full"></div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
-            ) : drinks.length === 0 ? (
-              <div className="text-center py-8">
-                <p className="text-muted-foreground">
-                  No drinks available at the moment.
-                </p>
-              </div>
-            ) : (
-              <>
-                <div className="mb-4 text-center">
-                  <Badge
-                    variant="outline"
-                    className="text-green-600 border-green-300"
-                  >
-                    {Object.values(selectedFreeDesserts).reduce(
-                      (sum, drink) => sum + (drink.quantity || 0),
-                      0
-                    )}{" "}
-                    / {freeDessertsQuantity} selected
-                  </Badge>
-                </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {drinks.map((drink) => {
-                    const remainingFreeDesserts =
-                      freeDessertsQuantity -
-                      Object.values(selectedFreeDesserts).reduce(
-                        (sum, d) => sum + (d.quantity || 0),
-                        0
-                      );
-                    const canAddMore =
-                      remainingFreeDesserts > 0 ||
-                      selectedFreeDesserts[drink.id]?.quantity > 0;
-
-                    return (
-                      <Card
-                        key={drink.id}
-                        className={`relative transition-shadow ${selectedFreeDesserts[drink.id]?.quantity > 0
-                          ? "ring-2 ring-green-400 bg-green-50"
-                          : "hover:shadow-lg"
-                          }`}
-                      >
-                        <div className="relative h-32 overflow-hidden rounded-t-lg">
-                          {drink.image_url || drink.image_path ? (
-                            <img
-                              src={drink.image_url || drink.image_path || ""}
-                              alt={drink.name}
-                              className="w-full h-full object-cover"
-                            />
-                          ) : (
-                            <div className="w-full h-full bg-gray-200 flex items-center justify-center">
-                              <ImageIcon className="w-8 h-8 text-gray-400" />
-                            </div>
-                          )}
-                          <div className="absolute top-2 right-2">
-                            <Badge className="bg-green-600 text-white">
-                              FREE
-                            </Badge>
-                          </div>
-                        </div>
-
-                        <CardContent className="p-4">
-                          <h4 className="font-semibold mb-1">{drink.name}</h4>
-                          <p className="text-sm text-muted-foreground mb-3">
-                            {drink.short_description || drink.description}
-                          </p>
-
-                          <div className="flex items-center justify-between">
-                            <div className="text-xs text-muted-foreground">
-                              {drink.calories || 0} kcal • {drink.protein || 0}g
-                              protein
-                            </div>
-
-                            <div className="flex items-center space-x-2">
-                              <Button
-                                size="sm"
-                                variant="outline"
-                                className="h-6 w-6 p-0 border-green-400 text-green-600 hover:bg-green-50"
-                                onClick={() =>
-                                  handleFreeDessertQuantityChange(drink.id, -1)
-                                }
-                                disabled={!selectedFreeDesserts[drink.id]}
-                              >
-                                <Minus className="h-3 w-3" />
-                              </Button>
-
-                              <span className="min-w-[1.5rem] text-center text-sm font-semibold text-green-700">
-                                {selectedFreeDesserts[drink.id]?.quantity || 0}
-                              </span>
-
-                              <Button
-                                size="sm"
-                                variant="outline"
-                                className="h-6 w-6 p-0 border-green-400 text-green-600 hover:bg-green-50"
-                                onClick={() =>
-                                  handleFreeDessertQuantityChange(drink.id, 1)
-                                }
-                                disabled={!canAddMore}
-                              >
-                                <Plus className="h-3 w-3" />
-                              </Button>
-                            </div>
-                          </div>
-                        </CardContent>
-                      </Card>
-                    );
-                  })}
-                </div>
-              </>
-            )}
-          </CardContent>
-        </Card>
-      )}
+      <FreeDesserts
+        hasFreeDesserts={hasFreeDesserts}
+        freeDessertsQuantity={freeDessertsQuantity}
+        membershipPlan={membershipPlan}
+        drinks={drinks}
+        isLoadingDrinks={isLoadingDrinks}
+        selectedFreeDesserts={selectedFreeDesserts}
+        handleFreeDessertQuantityChange={handleFreeDessertQuantityChange}
+      />
 
       {/* Drinks Section */}
-      <Card className="border-2 border-dashed border-muted-foreground/30">
-        <CardHeader className="flex flex-row items-center justify-between">
-          <div className="flex items-center space-x-3">
-            <Coffee className="w-6 h-6 text-secondary" />
-            <div>
-              <CardTitle className="text-lg">Add Drinks</CardTitle>
-              <p className="text-sm text-muted-foreground">
-                Optional - Healthy beverages
-              </p>
-            </div>
-          </div>
-          <div className="flex space-x-2">
-            <Button
-              variant={showDrinks ? "default" : "outline"}
-              size="sm"
-              onClick={() => setShowDrinks(true)}
-              className="flex items-center space-x-1"
-            >
-              <Check className="w-4 h-4" />
-              <span>Add</span>
-            </Button>
-            <Button
-              variant={!showDrinks ? "default" : "outline"}
-              size="sm"
-              onClick={() => setShowDrinks(false)}
-              className="flex items-center space-x-1"
-            >
-              <X className="w-4 h-4" />
-              <span>Skip</span>
-            </Button>
-          </div>
-        </CardHeader>
-
-        {showDrinks && (
-          <CardContent>
-            {isLoadingDrinks ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {Array.from({ length: 3 }).map((_, index) => (
-                  <Card key={index} className="border-2 border-gray-200">
-                    <CardContent className="p-4">
-                      <div className="animate-pulse">
-                        <div className="h-32 bg-gray-200 rounded mb-3"></div>
-                        <div className="h-4 bg-gray-200 rounded mb-2 w-3/4"></div>
-                        <div className="h-3 bg-gray-200 rounded w-full"></div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
-            ) : drinks.length === 0 ? (
-              <div className="text-center py-8">
-                <p className="text-muted-foreground">
-                  No drinks available at the moment.
-                </p>
-              </div>
-            ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {drinks.map((drink) => (
-                  <Card
-                    key={drink.id}
-                    className="relative hover:shadow-lg transition-shadow"
-                  >
-                    <div className="relative h-32 overflow-hidden rounded-t-lg">
-                      {drink.image_url || drink.image_path ? (
-                        <img
-                          src={drink.image_url || drink.image_path || ""}
-                          alt={drink.name}
-                          className="w-full h-full object-cover"
-                        />
-                      ) : (
-                        <div className="w-full h-full bg-gray-200 flex items-center justify-center">
-                          <ImageIcon className="w-8 h-8 text-gray-400" />
-                        </div>
-                      )}
-                      <div className="absolute top-2 right-2">
-                        <Badge className="bg-secondary text-secondary-foreground">
-                          £{Number(drink.price).toFixed(2)}
-                        </Badge>
-                      </div>
-                    </div>
-
-                    <CardContent className="p-4">
-                      <h4 className="font-semibold mb-1">{drink.name}</h4>
-                      <p className="text-sm text-muted-foreground mb-3">
-                        {drink.short_description || drink.description}
-                      </p>
-
-                      <div className="flex items-center justify-between">
-                        <div className="text-xs text-muted-foreground">
-                          {drink.calories || 0} kcal • {drink.protein || 0}g
-                          protein
-                        </div>
-
-                        <div className="flex items-center space-x-2">
-                          <Button
-                            size="sm"
-                            variant="outline"
-                            className="h-6 w-6 p-0"
-                            onClick={() =>
-                              handleDrinkQuantityChange(drink.id, -1)
-                            }
-                            disabled={!selectedDrinks[drink.id]}
-                          >
-                            <Minus className="h-3 w-3" />
-                          </Button>
-
-                          <span className="min-w-[1.5rem] text-center text-sm font-semibold">
-                            {selectedDrinks[drink.id]?.quantity || 0}
-                          </span>
-
-                          <Button
-                            size="sm"
-                            variant="outline"
-                            className="h-6 w-6 p-0"
-                            onClick={() =>
-                              handleDrinkQuantityChange(drink.id, 1)
-                            }
-                          >
-                            <Plus className="h-3 w-3" />
-                          </Button>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
-            )}
-          </CardContent>
-        )}
-      </Card>
+      <DrinksSection
+        drinks={drinks}
+        isLoadingDrinks={isLoadingDrinks}
+        showDrinks={showDrinks}
+        setShowDrinks={setShowDrinks}
+        selectedDrinks={selectedDrinks}
+        handleDrinkQuantityChange={handleDrinkQuantityChange}
+      />
 
       {/* Selected Meals Summary */}
-      <Card className="mt-8">
-        <CardHeader>
-          <CardTitle className="text-lg">
-            Selected Meals & Drinks Summary
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          {/* Applied Reward Section */}
-          {appliedReward && appliedRewardMeal && (
-            <div className="mb-6 p-4 bg-secondary/10 border border-secondary/30 rounded-lg">
-              <div className="flex items-start justify-between mb-3">
-                <div className="flex items-center gap-2">
-                  <Gift className="w-5 h-5 text-secondary" />
-                  <h4 className="font-semibold text-foreground">
-                    Applied Reward
-                  </h4>
-                </div>
-                <Badge className="bg-secondary text-white">
-                  {Number(appliedReward.value).toFixed(2)} MAD
-                </Badge>
-              </div>
-              <p className="text-sm text-muted-foreground mb-1">
-                {appliedReward.title}
-              </p>
-              <p className="text-xs text-muted-foreground mb-3">
-                {appliedReward.description}
-              </p>
-
-              {/* Reward Meal Display */}
-              <div className="mt-3 p-3 bg-white dark:bg-card rounded border border-secondary/20 flex items-center gap-3">
-                {appliedRewardMeal.image_url || appliedRewardMeal.image_path ? (
-                  <img
-                    src={
-                      appliedRewardMeal.image_url ||
-                      appliedRewardMeal.image_path || ""
-                    }
-                    alt={appliedRewardMeal.name}
-                    className="w-16 h-16 object-cover rounded"
-                  />
-                ) : (
-                  <div className="w-16 h-16 bg-gray-200 flex items-center justify-center rounded">
-                    <ImageIcon className="w-8 h-8 text-gray-400" />
-                  </div>
-                )}
-                <div className="flex-1">
-                  <p className="font-semibold text-foreground">
-                    {appliedRewardMeal.name}
-                  </p>
-                  <p className="text-xs text-muted-foreground">
-                    {appliedRewardMeal.calories || 0} kcal •{" "}
-                    {appliedRewardMeal.protein || 0}g protein
-                  </p>
-                  <p className="text-xs text-muted-foreground mt-1">
-                    Price: {Number(appliedRewardMeal.price).toFixed(2)} MAD
-                  </p>
-                </div>
-              </div>
-            </div>
-          )}
-
-          <div>
-            <h4 className="font-semibold mb-2">Meals</h4>
-            {selectedMealObjects.length === 0 ? (
-              <div className="text-muted-foreground">No meals selected.</div>
-            ) : (
-              <ul className="space-y-2">
-                {selectedMealObjects.map((meal: any) => (
-                  <li key={meal.id} className="flex items-center gap-4">
-                    {meal.image_url || meal.image_path ? (
-                      <img
-                        src={meal.image_url || meal.image_path}
-                        alt={meal.name}
-                        className="w-12 h-12 object-cover rounded"
-                      />
-                    ) : (
-                      <div className="w-12 h-12 bg-gray-200 flex items-center justify-center rounded">
-                        <ImageIcon className="w-6 h-6 text-gray-400" />
-                      </div>
-                    )}
-                    <div className="flex-1">
-                      <span className="font-semibold">{meal.name}</span>
-                      <span className="ml-2 text-sm text-muted-foreground">
-                        x {meal.quantity}
-                      </span>
-                      <div className="text-xs text-muted-foreground">
-                        Protein: {meal.protein}g | Calories: {meal.calories}
-                      </div>
-                    </div>
-                  </li>
-                ))}
-              </ul>
-            )}
-          </div>
-          <div className="mt-6">
-            <h4 className="font-semibold mb-2">Drinks</h4>
-            {selectedDrinkObjects.length === 0 ? (
-              <div className="text-muted-foreground">No drinks selected.</div>
-            ) : (
-              <ul className="space-y-2">
-                {selectedDrinkObjects.map((drink: any) => (
-                  <li key={drink.id} className="flex items-center gap-4">
-                    {drink.image_url || drink.image_path ? (
-                      <img
-                        src={drink.image_url || drink.image_path}
-                        alt={drink.name}
-                        className="w-12 h-12 object-cover rounded"
-                      />
-                    ) : (
-                      <div className="w-12 h-12 bg-gray-200 flex items-center justify-center rounded">
-                        <ImageIcon className="w-6 h-6 text-gray-400" />
-                      </div>
-                    )}
-                    <div className="flex-1">
-                      <span className="font-semibold">{drink.name}</span>
-                      <span className="ml-2 text-sm text-muted-foreground">
-                        x {drink.quantity}
-                      </span>
-                      <div className="text-xs text-muted-foreground">
-                        Protein: {drink.protein}g | Calories: {drink.calories}
-                      </div>
-                    </div>
-                  </li>
-                ))}
-              </ul>
-            )}
-          </div>
-
-          {/* Free Desserts Summary */}
-          {hasFreeDesserts && Object.keys(selectedFreeDesserts).length > 0 && (
-            <div className="mt-6">
-              <h4 className="font-semibold mb-2 text-green-700">
-                Free Desserts (Membership)
-              </h4>
-              <ul className="space-y-2">
-                {Object.values(selectedFreeDesserts).map((drink: any) => (
-                  <li
-                    key={drink.id}
-                    className="flex items-center gap-4 bg-green-50 p-2 rounded"
-                  >
-                    {drink.image_url || drink.image_path ? (
-                      <img
-                        src={drink.image_url || drink.image_path}
-                        alt={drink.name}
-                        className="w-12 h-12 object-cover rounded"
-                      />
-                    ) : (
-                      <div className="w-12 h-12 bg-gray-200 flex items-center justify-center rounded">
-                        <ImageIcon className="w-6 h-6 text-gray-400" />
-                      </div>
-                    )}
-                    <div className="flex-1">
-                      <span className="font-semibold text-green-800">
-                        {drink.name}
-                      </span>
-                      <span className="ml-2 text-sm text-green-600">
-                        x {drink.quantity}
-                      </span>
-                      <Badge className="ml-2 bg-green-600 text-white text-xs">
-                        FREE
-                      </Badge>
-                      <div className="text-xs text-green-600">
-                        Protein: {drink.protein}g | Calories: {drink.calories}
-                      </div>
-                    </div>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
-        </CardContent>
-      </Card>
+      <MealsSummary
+        selectedMealObjects={selectedMealObjects}
+        selectedDrinkObjects={selectedDrinkObjects}
+        selectedFreeDesserts={selectedFreeDesserts}
+        hasFreeDesserts={hasFreeDesserts}
+        appliedReward={appliedReward}
+        appliedRewardMeal={appliedRewardMeal}
+      />
     </div>
   );
 }

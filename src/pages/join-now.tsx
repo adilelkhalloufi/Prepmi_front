@@ -173,7 +173,7 @@ const JoinNow = () => {
             const orderSizes = settings.settings.find(s => s.key === 'order_sizes')?.value
             const parsedOrderSizes = orderSizes ? JSON.parse(orderSizes) : []
             if (parsedOrderSizes.length > 0 && (!planData?.selectedSize || planData?.selectedSize === '')) {
-                toast.error(t('joinNow.validation.selectSize', 'Please select an order size'))
+                toast.error(t('joinNow.validation.selectSize'))
                 return
             }
 
