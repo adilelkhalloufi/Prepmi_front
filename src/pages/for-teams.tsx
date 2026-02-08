@@ -1,8 +1,6 @@
 import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import { IconCheck, IconUsers, IconClock, IconHeart, IconStar } from "@tabler/icons-react";
-import { webRoutes } from "@/routes/web";
-import { useNavigate } from "react-router-dom";
 import Footer from "@/components/Footer";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -49,7 +47,6 @@ type FormData = z.infer<typeof formSchema>;
 
 const ForTeams = () => {
   const { t } = useTranslation();
-  const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
 
   const form = useForm<FormData>({
