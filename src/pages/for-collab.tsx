@@ -18,12 +18,28 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { apiRoutes } from "@/routes/api";
 import http from "@/utils/http";
 import { toast } from "sonner";
+import { useState } from "react";
 
 const formSchema = z.object({
   full_name: z.string().min(1, "Full name is required"),
-  social_url_1: z.string().url("Invalid URL"),
-  social_url_2: z.string().url("Invalid URL").optional().or(z.literal("")),
-  social_url_3: z.string().url("Invalid URL").optional().or(z.literal("")),
+  social_url_1: z.string().refine((val) => {
+    if (!val) return false; // required
+    const urlPattern = /^https?:\/\/.+/;
+    const domainPattern = /^[a-zA-Z0-9-]+\.[a-zA-Z]{2,}$/;
+    return urlPattern.test(val) || domainPattern.test(val);
+  }, "Invalid URL or domain"),
+  social_url_2: z.string().refine((val) => {
+    if (!val) return true; // optional
+    const urlPattern = /^https?:\/\/.+/;
+    const domainPattern = /^[a-zA-Z0-9-]+\.[a-zA-Z]{2,}$/;
+    return urlPattern.test(val) || domainPattern.test(val);
+  }, "Invalid URL or domain").optional().or(z.literal("")),
+  social_url_3: z.string().refine((val) => {
+    if (!val) return true; // optional
+    const urlPattern = /^https?:\/\/.+/;
+    const domainPattern = /^[a-zA-Z0-9-]+\.[a-zA-Z]{2,}$/;
+    return urlPattern.test(val) || domainPattern.test(val);
+  }, "Invalid URL or domain").optional().or(z.literal("")),
   email: z.string().email("Invalid email address"),
   phone: z.string().min(1, "Phone is required"),
   country: z.string().min(1, "Country is required"),
@@ -33,6 +49,7 @@ type FormData = z.infer<typeof formSchema>;
 
 const ForCollab = () => {
   const { t } = useTranslation();
+  const [loading, setLoading] = useState(false);
 
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
@@ -48,6 +65,7 @@ const ForCollab = () => {
   });
 
   const onSubmit = async (data: FormData) => {
+    setLoading(true);
     try {
       const response = await http.post(apiRoutes.collaborations, data);
       toast.success("Application submitted successfully!");
@@ -56,6 +74,8 @@ const ForCollab = () => {
     } catch (error) {
       toast.error("Failed to submit application. Please try again.");
       console.error('Error:', error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -75,6 +95,7 @@ const ForCollab = () => {
             <Button
               size="lg"
               className="bg-primary hover:bg-primary/90 text-white px-8 py-3 text-lg"
+              onClick={() => document.getElementById('apply')?.scrollIntoView({ behavior: 'smooth' })}
             >
               {t("for_collab.apply_now", "APPLY NOW")}
             </Button>
@@ -363,7 +384,7 @@ const ForCollab = () => {
       </section>
 
       {/* Application Section */}
-      <section className="py-16 bg-primary text-white">
+      <section id="apply" className="py-16 bg-primary text-white">
         <div className="container mx-auto px-4 text-center">
           <h2 className="text-3xl font-bold mb-4">
             {t("for_collab.apply_title", "READY TO BECOME A PREPME PARTNER?")}
@@ -437,7 +458,7 @@ const ForCollab = () => {
                       <FormItem className="col-span-2">
                         <FormLabel className="text-left">{t("for_collab.form.social_url_1", "Social Media URL 1")}</FormLabel>
                         <FormControl>
-                          <Input placeholder={t("for_collab.form.https_example", "https://example.com")} {...field} />
+                          <Input placeholder={t("for_collab.form.https_example", "example.com")} {...field} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -450,7 +471,7 @@ const ForCollab = () => {
                       <FormItem>
                         <FormLabel className="text-left">{t("for_collab.form.social_url_2", "Social Media URL 2 (Optional)")}</FormLabel>
                         <FormControl>
-                          <Input placeholder={t("for_collab.form.https_example", "https://example.com")} {...field} />
+                          <Input placeholder={t("for_collab.form.https_example", "example.com")} {...field} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -463,14 +484,14 @@ const ForCollab = () => {
                       <FormItem>
                         <FormLabel className="text-left">{t("for_collab.form.social_url_3", "Social Media URL 3 (Optional)")}</FormLabel>
                         <FormControl>
-                          <Input placeholder={t("for_collab.form.https_example", "https://example.com")} {...field} />
+                          <Input placeholder={t("for_collab.form.https_example", "example.com")} {...field} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
                     )}
                   />
-                  <Button type="submit" className="col-span-2 w-full">
-                    {t("for_collab.form.submit", "Submit Application")}
+                  <Button type="submit" className="col-span-2 w-full" disabled={loading}>
+                    {loading ? "Submitting..." : t("for_collab.form.submit", "Submit Application")}
                   </Button>
                 </form>
               </Form>

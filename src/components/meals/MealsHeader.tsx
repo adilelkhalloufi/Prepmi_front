@@ -12,13 +12,12 @@ export function MealsHeader({ weeklyMenu }: MealsHeaderProps) {
     return (
         <div className="text-center mb-8">
             <h2 className="text-3xl font-bold text-foreground mb-2">
-                {weeklyMenu?.title || t("joinNow.meals.title", "CHOOSE YOUR MEALS")}
+                {weeklyMenu?.title || t("joinNow.meals.title")}
             </h2>
             <p className="text-muted-foreground">
                 {weeklyMenu?.description ||
                     t(
-                        "joinNow.meals.subtitle",
-                        "Menu changes weekly with 50+ options per month"
+                        "joinNow.meals.subtitle"
                     )}
             </p>
             {weeklyMenu && (

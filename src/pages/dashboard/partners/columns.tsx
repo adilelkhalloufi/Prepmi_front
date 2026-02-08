@@ -72,8 +72,8 @@ export const columns: ColumnDef<Partner>[] = [
         accessorKey: "products_interested",
         header: "Products Interested",
         cell: ({ row }) => {
-            const products = row.getValue("products_interested") as string[]
-            return products ? products.join(", ") : "-"
+            const products = row.getValue("products_interested") as string
+            return products ? products : "-"
         }
     },
     {

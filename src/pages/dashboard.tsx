@@ -2,19 +2,17 @@
 import { Tabs, TabsContent } from '@/components/ui/tabs'
 import { useEffect } from 'react'
 import { setPageTitle } from '@/utils'
+import { useSelector } from 'react-redux'
+import { RootState } from '@/store'
+import { RoleEnum } from '@/enum/RoleEnum'
 
 import ClientDashboard from '@/components/dashboard/ClientDashboard'
-// import AdminDashboard from '@/components/dashboard/AdminDashboard'
-// import DeliveryDashboard from '@/components/dashboard/DeliveryDashboard'
-// import CuisineDashboard from '@/components/dashboard/CuisineDashboard'
-
-// // Types pour les rôles utilisateur
-// type UserRole = 'client' | 'admin' | 'delivery' | 'cuisine'
+import AdminDashboard from '@/components/dashboard/AdminDashboard'
 
 export default function Dashboard() {
-    // Simuler le rôle utilisateur - à remplacer par votre système d'auth
-    // const [userRole, setUserRole] = useState<UserRole>('client')
-
+    const user = useSelector((state: RootState) => state.admin?.user?.role)
+    const userRole = user
+    console.log("User role:", user)
     useEffect(() => {
         setPageTitle("Tableau de Bord")
     }, [])
@@ -60,12 +58,8 @@ export default function Dashboard() {
                     </TabsList> */}
                 </div>
                 <TabsContent value='overview' className='space-y-4'>
-                    {/* {userRole === 'client' && <ClientDashboard />}
-                    {userRole === 'admin' && <AdminDashboard />}
-                    {userRole === 'delivery' && <DeliveryDashboard />}
-                    {userRole === 'cuisine' && <CuisineDashboard />} */}
-                    <ClientDashboard />
-
+                    {userRole === RoleEnum.ADMIN && <AdminDashboard />}
+                    {userRole === RoleEnum.CLIENT && <ClientDashboard />}
                 </TabsContent>
             </Tabs>
         </>

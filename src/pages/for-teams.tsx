@@ -23,6 +23,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { apiRoutes } from "@/routes/api";
 import http from "@/utils/http";
 import { toast } from "sonner";
+import { useState } from "react";
 
 const formSchema = z.object({
   job_title: z.string().optional(),
@@ -30,7 +31,12 @@ const formSchema = z.object({
   first_name: z.string().min(1, "First name is required"),
   last_name: z.string().min(1, "Last name is required"),
   company_name: z.string().min(1, "Company name is required"),
-  company_website: z.string().url("Invalid URL").optional().or(z.literal("")),
+  company_website: z.string().refine((val) => {
+    if (!val) return true; // optional
+    const urlPattern = /^https?:\/\/.+/;
+    const domainPattern = /^[a-zA-Z0-9-]+\.[a-zA-Z]{2,}$/;
+    return urlPattern.test(val) || domainPattern.test(val);
+  }, "Invalid URL or domain").optional().or(z.literal("")),
   partnership_type: z.string().min(1, "Partnership type is required"),
   team_members_per_week: z.string().min(1, "Team members per week is required"),
   products_interested: z.string().min(1, "Products interested is required"),
@@ -44,6 +50,7 @@ type FormData = z.infer<typeof formSchema>;
 const ForTeams = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
 
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
@@ -64,6 +71,7 @@ const ForTeams = () => {
   });
 
   const onSubmit = async (data: FormData) => {
+    setLoading(true);
     try {
       const response = await http.post(apiRoutes.teamPartnerships, data);
       toast.success("Form submitted successfully!");
@@ -73,6 +81,8 @@ const ForTeams = () => {
     } catch (error) {
       toast.error("Failed to submit form. Please try again.");
       console.error('Error:', error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -80,7 +90,7 @@ const ForTeams = () => {
     <main>
       {/* Hero Section */}
       <section className="relative bg-gradient-to-br from-primary/10 to-primary/5 py-20 overflow-hidden pt-32 ">
-        <div className="absolute inset-0 bg-cover bg-center opacity-10" style={{ backgroundImage: 'url(https://images.unsplash.com/photo-1490645935967-10de6ba17061?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2053&q=80)' }}></div>
+        <div className="absolute inset-0 bg-cover bg-center opacity-10 pointer-events-none" style={{ backgroundImage: 'url(https://images.unsplash.com/photo-1490645935967-10de6ba17061?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2053&q=80)' }}></div>
         <div className="container mx-auto px-4">
           <div className="text-center max-w-4xl mx-auto">
             <h1 className="text-4xl md:text-5xl font-bold text-primary mb-6">
@@ -92,7 +102,7 @@ const ForTeams = () => {
             <Button
               size="lg"
               className="bg-primary hover:bg-primary/90 text-white px-8 py-3 text-lg"
-              onClick={() => navigate(webRoutes.join_now)}
+              onClick={() => document.getElementById('cta')?.scrollIntoView({ behavior: 'smooth' })}
             >
               {t("for_teams.get_started", "GET STARTED")}
             </Button>
@@ -281,7 +291,7 @@ const ForTeams = () => {
       </section>
 
       {/* CTA Section */}
-      <section className="py-16 bg-primary text-white">
+      <section id="cta" className="py-16 bg-primary text-white">
         <div className="container mx-auto px-4 text-center">
           <h2 className="text-3xl font-bold mb-4">
             {t("for_teams.cta_title", "READY TO FEED YOUR TEAM?")}
@@ -368,7 +378,7 @@ const ForTeams = () => {
                       <FormItem>
                         <FormLabel className="text-left">{t("for_teams.form.company_website", "Company Website (Optional)")}</FormLabel>
                         <FormControl>
-                          <Input placeholder={t("for_teams.form.https_example", "https://example.com")} {...field} />
+                          <Input placeholder={t("for_teams.form.https_example", "example.com")} {...field} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -495,8 +505,8 @@ const ForTeams = () => {
                       </FormItem>
                     )}
                   />
-                  <Button type="submit" className="col-span-2 w-full">
-                    {t("for_teams.form.submit", "Submit")}
+                  <Button type="submit" className="col-span-2 w-full" disabled={loading}>
+                    {loading ? "Submitting..." : t("for_teams.form.submit", "Submit")}
                   </Button>
                 </form>
               </Form>
