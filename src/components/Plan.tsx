@@ -35,7 +35,7 @@ export const Plan = ({
     const [selectedSize, setSelectedSize] = useState(planData?.selectedSize || '')
 
     // Get order sizes from settings
-    const orderSizes = settings.settings.find(s => s.key === 'order_sizes')?.value
+    const orderSizes = settings.settings?.find(s => s.key === 'order_sizes')?.value
     const parsedOrderSizes = orderSizes ? JSON.parse(orderSizes) : []
 
     // Update local state when Redux state changes

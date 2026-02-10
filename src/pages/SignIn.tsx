@@ -9,9 +9,20 @@ export default function SignIn() {
   const { t } = useTranslation()
   return (
     <>
+      <style>
+        {`
+          @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+          }
+          .animate-float {
+            animation: float 3s ease-in-out infinite;
+          }
+        `}
+      </style>
       <div className='container relative grid h-svh flex-col items-center justify-center lg:max-w-none lg:grid-cols-2 lg:px-0'>
         {/* First Section */}
-        <div className='relative hidden h-full flex-col bg-muted p-10 text-white dark:border-r lg:flex overflow-hidden bg-primary'>
+        <div className='relative hidden h-full flex-col bg-muted p-10 text-white dark:border-r lg:flex bg-primary'>
           <div className='  bg-primary' />
 
 
@@ -19,8 +30,8 @@ export default function SignIn() {
           <div className='relative z-20 flex items-center text-lg font-medium'>
 
           </div>
-          <div className='flex justify-center items-center h-full'>
-            <img src='./example4.png' alt='logo' className=' w-full  z-50' />
+          <div className='flex justify-center items-center h-full '>
+            <img src='./healthy-meal-bowl.png' alt='logo' className=' w-full  z-50 animate-float' />
 
           </div>
 

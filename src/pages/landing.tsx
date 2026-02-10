@@ -28,7 +28,7 @@ const Index = () => {
 
   const referralLink = isLoggedIn ? `${window.location.origin}/register?ref=${obfuscateId(admin.id!)}` : '';
 
-  const youtubeVideo = settings.find(s => s.key === 'youtube_explanation_video')?.value || 'https://www.youtube.com/embed/CRd8dHqU1AM?si=o3QPG9FPq-QEeL4c';
+  const youtubeVideo = settings?.find(s => s.key === 'youtube_explanation_video')?.value || 'https://www.youtube.com/embed/CRd8dHqU1AM?si=o3QPG9FPq-QEeL4c';
 
   useEffect(() => {
     // Show dialog after a short delay for better UX
