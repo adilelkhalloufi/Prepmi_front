@@ -313,6 +313,31 @@
       "off": "Off"
     }
   },
+    "meal": {
+      "nutritional_info": "Nutritional Information",
+      "calories": "Calories",
+      "protein": "Protein",
+      "carbs": "Carbs",
+      "fats": "Fats",
+      "fiber": "Fiber",
+      "sodium": "Sodium",
+      "sugar": "Sugar",
+      "preparation_details": "Preparation Details",
+      "prep_time": "Prep Time",
+      "cook_time": "Cook Time",
+      "total_time": "Total Time",
+      "difficulty": "Difficulty",
+      "serving_size": "Serving Size:",
+      "weight": "Weight:",
+      "spice_level": "Spice Level:",
+      "ingredients": "Ingredients",
+      "allergen_info": "Allergen Information",
+      "preparation_instructions": "Preparation Instructions",
+      "storage_instructions": "Storage Instructions",
+      "chef_notes": "Chef's Notes",
+      "related_meals": "Related Meals",
+      "no_related_meals": "No related meals found"
+    },
   "joinNow": {
     "meals": {
         "title": "CHOOSE YOUR MEALS",
@@ -620,34 +645,9 @@
         "total": "Total"
       }
     },
-    "meal": {
-      "nutritional_info": "Nutritional Information",
-      "calories": "Calories",
-      "protein": "Protein",
-      "carbs": "Carbs",
-      "fats": "Fats",
-      "fiber": "Fiber",
-      "sodium": "Sodium",
-      "sugar": "Sugar",
-      "preparation_details": "Preparation Details",
-      "prep_time": "Prep Time",
-      "cook_time": "Cook Time",
-      "total_time": "Total Time",
-      "difficulty": "Difficulty",
-      "serving_size": "Serving Size:",
-      "weight": "Weight:",
-      "spice_level": "Spice Level:",
-      "ingredients": "Ingredients",
-      "allergen_info": "Allergen Information",
-      "preparation_instructions": "Preparation Instructions",
-      "storage_instructions": "Storage Instructions",
-      "chef_notes": "Chef's Notes",
-      "related_meals": "Related Meals",
-      "no_related_meals": "No related meals found"
-    },
+  
     "common": {
       "selected": "Selected",
-      "meal": "meal",
       "loading": "Loading...",
       "backToHome": "Back to Home"
     },

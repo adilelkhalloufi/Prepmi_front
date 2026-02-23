@@ -87,10 +87,12 @@ export default function EditMeal() {
     const [categories, setCategories] = useState([]);
     const [loadingCategories, setLoadingCategories] = useState(true);
 
+  
     const types = [
         { id: 1, name: 'Menus' },
         { id: 2, name: 'Breakfast' },
         { id: 3, name: 'Drinks' },
+        { id: 4, name: 'Desserts' },
     ];
 
     // Fetch categories on component mount

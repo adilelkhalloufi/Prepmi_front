@@ -13,6 +13,22 @@ import {
 import { Badge } from "@/components/ui/badge"
 import { useNavigate } from "react-router-dom"
 import { webRoutes } from "@/routes/web"
+import { MealTypesEnum } from "@/enum/MealTypesEnum"
+
+const getTypeName = (typeId?: number): string => {
+  switch (typeId) {
+    case MealTypesEnum.Menu:
+      return "Menu"
+    case MealTypesEnum.Breakfast:
+      return "Breakfast"
+    case MealTypesEnum.Drink:
+      return "Drink"
+    case MealTypesEnum.Dessert:
+      return "Dessert"
+    default:
+      return "-"
+  }
+}
 
 export const columns: ColumnDef<Meal>[] = [
   {
@@ -53,8 +69,7 @@ export const columns: ColumnDef<Meal>[] = [
     accessorFn: (row) => row.category?.name || "",
     header: "Catégorie",
     enableColumnFilter: true,
-    filterFn: (row, columnId, filterValue) => {
-      console.log("Filtering by category:", columnId);
+    filterFn: (row, _columnId, filterValue) => {
       if (!filterValue) return true;
       const categoryName = row.original.category?.name || "";
       return categoryName === filterValue;
@@ -71,13 +86,21 @@ export const columns: ColumnDef<Meal>[] = [
     }
   },
   {
-    accessorKey: "type",
+    id: "type",
+    accessorFn: (row) => getTypeName(row.type_id),
     header: "Type",
+    enableColumnFilter: true,
+    filterFn: (row, _columnId, filterValue) => {
+      if (!filterValue) return true;
+      const typeName = getTypeName(row.original.type_id);
+      return typeName === filterValue;
+    },
     cell: ({ row }) => {
-      const type = row.getValue("type") as string
-      return type ? (
+      const meal = row.original
+      const typeName = getTypeName(meal.type_id)
+      return typeName !== "-" ? (
         <Badge variant="secondary" className="text-white">
-          {type}
+          {typeName}
         </Badge>
       ) : (
         <span className="text-gray-400">-</span>

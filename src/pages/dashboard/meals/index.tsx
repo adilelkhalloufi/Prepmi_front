@@ -7,19 +7,26 @@ import { apiRoutes } from "@/routes/api";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import { webRoutes } from "@/routes/web";
+import { MealTypesEnum } from "@/enum/MealTypesEnum";
 
-export const MealTypesEnum = [
-  { id: 0, name: "Menu" },
-  { id: 1, name: "Breakfast" },
-  { id: 2, name: "Drink" },
-];
+// export const MealTypesEnum = [
+//   { id: 1, name: "Menu" },
+//   { id: 2, name: "Breakfast" },
+//   { id: 3, name: "Drink" },
+//   { id: 4, name: "Dessert" },
+// ];
 
 export default function index() {
   const navigate = useNavigate();
   const [data, setData] = useState<Meal[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [categories, setCategories] = useState<any[]>([]);
-  const [types] = useState(MealTypesEnum);
+  const [types] = useState([
+    { id: MealTypesEnum.Menu, name: "Menu" },
+    { id: MealTypesEnum.Breakfast, name: "Breakfast" },
+    { id: MealTypesEnum.Drink, name: "Drink" },
+    { id: MealTypesEnum.Dessert, name: "Dessert" },
+  ]);
 
   useEffect(() => {
     // Fetch meals

@@ -1,9 +1,9 @@
 export enum MealTypesEnum {
 
 
-  Menu = 0,
-  Breakfast = 1,
-  Drink = 2,
-
+  Menu = 1,
+  Breakfast = 2,
+  Drink = 3,
+  Dessert = 4,
 
 }
