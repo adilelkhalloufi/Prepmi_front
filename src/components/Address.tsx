@@ -101,9 +101,28 @@ export function Address({ deliverySlotsData = [], membershipData = null, isLoadi
     }
 
     const handleDeliverySlotToggle = (slotId: number) => {
-        const updatedSlots = selectedDeliverySlots.includes(slotId)
-            ? selectedDeliverySlots.filter(id => id !== slotId)
-            : [...selectedDeliverySlots, slotId]
+        const hasActiveMembership = membershipData && membershipData.status === 'active'
+        
+        let updatedSlots: number[]
+        
+        if (selectedDeliverySlots.includes(slotId)) {
+            // Remove the slot if already selected
+            updatedSlots = selectedDeliverySlots.filter(id => id !== slotId)
+        } else {
+            // Add the slot
+            if (hasActiveMembership) {
+                // Members can select up to 2 slots
+                if (selectedDeliverySlots.length < 2) {
+                    updatedSlots = [...selectedDeliverySlots, slotId]
+                } else {
+                    // Already have 2 slots, don't add more
+                    return
+                }
+            } else {
+                // Non-members can only select one slot (replace existing)
+                updatedSlots = [slotId]
+            }
+        }
 
         setSelectedDeliverySlots(updatedSlots)
         dispatch(updatePlanData({ delivery_slot_ids: updatedSlots }))
@@ -428,10 +447,26 @@ export function Address({ deliverySlotsData = [], membershipData = null, isLoadi
                             <p className="text-sm text-muted-foreground">
                                 {t('joinNow.address.selectSlotsDescription', 'Select your preferred delivery time slots')}
                             </p>
+                            {membershipData && membershipData.status === 'active' ? (
+                                <div className="bg-green-50 border border-green-200 rounded-lg p-3 mb-3">
+                                    <p className="text-sm text-green-800 font-medium">
+                                        {t('joinNow.address.membershipMultipleSlots', '✨ As a member, you can select up to 2 delivery slots!')}
+                                    </p>
+                                </div>
+                            ) : (
+                                <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 mb-3">
+                                    <p className="text-sm text-blue-800">
+                                        {t('joinNow.address.nonMemberSingleSlot', 'You can select one delivery slot. Upgrade to membership to select up to 2 slots.')}
+                                    </p>
+                                </div>
+                            )}
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                                 {filteredDeliverySlots.map((slot: any) => {
                                     const isSelected = selectedDeliverySlots.includes(slot.id)
                                     const isFull = slot.current_bookings >= slot.max_capacity
+                                    const hasActiveMembership = membershipData && membershipData.status === 'active'
+                                    const isMaxSlotsReached = hasActiveMembership && selectedDeliverySlots.length >= 2 && !isSelected
+                                    const isDisabled = isFull || isMaxSlotsReached
 
                                     return (
                                         <div
@@ -439,14 +474,14 @@ export function Address({ deliverySlotsData = [], membershipData = null, isLoadi
                                             className={`relative border rounded-lg p-4 cursor-pointer transition-all ${isSelected
                                                 ? 'border-primary bg-primary/5'
                                                 : 'border-border hover:border-primary/50'
-                                                } ${isFull ? 'opacity-50 cursor-not-allowed' : ''}`}
-                                            onClick={() => !isFull && handleDeliverySlotToggle(slot.id)}
+                                                } ${isDisabled ? 'opacity-50 cursor-not-allowed' : ''}`}
+                                            onClick={() => !isDisabled && handleDeliverySlotToggle(slot.id)}
                                         >
                                             <div className="flex items-start space-x-3">
                                                 <Checkbox
                                                     checked={isSelected}
-                                                    disabled={isFull}
-                                                    onCheckedChange={() => !isFull && handleDeliverySlotToggle(slot.id)}
+                                                    disabled={isDisabled}
+                                                    onCheckedChange={() => !isDisabled && handleDeliverySlotToggle(slot.id)}
                                                     className="mt-1"
                                                 />
                                                 <div className="flex-1 min-w-0">
@@ -473,6 +508,11 @@ export function Address({ deliverySlotsData = [], membershipData = null, isLoadi
                             {selectedDeliverySlots.length === 0 && (
                                 <p className="text-sm text-red-500 mt-2">
                                     {t('joinNow.address.selectAtLeastOneSlot', 'Please select at least one delivery slot')}
+                                </p>
+                            )}
+                            {membershipData && membershipData.status === 'active' && selectedDeliverySlots.length === 2 && (
+                                <p className="text-sm text-green-600 mt-2">
+                                    {t('joinNow.address.maxSlotsReached', '✓ Maximum slots selected (2/2)')}
                                 </p>
                             )}
                         </div>

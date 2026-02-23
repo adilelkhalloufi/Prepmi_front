@@ -80,9 +80,6 @@ export function RewardsSection({
                                                 {reward.description}
                                             </p>
                                         </div>
-                                        <Badge className="bg-secondary text-secondary-foreground whitespace-nowrap">
-                                            £{Number(reward.value).toFixed(2)}
-                                        </Badge>
                                     </div>
                                     {isApplied && (
                                         <Badge className="bg-green-500 text-white">
@@ -126,11 +123,6 @@ export function RewardsSection({
                                                             <ImageIcon className="w-8 h-8 text-gray-400" />
                                                         </div>
                                                     )}
-                                                    <div className="absolute top-2 right-2">
-                                                        <Badge className="bg-primary text-primary-foreground">
-                                                            {Number(meal.price).toFixed(2)} MAD
-                                                        </Badge>
-                                                    </div>
                                                 </div>
 
                                                 <CardContent className="p-4">

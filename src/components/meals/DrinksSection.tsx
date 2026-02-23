@@ -101,11 +101,6 @@ export function DrinksSection({
                                                 <ImageIcon className="w-8 h-8 text-gray-400" />
                                             </div>
                                         )}
-                                        <div className="absolute top-2 right-2">
-                                            <Badge className="bg-secondary text-secondary-foreground">
-                                                {t("joinNow.meals.currency")}{Number(drink.price).toFixed(2)}
-                                            </Badge>
-                                        </div>
                                     </div>
 
                                     <CardContent className="p-4">
