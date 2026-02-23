@@ -6,6 +6,8 @@ import http from '@/utils/http';
 import { apiRoutes } from '@/routes/api';
 import { useSelector } from "react-redux";
 import { RootState } from "@/store";
+import { useNavigate } from "react-router-dom";
+import { webRoutes } from "@/routes/web";
 
 interface NutritionSummary {
     calories: number;
@@ -33,7 +35,7 @@ export default function ClientDashboard() {
     const [data, setData] = useState<ClientDashboardData | null>(null);
     const [loading, setLoading] = useState(true);
     const user = useSelector((state: RootState) => state.admin?.user);
-
+    const navigate = useNavigate();
     useEffect(() => {
         http.get(apiRoutes.dashboard).then((res) => {
             setData(res.data);
@@ -316,6 +318,9 @@ export default function ClientDashboard() {
                                             <Button
                                                 variant="outline"
                                                 size="sm"
+                                                onClick={()=>{
+                                                   navigate(webRoutes.join_now) 
+                                                }}
                                                 className="text-emerald-600 hover:text-emerald-700 hover:bg-emerald-50 border-emerald-300"
                                             >
                                                 Reorder
