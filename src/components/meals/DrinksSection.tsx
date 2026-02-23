@@ -1,7 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Coffee, Check, X, Plus, Minus, ImageIcon } from "lucide-react";
+ import { Coffee, Check, X, Plus, Minus, ImageIcon } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { Meal } from "@/interfaces/admin";
 

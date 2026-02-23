@@ -22,7 +22,7 @@ const Index = () => {
   const navigator = useNavigate();
   const dispatch = useDispatch();
   const admin = useSelector((state: RootState) => state.admin?.user);
-  const isLoggedIn = admin?.id && admin.id > 0;
+  const isLoggedIn = !!(admin?.id && admin.id > 0);
   const [referralDialogOpen, setReferralDialogOpen] = useState(false);
   const settings = useSelector((state: RootState) => state.settings.settings);
 

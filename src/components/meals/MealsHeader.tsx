@@ -1,6 +1,4 @@
-import { Badge } from "@/components/ui/badge";
-import { Calendar } from "lucide-react";
-import { useTranslation } from "react-i18next";
+ import { useTranslation } from "react-i18next";
 
 interface MealsHeaderProps {
     weeklyMenu: any;
