@@ -326,6 +326,8 @@ const JoinNow = () => {
                         ))}
                     </div>
                 </div>
+                                {/* Navigation */}
+
                 <div className="flex flex-col sm:flex-row justify-between items-center  mx-auto mt-8 gap-4 sm:gap-0">
                     <Button
                         variant="outline"

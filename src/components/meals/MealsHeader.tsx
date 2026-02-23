@@ -20,23 +20,7 @@ export function MealsHeader({ weeklyMenu }: MealsHeaderProps) {
                         "joinNow.meals.subtitle"
                     )}
             </p>
-            {weeklyMenu && (
-                <div className="mt-3">
-                    <Badge variant="outline" className="text-sm px-4 py-1">
-                        <Calendar className="w-4 h-4 mr-2 inline" />
-                        {new Date(weeklyMenu.week_start_date).toLocaleDateString("en-GB", {
-                            day: "numeric",
-                            month: "short",
-                        })}{" "}
-                        -{" "}
-                        {new Date(weeklyMenu.week_end_date).toLocaleDateString("en-GB", {
-                            day: "numeric",
-                            month: "short",
-                            year: "numeric",
-                        })}
-                    </Badge>
-                </div>
-            )}
+      
         </div>
     );
 }

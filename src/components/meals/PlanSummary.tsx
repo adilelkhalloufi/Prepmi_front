@@ -130,9 +130,7 @@ export function PlanSummary({
                                     {t("joinNow.meals.availableRewards")}
                                 </p>
                                 <p className="font-semibold text-foreground">
-                                    {availableRewards
-                                        .map((r) => `${Number(r.value).toFixed(2)} MAD`)
-                                        .join(", ")}
+                                    1
                                 </p>
                             </div>
                         </div>

@@ -69,6 +69,19 @@ export function Meals({
   const allMeals = mealsData;
   const drinks = drinksData;
 
+  // Filter meals based on selected category and type_id = 1 (Menu)
+  const filteredMeals = allMeals.filter((meal: Meal) => {
+    // Filter by type_id = 1 (Menu)
+    if (meal.type_id !== 1) return false;
+    
+    // Filter by selected category if one is selected
+    if (planData?.categoryId) {
+      return meal.category_id === planData.categoryId;
+    }
+    
+    return true;
+  });
+
   // Membership data
   const userMembership = membershipData;
   const membershipPlan = userMembership?.membership_plan || null;
@@ -122,12 +135,13 @@ export function Meals({
     return [];
   })();
   console.log("Available Rewards:", availableRewards);
-  // Filter meals that are eligible for reward (based on value)
-  const getRewardEligibleMeals = (reward: Reward) => {
-    const rewardValue = Number(reward.value);
-    return allMeals.filter((meal: Meal) => {
-      const mealPrice = Number(meal.price || 0);
-      return mealPrice <= rewardValue;
+  // Filter meals that are eligible for reward - show all filtered meals (not just by price)
+  const getRewardEligibleMeals = (_reward: Reward) => {
+    // Return all filtered meals (respecting category and type), not filtered by price or membership
+    return filteredMeals.filter((meal: Meal) => {
+      // Don't filter by price anymore, just return filtered meals
+      // Optionally exclude membership-only meals
+      return !meal.is_membership;
     });
   };
 
@@ -310,7 +324,7 @@ export function Meals({
 
       {/* All Meals Grid - Fetched from API */}
       <MealSelector
-        allMeals={allMeals}
+        allMeals={filteredMeals}
         isLoadingMeals={isLoadingMeals}
         selectedMeals={selectedMeals}
         remainingMeals={remainingMeals}
