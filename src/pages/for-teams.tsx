@@ -5,6 +5,8 @@ import Footer from "@/components/Footer";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store";
 import {
   Form,
   FormControl,
@@ -48,6 +50,10 @@ type FormData = z.infer<typeof formSchema>;
 const ForTeams = () => {
   const { t } = useTranslation();
   const [loading, setLoading] = useState(false);
+  const settings = useSelector((state: RootState) => state.settings);
+  
+  // Get team background image from settings
+  const teamBgImage = settings.settings?.find(s => s.key === 'team_bg_image')?.value || 'https://images.unsplash.com/photo-1490645935967-10de6ba17061?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2053&q=80';
 
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
@@ -87,7 +93,7 @@ const ForTeams = () => {
     <main>
       {/* Hero Section */}
       <section className="relative bg-gradient-to-br from-primary/10 to-primary/5 py-20 overflow-hidden pt-32 ">
-        <div className="absolute inset-0 bg-cover bg-center opacity-10 pointer-events-none" style={{ backgroundImage: 'url(https://images.unsplash.com/photo-1490645935967-10de6ba17061?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2053&q=80)' }}></div>
+        <div className="absolute inset-0 bg-cover bg-center opacity-25 pointer-events-none" style={{ backgroundImage: `url(${teamBgImage})` }}></div>
         <div className="container mx-auto px-4">
           <div className="text-center max-w-4xl mx-auto">
             <h1 className="text-4xl md:text-5xl font-bold text-primary mb-6">

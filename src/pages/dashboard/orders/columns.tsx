@@ -58,7 +58,7 @@ export const columns = (
             accessorKey: "total_amount",
             header: "Montant total",
             cell: ({ row }) => {
-                const amount = row.getValue("total_amount");
+                const amount = row.getValue("total_amount") as number;
                 return amount ? `${amount} MAD` : "-";
             }
         },

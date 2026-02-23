@@ -10,17 +10,17 @@ import { ClientReviews } from "@/components/ClientReviews";
 import { Button } from "@/components/ui/button";
 import { webRoutes } from "@/routes/web";
 import { useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "@/store";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { useState, useEffect } from "react";
 import { obfuscateId } from "@/lib/utils";
-import { Gift, Share2, Users } from "lucide-react";
-import { toast } from "sonner";
+import { ReferralDialog } from "@/components/ReferralDialog";
+import { setSettings } from "@/store/slices/settingsSlice";
 
 const Index = () => {
   const { t } = useTranslation();
   const navigator = useNavigate();
+  const dispatch = useDispatch();
   const admin = useSelector((state: RootState) => state.admin?.user);
   const isLoggedIn = admin?.id && admin.id > 0;
   const [referralDialogOpen, setReferralDialogOpen] = useState(false);
@@ -29,6 +29,15 @@ const Index = () => {
   const referralLink = isLoggedIn ? `${window.location.origin}/register?ref=${obfuscateId(admin.id!)}` : '';
 
   const youtubeVideo = settings?.find(s => s.key === 'youtube_explanation_video')?.value || 'https://www.youtube.com/embed/CRd8dHqU1AM?si=o3QPG9FPq-QEeL4c';
+
+  // Fetch settings
+  useQuery({
+    queryKey: ["settings"],
+    queryFn: () => http.get(apiRoutes.settings).then(res => {
+      dispatch(setSettings(res.data.data || res.data));
+      return res.data;
+    }).catch(() => null),
+  });
 
   useEffect(() => {
     // Show dialog after a short delay for better UX
@@ -43,7 +52,8 @@ const Index = () => {
   };
   const {
     data: meals,
-
+    isLoading: mealsLoading,
+    isError: mealsError,
   } = useQuery({
     queryKey: ["meals"],
     queryFn: async () => {
@@ -107,7 +117,70 @@ const Index = () => {
           </p>
         </div>
       </div>
-      {/* Video Section */}
+    
+      {/* Meals display */}
+      <div className=" bg-primary  py-10 flex flex-col items-center">
+        {/* add button see all the menu */}
+        <Button
+          onClick={() => {
+            navigator(webRoutes.menu);
+          }}
+          className="text-white bg-secondary px-4 py-2 rounded-md mb-4 animate-in fade-in slide-in-from-bottom-4 duration-700 delay-300">
+          {t("see_all_menu")}
+        </Button>
+        <div className="flex flex-col md:flex-row  gap-4 justify-center">
+          {mealsLoading ? (
+            <div className="text-white text-lg py-8">
+              {t("loading", "Loading meals...")}
+            </div>
+          ) : mealsError ? (
+            <div className="text-white text-lg py-8">
+              {t("error_loading_meals", "Unable to load meals. Please try again later.")}
+            </div>
+          ) : meals && Array.isArray(meals) && meals.length > 0 ? (
+            meals.map((meal: any, index: number) => (
+              <div
+                onClick={() => handleCardClick(meal.id)}
+                key={meal.id}
+                className="cursor-pointer flex flex-col p-2 items-center w-72 max-w-72 animate-in fade-in slide-in-from-bottom-6 duration-700"
+                style={{ animationDelay: `${600 + index * 150}ms` }}
+              >
+                <div className="w-40 h-40 md:w-48 md:h-48 lg:w-56 lg:h-56 flex-shrink-0 relative">
+                  {/* give image shadow down like light */}
+                  <img
+                    src={meal.image_url || "./example1.png"}
+                    alt={meal.name}
+                    className="w-full h-full object-cover rounded-lg shadow-lg animate-in zoom-in duration-700"
+                    style={{ animationDelay: `${700 + index * 150}ms` }}
+                  />
+                </div>
+                <div className="rounded-lg   bg-background/95  supports-[backdrop-filter]:bg-background/20 flex flex-col p-2 items-center">
+                  <p className="text-white text-center mt-4 font-semibold text-lg min-h-[3.5rem] flex items-center justify-center">
+                    {meal.name}
+                  </p>
+
+                  <div className="flex space-x-4 mt-2 p-2">
+                    <span className="text-white text-sm flex items-center gap-1">
+                      {meal.nutrition.calories} {t("calories")}
+                      <IconFlame className="w-4 h-4 text-orange-400" />
+                    </span>
+                    <span className="text-white text-sm">|</span>
+                    <span className="text-white text-sm flex items-center gap-1">
+                      {meal.nutrition.protein}g {t("protein")}
+                      <IconMeat className="w-4 h-4 text-red-400" />
+                    </span>
+                  </div>
+                </div>
+              </div>
+            ))
+          ) : (
+            <div className="text-white text-lg py-8">
+              {t("no_meals_available", "No meals available at the moment.")}
+            </div>
+          )}
+        </div>
+      </div>
+        {/* Video Section */}
       <div className="container my-16 pt-8">
         <div className="text-center mb-8">
           <h2 className="text-3xl font-bold text-primary mb-4">
@@ -130,123 +203,17 @@ const Index = () => {
           </div>
         </div>
       </div>
-      {/* Meals display */}
-      <div className=" bg-primary  py-10 flex flex-col items-center">
-        {/* add button see all the menu */}
-        <Button
-          onClick={() => {
-            navigator(webRoutes.menu);
-          }}
-          className="text-white bg-secondary px-4 py-2 rounded-md mb-4 animate-in fade-in slide-in-from-bottom-4 duration-700 delay-300">
-          {t("see_all_menu")}
-        </Button>
-        <div className="flex flex-col md:flex-row  gap-4 justify-center">
-          {meals?.map((meal: any, index: number) => (
-            <div
-              onClick={() => handleCardClick(meal.id)}
-              key={meal.id}
-              className="cursor-pointer flex flex-col p-2 items-center w-72 max-w-72 animate-in fade-in slide-in-from-bottom-6 duration-700"
-              style={{ animationDelay: `${600 + index * 150}ms` }}
-            >
-              <div className="w-40 h-40 md:w-48 md:h-48 lg:w-56 lg:h-56 flex-shrink-0 relative">
-                {/* give image shadow down like light */}
-                <img
-                  src={meal.image_url || "./example1.png"}
-                  alt={meal.name}
-                  className="w-full h-full object-cover rounded-lg shadow-lg animate-in zoom-in duration-700"
-                  style={{ animationDelay: `${700 + index * 150}ms` }}
-                />
-              </div>
-              <div className="rounded-lg   bg-background/95  supports-[backdrop-filter]:bg-background/20 flex flex-col p-2 items-center">
-                <p className="text-white text-center mt-4 font-semibold text-lg min-h-[3.5rem] flex items-center justify-center">
-                  {meal.name}
-                </p>
-
-                <div className="flex space-x-4 mt-2 p-2">
-                  <span className="text-white text-sm flex items-center gap-1">
-                    {meal.nutrition.calories} {t("calories")}
-                    <IconFlame className="w-4 h-4 text-orange-400" />
-                  </span>
-                  <span className="text-white text-sm">|</span>
-                  <span className="text-white text-sm flex items-center gap-1">
-                    {meal.nutrition.protein}g {t("protein")}
-                    <IconMeat className="w-4 h-4 text-red-400" />
-                  </span>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
 
       <ClientReviews />
 
       <Footer />
 
-      <Dialog open={referralDialogOpen} onOpenChange={setReferralDialogOpen}>
-        <DialogContent className="sm:max-w-md">
-          <DialogHeader>
-            <div className="flex items-center gap-2">
-              <Gift className="w-6 h-6 text-primary" />
-              <DialogTitle>{isLoggedIn ? t('landing.referral_popup_title', 'Earn Points with Referrals!') : t('landing.referral_popup_title_guest', 'Join and Earn Points!')}</DialogTitle>
-            </div>
-            <DialogDescription>
-              {isLoggedIn
-                ? t('landing.referral_popup_desc', 'Share your referral link and earn points when someone creates an account using it.')
-                : t('landing.referral_popup_desc_guest', 'Connect your account and start earning points by sharing your referral link with friends!')
-              }
-            </DialogDescription>
-          </DialogHeader>
-          <div className="space-y-4">
-            {isLoggedIn ? (
-              <>
-                <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                  <Share2 className="w-4 h-4" />
-                  <p>{t('landing.referral_link_label', 'Your referral link:')}</p>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <input
-                    type="text"
-                    value={referralLink}
-                    readOnly
-                    className="flex-1 px-3 py-2 border rounded-md text-sm bg-muted"
-                  />
-                  <Button
-                    onClick={() => {
-                      window.navigator.clipboard.writeText(referralLink);
-                      toast.success(t('landing.link_copied', 'Link copied to clipboard!'));
-                    }}
-                    size="sm"
-                    className="flex items-center gap-1"
-                  >
-                    <Share2 className="w-4 h-4" />
-                    {t('landing.copy_link', 'Copy')}
-                  </Button>
-                </div>
-                <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                  <Users className="w-4 h-4" />
-                  <p>{t('landing.referral_note', 'Points will be credited once the referred user completes their first order.')}</p>
-                </div>
-              </>
-            ) : (
-              <div className="text-center space-y-4">
-                <div className="flex justify-center">
-                  <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center">
-                    <Gift className="w-8 h-8 text-primary" />
-                  </div>
-                </div>
-                <p className="text-sm">{t('landing.referral_benefits', 'Get rewarded for every friend you bring to PrepMe!')}</p>
-                <Button
-                  onClick={() => navigator(webRoutes.login)}
-                  className="w-full"
-                >
-                  {t('landing.connect_now', 'Connect Now')}
-                </Button>
-              </div>
-            )}
-          </div>
-        </DialogContent>
-      </Dialog>
+      <ReferralDialog
+        open={referralDialogOpen}
+        onOpenChange={setReferralDialogOpen}
+        isLoggedIn={isLoggedIn}
+        referralLink={referralLink}
+      />
     </main>
   );
 };

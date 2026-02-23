@@ -99,9 +99,9 @@ export const Plan = ({
         }
     }
 
-    const handleSizeSelect = (size: string) => {
+    const handleSizeSelect = (size: string, price: number) => {
         setSelectedSize(size)
-        dispatch(updatePlanData({ selectedSize: size }))
+        dispatch(updatePlanData({ selectedSize: size, sizePrice: price }))
     }
 
     const calculateTotal = () => {
@@ -109,7 +109,8 @@ export const Plan = ({
         const selectedPlan = mealOptions.find(plan => plan.meals_per_week === mealsNum);
         const portionExtra = selectedPortion && selectedPortion !== 'standard' ? 1.99 * mealsNum : 0;
         const pricePerWeek = Number(selectedPlan?.price_per_week || 0);
-        const subtotal = pricePerWeek + portionExtra;
+        const sizePrice = Number(planData?.sizePrice || 0);
+        const subtotal = pricePerWeek + portionExtra + sizePrice;
 
         // Calculate membership discount
         const membershipDiscountPercent = membershipPlan ? Number(membershipPlan.discount_percentage || 0) : 0;
@@ -235,21 +236,24 @@ export const Plan = ({
                             </div>
 
                             <div className="flex flex-row justify-center gap-6 mb-12">
-                                {parsedOrderSizes.map((size: string) => (
+                                {parsedOrderSizes.map((sizeObj: { size: string; price: number }) => (
                                     <Card
-                                        key={size}
-                                        className={`cursor-pointer transition-all duration-300 hover:shadow-lg border-2 ${selectedSize === size
+                                        key={sizeObj.size}
+                                        className={`cursor-pointer transition-all duration-300 hover:shadow-lg border-2 ${selectedSize === sizeObj.size
                                             ? 'border-primary bg-primary/10 shadow-lg'
                                             : 'border-gray-200 hover:border-primary/30'
                                             }`}
-                                        onClick={() => handleSizeSelect(size)}
+                                        onClick={() => handleSizeSelect(sizeObj.size, sizeObj.price)}
                                     >
                                         <CardContent className="p-8 text-center">
-                                            <h3 className="text-xl font-bold text-gray-900 mb-3 capitalize">{size}</h3>
-                                            <p className="text-gray-600">
-                                                {size === 'small' ? t('plan.size.small_desc', 'Perfect for individuals or couples') : t('plan.size.large_desc', 'Ideal for families or meal prepping')}
+                                            <h3 className="text-xl font-bold text-gray-900 mb-3 capitalize">{sizeObj.size}</h3>
+                                            <p className="text-gray-600 mb-2">
+                                                {sizeObj.size === 'small' ? t('plan.size.small_desc', 'Perfect for individuals or couples') : t('plan.size.large_desc', 'Ideal for families or meal prepping')}
                                             </p>
-                                            {selectedSize === size && (
+                                            <div className="text-lg font-bold text-primary">
+                                                {sizeObj.price > 0 ? `+${t('menu.currency')}${sizeObj.price.toFixed(2)}` : t('plan.summary.free')}
+                                            </div>
+                                            {selectedSize === sizeObj.size && (
                                                 <div className="mt-4">
                                                     <Badge className="bg-primary text-primary-foreground">{t('common.selected')}</Badge>
                                                 </div>
@@ -388,11 +392,23 @@ export const Plan = ({
                                         <span className="text-gray-700">{t('plan.summary.mainMeals')} ({selectedMeals})</span>
                                         <div className="text-right">
                                             <span className="font-semibold text-lg">
-                                                {totals.subtotal.toFixed(2)}
+                                                {(totals.subtotal - (planData?.sizePrice || 0)).toFixed(2)}
                                                 {t('menu.currency')}
                                             </span>
                                         </div>
                                     </div>
+
+                                    {(planData?.sizePrice || 0) > 0 && (
+                                        <div className="flex justify-between items-center py-3 border-b border-gray-100">
+                                            <span className="text-gray-700 capitalize">{t('plan.summary.size', 'Size')} ({planData?.selectedSize})</span>
+                                            <div className="text-right">
+                                                <span className="font-semibold text-lg">
+                                                    +{(planData?.sizePrice || 0).toFixed(2)}
+                                                    {t('menu.currency')}
+                                                </span>
+                                            </div>
+                                        </div>
+                                    )}
 
                                     {totals.membershipDiscount > 0 && (
                                         <div className="flex justify-between items-center py-3 border-b border-gray-100">

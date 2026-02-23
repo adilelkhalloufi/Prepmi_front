@@ -192,6 +192,10 @@ const DeliverySlotsEdit = loadable(() => import('../pages/dashboard/delivery-slo
   fallback: fallbackElement,
 });
 
+const DashboardSettings = loadable(() => import('../pages/dashboard/settings'), {
+  fallback: fallbackElement,
+});
+
 
 export const browserRouter = createBrowserRouter([
   {
@@ -410,6 +414,10 @@ export const browserRouter = createBrowserRouter([
       {
         path: webRoutes.dashboard_delivery_slots_edit,
         element: <DeliverySlotsEdit />,
+      },
+      {
+        path: webRoutes.dashboard_settings,
+        element: <DashboardSettings />,
       },
 
     ],

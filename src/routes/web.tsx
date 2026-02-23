@@ -46,6 +46,7 @@ export const webRoutes = {
   dashboard_rewards: '/dashboard/rewards',
   dashboard_collaborators: '/dashboard/collaborators',
   dashboard_partners: '/dashboard/partners',
+  dashboard_settings: '/dashboard/settings',
   menu: '/menu',
   meal_single: '/meal/:id',
   join_now: '/join-now',

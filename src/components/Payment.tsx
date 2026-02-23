@@ -121,7 +121,8 @@ export function Payment({
     // const breakfastSubtotal = selectedBreakfasts.reduce((sum, item) => sum + ((item.price || 0) * (item.quantity || 0)), 0)
     const drinksSubtotal = selectedDrinks.reduce((sum, item) => sum + ((item.price || 0) * (item.quantity || 0)), 0)
     const planSubtotal = Number(planData?.plan?.price_per_week || 0)
-    const subtotalBeforeDiscount = planSubtotal + drinksSubtotal
+    const sizePrice = Number(planData?.sizePrice || 0)
+    const subtotalBeforeDiscount = planSubtotal + drinksSubtotal + sizePrice
 
     // Apply membership discount
     const membershipDiscountPercent = membershipPlan ? Number(membershipPlan.discount_percentage || 0) : 0
@@ -168,6 +169,7 @@ export function Payment({
 
         const payload = {
             size: planData?.selectedSize || null,
+            sizePrice: planData?.sizePrice || 0,
             paymentMethod: paymentMethod,
             plan: planData?.plan || null,
             meals: selectedMeals, // array of meal objects
@@ -597,6 +599,13 @@ export function Payment({
                                     <div className="flex justify-between text-sm">
                                         <span>{t('joinNow.payment.planName', { name: planData?.plan?.name })}</span>
                                         <span>{Number(planData?.plan?.price_per_week).toFixed(2)} {t('menu.currency')}</span>
+                                    </div>
+                                )}
+                                {/* Show size price if selected and > 0 */}
+                                {(planData?.sizePrice || 0) > 0 && (
+                                    <div className="flex justify-between text-sm">
+                                        <span className="capitalize">{t('plan.summary.size', 'Size')} ({planData?.selectedSize})</span>
+                                        <span>+{(planData?.sizePrice || 0).toFixed(2)} {t('menu.currency')}</span>
                                     </div>
                                 )}
                                 {/* Show drinks total if any drinks selected */}

@@ -1,12 +1,14 @@
 import { Button } from "@/components/ui/button";
 import { useTranslation } from "react-i18next";
 import { webRoutes } from "@/routes/web";
-import { IconDashboard, IconLogin } from "@tabler/icons-react";
+import { IconDashboard, IconLogin, IconMenu2 } from "@tabler/icons-react";
 import { LangToggle } from "./lang-toggle";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store";
 import logo from "../assets/Prepme-simple.svg";
+import { useState } from "react";
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 interface RouteProps {
   href: string;
   label: string;
@@ -15,6 +17,7 @@ interface RouteProps {
 export function Header() {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const routeList: RouteProps[] = [
 
     {
@@ -69,6 +72,71 @@ export function Header() {
 
           <LangToggle />
 
+          {/* Mobile Menu Button */}
+          <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
+            <SheetTrigger asChild>
+              <Button variant="ghost" size="icon" className="md:hidden">
+                <IconMenu2 className="h-6 w-6" />
+                <span className="sr-only">{t("menu_toggle", "Toggle menu")}</span>
+              </Button>
+            </SheetTrigger>
+            <SheetContent side="right" className="w-[300px] sm:w-[400px]">
+              <SheetHeader>
+                <SheetTitle className="flex items-center">
+                  <img src={logo} alt="Prepme" className="h-12 w-auto" />
+                </SheetTitle>
+              </SheetHeader>
+              <nav className="flex flex-col space-y-4 mt-6">
+                {routeList.map((route: RouteProps, i) => (
+                  <a
+                    href={route.href}
+                    key={i}
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="text-base font-medium hover:text-primary py-2 px-2 hover:bg-accent rounded-md transition-colors"
+                  >
+                    {route.label}
+                  </a>
+                ))}
+                <div className="border-t pt-4 space-y-3">
+                  {admin?.id ? (
+                    <Button
+                      variant="outline"
+                      className="w-full justify-start"
+                      onClick={() => {
+                        navigate(webRoutes.dashboard);
+                        setMobileMenuOpen(false);
+                      }}
+                    >
+                      <IconDashboard className="mr-2 w-5 h-5" />
+                      {t("menu_dashboard", "Dashboard")}
+                    </Button>
+                  ) : (
+                    <Button
+                      variant="outline"
+                      className="w-full justify-start"
+                      onClick={() => {
+                        navigate(webRoutes.login);
+                        setMobileMenuOpen(false);
+                      }}
+                    >
+                      <IconLogin className="mr-2 w-5 h-5" />
+                      {t("menu_login")}
+                    </Button>
+                  )}
+                  <Button
+                    className="w-full"
+                    onClick={() => {
+                      navigate(webRoutes.join_now);
+                      setMobileMenuOpen(false);
+                    }}
+                  >
+                    {t("menu_get_started")}
+                  </Button>
+                </div>
+              </nav>
+            </SheetContent>
+          </Sheet>
+
 
           {/* <Button
             variant="ghost"
@@ -92,7 +160,7 @@ export function Header() {
           {admin?.id ? (
             <Button
               variant="ghost"
-
+              className="hidden md:flex"
               onClick={() => {
                 navigate(webRoutes.dashboard);
               }}
@@ -103,6 +171,7 @@ export function Header() {
           ) : (
             <Button
               variant="ghost"
+              className="hidden md:flex"
               onClick={() => {
                 navigate(webRoutes.login);
               }}

@@ -4,9 +4,16 @@ import { Link } from 'react-router-dom'
 import logo from '../assets/Prepme.svg'
 import { Button } from '@/components/ui/button'
 import { webRoutes } from '@/routes/web'
+import { useSelector } from 'react-redux'
+import { RootState } from '@/store'
 
 export default function SignIn() {
   const { t } = useTranslation()
+  const settings = useSelector((state: RootState) => state.settings)
+  
+  // Get login background image from settings
+  const loginBgImage = settings.settings?.find(s => s.key === 'login_bg_image')?.value || './healthy-meal-bowl.png'
+  
   return (
     <>
       <style>
@@ -31,7 +38,7 @@ export default function SignIn() {
 
           </div>
           <div className='flex justify-center items-center h-full '>
-            <img src='./healthy-meal-bowl.png' alt='logo' className=' w-full  z-50 animate-float' />
+            <img src={loginBgImage} alt='logo' className=' w-full  z-50 animate-float' />
 
           </div>
 
