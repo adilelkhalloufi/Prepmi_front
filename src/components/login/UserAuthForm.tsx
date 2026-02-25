@@ -25,6 +25,7 @@ import { PasswordInput } from '../dashboard/custom/password-input'
 import { Button } from '../ui/button'
 import { useTranslation } from 'react-i18next'
 import { login } from '@/store/slices/adminSlice'
+import { RoleEnum } from '@/enum/RoleEnum'
 
 interface UserAuthFormProps extends HTMLAttributes<HTMLDivElement> { }
 
@@ -69,7 +70,12 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
 
   useEffect(() => {
     if (admin?.token) {
-      navigate(from, { replace: true });
+      // Redirect cuisinier to meal preparation dashboard
+      if (admin.user?.role === RoleEnum.CUISINIER) {
+        navigate(webRoutes.dashboard_meal_preparation, { replace: true });
+      } else {
+        navigate(from, { replace: true });
+      }
     }
   }, [admin]);
 

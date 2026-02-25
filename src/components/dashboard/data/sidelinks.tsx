@@ -34,7 +34,7 @@ export const sidelinks: SideLink[] = [
     label: '',
     href: webRoutes.dashboard,
     icon: <IconLayoutDashboard size={18} />,
-    role: [RoleEnum.ADMIN, RoleEnum.CUISINIER, RoleEnum.LIVREUR, RoleEnum.CLIENT]
+    role: [RoleEnum.ADMIN ,RoleEnum.CLIENT]
   },
   {
     title: 'Gestion des repas',
@@ -48,11 +48,7 @@ export const sidelinks: SideLink[] = [
         href: webRoutes.dashboard_meals,
         icon: <IconBox size={18} />
       },
-      {
-        title: 'Plans hebdomadaires',
-        href: webRoutes.dashboard_weekly_menus,
-        icon: <IconCalendarMonth size={18} />
-      },
+     
       {
         title: 'Catégories',
         href: webRoutes.dashboard_categories,
