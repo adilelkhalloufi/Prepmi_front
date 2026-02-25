@@ -76,10 +76,10 @@ export default function ClientDashboard() {
                 <h1 className="text-3xl font-bold">
                     Hi {user?.first_name + " " + user?.last_name}, this week at a glance
                 </h1>
-                <Button className="bg-emerald-500 hover:bg-emerald-600 text-white">
+                {/* <Button className="bg-emerald-500 hover:bg-emerald-600 text-white">
                     <Dumbbell className="mr-2 h-4 w-4" />
                     Garage Gym
-                </Button>
+                </Button> */}
             </div>
 
             {/* Main content grid */}
@@ -191,7 +191,7 @@ export default function ClientDashboard() {
                     </Card>
 
                     {/* Progress Tracker */}
-                    <Card>
+                    {/* <Card>
                         <CardHeader>
                             <CardTitle>Progress tracker</CardTitle>
                         </CardHeader>
@@ -230,7 +230,7 @@ export default function ClientDashboard() {
                                 </div>
                             </div>
                         </CardContent>
-                    </Card>
+                    </Card> */}
 
                     {/* Motivational Corner */}
                     <Card className="bg-yellow-100 border-yellow-200">
