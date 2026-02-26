@@ -58,7 +58,7 @@ export default function MembershipCheckout() {
         queryKey: ["membership-plan", selectedPlanId],
         queryFn: () =>
             http
-                .get(`${apiRoutes.membershipPlans}/${selectedPlanId}`)
+                .get(`${apiRoutes.membershipPlans}`)
                 .then((res) => {
                     // Handle both res.data.data and res.data response formats
                     const plan = res && res.data ? (res.data.data ?? res.data) : null
