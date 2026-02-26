@@ -9,8 +9,7 @@ import {
   IconSettings2,
   IconShoppingCart,
   IconUser,
-  IconCalendarMonth,
-  IconChefHat,
+   IconChefHat,
   IconCreditCard,
   IconUsers
 

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Check, Dumbbell, Gift, TrendingUp, ShoppingBag } from 'lucide-react';
+import {   Gift, TrendingUp, ShoppingBag } from 'lucide-react';
 import http from '@/utils/http';
 import { apiRoutes } from '@/routes/api';
 import { useSelector } from "react-redux";
