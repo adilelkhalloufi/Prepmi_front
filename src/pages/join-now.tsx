@@ -193,6 +193,7 @@ const JoinNow = () => {
             }
 
             // Validate free desserts from membership
+            /* COMMENTED OUT - Free desserts validation
             const membershipPlan = membershipResponse?.membership_plan || null
             const hasFreeDesserts = membershipPlan?.includes_free_desserts || false
             const freeDessertsQuantity = Number(membershipPlan?.free_desserts_quantity || 0)
@@ -207,6 +208,7 @@ const JoinNow = () => {
                     return
                 }
             }
+            */
         }
         // Validate Address step (step 3)
         if (currentStep === 3) {
