@@ -86,8 +86,10 @@ export function Meals({
   const userMembership = membershipData;
   const membershipPlan = userMembership?.membership_plan || null;
   const hasFreeDesserts = membershipPlan?.includes_free_desserts || false;
+  const free_desserts_used_this_month = Number(userMembership?.free_desserts_used_this_month || 0);
+
   const freeDessertsQuantity = Number(
-    membershipPlan?.free_desserts_quantity || 0
+    membershipPlan?.free_desserts_quantity - free_desserts_used_this_month || 0
   );
   const membershipDiscount = Number(membershipPlan?.discount_percentage || 0);
 
