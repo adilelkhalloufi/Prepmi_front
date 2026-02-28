@@ -1,7 +1,7 @@
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Gift, Share2, Users } from "lucide-react";
-import { IconBrandWhatsapp, IconBrandFacebook, IconBrandInstagram, IconBrandLinkedin } from "@tabler/icons-react";
+import { IconBrandWhatsapp, IconBrandMessenger, IconBrandInstagram, IconBrandLinkedin } from "@tabler/icons-react";
 import { toast } from "sonner";
 import { useTranslation } from "react-i18next";
 import { webRoutes } from "@/routes/web";
@@ -16,24 +16,62 @@ interface ReferralDialogProps {
 
 export const ReferralDialog = ({ open, onOpenChange, isLoggedIn, referralLink }: ReferralDialogProps) => {
   const { t } = useTranslation();
-  const navigator = useNavigate();
+  const navigate = useNavigate();
 
   const shareToWhatsApp = () => {
     const message = t('landing.referral_message', `Join PrepMe and enjoy healthy meals! Use my referral link: ${referralLink}`);
-    window.open(`https://wa.me/?text=${encodeURIComponent(message)}`, '_blank');
+    // Mobile-friendly WhatsApp sharing
+    const isMobile = /iPhone|iPad|iPod|Android/i.test(window.navigator.userAgent);
+    if (isMobile) {
+      // Open WhatsApp app directly on mobile
+      window.location.href = `whatsapp://send?text=${encodeURIComponent(message)}`;
+    } else {
+      // Desktop: use WhatsApp Web
+      window.open(`https://wa.me/?text=${encodeURIComponent(message)}`, '_blank');
+    }
   };
 
-  const shareToFacebook = () => {
-    window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(referralLink)}`, '_blank');
+  const shareToMessenger = () => {
+    // Mobile-friendly Messenger sharing
+    const isMobile = /iPhone|iPad|iPod|Android/i.test(window.navigator.userAgent);
+    if (isMobile) {
+      // Try to open Messenger app with deep link
+      window.location.href = `fb-messenger://share/?link=${encodeURIComponent(referralLink)}`;
+    } else {
+      // Desktop: copy link and notify user
+      window.navigator.clipboard.writeText(referralLink);
+      toast.success(t('landing.messenger_copy', 'Link copied! You can now paste it in Messenger.'));
+    }
   };
 
   const shareToInstagram = () => {
+    // Copy link first
     window.navigator.clipboard.writeText(referralLink);
-    toast.success(t('landing.instagram_copy', 'Link copied! You can now paste it in your Instagram bio or stories.'));
+
+    // Mobile-friendly Instagram sharing
+    const isMobile = /iPhone|iPad|iPod|Android/i.test(window.navigator.userAgent);
+    if (isMobile) {
+      // Try to open Instagram app
+      window.location.href = 'instagram://app';
+      // Show toast after a brief delay
+      setTimeout(() => {
+        toast.success(t('landing.instagram_copy', 'Link copied! You can now paste it in your Instagram bio or stories.'));
+      }, 500);
+    } else {
+      toast.success(t('landing.instagram_copy', 'Link copied! You can now paste it in your Instagram bio or stories.'));
+    }
   };
 
   const shareToLinkedIn = () => {
-    window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(referralLink)}`, '_blank');
+    // Mobile-friendly LinkedIn sharing
+    const isMobile = /iPhone|iPad|iPod|Android/i.test(window.navigator.userAgent);
+    if (isMobile) {
+      // Try to open LinkedIn app on mobile
+      window.location.href = `linkedin://sharing/share-offsite/?url=${encodeURIComponent(referralLink)}`;
+    } else {
+      // Desktop: use web sharing
+      window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(referralLink)}`, '_blank');
+    }
   };
 
   const copyToClipboard = () => {
@@ -48,8 +86,8 @@ export const ReferralDialog = ({ open, onOpenChange, isLoggedIn, referralLink }:
           <div className="flex items-center gap-2">
             <Gift className="w-6 h-6 text-primary" />
             <DialogTitle>
-              {isLoggedIn 
-                ? t('landing.referral_popup_title', 'Earn Points with Referrals!') 
+              {isLoggedIn
+                ? t('landing.referral_popup_title', 'Earn Points with Referrals!')
                 : t('landing.referral_popup_title_guest', 'Join and Earn Points!')
               }
             </DialogTitle>
@@ -97,13 +135,13 @@ export const ReferralDialog = ({ open, onOpenChange, isLoggedIn, referralLink }:
                     {t('landing.whatsapp', 'WhatsApp')}
                   </Button>
                   <Button
-                    onClick={shareToFacebook}
+                    onClick={shareToMessenger}
                     variant="outline"
                     size="sm"
                     className="flex items-center gap-2"
                   >
-                    <IconBrandFacebook className="w-5 h-5 text-blue-600" />
-                    {t('landing.facebook', 'Facebook')}
+                    <IconBrandMessenger className="w-5 h-5 text-blue-600" />
+                    {t('landing.messenger', 'Messenger')}
                   </Button>
                   <Button
                     onClick={shareToInstagram}
@@ -139,7 +177,7 @@ export const ReferralDialog = ({ open, onOpenChange, isLoggedIn, referralLink }:
               </div>
               <p className="text-sm">{t('landing.referral_benefits', 'Get rewarded for every friend you bring to PrepMe!')}</p>
               <Button
-                onClick={() => navigator(webRoutes.login)}
+                onClick={() => navigate(webRoutes.login)}
                 className="w-full"
               >
                 {t('landing.connect_now', 'Connect Now')}

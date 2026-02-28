@@ -2,7 +2,7 @@ import { Outlet } from 'react-router-dom'
 
 import { memo } from 'react'
 import { UserNav } from '../user-nav'
-import { TopNav } from '../top-nav'
+// import { TopNav } from '../top-nav'
 import SkipToMain from '../skip-to-main'
 import Sidebar from '../sidebar'
 import { LayoutDashbord } from '../custom/LayoutDashbord'
@@ -13,28 +13,28 @@ const Layout = () => {
 
   const [isCollapsed, setIsCollapsed] = useIsCollapsed()
 
-  const topNav: any = [
-    // {
-    //   title: 'Overview',
-    //   href: 'dashboard/overview',
-    //   isActive: true,
-    // },
-    // {
-    //   title: 'Customers',
-    //   href: 'dashboard/customers',
-    //   isActive: false,
-    // },
-    // {
-    //   title: 'Products',
-    //   href: 'dashboard/products',
-    //   isActive: false,
-    // },
-    // {
-    //   title: 'Settings',
-    //   href: 'dashboard/settings',
-    //   isActive: false,
-    // },
-  ]
+  // const topNav: any = [
+  //   // {
+  //   //   title: 'Overview',
+  //   //   href: 'dashboard/overview',
+  //   //   isActive: true,
+  //   // },
+  //   // {
+  //   //   title: 'Customers',
+  //   //   href: 'dashboard/customers',
+  //   //   isActive: false,
+  //   // },
+  //   // {
+  //   //   title: 'Products',
+  //   //   href: 'dashboard/products',
+  //   //   isActive: false,
+  //   // },
+  //   // {
+  //   //   title: 'Settings',
+  //   //   href: 'dashboard/settings',
+  //   //   isActive: false,
+  //   // },
+  // ]
   return (
     <div className='relative h-full overflow-hidden bg-background'>
       <SkipToMain />
@@ -46,7 +46,7 @@ const Layout = () => {
         <LayoutDashbord>
           {/* ===== Top Heading ===== */}
           <LayoutDashbord.Header>
-            <TopNav links={topNav} />
+            {/* <TopNav links={topNav} /> */}
             <div className='ml-auto flex items-center space-x-4'>
               <ThemeSwitcher />
               <UserNav />

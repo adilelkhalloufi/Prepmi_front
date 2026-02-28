@@ -196,7 +196,9 @@ const DashboardSettings = loadable(() => import('../pages/dashboard/settings'), 
   fallback: fallbackElement,
 });
 
-
+const DashboardProfile = loadable(() => import('../pages/dashboard/profile'), {
+  fallback: fallbackElement,
+});
 export const browserRouter = createBrowserRouter([
   {
     element: <LayoutLanding />,
@@ -261,6 +263,10 @@ export const browserRouter = createBrowserRouter([
       </RequireAuth>
     ),
     children: [
+      {
+        path: webRoutes.dashboard_profile,
+        element: <DashboardProfile />,
+      },
       {
         path: webRoutes.dashboard,
         element: <Dashboard />,

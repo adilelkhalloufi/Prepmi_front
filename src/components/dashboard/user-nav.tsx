@@ -59,14 +59,13 @@ export function UserNav() {
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
-          {/* <DropdownMenuItem
+          <DropdownMenuItem
             onClick={() => {
-              // navigate(webRoutes.dashboard_profile);
+              navigate(webRoutes.dashboard_profile);
             }}
           >
             Profile
-            <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
-          </DropdownMenuItem> */}
+          </DropdownMenuItem>
 
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
