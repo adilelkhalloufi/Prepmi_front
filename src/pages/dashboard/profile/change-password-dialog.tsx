@@ -7,6 +7,8 @@ import { useTranslation } from "react-i18next";
 import { Lock, Eye, EyeOff, Loader2 } from "lucide-react";
 import { API_URL, handleErrorResponse, showNotification, NotificationType } from "@/utils";
 import axios from "axios";
+import http from "@/utils/http";
+import { apiRoutes } from "@/routes/api";
 
 interface ChangePasswordDialogProps {
     open: boolean;
@@ -68,40 +70,16 @@ export const ChangePasswordDialog = ({ open, onOpenChange }: ChangePasswordDialo
 
         setLoading(true);
 
-        try {
-            const token = localStorage.getItem('token');
-
-            await axios.post(
-                `${API_URL}/change-password`,
-                {
-                    old_password: formData.old_password,
-                    new_password: formData.new_password,
-                    new_password_confirmation: formData.new_password_confirmation
-                },
-                {
-                    headers: {
-                        Authorization: `Bearer ${token}`
-                    }
-                }
-            );
-
-            showNotification(
-                t('profile.password_changed_success', 'Password changed successfully!'),
-                NotificationType.SUCCESS
-            );
-
-            setFormData({
-                old_password: '',
-                new_password: '',
-                new_password_confirmation: ''
-            });
-
-            onOpenChange(false);
-        } catch (error: any) {
-            handleErrorResponse(error);
-        } finally {
-            setLoading(false);
-        }
+        http.post(apiRoutes.changePassword, formData)
+            .then(() => {
+                showNotification(
+                    t('profile.password_changed_success', 'Password changed successfully!'),
+                    NotificationType.SUCCESS
+                );
+                handleClose();
+            })
+            .catch(handleErrorResponse)
+            .finally(() => setLoading(false));
     };
 
     const handleClose = () => {

@@ -37,4 +37,6 @@ export const apiRoutes = {
   teamPartnerships: `${API_URL}/team-partnerships`,
   collaborations: `${API_URL}/collaborations`,
   mediaUpload: `${API_URL}/media/upload`,
+  changePassword: `${API_URL}/change-password`,
+  
 };
