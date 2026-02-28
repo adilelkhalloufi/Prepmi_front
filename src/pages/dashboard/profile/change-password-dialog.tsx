@@ -5,8 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useTranslation } from "react-i18next";
 import { Lock, Eye, EyeOff, Loader2 } from "lucide-react";
-import { API_URL, handleErrorResponse, showNotification, NotificationType } from "@/utils";
-import axios from "axios";
+import { handleErrorResponse, showNotification, NotificationType } from "@/utils";
 import http from "@/utils/http";
 import { apiRoutes } from "@/routes/api";
 
