@@ -328,9 +328,9 @@ const JoinNow = () => {
                         ))}
                     </div>
                 </div>
-                                {/* Navigation */}
+                {/* Navigation */}
 
-                <div className="flex flex-col sm:flex-row justify-between items-center  mx-auto mt-8 gap-4 sm:gap-0">
+                <div className="hidden md:flex flex-col sm:flex-row justify-between items-center  mx-auto mt-8 gap-4 sm:gap-0">
                     <Button
                         variant="outline"
                         onClick={handlePrev}
@@ -350,6 +350,7 @@ const JoinNow = () => {
                         <ChevronRight className="h-4 w-4" />
                     </Button>
                 </div>
+
                 {/* Step Content */}
                 <div className=" mx-auto max-w-6xl">
                     {CurrentStepComponent && (

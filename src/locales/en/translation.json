@@ -703,8 +703,8 @@
       "company_name": "Company Name",
       "company_website": "Company Website (Optional)",
       "partnership_type": "Partnership Type",
-      "team_members_per_week": "Team Members per Week",
-      "products_interested": "Products Interested",
+      "team_members_per_week": "Team Members",
+      "products_interested": "Your interests",
       "heard_about_us": "How did you hear about us? (Optional)",
       "accept_terms": "I accept the terms and conditions",
       "accept_communications": "I agree to receive communications",
@@ -712,7 +712,7 @@
       "select_partnership_type": "Select partnership type",
       "select_range": "Select range",
       "select_option": "Select option",
-      "list_products": "List products you're interested in",
+      "list_products": "List what interests you",
       "https_example": "https://example.com"
     }
   },

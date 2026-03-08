@@ -21,6 +21,7 @@ import { apiRoutes } from "@/routes/api";
 import http from "@/utils/http";
 import { toast } from "sonner";
 import { useState } from "react";
+import { Textarea } from "@/components/ui/textarea";
 
 const formSchema = z.object({
   full_name: z.string().min(1, "Full name is required"),
@@ -53,7 +54,7 @@ const ForCollab = () => {
   const { t } = useTranslation();
   const [loading, setLoading] = useState(false);
   const settings = useSelector((state: RootState) => state.settings);
-  
+
   // Get collaboration background image from settings
   const collabBgImage = settings.settings?.find(s => s.key === 'collaboration_bg_image')?.value || 'https://images.unsplash.com/photo-1490645935967-10de6ba17061?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2053&q=80';
 
@@ -459,9 +460,23 @@ const ForCollab = () => {
                   />
                   <FormField
                     control={form.control}
-                    name="social_url_1"
+                    name="social_url_3"
+
                     render={({ field }) => (
                       <FormItem className="col-span-2">
+                        <FormLabel className="text-left">{t("for_teams.form.products_interested")}</FormLabel>
+                        <FormControl>
+                          <Textarea placeholder={t("for_teams.form.list_products", "List products you're interested in")} {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="social_url_1"
+                    render={({ field }) => (
+                      <FormItem >
                         <FormLabel className="text-left">{t("for_collab.form.social_url_1", "Social Media URL 1")}</FormLabel>
                         <FormControl>
                           <Input placeholder={t("for_collab.form.https_example", "example.com")} {...field} />
@@ -483,19 +498,7 @@ const ForCollab = () => {
                       </FormItem>
                     )}
                   />
-                  <FormField
-                    control={form.control}
-                    name="social_url_3"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel className="text-left">{t("for_collab.form.social_url_3", "Social Media URL 3 (Optional)")}</FormLabel>
-                        <FormControl>
-                          <Input placeholder={t("for_collab.form.https_example", "example.com")} {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
+
                   <Button type="submit" className="col-span-2 w-full" disabled={loading}>
                     {loading ? "Submitting..." : t("for_collab.form.submit", "Submit Application")}
                   </Button>

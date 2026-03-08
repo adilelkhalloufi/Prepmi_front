@@ -657,8 +657,8 @@
       "company_name": "Nom de l'entreprise",
       "company_website": "Site web de l'entreprise (Optionnel)",
       "partnership_type": "Type de partenariat",
-      "team_members_per_week": "Membres de l'équipe par semaine",
-      "products_interested": "Produits intéressés",
+      "team_members_per_week": "Membres de l'équipe",
+      "products_interested": "Vos intérêts ",
       "heard_about_us": "Comment avez-vous entendu parler de nous ? (Optionnel)",
       "accept_terms": "J'accepte les termes et conditions",
       "accept_communications": "J'accepte de recevoir des communications",
@@ -666,7 +666,7 @@
       "select_partnership_type": "Sélectionner le type de partenariat",
       "select_range": "Sélectionner la plage",
       "select_option": "Sélectionner une option",
-      "list_products": "Lister les produits qui vous intéressent",
+      "list_products": "Listez ce qui vous intéresse",
       "https_example": "https://exemple.com"
     }
   },
