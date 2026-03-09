@@ -1,7 +1,7 @@
 import { UserAuthForm } from '@/components/login/UserAuthForm'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
-import logo from '../assets/Prepme.svg'
+import logo from "../assets/Prepme-simple.svg";
 import { Button } from '@/components/ui/button'
 import { webRoutes } from '@/routes/web'
 import { useSelector } from 'react-redux'
@@ -58,7 +58,7 @@ export default function SignIn() {
         <div className='lg:p-8'>
           <div className='mx-auto flex w-full flex-col justify-center space-y-2 sm:w-[350px]'>
             <div className='flex flex-col space-y-2 text-left'>
-              <img src={logo} />
+              <img src={logo} className='h-40  w-auto' />
 
               <h1 className='text-2xl font-semibold tracking-tight'>{t('login.title')}</h1>
               < p className='text-sm text-muted-foreground' dangerouslySetInnerHTML={{ __html: t('login.description') }} >

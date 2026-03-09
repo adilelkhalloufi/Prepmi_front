@@ -64,18 +64,10 @@ export const columns: ColumnDef<Collaborator>[] = [
     },
     {
         accessorKey: "social_url_3",
-        header: "Social URL 3",
+        header: "Products Interested",
         cell: ({ row }) => {
             const url = row.getValue("social_url_3") as string
-            return url ? (
-                <Button
-                    variant="link"
-                    className="p-0 h-auto font-normal"
-                    onClick={() => window.open(url, '_blank')}
-                >
-                    {url} <ExternalLink className="ml-1 h-3 w-3" />
-                </Button>
-            ) : "-"
+            return url 
         }
     },
 ]
